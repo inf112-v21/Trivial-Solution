@@ -15,7 +15,7 @@ public class HelloWorld implements ApplicationListener {
     public void create() {
         batch = new SpriteBatch();
         font = new BitmapFont();
-        font.setColor(Color.RED); //Testing git push
+        font.setColor(Color.RED); //Testing git push igjen
     }
 
     @Override

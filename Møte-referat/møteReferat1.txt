@@ -1,0 +1,37 @@
+Møtereferat 1, 05.02.2021
+Plan for møter:
+	- Presentere hva vi har gjort
+		○ Problemer, ferdige
+	- Veien videre
+		○ Lage nye issues
+
+Agenda:
+	- Deloppgave 1, 2 og 3
+
+Deloppgave 1:
+Bytter roller mellom hver oblig
+	Roller:
+		○ Teamleder
+		○ Testansvarlig
+		○ Referat-ansvarlig
+	Senere i prosjektet:
+		○ UI-ansvarlig?
+		○ Nettverks-ansvarlig
+	
+Project Board:
+	- Bruker GitHub Project Board og Issues på GitHub
+
+Flinke på å kommentere kode
+	- "Javadoc"
+
+Bruke Kanban
+	- User-stories fra scrum
+	- TTD fra XP
+
+Oppfølging av arbeid
+	- Begrense antall issues i hver kolonne - f.eks. i test-kolonnen
+
+Deling og oppbevaring av felles dokumenter, diagram og kodebase
+	- Lage en egen mappe med .txt-filer i GitHub
+	- README-filene i fellesskap
+	- "Møte-mappe"

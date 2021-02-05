@@ -7,8 +7,8 @@ Plan for møter:
 
 Agenda:
 	- Deloppgave 1, 2 og 3
-
 Deloppgave 1:
+
 Bytter roller mellom hver oblig
 	Roller:
 		○ Teamleder
@@ -24,6 +24,10 @@ Project Board:
 Flinke på å kommentere kode
 	- "Javadoc"
 
+Selve koden skal være på engelsk: variabel-navn, klasse-navn.
+Klassenavn: starter på stor bokstav (Eksempel)
+Variabel-navn: første ord med liten bokstav, resten av ordene med stor. (eksempelPåEtVariabelNavn)
+
 Bruke Kanban
 	- User-stories fra scrum
 	- TTD fra XP
@@ -34,4 +38,39 @@ Oppfølging av arbeid
 Deling og oppbevaring av felles dokumenter, diagram og kodebase
 	- Lage en egen mappe med .txt-filer i GitHub
 	- README-filene i fellesskap
+		- Retrospektiv (skal inneholde beskrivelse av hva som var planlagt å bruke av metodikk, hva vi faktisk bruker, og hvorfor?
 	- "Møte-mappe"
+
+MVP:
+	- Som spiller vil jeg kunne se et spillebrett, så jeg enklere kan visualisere hva som skjer. (Krav 1.)
+		- Akseptansekrav: Fungerende brett vises på skjermen. Et fungerende register som vises for spiller.
+	- Som spiller vil jeg kunne se hvor mine og andre spillere sine brikker skal stå, slik at jeg lettere kan planlegge neste trekk. (Krav 2)
+		- Akseptansekrav: Brettet må kunne vise robot-objektene for spiller. 
+	- Som spiller vil jeg kunne flytte brikken min på en intuitiv måte. (Krav 3)
+	   Som utvikler vil jeg kunne flytte brikker ved hjelp av kommandoer, for å lettere debugge spillet. Dette skal ikke være tilgjengelig for kunder.
+		- Akseptansekrav: 
+	- Som spiller vil jeg kunne vinne spillet ved å besøke alle flaggene. (Krav 4,5)
+		- Akseptansekrav: 
+	- Som spiller ønsker jeg å kunne spille mot andre mennesker.(Krav 6)
+		- Akseptansekrav: 
+	- Som spiller ønsker jeg å få utdelt kort, slik at jeg kan velge 5 kort for å spille spillet. (Krav 7,8)
+		- Akseptansekrav: 
+	- Som spiller vil jeg at roboten flyttes basert på de 5 utvalgte kortene mine. (Krav 9)
+		- Akseptansekrav: 
+
+Krav 1-5 skal gjøres før fredag 12.02.
+
+Oppgaver som må gjøres:
+	1. Finne ut hvordan kort skal representeres. Begynne å skrive kort-klassene
+	2. Finne ut hvordan brettet skal representeres, hvor mange lag. Som en grid
+	3. Finne ut hvordan en robot skal representeres.
+	4. Finne ut hvordan registers skal representeres. (spiller -> register -> robot)
+	5. Finne ut hvordan tilbehøret på brettet skal representeres. (lasere, samlebånd, hull, hvilket layer av brettet skal de være på?)
+
+Arbeidsfordeling: 
+	1. Samuel
+	2. Steinar
+	3. Ilyas
+	4. Sander
+	5. Dusan
+

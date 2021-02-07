@@ -1,6 +1,6 @@
 package Cards;
 
-interface ICards {
+public interface ICards {
     int getDistance();
     int getRotation();
     int priority();

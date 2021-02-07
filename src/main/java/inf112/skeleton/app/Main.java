@@ -10,5 +10,9 @@ public class Main {
         cfg.setWindowedMode(480, 320);
 
         new Lwjgl3Application(new HelloWorld(), cfg);
+
+         //Av en eller annen grunn må koden over kjøres før Board kan lese tmx-filen sin.
+         //TODO: Finn ut hvorfor, så vi slepper å kalle HelloWorld hver gang programmet skal kjøres
+        Board bård = new Board();
     }
 }

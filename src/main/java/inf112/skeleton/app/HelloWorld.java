@@ -27,10 +27,10 @@ public class HelloWorld implements ApplicationListener {
 
     @Override
     public void create() {
-        map = new TmxMapLoader().load("eksempel.tmx");
+        TmxMapLoader tmx = new TmxMapLoader();
+        TiledMap map = tmx.load("eksempel.tmx");
 
         boardLayer = (TiledMapTileLayer) map.getLayers().get("Board");
-
         Player = (TiledMapTileLayer) map.getLayers().get("Player");
         Hole = (TiledMapTileLayer) map.getLayers().get("Hole");
         Flag = (TiledMapTileLayer) map.getLayers().get("Flag");
@@ -40,7 +40,7 @@ public class HelloWorld implements ApplicationListener {
         camera.position.x = 3;
         camera.update();
 
-        renderer = new OrthogonalTiledMapRenderer(map, 1/(300*300));
+        renderer = new OrthogonalTiledMapRenderer(map, 1);
         renderer.setView(camera);
 
         batch = new SpriteBatch();

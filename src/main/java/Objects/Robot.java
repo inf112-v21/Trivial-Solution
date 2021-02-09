@@ -13,11 +13,9 @@ public class Robot{
 	private int lives = 3;
 	private int damage = 0;
 	private String name;
-	private int flags; 
-//	private ICard cards;
-//	private Register registers;
+	private int flags;
 	private Color color;
-	public int direction = -1;
+	public int direction = 0;
 	
 	
 	Robot(String name, Color color){
@@ -47,8 +45,7 @@ public class Robot{
 	}
 	
 	/**
-	 * 
-	 * @param dam apply damage to this robot
+	 * apply damage to this robot
 	 */
 	public void applyDamage() {
 		damage += 1;
@@ -66,7 +63,14 @@ public class Robot{
 	public boolean isDestroyed() {
 		return lives < 1;
 	}
-	
+
+	public int getDirection(){ return direction; }
+
+	public void setDirection(int dir){
+	    if (dir < 0 || dir > 3) throw new IllegalArgumentException();
+	    direction = dir;
+	}
+
 	@Override
 	public String toString() {
 		return getName() +" has "+ getRemainingLives() + " "

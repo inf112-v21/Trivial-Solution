@@ -1,4 +1,4 @@
-package inf112.skeleton.app;
+package GUI;
 
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
@@ -28,7 +28,7 @@ public class HelloWorld implements ApplicationListener {
     @Override
     public void create() {
         TmxMapLoader tmx = new TmxMapLoader();
-        TiledMap map = tmx.load("eksempel.tmx");
+        TiledMap map = tmx.load("TestMap.tmx");
 
         boardLayer = (TiledMapTileLayer) map.getLayers().get("Board");
         Player = (TiledMapTileLayer) map.getLayers().get("Player");
@@ -36,8 +36,8 @@ public class HelloWorld implements ApplicationListener {
         Flag = (TiledMapTileLayer) map.getLayers().get("Flag");
 
         camera = new OrthographicCamera();
-        camera.setToOrtho(false, 5, 5);
-        camera.position.x = 3;
+        camera.setToOrtho(false, 3000, 3000);
+        camera.position.x = 1500;
         camera.update();
 
         renderer = new OrthogonalTiledMapRenderer(map, 1);

@@ -1,4 +1,4 @@
 package Objects;
 
-public class Flag {
+public class Flag{
 }

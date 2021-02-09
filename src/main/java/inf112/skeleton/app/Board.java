@@ -1,6 +1,9 @@
 package inf112.skeleton.app;
 
 import Cards.ICards;
+import Objects.IBackgroundTile;
+import Objects.IForegroundTile;
+import Objects.IMiddlegroundTile;
 import Objects.Robot;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;

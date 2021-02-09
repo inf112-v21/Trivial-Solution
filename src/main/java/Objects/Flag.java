@@ -2,11 +2,12 @@ package Objects;
 
 public class Flag implements IComponent {
 
-    String name;
-    char SYMBOL = 'F';
+    private String name;
+    private final char SYMBOL = 'F';
 
     Flag(String name){
-
+        this.name = name;    //If we need a way to identify the different flags by name. Again, this will depend on
+                             // how we choose to remember the flags in the grid.
     }
 
     @Override

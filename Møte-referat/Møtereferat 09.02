@@ -1,0 +1,16 @@
+Hva har vi gjort:
+  - Kort er ferdig
+  - Board har logikk for å spawne ruter og roboter, og huske hvor de står
+  - Roboter ferdig for nå
+  - Vi har et pent testmap vi kan bruke nå
+  
+Kommentarer:
+  - Issuen for Board hadde litt upresis beskrivelse, så den er strengt tatt ikke ferdig før vi har en hel GUI. Isfjell!
+  - Vi hadde litt misforståelse på hvordan ruter og griddet skal representeres. Det er oppklart nå.
+
+Hva skal vi jobbe med videre:
+  - Dusan gjør ferdig ruteklassene
+  - Steinar implementerer at de rutene blir spawnet riktig i Board
+  - Steinar fikser litt enkel logikk for at roboter blir flyttet via kort. Hull, vegger og sånt tar vi senere.
+  - Sander og Ilyas går sammen og begynner på en GUI
+  - Samuel fikser Deck-klassen, slik at vi får 84 unike kort.

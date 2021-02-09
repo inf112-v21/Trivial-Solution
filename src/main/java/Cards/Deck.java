@@ -2,10 +2,9 @@ package Cards;
 
 import java.util.ArrayList;
 import java.util.Collections;
-
 public class Deck {
     ArrayList<ICard> cards = new ArrayList<>();
-    int counter = -1;
+    int counter;
     public Deck(){
         for (int i=0; i<6; i++){
             cards.add(new ProgramCard(-1,0,43+i));
@@ -25,13 +24,14 @@ public class Deck {
         }
     }
     public ArrayList<ICard> shuffledDeck(){
-        counter =-1;
+        counter = 0;
         Collections.shuffle(cards);
         return cards;
     }
 
     public ICard drawCard() {
+        ICard drawn = cards.get(counter);
         counter++;
-        return cards.get(counter);
+        return drawn ;
     }
 }

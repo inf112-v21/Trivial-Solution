@@ -1,4 +1,6 @@
 package Objects;
 
-public class Flag{
+public class Flag implements IComponent {
+
+    
 }

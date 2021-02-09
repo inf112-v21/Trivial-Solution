@@ -1,9 +1,7 @@
 package inf112.skeleton.app;
 
 import Cards.ICards;
-import Objects.IBackgroundTile;
-import Objects.IForegroundTile;
-import Objects.IMiddlegroundTile;
+import Objects.IComponent;;
 import Objects.Robot;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
@@ -17,9 +15,9 @@ public class Board {
 
     //Grids. Disse må initialiseres i readFromTMX().
     private Robot[][]            botgrid;
-    private BackgroundTile[][]   backgrid;
-    private MiddlegroundTile[][] midgrid;
-    private ForegroundTile[][]   forgrid;
+    private IComponent[][]   backgrid;
+    private IComponent[][] midgrid;
+    private IComponent[][]   forgrid;
 
     public Board(String filename){
         readFromTMX(filename);
@@ -44,9 +42,9 @@ public class Board {
         WIDTH  = background.getWidth();
 
         botgrid  = new Robot[HEIGHT][WIDTH];
-        backgrid = new BackgroundTile[HEIGHT][WIDTH];
-        midgrid  = new MiddlegroundTile[HEIGHT][WIDTH];
-        forgrid  = new ForegroundTile[HEIGHT][WIDTH];
+        backgrid = new IComponent[HEIGHT][WIDTH];
+        midgrid  = new IComponent[HEIGHT][WIDTH];
+        forgrid  = new IComponent[HEIGHT][WIDTH];
 
         for (int y = 0; y < background.getHeight(); y++) {
             for (int x = 0; x < background.getWidth(); x++) {
@@ -93,15 +91,14 @@ public class Board {
         botgrid[botY][botX] = null;
     }
 
-    public IBackgroundTile getBackgroundAt(int x, int y){
+    public IComponent getBackgroundAt(int x, int y){
         return backgrid[y][x];
     }
-
-    public IMiddlegroundTile getMiddlegroundAt(int x, int y){
+    public IComponent getMiddlegroundAt(int x, int y){
         return midgrid[y][x];
     }
 
-    public IForegroundTile getForegroundAt(int x, int y){
+    public IComponent getForegroundAt(int x, int y){
         return forgrid[y][x];
     }
 

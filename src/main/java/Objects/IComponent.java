@@ -11,6 +11,16 @@ package Objects;
  * middleground layer.
  */
 
-public interface ITile {
+public interface IComponent {
+
+    /**
+     *@return the name
+     */
+    String getName();
+
+    /**
+     *@return the symbol which is a character that represents a board-component on the board
+     */
+    char getSymbol();
 
 }

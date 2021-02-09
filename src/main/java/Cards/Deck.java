@@ -6,7 +6,7 @@ import java.util.Collections;
 public class Deck {
     ArrayList<ICards> cards = new ArrayList<>();
     public Deck(){
-        for (int i=0; i<14; i++){
+        for (int i=0; i<12; i++){
             cards.add(new ProgramCard(1,0,18));
             cards.add(new ProgramCard(2,0,12));
             cards.add(new ProgramCard(3,0,6));

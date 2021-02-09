@@ -1,5 +1,6 @@
 package inf112.skeleton.app;
 
+import GUI.HelloWorld;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
 

@@ -1,4 +1,4 @@
-package inf112.skeleton.app;
+package GUI;
 
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;

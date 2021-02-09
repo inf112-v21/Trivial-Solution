@@ -2,7 +2,7 @@
 <map version="1.4" tiledversion="1.4.3" orientation="orthogonal" renderorder="right-down" width="10" height="10" tilewidth="300" tileheight="300" infinite="0" nextlayerid="7" nextobjectid="1">
  <tileset firstgid="1" source="tiles2.tsx"/>
  <tileset firstgid="137" source="player.tsx"/>
- <layer id="1" name="Background" width="10" height="10" visible="0">
+ <layer id="1" name="Background" width="10" height="10">
   <data encoding="csv">
 5,5,5,5,5,5,5,5,5,5,
 5,5,5,5,5,5,5,5,5,5,
@@ -16,7 +16,7 @@
 5,5,5,5,5,5,5,5,5,5
 </data>
  </layer>
- <layer id="2" name="Middleground" width="10" height="10" visible="0">
+ <layer id="2" name="Middleground" width="10" height="10">
   <data encoding="csv">
 0,0,0,0,0,0,0,0,0,0,
 0,35,14,14,14,14,14,14,20,0,
@@ -30,7 +30,7 @@
 0,0,0,0,0,0,0,0,0,0
 </data>
  </layer>
- <layer id="3" name="Foreground" width="10" height="10" visible="0" opacity="0.9">
+ <layer id="3" name="Foreground" width="10" height="10" opacity="0.9">
   <data encoding="csv">
 56,0,0,0,0,56,0,0,0,56,
 0,0,0,0,0,0,0,0,0,0,
@@ -44,7 +44,7 @@
 56,0,0,0,0,0,0,0,0,0
 </data>
  </layer>
- <layer id="6" name="Robot" width="10" height="10" visible="0">
+ <layer id="6" name="Robot" width="10" height="10">
   <data encoding="csv">
 137,0,0,0,138,0,0,0,0,139,
 0,0,0,0,0,0,0,0,0,0,

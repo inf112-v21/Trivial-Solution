@@ -24,4 +24,7 @@ public interface IComponent {
     //TODO: Maybe unnessecary if we are just going to store the components in their objectform
     char getSymbol();
 
+    //We will probably need a guiRepresentation for each component
+    default void guiRepresentation(){};
+
 }

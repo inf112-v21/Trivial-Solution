@@ -1,6 +1,9 @@
 package inf112.skeleton.app;
 
 import Cards.ICards;
+import Objects.IBackgroundTile;
+import Objects.IForegroundTile;
+import Objects.IMiddlegroundTile;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
@@ -15,9 +18,9 @@ public class Board {
 
     //Grids. Disse må initialiseres i readFromTMX().
     private Robot[][]            botgrid  = new Robot[HEIGHT][WIDTH];
-    private BackgroundTile[][]   backgrid = new BackgroundTile[HEIGHT][WIDTH];
-    private MiddlegroundTile[][] midgrid  = new MiddlegroundTile[HEIGHT][WIDTH];
-    private ForegroundTile[][]   forgrid  = new ForegroundTile[HEIGHT][WIDTH];
+    private IBackgroundTile[][]   backgrid = new IBackgroundTile[HEIGHT][WIDTH];
+    private IMiddlegroundTile[][] midgrid  = new IMiddlegroundTile[HEIGHT][WIDTH];
+    private IForegroundTile[][]   forgrid  = new IForegroundTile[HEIGHT][WIDTH];
 
     public Board(String filename){
         readFromTMX(filename);

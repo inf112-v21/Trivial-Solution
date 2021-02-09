@@ -55,15 +55,15 @@ public class Board {
         // TODO: 06.02.2021
     }
 
-    public BackgroundTile getBackgroundAt(int x, int y){
+    public IBackgroundTile getBackgroundAt(int x, int y){
         return backgrid[y][x];
     }
 
-    public MiddlegroundTile getMiddlegroundAt(int x, int y){
+    public IMiddlegroundTile getMiddlegroundAt(int x, int y){
         return midgrid[y][x];
     }
 
-    public ForegroundTile getForegroundAt(int x, int y){
+    public IForegroundTile getForegroundAt(int x, int y){
         return forgrid[y][x];
     }
 

@@ -1,5 +1,9 @@
 package Objects;
 
+/**
+ * The flag. The player needs to have touched 3 flags in order (been on positions which the flags are at
+ */
+
 public class Flag implements IComponent {
 
     private String name;

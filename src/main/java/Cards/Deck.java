@@ -8,7 +8,6 @@ public class Deck {
     int counter = -1;
     public Deck(){
         for (int i=0; i<6; i++){
-
             cards.add(new ProgramCard(-1,0,43+i));
             cards.add(new ProgramCard(1,0,49+i));
             cards.add(new ProgramCard(1,0,55+i));

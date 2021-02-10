@@ -25,6 +25,7 @@ public interface IComponent {
     char getSymbol();
 
     //We will probably need a guiRepresentation for each component
+    //Maybe unicode character? Will leave it empty for now
     default void guiRepresentation(){};
 
 }

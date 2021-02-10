@@ -2,8 +2,8 @@ package Objects;
 
 public class Tile implements IComponent{
 
-    private String name = "Tile";
-    private final char SYMBOL = 'T';
+    private static final String name = "Tile";
+    private static final char symbol = 'T';
 
     @Override
     public String getName() {
@@ -12,7 +12,7 @@ public class Tile implements IComponent{
 
     @Override
     public char getSymbol() {
-        return SYMBOL;
+        return symbol;
     }
 }
 

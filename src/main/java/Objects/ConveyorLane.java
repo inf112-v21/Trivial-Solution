@@ -14,8 +14,8 @@ package Objects;
 
 public class ConveyorLane implements IComponent{
 
-    private String name = "ConveyorLane";
-    private final char symbol = 'C'; //Maybe we should make an enum class for symbols?
+    private static final String name = "ConveyorLane";
+    private static final char symbol = 'C'; //Maybe we should make an enum class for symbols?
     private int direction;
 
     ConveyorLane(int dir){

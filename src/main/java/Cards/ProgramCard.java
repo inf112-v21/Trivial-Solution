@@ -4,7 +4,6 @@ public class ProgramCard implements ICard{
     int x;
     int y;
     int z;
-
     public ProgramCard(int distance, int rotation, int priority) {
         x = distance;
         y = rotation;

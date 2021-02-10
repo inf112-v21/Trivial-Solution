@@ -1,11 +1,12 @@
 package inf112.skeleton.app;
 
-import Cards.ICards;
+import Cards.ICard;
 import Objects.IComponent;;
 import Objects.Robot;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
+import com.badlogic.gdx.scenes.scene2d.ui.Cell;
 
 public class Board {
 
@@ -14,10 +15,10 @@ public class Board {
     int WIDTH;
 
     //Grids. Disse må initialiseres i readFromTMX().
-    private Robot[][]            botgrid;
-    private IComponent[][]   backgrid;
+    private Robot[][]      botgrid;
+    private IComponent[][] backgrid;
     private IComponent[][] midgrid;
-    private IComponent[][]   forgrid;
+    private IComponent[][] forgrid;
 
     public Board(String filename){
         readFromTMX(filename);
@@ -29,7 +30,6 @@ public class Board {
     }
 
     private void readFromTMX(String filename){
-        // TODO: 05.02.2021 Denne må kunne lese en tmx-fil og spawne alle brikker og roboter.
         TmxMapLoader tmx = new TmxMapLoader();
         TiledMap map = tmx.load(filename);
 
@@ -48,17 +48,15 @@ public class Board {
 
         for (int y = 0; y < background.getHeight(); y++) {
             for (int x = 0; x < background.getWidth(); x++) {
-
-                //Disse skal erstattes med konstruktører for ulike karttilbehør når Dusan er ferdig
-                System.out.println(background.getCell(x, y));
-                System.out.println(middleground.getCell(x, y));
-                System.out.println(foreground.getCell(x, y));
-                System.out.println(robots.getCell(x, y));
+                backgrid[y][x] = ComponentFactory.spawnComponent(background.getCell(x, y));
+                midgrid[y][x] = ComponentFactory.spawnComponent(middleground.getCell(x, y));
+                forgrid[y][x] = ComponentFactory.spawnComponent(foreground.getCell(x, y));
+                //botgrid[y][x] = ComponentFactory.spawnComponent(robots.getCell(x, y));
             }
         }
     }
 
-    public void performMove(ICards card, Robot bot){
+    public void performMove(ICard card, Robot bot){
         if(card.getRotation() != 0){
             bot.setDirection((bot.getDirection() + card.getRotation()) % 4);
             return;

@@ -1,9 +1,13 @@
 package Objects;
 
-public class Tile implements IComponent{
+public class Floor implements IComponent{
 
     private static final String name = "Tile";
-    private static final char symbol = 'T';
+    private int id;
+
+    Floor(int id){
+
+    }
 
     @Override
     public String getName() {
@@ -11,8 +15,9 @@ public class Tile implements IComponent{
     }
 
     @Override
-    public char getSymbol() {
-        return symbol;
+    public int getID() {
+        return 0;
     }
+
 }
 

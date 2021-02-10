@@ -7,8 +7,7 @@ package Objects;
 public class Flag implements IComponent {
 
     private static String name = "flag";
-    private static final char symbol = 'F';
-    private int id;
+    private static int id;
 
     Flag(int id){
         this.id = id;    //If we need a way to identify the different flags by name. Again, this will depend on
@@ -21,7 +20,9 @@ public class Flag implements IComponent {
     }
 
     @Override
-    public char getSymbol() {
-        return symbol;
+    public int getID() {
+        return id;
     }
+
+
 }

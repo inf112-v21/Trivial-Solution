@@ -18,7 +18,7 @@ public class ConveyorBelt extends SimpleComponent{
     private int dir;
 
 
-    ConveyorBelt(int id, int dir, int speed){
+    public ConveyorBelt(int id, int dir, int speed){
         super(id);
         this.dir = dir;
         this.speed = speed;

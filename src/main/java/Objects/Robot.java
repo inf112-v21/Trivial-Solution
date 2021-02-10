@@ -17,7 +17,7 @@ public class Robot{
 	public int direction = 0;
 	
 	
-	Robot(String name, Color color){
+	public Robot(String name, Color color){
 		this.name = name;
 		this.color = color;
 	}

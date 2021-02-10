@@ -12,42 +12,32 @@ package Objects;
  */
 
 
-public class ConveyorBelt implements IComponent{
+public class ConveyorBelt extends SimpleComponent{
 
-    private static final String name = "ConveyorLane";
-    private static final char symbol = 'C';
     private int speed;
-    private int direction;
-    private int id;
+    private int dir;
+
 
     ConveyorBelt(int id, int dir, int speed){
-        this.id = id;
-        direction = dir;
+        super(id);
+        this.dir = dir;
         this.speed = speed;
+        this.name = "ConveyorBelt";
     }
+
+
+    //Some method to differentiate the 2 different type of conveyor belts. One with the speed=1
+    //and one with speed=2.
 
 
 
     public int getDirection(){
-        return direction;
+        return dir;
     }
 
     public int getSpeed(){
         return speed;
     }
 
-    @Override
-    public String getName() {
-        return name;
-    }
 
-    @Override
-    public int getID() {
-        return id;
-    }
-
-    @Override
-    public char getSymbol() {
-        return symbol;
-    }
 }

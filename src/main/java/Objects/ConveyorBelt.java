@@ -18,13 +18,14 @@ public class ConveyorBelt implements IComponent{
     private static final char symbol = 'C';
     private int speed;
     private int direction;
+    private int id;
 
-    ConveyorBelt(int dir, int speed){
+    ConveyorBelt(int id, int dir, int speed){
+        this.id = id;
         direction = dir;
         this.speed = speed;
     }
 
-    boolean
 
 
     public int getDirection(){
@@ -38,6 +39,11 @@ public class ConveyorBelt implements IComponent{
     @Override
     public String getName() {
         return name;
+    }
+
+    @Override
+    public int getID() {
+        return id;
     }
 
     @Override

@@ -4,6 +4,8 @@ import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
 import inf112.skeleton.app.Board;
 
+import java.nio.charset.StandardCharsets;
+
 public class GUIMain {
     // kopierte denne metoden fra main-klassen
 

@@ -2,6 +2,8 @@ package GUI;
 
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
+import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL30;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -18,17 +20,16 @@ import com.badlogic.gdx.math.Vector2;
 
 import java.lang.reflect.Member;
 
-public class HelloWorld implements ApplicationListener {
+public class HelloWorld extends InputAdapter implements ApplicationListener {
     private SpriteBatch batch;
     private BitmapFont font;
     private TiledMap map;
     private TiledMapTileLayer boardLayer;
     private TiledMapTileLayer playerLayer;
-    private TiledMapTileLayer Hole;
-    private TiledMapTileLayer Flag;
+    private TiledMapTileLayer holeLayer;
+    private TiledMapTileLayer flagLayer;
     private OrthogonalTiledMapRenderer renderer;
     private OrthographicCamera camera;
-    //TODO sjekk disse
     private TiledMapTileLayer.Cell playerCell;
     private TiledMapTileLayer.Cell playerWonCell;
     private TiledMapTileLayer.Cell playerDiedCell;
@@ -41,8 +42,8 @@ public class HelloWorld implements ApplicationListener {
 
         boardLayer = (TiledMapTileLayer) map.getLayers().get("Board");
         playerLayer = (TiledMapTileLayer) map.getLayers().get("Player");
-        //Hole = (TiledMapTileLayer) map.getLayers().get("Hole");
-        //Flag = (TiledMapTileLayer) map.getLayers().get("Flag");
+        holeLayer = (TiledMapTileLayer) map.getLayers().get("Hole");
+        flagLayer = (TiledMapTileLayer) map.getLayers().get("Flag");
 
         camera = new OrthographicCamera();
         camera.setToOrtho(false, 1500, 1500);
@@ -59,18 +60,46 @@ public class HelloWorld implements ApplicationListener {
         // får nullpointer her av en eller annen grunn
 
         StaticTiledMapTile PlayerTile = new StaticTiledMapTile(tmp[0][0]);
-        //StaticTiledMapTile PlayerDiedTile = new StaticTiledMapTile(tmp[0][1]);
-        //StaticTiledMapTile playerWonTile = new StaticTiledMapTile(tmp[0][2]);
+        StaticTiledMapTile PlayerDiedTile = new StaticTiledMapTile(tmp[0][1]);
+        StaticTiledMapTile playerWonTile = new StaticTiledMapTile(tmp[0][2]);
 
         playerCell = new TiledMapTileLayer.Cell().setTile(PlayerTile);
-        //playerDiedCell = new TiledMapTileLayer.Cell().setTile(PlayerDiedTile);
-        //playerWonCell = new TiledMapTileLayer.Cell().setTile(playerWonTile);
+        playerDiedCell = new TiledMapTileLayer.Cell().setTile(PlayerDiedTile);
+        playerWonCell = new TiledMapTileLayer.Cell().setTile(playerWonTile);
 
         playerPos = new Vector2(0,0);
+
+        // Legger til støtte for å flytte spilleren:
+        Gdx.input.setInputProcessor(this);
+
 
         batch = new SpriteBatch();
         font = new BitmapFont();
         font.setColor(Color.RED);
+    }
+    @Override
+    public boolean keyUp(int keyCode){
+        if(keyCode == Input.Keys.UP){
+            playerPos.y++;
+            playerLayer.setCell((int)playerPos.x,(int)playerPos.y-1,null);
+            return true;
+        }
+        if(keyCode == Input.Keys.DOWN){
+            playerPos.y--;
+            playerLayer.setCell((int)playerPos.x,(int)playerPos.y+1,null);
+            return true;
+        }
+        if(keyCode == Input.Keys.RIGHT){
+            playerPos.x++;
+            playerLayer.setCell((int)playerPos.x-1,(int)playerPos.y,null);
+            return true;
+        }
+        if(keyCode == Input.Keys.LEFT){
+            playerPos.x--;
+            playerLayer.setCell((int)playerPos.x+1,(int)playerPos.y,null);
+            return true;
+        }
+        return false;
     }
 
     @Override
@@ -85,6 +114,15 @@ public class HelloWorld implements ApplicationListener {
         Gdx.gl.glClear(GL30.GL_COLOR_BUFFER_BIT);
         renderer.render();
         playerLayer.setCell((int)playerPos.x,(int)playerPos.y, playerCell);
+
+        if(holeLayer.getCell((int)playerPos.x, (int)playerPos.y) != null)
+            playerLayer.setCell((int)playerPos.x,(int)playerPos.y, playerDiedCell);
+
+        if(flagLayer.getCell((int)playerPos.x, (int)playerPos.y) != null)
+            playerLayer.setCell((int)playerPos.x,(int)playerPos.y, playerWonCell);
+
+
+        flagLayer.getCell((int)playerPos.x, (int)playerPos.y);
 
     }
 

@@ -5,6 +5,7 @@ import java.util.Collections;
 public class Deck {
     ArrayList<ICard> cards = new ArrayList<>();
     int counter;
+
     public Deck(){
         for (int i=0; i<6; i++){
             cards.add(new ProgramCard(0,2,i+1));
@@ -23,6 +24,7 @@ public class Deck {
             cards.add(new ProgramCard(3,0,79+i));
         }
     }
+
     public void shuffledDeck(){
         counter = 0;
         Collections.shuffle(cards);

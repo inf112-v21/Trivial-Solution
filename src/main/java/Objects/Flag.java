@@ -7,7 +7,7 @@ package Objects;
 public class Flag extends SimpleComponent{
 
 
-    Flag(int id){
+    public Flag(int id){
         super(id);    //If we need a way to identify the different flags by name. Again, this will depend on
         this.name = "Flag"; // how we choose to remember the flags in the grid.
     }

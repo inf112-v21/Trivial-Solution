@@ -26,11 +26,6 @@ public class ConveyorBelt extends SimpleComponent{
     }
 
 
-    //Some method to differentiate the 2 different type of conveyor belts. One with the speed=1
-    //and one with speed=2.
-
-
-
     public int getDirection(){
         return dir;
     }

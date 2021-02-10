@@ -20,7 +20,7 @@ public class Deck {
             cards.add(new ProgramCard(1,0,55+i));
             cards.add(new ProgramCard(1,0,61+i));
             cards.add(new ProgramCard(2,0,67+i));
-            cards.add(new ProgramCard(2,0,63+i));
+            cards.add(new ProgramCard(2,0,73+i));
             cards.add(new ProgramCard(3,0,79+i));
         }
     }

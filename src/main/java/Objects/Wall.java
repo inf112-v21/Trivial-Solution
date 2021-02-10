@@ -1,4 +1,8 @@
 package Objects;
 
-public class Wall {
+public class Wall extends SimpleComponent{
+
+    Wall(int id) {
+        super(id);
+    }
 }

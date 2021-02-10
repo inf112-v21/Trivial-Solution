@@ -3,6 +3,7 @@ package inf112.skeleton.app;
 import Cards.ICard;
 import Objects.IComponent;;
 import Objects.Robot;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
@@ -51,7 +52,10 @@ public class Board {
                 backgrid[y][x] = ComponentFactory.spawnComponent(background.getCell(x, y));
                 midgrid[y][x] = ComponentFactory.spawnComponent(middleground.getCell(x, y));
                 forgrid[y][x] = ComponentFactory.spawnComponent(foreground.getCell(x, y));
-                //botgrid[y][x] = ComponentFactory.spawnComponent(robots.getCell(x, y));
+
+                if (robots.getCell(x, y) != null){
+                    botgrid[y][x] = new Robot("Robot" + (robots.getCell(x, y).getTile().getId() - 136), Color.WHITE); //Erstatt senere med custom navn og farger
+                }
             }
         }
     }
@@ -95,11 +99,9 @@ public class Board {
     public IComponent getMiddlegroundAt(int x, int y){
         return midgrid[y][x];
     }
-
     public IComponent getForegroundAt(int x, int y){
         return forgrid[y][x];
     }
-
     public Robot getRobotAt(int x, int y){ return botgrid[y][x]; }
 
     public int getHeight(){

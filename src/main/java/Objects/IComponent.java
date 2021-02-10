@@ -18,6 +18,8 @@ public interface IComponent {
      */
     String getName();
 
+
+
     /**
      *@return the symbol which is a character that represents a board-component on the board
      */
@@ -27,5 +29,11 @@ public interface IComponent {
     //We will probably need a guiRepresentation for each component
     //Maybe unicode character? Will leave it empty for now
     default void guiRepresentation(){};
+
+
+    /**
+     * Other thoughts about components
+     * -Maybe we should make an enum class for symbols?
+     */
 
 }

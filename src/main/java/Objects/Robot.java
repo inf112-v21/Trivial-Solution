@@ -1,8 +1,7 @@
 package Objects;
 
 import com.badlogic.gdx.graphics.Color;
-
-import Cards.ICards;
+import Cards.ICard;
 /**
  * 
  * @author ilyasali

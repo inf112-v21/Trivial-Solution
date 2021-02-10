@@ -18,14 +18,17 @@ public interface IComponent {
      */
     String getName();
 
-    /**
-     *@return the symbol which is a character that represents a board-component on the board
-     */
-    //TODO: Maybe unnessecary if we are just going to store the components in their objectform
-    char getSymbol();
+    int getID();
+
 
     //We will probably need a guiRepresentation for each component
     //Maybe unicode character? Will leave it empty for now
     default void guiRepresentation(){};
+
+
+    /**
+     * Other thoughts about components
+     * -Maybe we should make an enum class for symbols?
+     */
 
 }

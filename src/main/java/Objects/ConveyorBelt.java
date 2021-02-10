@@ -8,25 +8,42 @@ package Objects;
  * TODO: Then there are 4 that increment the position and 4 that change direction
  * TODO: Each one has a specific number in the TestMap.tmx file.
  *
- * How will i differentiate them?
+ * How will i differentiate them? Since they all have one direction that they ultimatly
  */
 
 
-public class ConveyorLane implements IComponent{
+public class ConveyorBelt implements IComponent{
 
     private static final String name = "ConveyorLane";
-    private static final char symbol = 'C'; //Maybe we should make an enum class for symbols?
+    private static final char symbol = 'C';
+    private int speed;
     private int direction;
+    private int id;
 
-    ConveyorLane(int dir){
+    ConveyorBelt(int id, int dir, int speed){
+        this.id = id;
         direction = dir;
+        this.speed = speed;
     }
 
 
 
+    public int getDirection(){
+        return direction;
+    }
+
+    public int getSpeed(){
+        return speed;
+    }
+
     @Override
     public String getName() {
         return name;
+    }
+
+    @Override
+    public int getID() {
+        return id;
     }
 
     @Override

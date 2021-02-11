@@ -1,18 +1,14 @@
-package inf112.skeleton.app;
+package Components;
 
-import Objects.ConveyorBelt;
-import Objects.Flag;
-import Objects.IComponent;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
-
-import java.awt.*;
-import java.security.cert.CertificateParsingException;
 
 public class ComponentFactory {
 
     public static IComponent spawnComponent(TiledMapTileLayer.Cell cell){
         if(cell == null) return null;
         switch (cell.getTile().getId()){
+
+            //Flagg
             case 55:
                 return new Flag(55);
             case 63:
@@ -22,6 +18,21 @@ public class ComponentFactory {
             case 79:
                 return new Flag(79);
 
+            //Misc.
+            case 5:
+                return new SteelPlate(5);
+            case 6:
+                return new Hole(6);
+            case 7:
+                return new CheckPoint(7);
+            case 15:
+                return new Wrench(15);
+            case 53:
+                return new Gear(53, -1);
+            case 54:
+                return new Gear(54, 1);
+
+            //Alt under dette til neste kommentar er kun diverse samlebånd
             case 13:
                 return new ConveyorBelt(13, 0, 2);
             case 14:

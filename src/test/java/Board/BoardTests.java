@@ -1,4 +1,4 @@
-package inf112.skeleton.app;
+package Board;
 
 import org.junit.Test;
 

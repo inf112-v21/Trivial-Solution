@@ -1,4 +1,4 @@
-package Register;
+package Player;
 
 public class Register {
 

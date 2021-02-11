@@ -1,4 +1,4 @@
-package Objects;
+package Components;
 
 /**
  * The ConveyorLane is what can move the robots on the board

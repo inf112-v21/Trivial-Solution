@@ -1,4 +1,4 @@
-package Objects;
+package Components;
 
 /**
  * The flag. The player needs to have touched 3 flags in order (been on positions which the flags are at

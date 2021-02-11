@@ -1,4 +1,4 @@
-package Objects;
+package Components;
 
 public class Laser extends SimpleComponent{
 

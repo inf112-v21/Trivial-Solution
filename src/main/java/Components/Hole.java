@@ -1,4 +1,4 @@
-package Objects;
+package Components;
 
 public class Hole extends SimpleComponent {
 

@@ -1,13 +1,13 @@
-package inf112.skeleton.app;
+package Board;
 
 import Cards.ICard;
-import Objects.IComponent;;
-import Objects.Robot;
+import Components.ComponentFactory;
+import Components.IComponent;;
+import Player.Robot;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
-import com.badlogic.gdx.scenes.scene2d.ui.Cell;
 
 public class Board {
 
@@ -83,7 +83,7 @@ public class Board {
         if (botX < 0 || botY < 0) throw new IllegalStateException("Kunne ikke finne botten på brettet?");
 
         if (isOutOfBounds(botX + dx, botY + dy)){
-            //Placeholdere, her skal botten drepes, og respawnes ved forrige respawn-punkt.
+            //Placeholdere, her skal botten drepes og respawnes ved forrige respawn-punkt.
             System.out.println("Å nei! Du fallt utenfor brettet!");
             bot.applyDamage();
             return;
@@ -113,7 +113,7 @@ public class Board {
     }
 
 
-    /** Konverterer retninger på formen 0, 1, 2, 3 til hvilken retninger det vil si for x-akesen. */
+    /** Konverterer retninger på formen 0, 1, 2, 3 til hvilken retninger det vil si for x-aksen. */
     private int directionToX(int dir){
         return - dir % 2 * (dir - 2);
     }

@@ -1,4 +1,4 @@
-package Objects;
+package Player;
 
 import com.badlogic.gdx.graphics.Color;
 import Cards.ICard;

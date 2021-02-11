@@ -1,4 +1,4 @@
-package Objects;
+package Components;
 
 public abstract class SimpleComponent implements IComponent {
 

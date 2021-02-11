@@ -3,9 +3,9 @@ package Cards;
 import java.util.ArrayList;
 import java.util.Collections;
 public class Deck {
-    ArrayList<ICard> cards = new ArrayList<>();
-    int counter = 0;
-    private int DECKSIZE = 84;
+    private final ArrayList<ICard> cards = new ArrayList<>();
+    private int counter = 0;
+    private final int DECKSIZE = 84;
 
     /**
      * Spawner et dekk på 84 unike kort.

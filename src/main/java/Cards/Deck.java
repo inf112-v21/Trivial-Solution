@@ -6,6 +6,9 @@ public class Deck {
     ArrayList<ICard> cards = new ArrayList<>();
     int counter;
 
+    /**
+     * Builds the deck out of programCards
+     */
     public Deck(){
         for (int i=0; i<6; i++){
             cards.add(new ProgramCard(0,2,i+1));
@@ -26,10 +29,14 @@ public class Deck {
     }
 
     public void shuffledDeck(){
+        //Shuffles the list with ProgramCards in it
         counter = 0;
         Collections.shuffle(cards);
     }
 
+    /**
+     * @return the card at the top of the deck
+     */
     public ICard drawCard() {
         ICard drawn = cards.get(counter);
         counter++;

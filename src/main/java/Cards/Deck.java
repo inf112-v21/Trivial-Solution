@@ -2,6 +2,13 @@ package Cards;
 
 import java.util.ArrayList;
 import java.util.Collections;
+
+/**
+ *
+ * @author Samueljacoo
+ *
+ */
+
 public class Deck {
     ArrayList<ICard> cards = new ArrayList<>();
     int counter;

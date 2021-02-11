@@ -45,6 +45,7 @@ public class ComponentFactory {
                 return new ConveyorBelt(13, 0, 2);
             case 14:
                 return new ConveyorBelt(14, 1, 2);
+
             case 17:
                 return new ConveyorBelt(17, 2, 2);
             case 18:
@@ -55,8 +56,8 @@ public class ComponentFactory {
                 return new ConveyorBelt(20, 2, 2);
             case 21:
                 return new ConveyorBelt(21, 2, 2);
-            case 23:
-                return new ConveyorBelt(23, 3, 2);
+            case 22:
+                return new ConveyorBelt(22, 3, 2);
 
             case 25:
                 return new ConveyorBelt(25, 1, 2);

@@ -19,16 +19,14 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.tiles.StaticTiledMapTile;
 import com.badlogic.gdx.math.Vector2;
 
-import java.lang.reflect.Member;
-
 public class HelloWorld extends InputAdapter implements ApplicationListener {
     private SpriteBatch batch;
     private BitmapFont font;
     private TiledMap map;
-    private TiledMapTileLayer boardLayer;
+    private TiledMapTileLayer backgroundLayer;
     private TiledMapTileLayer playerLayer;
-    private TiledMapTileLayer holeLayer;
-    private TiledMapTileLayer flagLayer;
+    private TiledMapTileLayer middlegroundLayer;
+    private TiledMapTileLayer foregroundLayer;
     private OrthogonalTiledMapRenderer renderer;
     private OrthographicCamera camera;
     private TiledMapTileLayer.Cell playerCell;
@@ -47,10 +45,10 @@ public class HelloWorld extends InputAdapter implements ApplicationListener {
         TmxMapLoader tmx = new TmxMapLoader();
         TiledMap map = tmx.load(mapName);
 
-        boardLayer = (TiledMapTileLayer) map.getLayers().get("Board");
-        playerLayer = (TiledMapTileLayer) map.getLayers().get("Player");
-        holeLayer = (TiledMapTileLayer) map.getLayers().get("Hole");
-        flagLayer = (TiledMapTileLayer) map.getLayers().get("Flag");
+        backgroundLayer = (TiledMapTileLayer) map.getLayers().get("Background");
+        middlegroundLayer = (TiledMapTileLayer) map.getLayers().get("Middleground");
+        foregroundLayer = (TiledMapTileLayer) map.getLayers().get("Foreground");
+        playerLayer = (TiledMapTileLayer) map.getLayers().get("Robot");
 
         camera = new OrthographicCamera();
         camera.setToOrtho(false, 3000, 3000);
@@ -123,20 +121,20 @@ public class HelloWorld extends InputAdapter implements ApplicationListener {
         Gdx.gl.glClearColor(1, 1, 1, 1);
         Gdx.gl.glClear(GL30.GL_COLOR_BUFFER_BIT);
         renderer.render();
-        /*
+
         playerLayer.setCell((int)playerPos.x,(int)playerPos.y, playerCell);
 
-        if(holeLayer.getCell((int)playerPos.x, (int)playerPos.y) != null)
+        if(middlegroundLayer.getCell((int)playerPos.x, (int)playerPos.y) != null)
             playerLayer.setCell((int)playerPos.x,(int)playerPos.y, playerDiedCell);
 
-        if(flagLayer.getCell((int)playerPos.x, (int)playerPos.y) != null)
+        if(foregroundLayer.getCell((int)playerPos.x, (int)playerPos.y) != null)
             playerLayer.setCell((int)playerPos.x,(int)playerPos.y, playerWonCell);
 
 
-        flagLayer.getCell((int)playerPos.x, (int)playerPos.y);
+        foregroundLayer.getCell((int)playerPos.x, (int)playerPos.y);
 
 
-         */
+
     }
 
     @Override

@@ -53,7 +53,6 @@ public class HelloWorld extends InputAdapter implements ApplicationListener {
         camera = new OrthographicCamera();
         camera.setToOrtho(false, 3000, 3000);
         camera.position.x = 1500;
-        // TestMap trenger doble verdier i de to linjene over.
         camera.update();
 
         renderer = new OrthogonalTiledMapRenderer(map, 1);
@@ -61,8 +60,6 @@ public class HelloWorld extends InputAdapter implements ApplicationListener {
 
         Texture t = new Texture("player.png");
         TextureRegion[][] tmp = new TextureRegion(t).split(300,300);
-        //System.out.println(tmp[0][0]);
-        // får nullpointer her av en eller annen grunn
 
         StaticTiledMapTile PlayerTile = new StaticTiledMapTile(tmp[0][0]);
         StaticTiledMapTile PlayerDiedTile = new StaticTiledMapTile(tmp[0][1]);

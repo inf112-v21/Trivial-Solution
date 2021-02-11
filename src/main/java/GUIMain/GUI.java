@@ -1,4 +1,4 @@
-package GUI;
+package GUIMain;
 
 import Board.Board;
 import com.badlogic.gdx.ApplicationListener;
@@ -19,7 +19,7 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.tiles.StaticTiledMapTile;
 import com.badlogic.gdx.math.Vector2;
 
-public class HelloWorld extends InputAdapter implements ApplicationListener {
+public class GUI extends InputAdapter implements ApplicationListener {
     private SpriteBatch batch;
     private BitmapFont font;
     private TiledMap map;
@@ -36,7 +36,7 @@ public class HelloWorld extends InputAdapter implements ApplicationListener {
     private Board bård;
     private String mapName;
 
-    public HelloWorld(String mapName){
+    public GUI(String mapName){
         this.mapName = mapName;
     }
 

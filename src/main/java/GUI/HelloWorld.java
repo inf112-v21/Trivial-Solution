@@ -19,14 +19,16 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.tiles.StaticTiledMapTile;
 import com.badlogic.gdx.math.Vector2;
 
+import java.lang.reflect.Member;
+
 public class HelloWorld extends InputAdapter implements ApplicationListener {
     private SpriteBatch batch;
     private BitmapFont font;
     private TiledMap map;
-    private TiledMapTileLayer backgroundLayer;
+    private TiledMapTileLayer boardLayer;
     private TiledMapTileLayer playerLayer;
-    private TiledMapTileLayer middlegroundLayer;
-    private TiledMapTileLayer foregroundLayer;
+    private TiledMapTileLayer holeLayer;
+    private TiledMapTileLayer flagLayer;
     private OrthogonalTiledMapRenderer renderer;
     private OrthographicCamera camera;
     private TiledMapTileLayer.Cell playerCell;
@@ -45,15 +47,14 @@ public class HelloWorld extends InputAdapter implements ApplicationListener {
         TmxMapLoader tmx = new TmxMapLoader();
         TiledMap map = tmx.load(mapName);
 
-        backgroundLayer = (TiledMapTileLayer) map.getLayers().get("Background");
-        middlegroundLayer = (TiledMapTileLayer) map.getLayers().get("Middleground");
-        foregroundLayer = (TiledMapTileLayer) map.getLayers().get("Foreground");
-        playerLayer = (TiledMapTileLayer) map.getLayers().get("Robot");
+        boardLayer = (TiledMapTileLayer) map.getLayers().get("Board");
+        playerLayer = (TiledMapTileLayer) map.getLayers().get("Player");
+        holeLayer = (TiledMapTileLayer) map.getLayers().get("Hole");
+        flagLayer = (TiledMapTileLayer) map.getLayers().get("Flag");
 
         camera = new OrthographicCamera();
         camera.setToOrtho(false, 3000, 3000);
         camera.position.x = 1500;
-        // TestMap trenger doble verdier i de to linjene over.
         camera.update();
 
         renderer = new OrthogonalTiledMapRenderer(map, 1);
@@ -61,8 +62,6 @@ public class HelloWorld extends InputAdapter implements ApplicationListener {
 
         Texture t = new Texture("player.png");
         TextureRegion[][] tmp = new TextureRegion(t).split(300,300);
-        //System.out.println(tmp[0][0]);
-        // får nullpointer her av en eller annen grunn
 
         StaticTiledMapTile PlayerTile = new StaticTiledMapTile(tmp[0][0]);
         StaticTiledMapTile PlayerDiedTile = new StaticTiledMapTile(tmp[0][1]);
@@ -122,19 +121,18 @@ public class HelloWorld extends InputAdapter implements ApplicationListener {
         Gdx.gl.glClear(GL30.GL_COLOR_BUFFER_BIT);
         renderer.render();
 
+        /*
         playerLayer.setCell((int)playerPos.x,(int)playerPos.y, playerCell);
 
-        if(middlegroundLayer.getCell((int)playerPos.x, (int)playerPos.y) != null)
+        if(holeLayer.getCell((int)playerPos.x, (int)playerPos.y) != null)
             playerLayer.setCell((int)playerPos.x,(int)playerPos.y, playerDiedCell);
 
-        if(foregroundLayer.getCell((int)playerPos.x, (int)playerPos.y) != null)
+        if(flagLayer.getCell((int)playerPos.x, (int)playerPos.y) != null)
             playerLayer.setCell((int)playerPos.x,(int)playerPos.y, playerWonCell);
 
 
-        foregroundLayer.getCell((int)playerPos.x, (int)playerPos.y);
-
-
-
+        flagLayer.getCell((int)playerPos.x, (int)playerPos.y);
+         */
     }
 
     @Override

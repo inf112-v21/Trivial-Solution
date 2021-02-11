@@ -119,6 +119,7 @@ public class GUI extends InputAdapter implements ApplicationListener {
         Gdx.gl.glClear(GL30.GL_COLOR_BUFFER_BIT);
         renderer.render();
 
+        // Denne logikken bør flyttes ut av GUI asap
         playerLayer.setCell((int)playerPos.x,(int)playerPos.y, playerCell);
 
         if(middlegroundLayer.getCell((int)playerPos.x, (int)playerPos.y) != null) {

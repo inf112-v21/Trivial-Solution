@@ -80,8 +80,12 @@ til at vi valgte denne metodikken er at målet er å ike produsere et overskudd.
 et Kanban board (github issues boardet) for å visualisere hvor langt vi har komt i prosjektet
 og hvilke oppgaver som må gjøres videre.
 
-En annen fin ting med Kanban er at 
-- User-stories fra scrum
+En annen fin ting med Kanban er at vi tar inn oppgavene som de kommer. Vi holder oss dermed
+mer fleksible. Dette setter et større ansvar på teamlederen da, som gjør at denne personen
+må følge ekstra godt med her.
+
+Dessuten så tenker vi bruke User-stories fra scrum istedenfor kanban-kort på projectboarden.
+Brukerhistorier har spesifikke mål, men
 - TTD fra XP
 
 

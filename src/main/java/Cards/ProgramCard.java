@@ -1,27 +1,33 @@
 package Cards;
 
 public class ProgramCard implements ICard{
-    int x;
-    int y;
-    int z;
-    public ProgramCard(int distance, int rotation, int priority) {
-        x = distance;
-        y = rotation;
-        z = priority;
+    int distance;
+    int rotation;
+    int priority;
+
+    /**
+     * @param x The distance the card tells the robot to move.
+     * @param y The rotation the card tells the robot to rotate
+     * @param z The priority the card has.
+     */
+    public ProgramCard(int x, int y, int z) {
+        distance = x;
+        rotation = y;
+        priority = z;
     }
 
     @Override
     public int getDistance() {
-        return x;
+        return distance;
     }
 
     @Override
     public int getRotation() {
-        return y;
+        return rotation;
     }
 
     @Override
     public int priority() {
-        return z;
+        return priority;
     }
 }

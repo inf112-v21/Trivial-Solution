@@ -19,28 +19,24 @@ Vi har bestemt oss for at vi kan bytte roller etter hver oblig.
 Alle skal få sjansen til å prøve seg på de forskjellige rollene hvis de har lyst.
 
 Akkurat nå har vi disse rollene:
-○ Teamleder
+○ Teamleder - Steinar
 Vi trenger en Teamleader for å ha et overordnede ansvar i prosjektet.
 Arbeidsoppgavene til en teamleader er å se til at de ulike oppgavene 
-som vi har fordelt blir gjort innen tidsfristen. Denne personene vil og 
-lede møtene og sette prioriteringer --> Bestemme hvilke brukerhistoreier som er
-viktigst.
+som vi har fordelt blir gjort innen tidsfristen, og på en måte som fungerer. 
+Denne personene vil og lede møtene og sette prioriteringer --> Bestemme hvilke brukerhistoreier som er viktigst. 
+Oppgaven til denne personen blir og å tenke på hvordan brukerhistoriene kan bli 
+implementert sammen med alle andre.
 
-○ Produktansvarlig
-Vi trenger en produktansvarlig person til å ha selve ansvaret for produktet.
-Dette kan være en person som vil ha et tett sammaerbid med Teamlederen. Oppgaven
-til denne personen er å tenke på hvordan brukerhistoriene kan bli implementert.
-
-○ Testansvarlig
+○ Testansvarlig - Ingen //TODO
 Vi trenger en testansvarlig for å dobbelsjekke at testene er gode og at det 
 ikke er noen logiske feil i koden. Dette blir viktigere desto lengre vi kommer i 
 prosjektet.
 
-○ Referat-ansvarlig
+○ Referat-ansvarlig - byttet hver gang (Samuel, Steinar, Sander og Dusan)
 Vi trenger en referatansvarlig i hvert møte for å skrive ned hva vi har gått igjennom
 på det møtet/arbidstiden og hva vi skal gjøre til neste møte.
 
-○ Utvikler
+○ Utvikler - Alle
 Vi trenger utviklere i prosjketet for å lage produktet. Oppgaven til utviklerene
 er å bli ferdige med de tildelte programmeringsoppgavene innen tidsfristen. 
 
@@ -66,13 +62,6 @@ Alle i teamet er komfortable med å bruke det også.
 
 #Deloppgave 2
 
-    Vi kommer bare til å møtes 2-4 ganger i uken, så det er ekstra viktig å kunne enkelt se hvem som jobber med hva, hva som skal gjøres, etc.
-    Vi har derfor valgt å bruke issues på github ganske mye. 
-    Vi kommer til å variere litt om hva vi jobber med indivudellt og hva vi gjør i par, avhengig av oppgaven. 
-    Parprogrammering er jo litt mer slitsomt over nettet, men for enkelte oppgaver er det nødvendig for å få det til.
-    Teamlederen har ansvar for å dele ut oppgaver, og å følge opp at det blir gjort på en måte som henger sammen med resten av prosjektet.
-    Hvert møte starter da ved at vi går igjennom hva vi har gjort siden forrige gang, ledet av teamleaderen. Deretter oppdaterer vi issueboardet.
-    Mellom møtene bruker vi discord til å kommunisere.
 
 ```
 Vi har valgt å bruke Kanban som hoved prosjektmetodikk. Det vi likte med Kanban og grunnen 
@@ -85,10 +74,36 @@ mer fleksible. Dette setter et større ansvar på teamlederen da, som gjør at d
 må følge ekstra godt med her.
 
 Dessuten så tenker vi bruke User-stories fra scrum istedenfor kanban-kort på projectboarden.
-Brukerhistorier har spesifikke mål, men
-- TTD fra XP
+Brukerhistorier har spesifikke mål, men de spesifiserer ikke implementasjonen så mye.Målet
+vårt er å holde oss så fleksible som mulig.
 
+Ellers så kommer vi bruke TDD fra XP. Vi ser på dette som en god måte å utvikle på og vil prøve den
+ut.
 
+Dermed kommer vi også:
+-Vi kommer bare til å møtes 2-4 ganger i uken, så det er ekstra viktig å kunne enkelt se hvem som jobber 
+med hva, hva som skal gjøres, etc.
+-Vi kommer til å variere litt om hva vi jobber med indivudellt og hva vi gjør i par, avhengig av oppgaven. 
+
+Parprogrammering er jo litt mer slitsomt over nettet, men for enkelte oppgaver er det nødvendig for å få det til. 
+Teamlederen har ansvar for å dele ut oppgaver, og å følge opp at det blir gjort på en måte som henger sammen med 
+resten av prosjektet. 
+Hvert møte starter da ved at vi går igjennom hva vi har gjort siden forrige gang, ledet av teamleaderen. Deretter oppdaterer vi issueboardet.
+Mellom møtene bruker vi discord til å kommunisere.
+
+Oppgaver som må gjøres:
+	1. Finne ut hvordan kort skal representeres. Begynne å skrive kort-klassene
+	2. Finne ut hvordan brettet skal representeres, hvor mange lag. Som en grid
+	3. Finne ut hvordan en robot skal representeres.
+	4. Finne ut hvordan registers skal representeres. (spiller -> register -> robot)
+	5. Finne ut hvordan tilbehøret på brettet skal representeres. (lasere, samlebånd, hull, hvilket layer av brettet skal de være på?)
+
+Arbeidsfordeling: 
+	1. Samuel
+	2. Steinar
+	3. Ilyas
+	4. Sander
+	5. Dusan
 ```
 
 #Deloppgave 3
@@ -148,73 +163,27 @@ Brukerhistorier har spesifikke mål, men
     8: 
     9:
 
+```
+Se kode
+
+```
+
+
 #Oppsummering
-    Til neste gang må vi bli enige om et språk for commits/kommentarer/kode osv.
-    Skrive opp issues på begynnelsen av hvert møte.
+
+###Erfaringer:
+    - Vanskelig å holde seg til MVP, lett å begynne på andre oppgaver uten å helt legge merke til det selv.
+    - Enkelte av akseptansekravene våre var upresise, noe som gjorde dem til isfjell.
+    - Vi har hatt en jevnt over god kommunikasjon mellom alle deltakere og alle har bidratt like mye til prosjektet :)
+    
+
+###Hva vi kan forbedre:
+    - Til neste gang må vi bli enige om et språk for commits/kommentarer/kode osv.
+    - Skrive opp issues på begynnelsen av hvert møte.
+    - Litt klarere roller
+    - Vi må begynne å skrive tester
+    - Klarere struktur på møter
+
     
     
-Bytter roller mellom hver oblig
-Roller:
-○ Teamleder
-○ Testansvarlig
-○ Referat-ansvarlig
 
-Senere i prosjektet:
-○ UI-ansvarlig?
-○ Nettverks-ansvarlig
-
-Project Board:
-- Bruker GitHub Project Board og Issues på GitHub
-
-Flinke på å kommentere kode
-- "Javadoc"
-
-Selve koden skal være på engelsk: variabel-navn, klasse-navn.
-Klassenavn: starter på stor bokstav (Eksempel)
-Variabel-navn: første ord med liten bokstav, resten av ordene med stor. (eksempelPåEtVariabelNavn)
-
-Bruke Kanban
-- User-stories fra scrum
-- TTD fra XP
-
-Oppfølging av arbeid
-- Begrense antall issues i hver kolonne - f.eks. i test-kolonnen
-
-Deling og oppbevaring av felles dokumenter, diagram og kodebase
-- Lage en egen mappe med .txt-filer i GitHub
-- README-filene i fellesskap
-- Retrospektiv (skal inneholde beskrivelse av hva som var planlagt å bruke av metodikk, hva vi faktisk bruker, og hvorfor?
-- "Møte-mappe"
-
-MVP:
-- Som spiller vil jeg kunne se et spillebrett, så jeg enklere kan visualisere hva som skjer. (Krav 1.)
-- Akseptansekrav: Fungerende brett vises på skjermen. Et fungerende register som vises for spiller.
-- Som spiller vil jeg kunne se hvor mine og andre spillere sine brikker skal stå, slik at jeg lettere kan planlegge neste trekk. (Krav 2)
-- Akseptansekrav: Brettet må kunne vise robot-objektene for spiller.
-- Som spiller vil jeg kunne flytte brikken min på en intuitiv måte. (Krav 3)
-Som utvikler vil jeg kunne flytte brikker ved hjelp av kommandoer, for å lettere debugge spillet. Dette skal ikke være tilgjengelig for kunder.
-- Akseptansekrav:
-- Som spiller vil jeg kunne vinne spillet ved å besøke alle flaggene. (Krav 4,5)
-- Akseptansekrav:
-- Som spiller ønsker jeg å kunne spille mot andre mennesker.(Krav 6)
-- Akseptansekrav:
-- Som spiller ønsker jeg å få utdelt kort, slik at jeg kan velge 5 kort for å spille spillet. (Krav 7,8)
-- Akseptansekrav:
-- Som spiller vil jeg at roboten flyttes basert på de 5 utvalgte kortene mine. (Krav 9)
-- Akseptansekrav:
-
-Krav 1-5 skal gjøres før fredag 12.02.
-
-Oppgaver som må gjøres:
-1. Finne ut hvordan kort skal representeres. Begynne å skrive kort-klassene
-2. Finne ut hvordan brettet skal representeres, hvor mange lag. Som en grid
-3. Finne ut hvordan en robot skal representeres.
-4. Finne ut hvordan registers skal representeres. (spiller -> register -> robot)
-5. Finne ut hvordan tilbehøret på brettet skal representeres. (lasere, samlebånd, hull, hvilket layer av brettet skal de være på?)
-
-Arbeidsfordeling:
-1. Samuel
-2. Steinar
-3. Ilyas
-4. Sander
-5. Dusan

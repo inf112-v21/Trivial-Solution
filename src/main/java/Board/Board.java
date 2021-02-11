@@ -2,6 +2,7 @@ package Board;
 
 import Cards.ICard;
 import Components.ComponentFactory;
+import Components.Flag;
 import Components.IComponent;;
 import Player.Robot;
 import com.badlogic.gdx.graphics.Color;
@@ -21,15 +22,25 @@ public class Board {
     private IComponent[][] midgrid;
     private IComponent[][] forgrid;
 
+    //Antall flagg i spillet.
+    private int numberOfFlags = 0;
+
     public Board(String filename){
         readFromTMX(filename);
     }
 
-    //Kun for testing
+    //Kun for testing.
     public Board(){
         this("assets/TestMap.tmx");
     }
 
+
+    /**
+     * Når Board startes opp må denne kalles. Denne finner ut av hvordan Boardet skal settes opp, hvor roboter står, etc.
+     * Den setter all informasjonen inn i 4 grids, for 4 lag.
+     *
+     * @param filename navnet på filen som skal leses.
+     */
     private void readFromTMX(String filename){
         TmxMapLoader tmx = new TmxMapLoader();
         TiledMap map = tmx.load(filename);
@@ -51,7 +62,9 @@ public class Board {
             for (int x = 0; x < background.getWidth(); x++) {
                 backgrid[y][x] = ComponentFactory.spawnComponent(background.getCell(x, y));
                 midgrid[y][x] = ComponentFactory.spawnComponent(middleground.getCell(x, y));
-                forgrid[y][x] = ComponentFactory.spawnComponent(foreground.getCell(x, y));
+                IComponent forcomp = ComponentFactory.spawnComponent(foreground.getCell(x, y));
+                forgrid[y][x] = forcomp;
+                if (forcomp instanceof Flag) numberOfFlags++;
 
                 if (robots.getCell(x, y) != null){
                     botgrid[y][x] = new Robot("Robot" + (robots.getCell(x, y).getTile().getId() - 136), Color.WHITE); //Erstatt senere med custom navn og farger
@@ -60,6 +73,12 @@ public class Board {
         }
     }
 
+    /**
+     * Flytter en robot i henhold til kortet.
+     *
+     * @param card Bevegelseskortet
+     * @param bot Roboten som skal flyttes
+     */
     public void performMove(ICard card, Robot bot){
         if(card.getRotation() != 0){
             bot.setDirection((bot.getDirection() + card.getRotation()) % 4);
@@ -91,6 +110,10 @@ public class Board {
 
         botgrid[botY+dy][botX+dx] = botgrid[botY][botX];
         botgrid[botY][botX] = null;
+    }
+
+    public void afterPhase(){
+        // TODO: 11.02.2021 Det som skjer på slutten av hver fase. Lasere aktiveres, samlebånd går, etc.
     }
 
     public IComponent getBackgroundAt(int x, int y){

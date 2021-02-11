@@ -4,6 +4,14 @@ import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 
 public class ComponentFactory {
 
+    /**
+     * Gitt en celle fra Libgdx-biblioteket, spawner denne vår ojektorienterte versjon.
+     * Om celler er null returnerer vi bare null. Det er på en måte 'luft'.
+     *
+     * @param cell Cellen fra Libgdx, som skal konverteres til sitt tilsvarende objekt.
+     * @return
+     */
+
     public static IComponent spawnComponent(TiledMapTileLayer.Cell cell){
         if(cell == null) return null;
         switch (cell.getTile().getId()){
@@ -20,7 +28,7 @@ public class ComponentFactory {
 
             //Misc.
             case 5:
-                return new SteelPlate(5);
+                return new Floor(5);
             case 6:
                 return new Hole(6);
             case 7:
@@ -153,5 +161,4 @@ public class ComponentFactory {
                 return null;
         }
     }
-
 }

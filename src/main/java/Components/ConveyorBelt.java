@@ -1,17 +1,10 @@
 package Components;
 
 /**
- * The ConveyorLane is what can move the robots on the board
- *
- * TODO: There are 16 different kind of conveyor lanes in the game in total.
- * TODO: There are 2 kinds, one that increments the position by 1 and one that does so by 2.
- * TODO: Then there are 4 that increment the position and 4 that change direction
- * TODO: Each one has a specific number in the TestMap.tmx file.
- *
- * How will i differentiate them? Since they all have one direction that they ultimatly
+ * Samlebånd, som flytter roboter rundt om de avslutter turen oppå dem.
+ * De har en hastighet og en retning.
+ * Retningene er representert som 0, 1, 2, 3 og tilsvarer Nord, Øst, Sør og Vest i den rekkefølgen.
  */
-
-
 public class ConveyorBelt extends SimpleComponent{
 
     private int speed;

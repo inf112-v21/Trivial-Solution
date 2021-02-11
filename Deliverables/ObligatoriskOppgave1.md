@@ -163,16 +163,14 @@ Arbeidsfordeling:
     8: 
     9:
 
-```
 Se kode
 
-```
 
 
 #Oppsummering
 
 ###Erfaringer:
-    - Vanskelig å holde seg til MVP, lett å begynne på andre oppgaver uten å helt legge merke til det selv.
+    - Vanskelig å holde seg til MVP og Kanban, lett å begynne på andre oppgaver uten å helt legge merke til det selv.
     - Enkelte av akseptansekravene våre var upresise, noe som gjorde dem til isfjell.
     - Vi har hatt en jevnt over god kommunikasjon mellom alle deltakere og alle har bidratt like mye til prosjektet :)
     

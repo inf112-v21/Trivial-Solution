@@ -157,6 +157,16 @@ public class ComponentFactory {
             case 80:
                 return null;
 
+            //Wall-ruter med en wall
+            case 31:
+                return new Wall(30,false,true,true,true); //Kan ikke gå opp vegg
+            case 23:
+                return new Wall(22,true,false,true,true); //Kan ikke gå til høyre vegg
+            case 29:
+                return new Wall(30,true,true,false,true); // Kan ikke gå ned vegg
+            case 30:
+                return new Wall(30,true,true,true,false); //Kan ikke gå til venstre
+
             default:
                 System.err.println("Could not recognize ID no. " + cell.getTile().getId() + ". Please go to ComponentFactory and add that case to the list. Or you could go complain to Steinar.");
                 return null;

@@ -7,15 +7,13 @@ import Board.Board;
 public class GUIMain {
     // kopierte denne metoden fra main-klassen
 
+    private static String defaultMapName = "TestMap.tmx";
+
     public static void main(String[] args) {
         Lwjgl3ApplicationConfiguration cfg = new Lwjgl3ApplicationConfiguration();
-        cfg.setTitle("TestMap");
+        cfg.setTitle(defaultMapName.substring(0, defaultMapName.length() - 4));
         cfg.setWindowedMode(500, 500);
 
-        Lwjgl3Application gui = new Lwjgl3Application(new HelloWorld(), cfg);
-
-        //Av en eller annen grunn må koden over kjøres før Board kan lese tmx-filen sin.
-        //TODO: Finn ut hvorfor, så vi slepper å kalle HelloWorld hver gang programmet skal kjøres
-        Board bård = new Board();
+        new Lwjgl3Application(new HelloWorld(defaultMapName), cfg);
     }
 }

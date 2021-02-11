@@ -137,6 +137,17 @@ public class ComponentFactory {
                 return new ConveyorBelt(85, 3, 2);
             case 86:
                 return new ConveyorBelt(86, 2, 2);
+
+            //Luft-ruter
+            case 56:
+                return null;
+            case 64:
+                return null;
+            case 72:
+                return null;
+            case 80:
+                return null;
+
             default:
                 System.err.println("Could not recognize ID no. " + cell.getTile().getId() + ". Please go to ComponentFactory and add that case to the list. Or you could go complain to Steinar.");
                 return null;

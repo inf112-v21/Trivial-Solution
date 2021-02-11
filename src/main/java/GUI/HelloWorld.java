@@ -1,5 +1,6 @@
 package GUI;
 
+import Board.Board;
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -34,11 +35,17 @@ public class HelloWorld extends InputAdapter implements ApplicationListener {
     private TiledMapTileLayer.Cell playerWonCell;
     private TiledMapTileLayer.Cell playerDiedCell;
     private com.badlogic.gdx.math.Vector2 playerPos;
+    private Board bård;
+    private String mapName;
+
+    public HelloWorld(String mapName){
+        this.mapName = mapName;
+    }
 
     @Override
     public void create() {
         TmxMapLoader tmx = new TmxMapLoader();
-        TiledMap map = tmx.load("eksempel.tmx");
+        TiledMap map = tmx.load(mapName);
 
         boardLayer = (TiledMapTileLayer) map.getLayers().get("Board");
         playerLayer = (TiledMapTileLayer) map.getLayers().get("Player");
@@ -46,8 +53,8 @@ public class HelloWorld extends InputAdapter implements ApplicationListener {
         flagLayer = (TiledMapTileLayer) map.getLayers().get("Flag");
 
         camera = new OrthographicCamera();
-        camera.setToOrtho(false, 1500, 1500);
-        camera.position.x = 750;
+        camera.setToOrtho(false, 3000, 3000);
+        camera.position.x = 1500;
         // TestMap trenger doble verdier i de to linjene over.
         camera.update();
 
@@ -76,6 +83,8 @@ public class HelloWorld extends InputAdapter implements ApplicationListener {
         batch = new SpriteBatch();
         font = new BitmapFont();
         font.setColor(Color.RED);
+
+        bård = new Board(mapName);
     }
     @Override
     public boolean keyUp(int keyCode){
@@ -110,9 +119,11 @@ public class HelloWorld extends InputAdapter implements ApplicationListener {
 
     @Override
     public void render() {
+
         Gdx.gl.glClearColor(1, 1, 1, 1);
         Gdx.gl.glClear(GL30.GL_COLOR_BUFFER_BIT);
         renderer.render();
+        /*
         playerLayer.setCell((int)playerPos.x,(int)playerPos.y, playerCell);
 
         if(holeLayer.getCell((int)playerPos.x, (int)playerPos.y) != null)
@@ -124,6 +135,8 @@ public class HelloWorld extends InputAdapter implements ApplicationListener {
 
         flagLayer.getCell((int)playerPos.x, (int)playerPos.y);
 
+
+         */
     }
 
     @Override

@@ -1,0 +1,17 @@
+Møte Referat 11.02.21
+
+Møte handler om hva som må bli gjort for at oppgaven skal bli ferdig til innlevingsfristen.
+
+Alle i gruppen er innkalt.
+Alle i gruppen er tilstede ved møte.
+møtet varer fra kl.18 til kl.20 via discord delgruppe kanal.
+
+Saker som skal diskuteres:
+MVP kravene i deloppgave 4, særlig krav 1-5.
+
+Hva vi har gjort:
+- endringer til ComponentFactory.
+- Implementert ComponentFactory i Board klassen.
+
+Hva vi skal jobbe videre med:
+- Bli ferdig med MVP kravene 1-5 til 12.02.21

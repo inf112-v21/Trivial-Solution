@@ -37,7 +37,7 @@ public class Board {
         TiledMapTileLayer background   = (TiledMapTileLayer) map.getLayers().get("Background");
         TiledMapTileLayer middleground = (TiledMapTileLayer) map.getLayers().get("Middleground");
         TiledMapTileLayer foreground   = (TiledMapTileLayer) map.getLayers().get("Foreground");
-        TiledMapTileLayer robots       = (TiledMapTileLayer) map.getLayers().get("Robots");
+        TiledMapTileLayer robots       = (TiledMapTileLayer) map.getLayers().get("Robot");
 
         HEIGHT = background.getHeight();
         WIDTH  = background.getWidth();

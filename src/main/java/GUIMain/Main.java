@@ -1,10 +1,9 @@
-package GUI;
+package GUIMain;
 
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
-import Board.Board;
 
-public class GUIMain {
+public class Main {
     // kopierte denne metoden fra main-klassen
 
     private static String defaultMapName = "TestMap.tmx";
@@ -14,6 +13,6 @@ public class GUIMain {
         cfg.setTitle(defaultMapName.substring(0, defaultMapName.length() - 4));
         cfg.setWindowedMode(500, 500);
 
-        new Lwjgl3Application(new HelloWorld(defaultMapName), cfg);
+        new Lwjgl3Application(new GUI(defaultMapName), cfg);
     }
 }

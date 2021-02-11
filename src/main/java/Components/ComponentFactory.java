@@ -58,14 +58,14 @@ public class ComponentFactory {
             case 23:
                 return new ConveyorBelt(23, 3, 2);
 
+            case 25:
+                return new ConveyorBelt(25, 1, 2);
             case 26:
-                return new ConveyorBelt(26, 1, 2);
+                return new ConveyorBelt(26, 0, 2);
             case 27:
                 return new ConveyorBelt(27, 0, 2);
             case 28:
-                return new ConveyorBelt(28, 0, 2);
-            case 29:
-                return new ConveyorBelt(29, 3, 2);
+                return new ConveyorBelt(28, 3, 2);
 
             case 33:
                 return new ConveyorBelt(33, 2, 1);

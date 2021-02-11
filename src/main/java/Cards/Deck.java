@@ -16,6 +16,7 @@ public class Deck {
     /**
      * Builds the deck out of programCards
      */
+
     public Deck(){
         for (int i=0; i<6; i++){
             cards.add(new ProgramCard(0,2,i+1));
@@ -44,6 +45,7 @@ public class Deck {
     /**
      * @return the card at the top of the deck
      */
+
     public ICard drawCard() {
         ICard drawn = cards.get(counter);
         counter++;

@@ -121,16 +121,25 @@ public class GUI extends InputAdapter implements ApplicationListener {
 
         playerLayer.setCell((int)playerPos.x,(int)playerPos.y, playerCell);
 
-        if(middlegroundLayer.getCell((int)playerPos.x, (int)playerPos.y) != null)
-            playerLayer.setCell((int)playerPos.x,(int)playerPos.y, playerDiedCell);
+        if(middlegroundLayer.getCell((int)playerPos.x, (int)playerPos.y) != null) {
+            if (middlegroundLayer.getCell((int) playerPos.x, (int) playerPos.y).getTile().getId() == 6)
+                playerLayer.setCell((int) playerPos.x, (int) playerPos.y, playerDiedCell);
+        }
 
-        if(foregroundLayer.getCell((int)playerPos.x, (int)playerPos.y) != null)
-            playerLayer.setCell((int)playerPos.x,(int)playerPos.y, playerWonCell);
-
+        if(foregroundLayer.getCell((int)playerPos.x, (int)playerPos.y) != null) {
+            switch (foregroundLayer.getCell((int) playerPos.x, (int) playerPos.y).getTile().getId()) {
+                case (55):
+                    playerLayer.setCell((int) playerPos.x, (int) playerPos.y, playerWonCell);
+                case (63):
+                    playerLayer.setCell((int) playerPos.x, (int) playerPos.y, playerWonCell);
+                case (71):
+                    playerLayer.setCell((int) playerPos.x, (int) playerPos.y, playerWonCell);
+                case (79):
+                    playerLayer.setCell((int) playerPos.x, (int) playerPos.y, playerWonCell);
+            }
+        }
 
         foregroundLayer.getCell((int)playerPos.x, (int)playerPos.y);
-
-
 
     }
 

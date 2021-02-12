@@ -12,9 +12,9 @@ public class ProgramCard implements ICard{
     int priority;
 
     /**
-     * @param x The distance the card tells the robot to move.
-     * @param y The rotation the card tells the robot to rotate
-     * @param z The priority the card has.
+     * @param dist The distance the card tells the robot to move.
+     * @param rotation The rotation the card tells the robot to rotate
+     * @param priority The priority the card has.
      */
 
     public ProgramCard(int dist, int rotation, int priority) {

@@ -11,13 +11,12 @@ public class ProgramCard implements ICard{
     int rotation;
     int priority;
 
-
     /**
-     *
-     * @param dist The distance to move, may be zero
-     * @param rotation The radians to rotate is rotation*pi/2
-     * @param priority The priority level of the card.
+     * @param dist The distance the card tells the robot to move.
+     * @param rotation The rotation the card tells the robot to rotate
+     * @param priority The priority the card has.
      */
+
     public ProgramCard(int dist, int rotation, int priority) {
         this.distance = dist;
         this.rotation = rotation;

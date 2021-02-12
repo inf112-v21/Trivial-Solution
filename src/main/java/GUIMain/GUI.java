@@ -36,6 +36,9 @@ public class GUI extends InputAdapter implements ApplicationListener {
     private com.badlogic.gdx.math.Vector2 playerPos;
     private Board bård;
     private String mapName;
+    private int CELL_SIZE = 300;
+    private int HEIGHT;
+    private int WIDTH;
 
     public GUI(String mapName){
         this.mapName = mapName;
@@ -51,16 +54,19 @@ public class GUI extends InputAdapter implements ApplicationListener {
         foregroundLayer = (TiledMapTileLayer) map.getLayers().get("Foreground");
         playerLayer = (TiledMapTileLayer) map.getLayers().get("Robot");
 
+        HEIGHT = backgroundLayer.getHeight();
+        WIDTH = backgroundLayer.getWidth();
+
         camera = new OrthographicCamera();
-        camera.setToOrtho(false, 3000, 3000);
-        camera.position.x = 1500;
+        camera.setToOrtho(false, CELL_SIZE*WIDTH, CELL_SIZE*HEIGHT);
+        camera.position.x = CELL_SIZE*WIDTH / 2;
         camera.update();
 
         renderer = new OrthogonalTiledMapRenderer(map, 1);
         renderer.setView(camera);
 
         Texture t = new Texture("player.png");
-        TextureRegion[][] tmp = new TextureRegion(t).split(300,300);
+        TextureRegion[][] tmp = new TextureRegion(t).split(CELL_SIZE,CELL_SIZE);
 
         StaticTiledMapTile PlayerTile = new StaticTiledMapTile(tmp[0][0]);
         StaticTiledMapTile PlayerDiedTile = new StaticTiledMapTile(tmp[0][1]);

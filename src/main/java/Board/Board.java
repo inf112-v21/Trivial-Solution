@@ -81,7 +81,7 @@ public class Board {
      */
     public void performMove(ICard card, Robot bot){
         if(card.getRotation() != 0){
-            bot.setDirection((bot.getDirection() + card.getRotation()) % 4);
+            bot.rotate(card.getRotation());
             return;
         }
         int dx = directionToX(bot.getDirection());
@@ -90,19 +90,21 @@ public class Board {
         int botX = -1;
         int botY = -1;
 
-        for (int y = 0; y < HEIGHT; y++) {
+        outer: for (int y = 0; y < HEIGHT; y++) {
             for (int x = 0; x < WIDTH; x++) {
+                if (botgrid[y][x] == null) continue;
                 if (botgrid[y][x].equals(bot)) {
-                    System.out.println("Fant botten!");
                     botX = x;
                     botY = y;
-                    break;
+                    break outer;
                 }
             }
         }
         if (botX < 0) throw new IllegalStateException("Kunne ikke finne botten på brettet?");
 
         if (isOutOfBounds(botX + dx, botY + dy)){
+            System.out.println("X: " + (botX + dx));
+            System.out.println("Y: " + (botY + dy));
             //Placeholdere, her skal botten drepes og respawnes ved forrige respawn-punkt.
             System.out.println("Å nei! Du fallt utenfor brettet!");
             bot.applyDamage();
@@ -165,7 +167,7 @@ public class Board {
     }
 
     private boolean isOutOfBounds(int x, int y){
-        return x >= 0 && x < WIDTH && y >= 0 && y < HEIGHT;
+        return !(x >= 0 && x < WIDTH && y >= 0 && y < HEIGHT);
     }
 
 }

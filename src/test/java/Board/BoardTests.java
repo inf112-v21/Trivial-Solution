@@ -49,7 +49,6 @@ public class BoardTests {
 
     @Test
     public void readFromFileReadsWidthAndHeight(){
-        // TODO: 07.02.2021 Koden i main må kjøres før konstruktøren til Board av en eller annen grunn. Finn ut hvorfor!
         assertNotNull(bård.getHeight());
         assertNotNull(bård.getWidth());
     }
@@ -70,14 +69,22 @@ public class BoardTests {
         bård.performMove(new ProgramCard(0, 1, 1), robot1);
 
         assertNotEquals(direction, robot1.getDirection());
+    }
 
+    @Test
+    public void canMoveTheRobotWithMoveCard(){
+        bård.placeRobotAt(0, 0, robot1);
+        robot1.setDirection(1);
+        bård.performMove(new ProgramCard(1, 0, 1), robot1);
 
+        assertNull(bård.getRobotAt(0, 0));
+        assertEquals(robot1, bård.getRobotAt(1, 0));
     }
 
     @Test
     public void tryingToMoveNonExistentRobotYieldsError(){
         try{
-            bård.performMove(new ProgramCard(0, 1, 10), robot1);
+            bård.performMove(new ProgramCard(1, 0, 10), robot1);
             fail();
         } catch (IllegalStateException ex){
             //Yay it worked

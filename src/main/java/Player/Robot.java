@@ -14,7 +14,7 @@ public class Robot{
 	private String name;
 	private int flags;
 	private Color color;
-	public int direction = 0;
+	private int direction = 0;
 	
 	
 	public Robot(String name, Color color){

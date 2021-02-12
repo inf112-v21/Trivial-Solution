@@ -17,10 +17,10 @@ public class ProgramCard implements ICard{
      * @param z The priority the card has.
      */
 
-    public ProgramCard(int x, int y, int z) {
-        distance = x;
-        rotation = y;
-        priority = z;
+    public ProgramCard(int dist, int rotation, int priority) {
+        this.distance = dist;
+        this.rotation = rotation;
+        this.priority = priority;
     }
 
     @Override

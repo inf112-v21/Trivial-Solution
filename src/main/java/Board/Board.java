@@ -93,13 +93,14 @@ public class Board {
         for (int y = 0; y < HEIGHT; y++) {
             for (int x = 0; x < WIDTH; x++) {
                 if (botgrid[y][x].equals(bot)) {
+                    System.out.println("Fant botten!");
                     botX = x;
                     botY = y;
                     break;
                 }
             }
         }
-        if (botX < 0 || botY < 0) throw new IllegalStateException("Kunne ikke finne botten på brettet?");
+        if (botX < 0) throw new IllegalStateException("Kunne ikke finne botten på brettet?");
 
         if (isOutOfBounds(botX + dx, botY + dy)){
             //Placeholdere, her skal botten drepes og respawnes ved forrige respawn-punkt.
@@ -127,21 +128,38 @@ public class Board {
     }
     public Robot getRobotAt(int x, int y){ return botgrid[y][x]; }
 
+    public void placeRobotAt(int x, int y, Robot bot){ botgrid[y][x] = bot; }
+
     public int getHeight(){
         return HEIGHT;
     }
-
     public int getWidth(){
         return WIDTH;
     }
 
 
-    /** Konverterer retninger på formen 0, 1, 2, 3 til hvilken retninger det vil si for x-aksen. */
+    /**
+     * Konverterer retninger på formen 0, 1, 2, 3 til hvilken retning det vil si for x-aksen.
+     *
+     * Eksempler:
+     *    0 -> 0
+     *    1 -> 1
+     *    2 -> 0
+     *    3 -> -1
+     */
     private int directionToX(int dir){
         return - dir % 2 * (dir - 2);
     }
 
-    /** Konverterer retninger på formen 0, 1, 2, 3 til hvilken retning det vil si for y-aksen. */
+    /**
+     * Konverterer retninger på formen 0, 1, 2, 3 til hvilken retning det vil si for y-aksen.
+     *
+     * Eksempler:
+     *    0 -> -1
+     *    1 -> 0
+     *    2 -> 1
+     *    3 -> 0
+     */
     private int directionToY(int dir){
         return (dir+1) % 2 * (dir - 1);
     }

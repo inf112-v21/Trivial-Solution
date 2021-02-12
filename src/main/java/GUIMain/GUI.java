@@ -18,6 +18,7 @@ import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.tiles.StaticTiledMapTile;
 import com.badlogic.gdx.math.Vector2;
+import org.lwjgl.system.CallbackI;
 
 public class GUI extends InputAdapter implements ApplicationListener {
     private SpriteBatch batch;
@@ -129,6 +130,7 @@ public class GUI extends InputAdapter implements ApplicationListener {
 
         if(foregroundLayer.getCell((int)playerPos.x, (int)playerPos.y) != null) {
             switch (foregroundLayer.getCell((int) playerPos.x, (int) playerPos.y).getTile().getId()) {
+                //Dette er de 4 ID-ene som flaggikonene våre har.
                 case (55):
                     playerLayer.setCell((int) playerPos.x, (int) playerPos.y, playerWonCell);
                 case (63):
@@ -143,6 +145,8 @@ public class GUI extends InputAdapter implements ApplicationListener {
         foregroundLayer.getCell((int)playerPos.x, (int)playerPos.y);
 
     }
+
+    public Board getBoard(){ return bård; }
 
     @Override
     public void resize(int width, int height) {

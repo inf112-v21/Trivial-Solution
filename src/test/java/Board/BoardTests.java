@@ -90,4 +90,7 @@ public class BoardTests {
     public void beforeEachActuallyResetsTheBoard(){
         assertNull(bård.getRobotAt(0, 0));
     }
+
+
+
 }

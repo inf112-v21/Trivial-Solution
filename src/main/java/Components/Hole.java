@@ -2,11 +2,15 @@ package Components;
 
 public class Hole extends SimpleComponent {
 
+    private static final int damage = 10;
+
     public Hole(int id) {
         super(id);
         name = "Hole";
     }
 
 
-    //Some damage method that makes the player's/Robot's health zero
+    public int getDamage(){
+        return damage;
+    }
 }

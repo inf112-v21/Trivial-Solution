@@ -16,6 +16,6 @@ public class Wall extends SimpleComponent{
         name = "Wall";
     }
 
-    public boolean
+    //public boolean en metode for å se hvordan ting virker.
 
 }

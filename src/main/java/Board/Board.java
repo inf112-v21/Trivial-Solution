@@ -3,7 +3,7 @@ package Board;
 import Cards.ICard;
 import Components.ComponentFactory;
 import Components.Flag;
-import Components.IComponent;;
+import Components.IComponent;
 import Player.Robot;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.maps.tiled.TiledMap;

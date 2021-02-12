@@ -166,6 +166,14 @@ public class ComponentFactory {
                 return new Wall(30,true,true,false,true); // Kan ikke gå ned vegg
             case 30:
                 return new Wall(30,true,true,true,false); //Kan ikke gå til venstre
+            case 8:
+                return new Wall(8,true,false,false,true); //Kan ikke gå ned eller til høyre (Dobbelvegg)
+            case 16:
+                return new Wall(16,false,false,true,true); //Kan ikke gå til høyre eller opp (Dobbelvegg)
+            case 24:
+                return new Wall(24,false,true,true,false); //Kan ikke gå til venstre eller opp (Dobbelvegg)
+            case 32:
+                return new Wall(32,true,true,false,false); //Kan ikke gå til venstre eller ned (Dobbelvegg)
 
             default:
                 System.err.println("Could not recognize ID no. " + cell.getTile().getId() + ". Please go to ComponentFactory and add that case to the list. Or you could go complain to Steinar.");

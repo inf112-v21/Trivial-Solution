@@ -44,7 +44,7 @@ public class GUI extends InputAdapter implements ApplicationListener {
     @Override
     public void create() {
         TmxMapLoader tmx = new TmxMapLoader();
-        TiledMap map = tmx.load(mapName);
+        map = tmx.load(mapName);
 
         backgroundLayer = (TiledMapTileLayer) map.getLayers().get("Background");
         middlegroundLayer = (TiledMapTileLayer) map.getLayers().get("Middleground");

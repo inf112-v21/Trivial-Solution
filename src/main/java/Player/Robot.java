@@ -90,7 +90,9 @@ public class Robot{
 	public void flagVisited() {
 		flags ++;
 	}
-	
-	
-	
+
+
+    public void rotate(int degree) {
+	    direction = (direction + degree) % 4;
+    }
 }

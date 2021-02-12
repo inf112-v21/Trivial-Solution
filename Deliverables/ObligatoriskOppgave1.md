@@ -178,7 +178,7 @@ Vi har valgt å fokusere på disse 5 punktene til oblig1.
     - Litt klarere roller
     - Vi må begynne å skrive tester
     - Klarere struktur på møter
-    -Ha tydeligere fokus. Holde oss mer til Kanban og MVP
+    - Ha tydeligere fokus. Holde oss mer til Kanban og MVP
 
 ###Hvor langt har vi komt:
     -Vi har greid punktene 1-4 fra deloppgave 4 så langt. Vi blir mest sannsynlig

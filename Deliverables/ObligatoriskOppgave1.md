@@ -182,6 +182,7 @@ Se kode
     - Vi må begynne å skrive tester
     - Klarere struktur på møter
 
+
     
     
 

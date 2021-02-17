@@ -3,44 +3,41 @@ package Register;
 import Cards.Deck;
 import Cards.ICard;
 import Player.Register;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class registerTest {
 
-    private ArrayList<ICard> cards = new ArrayList<ICard>();
+    private static ArrayList<ICard> cards = new ArrayList<ICard>();
+    private static Register r;
 
-    @BeforeEach
-    void createListOfCards(){
+    @BeforeAll
+    public static void setUp(){
+        r = new Register();
+
         Deck d = new Deck();
         for(int i = 0; i < 6; i++){
             ICard card = d.drawCard();
             cards.add(card);
         }
+        r.setRegisterCards(cards);
+
     }
 
     @Test
     public void registerCanSetNineCards(){
-        Register r = new Register();
-
-        r.setRegisterCards(cards);
-
-        assertEquals(cards.size() ,r.getRegisterCards().size());
+        assertEquals(cards, r.getRegisterCards());
     }
 
     @Test
-    public void registerReturnsNineCardsToPlayerWhenPrompted(){
-        Register r = new Register();
+    public void registerCanClearAllCardsBeforeEachNewGameRound(){
+        //clear register-list
+        r.clearAllRegisterCards();
 
-        //ArrayList<ICard> registerCards= r.getRegisterCards();
-
-        //assertEquals(cards, registerCards);
+        assertTrue(r.getRegisterCards().isEmpty());
     }
-
-
-
 }

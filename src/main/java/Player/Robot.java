@@ -1,7 +1,12 @@
 package Player;
 
+import Components.Flag;
 import com.badlogic.gdx.graphics.Color;
 import Cards.ICard;
+
+import java.util.ArrayList;
+import java.util.FormattableFlags;
+
 /**
  * 
  * @author ilyasali
@@ -12,7 +17,7 @@ public class Robot{
 	private int lives = 3;
 	private int damage = 0;
 	private String name;
-	private int flags;
+	private ArrayList<Flag> flags;
 	private Color color;
 	private int direction = 0;
 	
@@ -87,8 +92,8 @@ public class Robot{
 	/**
 	 * Should only be called when the robot visited a flag
 	 */
-	public void flagVisited() {
-		flags ++;
+	public void flagVisited(Flag flag) {
+		flags.add(flag);
 	}
 
 

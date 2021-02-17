@@ -80,13 +80,18 @@ public class Robot{
 		return getName() + " has " + getRemainingLives() + " "
 				+ "lives and has " + getDamage() + " damage.";
 	}
+
+	/**
+	 * @return Gir oss flaggene som roboten har besøkt.
+	 */
+	public ArrayList<Flag> getVisitedFlags(){ return flags;}
 	
 	/**
 	 * Should only be called when the robot visited a flag
 	 * Denne funksjonen
 	 */
 	public void flagVisited(Flag flag) {
-
+		
 
 		flags.add(flag);
 	}

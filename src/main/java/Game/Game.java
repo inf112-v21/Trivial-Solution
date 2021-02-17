@@ -15,7 +15,7 @@ public class Game {
     public void Game(int player){
         players = player;
         for (int i=0; i < players; i++){
-            Bots.add(new Robot());
+            //Bots.add(new Robot());
         }
 
     }
@@ -31,8 +31,10 @@ public class Game {
      * @return true if a robot won, false if there is no winner yet
      */
     public boolean hasWon(Robot rob) {
-        ArrayList<Flag> visitedFlags = rob.flags;
+        ArrayList<Flag> visitedFlags = rob.getVisitedFlags();
 
+
+        return true;
     }
 
 

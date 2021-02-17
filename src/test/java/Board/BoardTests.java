@@ -44,11 +44,6 @@ public class BoardTests {
     }
 
     @Test
-    public void setUpActuallyCreatesTheBoardEveryTime(){
-        assertNotNull(bård);
-    }
-
-    @Test
     public void readFromFileReadsWidthAndHeight(){
         assertNotNull(bård.getHeight());
         assertNotNull(bård.getWidth());
@@ -171,6 +166,7 @@ public class BoardTests {
         bård.placeRobotAt(1, 3, robot2);
         robot1.setDirection(1);
 
+        //Her treffer de veggen umiddelbart.
         bård.performMove(new ProgramCard(3, 0, 1), robot1);
 
         assertEquals(robot1, bård.getRobotAt(0, 3));
@@ -184,6 +180,7 @@ public class BoardTests {
         bård.placeRobotAt(4, 3, robot1);
         robot1.setDirection(3);
 
+        //Har kan de gå ett skritt før de treffer veggen.
         bård.performMove(new ProgramCard(3, 0, 1), robot1);
 
         assertNull(bård.getRobotAt(4, 3));
@@ -191,7 +188,35 @@ public class BoardTests {
         assertEquals(robot2, bård.getRobotAt(2, 3));
     }
 
+    @Test
+    public void firingLaserAtRobotDealsDamage(){
+        int startingDamage = robot1.getHP();
+        bård.placeRobotAt(7, 4, robot1);
 
+        bård.endPhase();
+
+        assertNotEquals(startingDamage, robot1.getHP());
+    }
+
+    @Test
+    public void doubleLaserYieldsDoubleDamage(){
+        int startingDamage = robot1.getHP();
+        bård.placeRobotAt(7, 6, robot1);
+
+        bård.endPhase();
+
+        assertEquals(startingDamage+2, robot1.getHP());
+    }
+
+    @Test
+    public void laserStopsWhenItHitsAWall(){
+        int startingDamage = robot1.getHP();
+        bård.placeRobotAt(5, 4, robot1);
+
+        bård.endPhase();
+
+        assertEquals(startingDamage, robot1.getHP());
+    }
 
     @Test
     public void tryingToMoveNonExistentRobotYieldsError(){
@@ -210,6 +235,7 @@ public class BoardTests {
         assertNull(bård.getRobotAt(0, 0));
     }
 
-
+    @Test
+    public void setUpActuallyCreatesTheBoardEveryTime(){ assertNotNull(bård); }
 
 }

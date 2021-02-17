@@ -104,7 +104,7 @@ public class Board {
         moveTowards(card.getDistance(), botX, botY, bot.getDirection());
     }
 
-    public void afterPhase(){
+    public void endPhase(){
         // TODO: 11.02.2021 Det som skjer på slutten av hver fase. Lasere aktiveres, samlebånd går, etc.
     }
 
@@ -153,7 +153,6 @@ public class Board {
     private void botFellOff(Robot bot){
         //Placeholdere, her skal botten drepes og respawnes ved forrige respawn-punkt.
         System.out.println("Å nei! Du fallt utenfor brettet!");
-        bot.applyDamage();
     }
 
     public IComponent getBackgroundAt(int x, int y){

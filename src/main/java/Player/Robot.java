@@ -2,10 +2,8 @@ package Player;
 
 import Components.Flag;
 import com.badlogic.gdx.graphics.Color;
-import Cards.ICard;
 
 import java.util.ArrayList;
-import java.util.FormattableFlags;
 
 /**
  * 
@@ -13,9 +11,10 @@ import java.util.FormattableFlags;
  *
  */
 public class Robot{
-	
+
+    public static final int INITIAL_HP = 10;
 	private int lives = 3;
-	private int damage = 0;
+	private int hp = INITIAL_HP;
 	private String name;
 	private ArrayList<Flag> flags;
 	private Color color;
@@ -44,20 +43,15 @@ public class Robot{
 	 * 
 	 * @return the damages on this robot
 	 */
-	public int getDamage() {
-		return damage;
+	public int getHP() {
+		return hp;
 	}
 	
 	/**
 	 * apply damage to this robot
 	 */
-	public void applyDamage() {
-		damage += 1;
-		if(damage == 9) {
-			lives -=1;
-			damage = 0;
-		}
-		System.out.println(toString());
+	public void applyDamage(int dmg) {
+		hp -= dmg;
 	}
 	
 	/**
@@ -78,7 +72,7 @@ public class Robot{
 	@Override
 	public String toString() {
 		return getName() + " has " + getRemainingLives() + " "
-				+ "lives and has " + getDamage() + " damage.";
+				+ "lives and has " + getHP() + " damage.";
 	}
 
 	/**

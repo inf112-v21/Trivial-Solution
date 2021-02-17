@@ -10,4 +10,8 @@ public class Laser extends SimpleComponent{
         name = "Laser";
         this.isDoubleLaser = isDoubleLaser;
     }
+
+    public int getDirection(){ return direction; }
+
+    public boolean isDoubleLaser(){ return isDoubleLaser; }
 }

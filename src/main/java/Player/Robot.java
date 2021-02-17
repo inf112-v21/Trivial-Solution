@@ -85,8 +85,8 @@ public class Robot{
 	 * 
 	 * @return true if robot won, e.g. visited all 3 flags, false otherwise 
 	 */
-	public boolean hasWon() {
-		return flags==3;
+	public boolean hasWon(Robot rob) {
+		rob.
 	}
 	
 	/**

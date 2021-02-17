@@ -28,6 +28,12 @@ public class Register {
         return registerCards;
     }
 
-    //metode for å "cleare" alle kortene i registerne for en nye runde
+    /**
+     * Metode for å "cleare" alle kortene i registerne før en nye runde starter.
+     */
+    public void clearAllRegisterCards(){
+        registerCards.clear();
+    }
+
 
 }

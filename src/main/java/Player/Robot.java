@@ -77,22 +77,17 @@ public class Robot{
 
 	@Override
 	public String toString() {
-		return getName() +" has "+ getRemainingLives() + " "
-				+ "lives and has " +getDamage()+" damage.";
-	}
-	
-	/**
-	 * 
-	 * @return true if robot won, e.g. visited all 3 flags, false otherwise 
-	 */
-	public boolean hasWon(Robot rob) {
-		rob.
+		return getName() + " has " + getRemainingLives() + " "
+				+ "lives and has " + getDamage() + " damage.";
 	}
 	
 	/**
 	 * Should only be called when the robot visited a flag
+	 * Denne funksjonen
 	 */
 	public void flagVisited(Flag flag) {
+
+
 		flags.add(flag);
 	}
 

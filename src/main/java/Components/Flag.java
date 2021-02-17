@@ -4,7 +4,7 @@ package Components;
  * The flag. The player needs to have touched 3 flags in order (been on positions which the flags are at
  */
 
-public class Flag extends SimpleComponent{
+public class Flag extends SimpleComponent implements Comparable<Integer>{
 
 
     public Flag(int id){
@@ -12,4 +12,9 @@ public class Flag extends SimpleComponent{
         this.name = "Flag"; // how we choose to remember the flags in the grid.
     }
 
+
+    @Override
+    public int compareTo(Integer o) {
+        this.id;
+    }
 }

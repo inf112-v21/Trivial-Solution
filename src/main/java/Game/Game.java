@@ -1,6 +1,7 @@
 package Game;
 
 import Cards.Deck;
+import Components.Flag;
 import Player.Robot;
 
 import java.awt.*;
@@ -22,4 +23,17 @@ public class Game {
         Deck.shuffleDeck();
 
     }
+
+
+    /**
+     * Metode som sjekker om en spiller har vunnet
+     * @param rob
+     * @return true if a robot won, false if there is no winner yet
+     */
+    public boolean hasWon(Robot rob) {
+        ArrayList<Flag> visitedFlags = rob.flags;
+
+    }
+
+
 }

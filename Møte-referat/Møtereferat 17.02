@@ -1,0 +1,21 @@
+Hva skal vi gjøre videre?
+Mvp 1-9, men hva inngår i det? Vi fant ut av dette og lagde issuene under.
+
+Vi dedikerer to stykk til å være multiplayereksperter, som skal sette seg ekstra inn i multiplayer så vi andre slepper.
+- Dusan
+- (TBD)
+
+Dusan sin plan er foreløpelig at vi har en maskin som hoster spillet og sender inn en invitasjonslink til andre maskiner
+via et LAN. Da kan den ene maskinen velge hvor mange spillere som skal spille. Den infoen bruker vi deretter til å spanne/lage
+det riktige antall roboter.
+Program som vi kan bruke kan være KryoNet.
+
+
+Issues for hva vi skal jobbe med videre:
+- Board flytter roboter i henhold til kort
+- Register-klassen skal implementeres, den må holde styr på roboten sin, og hvilke kort den har i hvilken posisjon, etc.
+- Roboter skal vinne ved å besøke flagg (i riktig rekkefølge)
+- Popup-vinduer med valgfri melding hadde vært fint å ha en egen metode for.
+- Bare-bones av Game-klassen skal implementeres.
+
+

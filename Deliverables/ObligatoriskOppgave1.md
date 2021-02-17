@@ -153,17 +153,14 @@ Arbeidsfordeling:
 
 
 #Deloppgave 4
-    1: Vi kan vise et spillebrett
-    2: Vi kan vise brikke på spillebrett
-    3: Vi kan flytte brikken ved hjelp av taster
-    4: Roboten kan besøke flagg
-    5: 
-    6: 
-    7:
-    8: 
-    9:
+1. Vise et spillebrett
+2. Vise brikke på spillebrett
+3. Flytte brikke (vha taster e.l. for testing)
+4. Robot besøker flagg
+5. Robot vinner ved å besøke flagg
 
-Se kode
+Vi har valgt å fokusere på disse 5 punktene til oblig1.
+
 
 
 
@@ -181,6 +178,12 @@ Se kode
     - Litt klarere roller
     - Vi må begynne å skrive tester
     - Klarere struktur på møter
+    - Ha tydeligere fokus. Holde oss mer til Kanban og MVP
+
+###Hvor langt har vi komt:
+    -Vi har greid punktene 1-4 fra deloppgave 4 så langt. Vi blir mest sannsynlig
+    ferdige med punkt 5 snart også.
+
 
     
     

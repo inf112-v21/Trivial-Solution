@@ -3,7 +3,7 @@ package Board;
 import Cards.ICard;
 import Components.ComponentFactory;
 import Components.Flag;
-import Components.IComponent;;
+import Components.IComponent;
 import Player.Robot;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.maps.tiled.TiledMap;
@@ -103,11 +103,7 @@ public class Board {
         if (botX < 0) throw new IllegalStateException("Kunne ikke finne botten på brettet?");
 
         if (isOutOfBounds(botX + dx, botY + dy)){
-            System.out.println("X: " + (botX + dx));
-            System.out.println("Y: " + (botY + dy));
-            //Placeholdere, her skal botten drepes og respawnes ved forrige respawn-punkt.
-            System.out.println("Å nei! Du fallt utenfor brettet!");
-            bot.applyDamage();
+            botFellOff(bot);
             return;
         }
 
@@ -117,6 +113,51 @@ public class Board {
 
     public void afterPhase(){
         // TODO: 11.02.2021 Det som skjer på slutten av hver fase. Lasere aktiveres, samlebånd går, etc.
+    }
+
+    /**
+     * En metode for å rekursivt flytte en robot i én retning.
+     * Om den kræsjer inn i en vegg stopper den opp.
+     * Om den kræsjer inn i en bot blir begge flyttet den veien,
+     * med mindre den også kræsjer inn i en vegg, da står begge stille.
+     *
+     * @param N_Moves Antall skritt vi skal prøve å gå
+     * @param fromX x-posisjon vi flytter fra
+     * @param fromY y-posisjon vi flytter fra
+     * @param dir Retningen, oppgitt i 0, 1, 2, 3
+     * @return true om den klarte å gå minst ett skritt
+     * @return false om den ble stoppet av en vegg eller noe
+     */
+    private boolean moveTowards(int N_Moves, int fromX, int fromY, int dir){
+        if (N_Moves <= 0) return true;
+
+        Robot bot = botgrid[fromY][fromX];
+        if (bot == null) throw new NullPointerException("There is no bot at (" + fromX + ", " + fromY + ").");
+
+        int toX = fromX + directionToX(dir);
+        int toY = fromY + directionToY(dir);
+
+        if(isOutOfBounds(toX, toY)){
+            botFellOff(bot);
+            return true; //Eller false, avhengig av hva som skjer når botten faller av brettet.
+        }
+
+        // TODO: 12.02.2021 Her et sted må vi ha sjekker for om botten prøver å gå inn i en vegg
+
+        Robot target = botgrid[toY][toX];
+        if (target != null && !moveTowards(1, toX, toY, dir)) return false; //Om botten kræsjet inn i en annen bot, og ikke klarte å dytte den.
+
+        //Flytter roboten, om det er mulig.
+        botgrid[toY][toX] = botgrid[fromY][fromX];
+        botgrid[fromY][fromX] = null;
+        moveTowards(N_Moves-1, toX, toY, dir);
+        return true;
+    }
+
+    private void botFellOff(Robot bot){
+        //Placeholdere, her skal botten drepes og respawnes ved forrige respawn-punkt.
+        System.out.println("Å nei! Du fallt utenfor brettet!");
+        bot.applyDamage();
     }
 
     public IComponent getBackgroundAt(int x, int y){

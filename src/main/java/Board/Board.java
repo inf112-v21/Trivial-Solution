@@ -4,6 +4,7 @@ import Cards.ICard;
 import Components.ComponentFactory;
 import Components.Flag;
 import Components.IComponent;
+import Components.Wall;
 import Player.Robot;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.maps.tiled.TiledMap;
@@ -53,21 +54,21 @@ public class Board {
         HEIGHT = background.getHeight();
         WIDTH  = background.getWidth();
 
-        botgrid  = new Robot[HEIGHT][WIDTH];
+        botgrid  = new Robot     [HEIGHT][WIDTH];
         backgrid = new IComponent[HEIGHT][WIDTH];
         midgrid  = new IComponent[HEIGHT][WIDTH];
         forgrid  = new IComponent[HEIGHT][WIDTH];
 
         for (int y = 0; y < background.getHeight(); y++) {
             for (int x = 0; x < background.getWidth(); x++) {
-                backgrid[y][x] = ComponentFactory.spawnComponent(background.getCell(x, y));
-                midgrid[y][x] = ComponentFactory.spawnComponent(middleground.getCell(x, y));
+                backgrid[HEIGHT-1-y][x] = ComponentFactory.spawnComponent(background.getCell(x, y));
+                midgrid[HEIGHT-1-y][x] = ComponentFactory.spawnComponent(middleground.getCell(x, y));
                 IComponent forcomp = ComponentFactory.spawnComponent(foreground.getCell(x, y));
-                forgrid[y][x] = forcomp;
+                forgrid[HEIGHT-1-y][x] = forcomp;
                 if (forcomp instanceof Flag) numberOfFlags++;
 
                 if (robots.getCell(x, y) != null){
-                    botgrid[y][x] = new Robot("Robot" + (robots.getCell(x, y).getTile().getId() - 136), Color.WHITE); //Erstatt senere med custom navn og farger
+                    botgrid[HEIGHT-1-y][x] = new Robot("Robot" + (robots.getCell(x, y).getTile().getId() - 136), Color.WHITE); //Erstatt senere med custom navn og farger
                 }
             }
         }
@@ -82,11 +83,9 @@ public class Board {
     public void performMove(ICard card, Robot bot){
         if(card.getRotation() != 0){
             bot.rotate(card.getRotation());
+            if (card.getDistance() != 0) throw new IllegalArgumentException("A card has to be either a moving card, or a rotation card. This one is both!");
             return;
         }
-        int dx = directionToX(bot.getDirection());
-        int dy = directionToY(bot.getDirection());
-
         int botX = -1;
         int botY = -1;
 
@@ -100,15 +99,9 @@ public class Board {
                 }
             }
         }
-        if (botX < 0) throw new IllegalStateException("Kunne ikke finne botten på brettet?");
+        if (botX < 0) throw new IllegalStateException("Could not find the robot on the board?");
 
-        if (isOutOfBounds(botX + dx, botY + dy)){
-            botFellOff(bot);
-            return;
-        }
-
-        botgrid[botY+dy][botX+dx] = botgrid[botY][botX];
-        botgrid[botY][botX] = null;
+        moveTowards(card.getDistance(), botX, botY, bot.getDirection());
     }
 
     public void afterPhase(){
@@ -139,11 +132,14 @@ public class Board {
 
         if(isOutOfBounds(toX, toY)){
             botFellOff(bot);
-            return true; //Eller false, avhengig av hva som skjer når botten faller av brettet.
+            return true; //Eller false, avhengig av hva som skal skje når botten faller av brettet.
         }
 
-        // TODO: 12.02.2021 Her et sted må vi ha sjekker for om botten prøver å gå inn i en vegg
+        //Om botten kræsjer inn i en vegg.
+        if(midgrid[fromY][fromX] instanceof Wall && !((Wall)midgrid[fromY][fromX]).canLeaveInDirection(dir)) return false;
+        if(midgrid[toY][toX] instanceof Wall && !((Wall) midgrid[toY][toX]).canGoToInDirection(dir)) return false;
 
+        //Om botten prøver å dytte en annen robot.
         Robot target = botgrid[toY][toX];
         if (target != null && !moveTowards(1, toX, toY, dir)) return false; //Om botten kræsjet inn i en annen bot, og ikke klarte å dytte den.
 

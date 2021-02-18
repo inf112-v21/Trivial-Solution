@@ -93,22 +93,10 @@ public class Board {
             if (card.getDistance() != 0) throw new IllegalArgumentException("A card has to be either a moving card, or a rotation card. This one is both!");
             return;
         }
-        int botX = -1;
-        int botY = -1;
+        Position pos = botPositions.get(bot);
+        if (pos == null) throw new IllegalArgumentException("Could not find the bot");
 
-        outer: for (int y = 0; y < HEIGHT; y++) {
-            for (int x = 0; x < WIDTH; x++) {
-                if (botgrid[y][x] == null) continue;
-                if (botgrid[y][x].equals(bot)) {
-                    botX = x;
-                    botY = y;
-                    break outer;
-                }
-            }
-        }
-        if (botX < 0) throw new IllegalStateException("Could not find the robot on the board?");
-
-        moveTowards(card.getDistance(), botX, botY, bot.getDirection());
+        moveTowards(card.getDistance(), pos.getX(), pos.getY(), bot.getDirection());
     }
 
     public void endPhase(){
@@ -181,23 +169,21 @@ public class Board {
      * @param ignoreFirst om laseren er avfyrt av en robot.
      */
     private void fireOneLaser(int x, int y, int dir, boolean isDoubleLaser, boolean ignoreFirst){
-        if(isOutOfBounds(x, y)) return;
-
-        if(!ignoreFirst) {
-            //Laseren traff en vegg på vei inn i ruten
-            if (midgrid[y][x] instanceof Wall && !((Wall) midgrid[y][x]).canGoToInDirection(dir)) return;
-
-            //Laseren traff en bot
-            if (botgrid[y][x] != null) {
-                botgrid[y][x].applyDamage(isDoubleLaser ? 2 : 1);
-                return;
-            }
+        if(!ignoreFirst && botgrid[y][x] != null){
+            botgrid[y][x].applyDamage(isDoubleLaser ? 2 : 1);
+            return;
         }
 
-        //Laseren traff en vegg på vei vekk fra ruten
         if(midgrid[y][x] instanceof Wall && !((Wall) midgrid[y][x]).canLeaveInDirection(dir)) return;
 
-        fireOneLaser(x + directionToX(dir), y + directionToY(dir), dir, isDoubleLaser, false);
+        int nextX = x + directionToX(dir);
+        int nextY = y + directionToY(dir);
+
+        if (isOutOfBounds(nextX, nextY)) return;
+        if (midgrid[nextY][nextX] instanceof Wall && !((Wall) midgrid[nextY][nextX]).canGoToInDirection(dir)) return;
+
+        fireOneLaser(nextX, nextY, dir, isDoubleLaser, false);
+
     }
 
 

@@ -19,6 +19,8 @@ public class BoardTests {
     private static String defaultMapName = "TestMap.tmx";
     private static Robot robot1 = new Robot("Nebuchadnezzar", Color.BLUE);
     private static Robot robot2 = new Robot("Alexstrasza", Color.RED);
+    private static Robot robot3 = new Robot("Gilgamesh", Color.YELLOW);
+    private static Robot robot4 = new Robot("Ashurbarnipal", Color.GREEN);
     private static GUI gui;
 
     /**
@@ -219,11 +221,53 @@ public class BoardTests {
     }
 
     @Test
+    public void robotsFireLasersAtEachOther(){
+        bård.placeRobotAt(0, 0, robot1);
+        bård.placeRobotAt(2, 0, robot2);
+        robot1.setDirection(1);
+        robot2.setDirection(3);
+        int hp1 = robot1.getHP();
+        int hp2 = robot1.getHP();
+
+        bård.endPhase();
+
+        assertNotEquals(hp1, robot1.getHP());
+        assertNotEquals(hp2, robot2.getHP());
+    }
+
+    @Test
+    public void botDoesNotShootItselfLikeADumbass(){
+        bård.placeRobotAt(0, 0, robot1);
+        int hp = robot1.getHP();
+
+        bård.endPhase();
+
+        assertEquals(hp, robot1.getHP());
+    }
+
+    @Test
+    public void laserStopsWhenItHitsARobot(){
+        bård.placeRobotAt(0, 0, robot1);
+        bård.placeRobotAt(0, 2, robot2);
+        bård.placeRobotAt(0, 3, robot3);
+        robot1.setDirection(1);
+        robot2.setDirection(0);
+        robot3.setDirection(0);
+        int hp2 = robot2.getHP();
+        int hp3 = robot3.getHP();
+
+        bård.endPhase();
+
+        assertNotEquals(hp2, robot2.getHP());
+        assertEquals(hp3, robot3.getHP());
+    }
+
+    @Test
     public void tryingToMoveNonExistentRobotYieldsError(){
         try{
             bård.performMove(new ProgramCard(1, 0, 10), robot1);
             fail();
-        } catch (IllegalStateException ex){
+        } catch (IllegalArgumentException ex){
             //Yay it worked
         }
     }

@@ -200,12 +200,12 @@ public class BoardTests {
 
     @Test
     public void doubleLaserYieldsDoubleDamage(){
-        int startingDamage = robot1.getHP();
+        int startingHP = robot1.getHP();
         bård.placeRobotAt(7, 6, robot1);
 
         bård.endPhase();
 
-        assertEquals(startingDamage+2, robot1.getHP());
+        assertEquals(startingHP-2, robot1.getHP());
     }
 
     @Test

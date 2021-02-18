@@ -162,37 +162,42 @@ public class Board {
     private void fireAllLasers(){
         for(Laser laser : laserPositions.keySet()){
             Position pos = laserPositions.get(laser);
-            fireOneLaser(pos.getX(), pos.getY(), laser.getDirection(), laser.isDoubleLaser());
+            fireOneLaser(pos.getX(), pos.getY(), laser.getDirection(), laser.isDoubleLaser(), false);
         }
         for(Robot bot : botPositions.keySet()){
             Position pos = botPositions.get(bot);
-            fireOneLaser(pos.getX(), pos.getY(), bot.getDirection(), false);
+            fireOneLaser(pos.getX(), pos.getY(), bot.getDirection(), false, true);
         }
     }
 
     /**
      * Avfyrer en laser ett og ett skritt, rekursivt.
+     * Om laseren er avfyrt av en robot, skal den første ruten ignoreres, slik at roboten ikke treffer seg selv.
+     *
      * @param x x-posisjonen akkurat nå
      * @param y y-posisjonen akkurat np
      * @param dir retningen til laseren
      * @param isDoubleLaser om det er en dobbellaser eller ikke.
+     * @param ignoreFirst om laseren er avfyrt av en robot.
      */
-    private void fireOneLaser(int x, int y, int dir, boolean isDoubleLaser){
+    private void fireOneLaser(int x, int y, int dir, boolean isDoubleLaser, boolean ignoreFirst){
         if(isOutOfBounds(x, y)) return;
 
-        //Laseren traff en vegg på vei inn i ruten
-        if(midgrid[y][x] instanceof Wall && !((Wall) midgrid[y][x]).canGoToInDirection(dir)) return;
+        if(!ignoreFirst) {
+            //Laseren traff en vegg på vei inn i ruten
+            if (midgrid[y][x] instanceof Wall && !((Wall) midgrid[y][x]).canGoToInDirection(dir)) return;
 
-        //Laseren traff en bot
-        if(botgrid[y][x] != null){
-            botgrid[y][x].applyDamage(isDoubleLaser ? 2 : 1);
-            return;
+            //Laseren traff en bot
+            if (botgrid[y][x] != null) {
+                botgrid[y][x].applyDamage(isDoubleLaser ? 2 : 1);
+                return;
+            }
         }
 
         //Laseren traff en vegg på vei vekk fra ruten
         if(midgrid[y][x] instanceof Wall && !((Wall) midgrid[y][x]).canLeaveInDirection(dir)) return;
 
-        fireOneLaser(x + directionToX(dir), y + directionToY(dir), dir, isDoubleLaser);
+        fireOneLaser(x + directionToX(dir), y + directionToY(dir), dir, isDoubleLaser, false);
     }
 
 

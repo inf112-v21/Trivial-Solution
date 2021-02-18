@@ -1,6 +1,7 @@
 package Components;
 
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
+import org.w3c.dom.ls.LSException;
 
 public class ComponentFactory {
 
@@ -174,7 +175,23 @@ public class ComponentFactory {
 
 
             //Lasere
-            case
+            case 37:
+                return new Laser(37, 0, false);
+            case 38:
+                return new Laser(38, 1, false);
+            case 45:
+                return new Laser(45, 2, false);
+            case 46:
+                return new Laser(46, 3, false);
+
+            case 87:
+                return new Laser(87, 0, true);
+            case 93:
+                return new Laser(93, 1, true);
+            case 94:
+                return new Laser(94, 2, true);
+            case 95:
+                return new Laser(95, 3, true);
 
 
             default:

@@ -149,11 +149,8 @@ public class ComponentFactory {
 
             //Luft-ruter
             case 56:
-                return null;
             case 64:
-                return null;
             case 72:
-                return null;
             case 80:
                 return null;
 
@@ -174,6 +171,11 @@ public class ComponentFactory {
                 return new Wall(24,false,true,true,false); //Kan ikke gå til venstre eller opp (Dobbelvegg)
             case 32:
                 return new Wall(32,true,true,false,false); //Kan ikke gå til venstre eller ned (Dobbelvegg)
+
+
+            //Lasere
+            case
+
 
             default:
                 System.err.println("Could not recognize ID no. " + cell.getTile().getId() + ". Please go to ComponentFactory and add that case to the list. Or you could go complain to Steinar.");

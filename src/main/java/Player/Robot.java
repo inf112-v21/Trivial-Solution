@@ -41,11 +41,13 @@ public class Robot{
 	
 	/**
 	 * 
-	 * @return the damages on this robot
+	 * @return the hp of this robot
 	 */
 	public int getHP() {
 		return hp;
 	}
+
+
 	
 	/**
 	 * apply damage to this robot

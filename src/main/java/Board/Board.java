@@ -1,15 +1,14 @@
 package Board;
 
 import Cards.ICard;
-import Components.ComponentFactory;
-import Components.Flag;
-import Components.IComponent;
-import Components.Wall;
+import Components.*;
 import Player.Robot;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
+
+import java.util.TreeMap;
 
 public class Board {
 
@@ -22,6 +21,10 @@ public class Board {
     private IComponent[][] backgrid;
     private IComponent[][] midgrid;
     private IComponent[][] forgrid;
+
+    private TreeMap<Robot, Position> botPositions = new TreeMap((Object bot1, Object bot2) -> Integer.compare(bot1.hashCode(), bot2.hashCode()));
+    private TreeMap<Laser, Position> laserPositions = new TreeMap((Object laser1, Object laser2) -> Integer.compare(laser1.hashCode(), laser2.hashCode()));
+
 
     //Antall flagg i spillet.
     private int numberOfFlags = 0;
@@ -63,12 +66,16 @@ public class Board {
             for (int x = 0; x < background.getWidth(); x++) {
                 backgrid[HEIGHT-1-y][x] = ComponentFactory.spawnComponent(background.getCell(x, y));
                 midgrid[HEIGHT-1-y][x] = ComponentFactory.spawnComponent(middleground.getCell(x, y));
+
                 IComponent forcomp = ComponentFactory.spawnComponent(foreground.getCell(x, y));
                 forgrid[HEIGHT-1-y][x] = forcomp;
                 if (forcomp instanceof Flag) numberOfFlags++;
+                else if(forcomp instanceof Laser) laserPositions.put((Laser)forcomp, new Position(x, HEIGHT-1-y));
 
                 if (robots.getCell(x, y) != null){
-                    botgrid[HEIGHT-1-y][x] = new Robot("Robot" + (robots.getCell(x, y).getTile().getId() - 136), Color.WHITE); //Erstatt senere med custom navn og farger
+                    Robot bot = new Robot("Robot" + (robots.getCell(x, y).getTile().getId() - 136), Color.WHITE); //Erstatt senere med custom navn og farger
+                    botgrid[HEIGHT-1-y][x] = bot;
+                    botPositions.put(bot, new Position(x, HEIGHT-1-y));
                 }
             }
         }
@@ -105,6 +112,7 @@ public class Board {
     }
 
     public void endPhase(){
+        fireAllLasers();
         // TODO: 11.02.2021 Det som skjer på slutten av hver fase. Lasere aktiveres, samlebånd går, etc.
     }
 
@@ -143,15 +151,54 @@ public class Board {
         Robot target = botgrid[toY][toX];
         if (target != null && !moveTowards(1, toX, toY, dir)) return false; //Om botten kræsjet inn i en annen bot, og ikke klarte å dytte den.
 
-        //Flytter roboten, om det er mulig.
-        botgrid[toY][toX] = botgrid[fromY][fromX];
+        //Flytter roboten, endelig.
+        botgrid[toY][toX] = bot;
         botgrid[fromY][fromX] = null;
+        botPositions.put(bot, new Position(toX, toY));
         moveTowards(N_Moves-1, toX, toY, dir);
         return true;
     }
 
+    private void fireAllLasers(){
+        for(Laser laser : laserPositions.keySet()){
+            Position pos = laserPositions.get(laser);
+            fireOneLaser(pos.getX(), pos.getY(), laser.getDirection(), laser.isDoubleLaser());
+        }
+        for(Robot bot : botPositions.keySet()){
+            Position pos = botPositions.get(bot);
+            fireOneLaser(pos.getX(), pos.getY(), bot.getDirection(), false);
+        }
+    }
+
+    /**
+     * Avfyrer en laser ett og ett skritt, rekursivt.
+     * @param x x-posisjonen akkurat nå
+     * @param y y-posisjonen akkurat np
+     * @param dir retningen til laseren
+     * @param isDoubleLaser om det er en dobbellaser eller ikke.
+     */
+    private void fireOneLaser(int x, int y, int dir, boolean isDoubleLaser){
+        if(isOutOfBounds(x, y)) return;
+
+        //Laseren traff en vegg på vei inn i ruten
+        if(midgrid[y][x] instanceof Wall && !((Wall) midgrid[y][x]).canGoToInDirection(dir)) return;
+
+        //Laseren traff en bot
+        if(botgrid[y][x] != null){
+            botgrid[y][x].applyDamage(isDoubleLaser ? 2 : 1);
+            return;
+        }
+
+        //Laseren traff en vegg på vei vekk fra ruten
+        if(midgrid[y][x] instanceof Wall && !((Wall) midgrid[y][x]).canLeaveInDirection(dir)) return;
+
+        fireOneLaser(x + directionToX(dir), y + directionToY(dir), dir, isDoubleLaser);
+    }
+
+
+
     private void botFellOff(Robot bot){
-        //Placeholdere, her skal botten drepes og respawnes ved forrige respawn-punkt.
+        // TODO: 17.02.2021 Her skal botten drepes og respawnes ved forrige respawn-punkt.
         System.out.println("Å nei! Du fallt utenfor brettet!");
     }
 
@@ -166,7 +213,10 @@ public class Board {
     }
     public Robot getRobotAt(int x, int y){ return botgrid[y][x]; }
 
-    public void placeRobotAt(int x, int y, Robot bot){ botgrid[y][x] = bot; }
+    public void placeRobotAt(int x, int y, Robot bot){
+        botPositions.put(bot, new Position(x, y));
+        botgrid[y][x] = bot;
+    }
 
     public int getHeight(){
         return HEIGHT;

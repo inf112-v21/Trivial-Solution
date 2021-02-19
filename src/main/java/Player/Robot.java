@@ -14,7 +14,7 @@ import java.util.FormattableFlags;
  */
 public class Robot{
 	
-	private int lives = 3;
+	private int lives = 10;
 	private int damage = 0;
 	private String name;
 	private ArrayList<Flag> flags;
@@ -88,12 +88,22 @@ public class Robot{
 	
 	/**
 	 * Should only be called when the robot visited a flag
-	 * Denne funksjonen
+	 * Denne funksjonen sjekker om roboten hentet flagget på en sukksesful måte
+	 *
+	 * @Return true hvis roboten greide å plukke opp flagget. false ellers.
 	 */
-	public void flagVisited(Flag flag) {
-		
+	public boolean flagVisited(Flag flag) {
+		if (!flags.isEmpty()) {
+			Flag lastAdded = flags.get(flags.size() - 1);
 
+			if (lastAdded.compareTo(flag) < 0){
+
+			}
+
+		}
 		flags.add(flag);
+
+		return false;
 	}
 
 

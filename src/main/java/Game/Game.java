@@ -46,7 +46,6 @@ public class Game {
         bots.remove(bot);
     }
 
-
     /**
      * Metode som sjekker om en spiller har vunnet
      * @param rob

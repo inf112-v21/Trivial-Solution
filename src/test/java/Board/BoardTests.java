@@ -263,6 +263,17 @@ public class BoardTests {
     }
 
     @Test
+    public void cannotGoTroughTheWallTheLaserIsMountedOn(){
+        bård.placeRobotAt(7, 4, robot1);
+        robot1.setDirection(1);
+
+        bård.performMove(new ProgramCard(1, 0, 1), robot1);
+
+        assertNull(bård.getRobotAt(7, 4));
+        assertEquals(robot1, bård.getRobotAt(8, 4));
+    }
+
+    @Test
     public void tryingToMoveNonExistentRobotYieldsError(){
         try{
             bård.performMove(new ProgramCard(1, 0, 10), robot1);

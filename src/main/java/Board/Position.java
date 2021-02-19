@@ -1,6 +1,9 @@
 package Board;
 
 public class Position {
+    /**
+     * En veldig enkel klasse for å representere en posisjon på brettet.
+     */
     private final int x;
     private final int y;
     public Position(int x, int y){

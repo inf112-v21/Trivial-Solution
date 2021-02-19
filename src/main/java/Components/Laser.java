@@ -1,6 +1,10 @@
 package Components;
 
 public class Laser extends Wall{
+    /**
+     * Alle lasere er montert på en vegg, så de er i bunn og grunn vegger.
+     * Derfor trenger vi metoder for å sjekke om man kan gå igjennom dem, så det arver vi fra Wall.
+     */
 
     private int direction;
     private boolean isDoubleLaser;

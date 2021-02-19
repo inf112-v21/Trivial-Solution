@@ -99,9 +99,13 @@ public class Board {
         moveTowards(card.getDistance(), pos.getX(), pos.getY(), bot.getDirection());
     }
 
+    /**
+     * Det som skal skje på slutten av hver fase.
+     * Lasere blir avfyrt, samlebånd går av, roboter blir reparert, etc.
+     * TODO: Alt unntatt lasere gjenstår.
+     */
     public void endPhase(){
         fireAllLasers();
-        // TODO: 11.02.2021 Det som skjer på slutten av hver fase. Lasere aktiveres, samlebånd går, etc.
     }
 
     /**
@@ -126,7 +130,7 @@ public class Board {
         int toX = fromX + directionToX(dir);
         int toY = fromY + directionToY(dir);
 
-        if(isOutOfBounds(toX, toY)){
+        if(outOfBounds(toX, toY)){
             botFellOff(bot);
             return true; //Eller false, avhengig av hva som skal skje når botten faller av brettet.
         }
@@ -147,6 +151,9 @@ public class Board {
         return true;
     }
 
+    /**
+     * Avfyrer alle lasere. inkluderte de skutt av robotene.
+     */
     private void fireAllLasers(){
         for(Laser laser : laserPositions.keySet()){
             Position pos = laserPositions.get(laser);
@@ -159,7 +166,7 @@ public class Board {
     }
 
     /**
-     * Avfyrer en laser ett og ett skritt, rekursivt.
+     * Skyter en laser ett og ett skritt, rekursivt.
      * Om laseren er avfyrt av en robot, skal den første ruten ignoreres, slik at roboten ikke treffer seg selv.
      *
      * @param x x-posisjonen akkurat nå
@@ -179,11 +186,10 @@ public class Board {
         int nextX = x + directionToX(dir);
         int nextY = y + directionToY(dir);
 
-        if (isOutOfBounds(nextX, nextY)) return;
+        if (outOfBounds(nextX, nextY)) return;
         if (midgrid[nextY][nextX] instanceof Wall && !((Wall) midgrid[nextY][nextX]).canGoToInDirection(dir)) return;
 
         fireOneLaser(nextX, nextY, dir, isDoubleLaser, false);
-
     }
 
 
@@ -243,8 +249,7 @@ public class Board {
         return (dir+1) % 2 * (dir - 1);
     }
 
-    private boolean isOutOfBounds(int x, int y){
+    private boolean outOfBounds(int x, int y){
         return !(x >= 0 && x < WIDTH && y >= 0 && y < HEIGHT);
     }
-
 }

@@ -13,6 +13,16 @@ import java.util.ArrayList;
 public class Register {
 
     private ArrayList<ICard> registerCards = new ArrayList<ICard>();
+    private Integer lifeTokens;
+    private Integer damageTokens;
+    private Boolean powerDown;
+
+    //Constructor
+    public Register(Integer numberOfLifeTokens, Integer numberOfDamageTokens, Boolean initializePowerDown){
+        lifeTokens = numberOfLifeTokens;
+        damageTokens = numberOfDamageTokens;
+        powerDown = initializePowerDown;
+    }
 
     /**
     * Denne metoden "setter" de 9 kortene som registerer får inn.
@@ -35,5 +45,30 @@ public class Register {
         registerCards.clear();
     }
 
+    //TODO
+    /**
+     * Returnerer antallet "life tokens" som registeret har.
+     * @return lifeTokens
+     */
+    public Integer getLifeTokens(){
+        return lifeTokens;
+    }
+
+    //TODO
+    /**
+     * Returnerer antallet "damage tokens" som registeret inneholder.
+     * @return damageTokens
+     */
+    public Integer getDamageTokens(){
+        return damageTokens;
+    }
+
+    /**
+     * Returnerer "true" hvis roboten har en "powerdown", og "false" hvis den ikke har det.
+     * @return Tilstanden til roboten
+     */
+    public Boolean isPowerDownAnnounced(){
+        return powerDown;
+    }
 
 }

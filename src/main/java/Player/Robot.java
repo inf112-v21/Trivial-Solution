@@ -13,16 +13,16 @@ import java.util.ArrayList;
  *
  */
 public class Robot{
-<<<<<<< HEAD
+
 	
 	private int lives = 10;
 	private int damage = 0;
-=======
+
 
     public static final int INITIAL_HP = 10;
-	private int lives = 3;
+
 	private int hp = INITIAL_HP;
->>>>>>> d7d28c1b386a31a239f651daa7b5c9a4b490e605
+
 	private String name;
 	private ArrayList<Flag> flags;
 	private Color color;
@@ -95,7 +95,6 @@ public class Robot{
 	public void setRespawnPoint(Position pos){ respawnPoint = pos; }
 	
 	/**
-	 * Should only be called when the robot visited a flag
 	 * Denne funksjonen sjekker om roboten hentet flagget på en sukksesful måte
 	 *
 	 * @Return true hvis roboten greide å plukke opp flagget. false ellers.

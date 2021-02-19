@@ -1,7 +1,9 @@
 package Player;
 
+import Board.Position;
 import Components.Flag;
 import com.badlogic.gdx.graphics.Color;
+import org.lwjgl.system.CallbackI;
 
 import java.util.ArrayList;
 
@@ -19,6 +21,7 @@ public class Robot{
 	private ArrayList<Flag> flags;
 	private Color color;
 	private int direction = 0;
+	private Position respawnPoint;
 	
 	
 	public Robot(String name, Color color){
@@ -81,6 +84,9 @@ public class Robot{
 	 * @return Gir oss flaggene som roboten har besøkt.
 	 */
 	public ArrayList<Flag> getVisitedFlags(){ return flags;}
+
+	public Position getRespawnPoint(){ return respawnPoint; }
+	public void setRespawnPoint(Position pos){ respawnPoint = pos; }
 	
 	/**
 	 * Should only be called when the robot visited a flag

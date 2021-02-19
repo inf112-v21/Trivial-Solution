@@ -194,6 +194,25 @@ public class ComponentFactory {
                 return new Laser(95, 3, true);
 
 
+            case 121:
+                return new SpawnPoint(121);
+            case 122:
+                return new SpawnPoint(122);
+            case 123:
+                return new SpawnPoint(123);
+            case 124:
+                return new SpawnPoint(124);
+
+            case 129:
+                return new SpawnPoint(129);
+            case 130:
+                return new SpawnPoint(130);
+            case 131:
+                return new SpawnPoint(131);
+            case 132:
+                return new SpawnPoint(132);
+
+
             default:
                 System.err.println("Could not recognize ID no. " + cell.getTile().getId() + ". Please go to ComponentFactory and add that case to the list. Or you could go complain to Steinar.");
                 return null;

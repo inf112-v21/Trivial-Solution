@@ -8,6 +8,8 @@ import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 
+import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.TreeMap;
 
 public class Board {
@@ -22,9 +24,9 @@ public class Board {
     private IComponent[][] midgrid;
     private IComponent[][] forgrid;
 
-    private TreeMap<Robot, Position> botPositions = new TreeMap((Object bot1, Object bot2) -> Integer.compare(bot1.hashCode(), bot2.hashCode()));
-    private TreeMap<Laser, Position> laserPositions = new TreeMap((Object laser1, Object laser2) -> Integer.compare(laser1.hashCode(), laser2.hashCode()));
-
+    private final TreeMap<Robot, Position> botPositions = new TreeMap<>((Object bot1, Object bot2) -> Integer.compare(bot1.hashCode(), bot2.hashCode()));
+    private final TreeMap<Laser, Position> laserPositions = new TreeMap<>((Object laser1, Object laser2) -> Integer.compare(laser1.hashCode(), laser2.hashCode()));
+    private final LinkedList<Position> availableSpawnPoints = new LinkedList<>();
 
     //Antall flagg i spillet.
     private int numberOfFlags = 0;
@@ -62,6 +64,7 @@ public class Board {
         midgrid  = new IComponent[HEIGHT][WIDTH];
         forgrid  = new IComponent[HEIGHT][WIDTH];
 
+        ArrayList<Object[]> newSpawnPositions = new ArrayList<>(8);
         for (int y = 0; y < background.getHeight(); y++) {
             for (int x = 0; x < background.getWidth(); x++) {
                 backgrid[HEIGHT-1-y][x] = ComponentFactory.spawnComponent(background.getCell(x, y));
@@ -71,6 +74,7 @@ public class Board {
                 forgrid[HEIGHT-1-y][x] = forcomp;
                 if (forcomp instanceof Flag) numberOfFlags++;
                 else if(forcomp instanceof Laser) laserPositions.put((Laser)forcomp, new Position(x, HEIGHT-1-y));
+                else if(forcomp instanceof SpawnPoint) newSpawnPositions.add(new Object[]{forcomp.getID(), new Position(x, HEIGHT-1-y)});
 
                 if (robots.getCell(x, y) != null){
                     Robot bot = new Robot("Robot" + (robots.getCell(x, y).getTile().getId() - 136), Color.WHITE); //Erstatt senere med custom navn og farger
@@ -79,6 +83,8 @@ public class Board {
                 }
             }
         }
+        newSpawnPositions.sort((o1, o2) -> Integer.compare(o1.hashCode(), o2.hashCode())); //Dette burde være det samme som å sortere etter lavest ID.
+        for(Object[] o : newSpawnPositions) availableSpawnPoints.add((Position) o[1]);
     }
 
     /**
@@ -213,6 +219,13 @@ public class Board {
     public void placeRobotAt(int x, int y, Robot bot){
         botPositions.put(bot, new Position(x, y));
         botgrid[y][x] = bot;
+    }
+
+    public void spawnRobot(Robot bot){
+        if(availableSpawnPoints.isEmpty()) throw new IllegalStateException("Found no available spawnpoints! Perhaps you added more robots than the game could handle?");
+        Position pos = availableSpawnPoints.pollFirst();
+        bot.setRespawnPoint(pos);
+        placeRobotAt(pos.getX(), pos.getY(), bot);
     }
 
     public int getHeight(){

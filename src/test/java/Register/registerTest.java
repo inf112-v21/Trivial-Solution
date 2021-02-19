@@ -12,12 +12,15 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class registerTest {
 
-    private static ArrayList<ICard> cards = new ArrayList<ICard>();
+    private static ArrayList<ICard> cards;
     private static Register r;
+    private static Integer numberOfLifeTokens = 5;
+    private static Integer numberOfDamageTokens = 7;
 
     @BeforeAll
     public static void setUp(){
-        r = new Register();
+        cards = new ArrayList<ICard>();
+        r = new Register(numberOfLifeTokens, numberOfDamageTokens,false);
 
         Deck d = new Deck();
         for(int i = 0; i < 6; i++){
@@ -25,19 +28,34 @@ public class registerTest {
             cards.add(card);
         }
         r.setRegisterCards(cards);
-
     }
 
     @Test
-    public void registerCanSetNineCards(){
+    void registerCanSetNineCards(){
         assertEquals(cards, r.getRegisterCards());
     }
 
     @Test
-    public void registerCanClearAllCardsBeforeEachNewGameRound(){
+    void registerCanClearAllCardsBeforeEachNewGameRound(){
         //clear register-list
         r.clearAllRegisterCards();
 
         assertTrue(r.getRegisterCards().isEmpty());
     }
+
+    @Test
+    void registerHoldsCorrectAmountOfDamageTokens(){
+        assertEquals(7, r.getDamageTokens());
+    }
+
+    @Test
+    void registerHoldsCorrectAmountOfLifeTokens(){
+        assertEquals(5, r.getLifeTokens());
+    }
+
+    @Test
+    void isRegisterPoweredDown(){
+        assertEquals(false, r.isPowerDownAnnounced());
+    }
+
 }

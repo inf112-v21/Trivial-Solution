@@ -1,15 +1,16 @@
 package Board;
 
 import Cards.ICard;
-import Components.ComponentFactory;
-import Components.Flag;
-import Components.IComponent;
-import Components.Wall;
+import Components.*;
 import Player.Robot;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
+
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.TreeMap;
 
 public class Board {
 
@@ -22,6 +23,10 @@ public class Board {
     private IComponent[][] backgrid;
     private IComponent[][] midgrid;
     private IComponent[][] forgrid;
+
+    private final TreeMap<Robot, Position> botPositions = new TreeMap<>((Object bot1, Object bot2) -> Integer.compare(bot1.hashCode(), bot2.hashCode()));
+    private final TreeMap<Laser, Position> laserPositions = new TreeMap<>((Object laser1, Object laser2) -> Integer.compare(laser1.hashCode(), laser2.hashCode()));
+    private final LinkedList<Position> availableSpawnPoints = new LinkedList<>();
 
     //Antall flagg i spillet.
     private int numberOfFlags = 0;
@@ -59,19 +64,27 @@ public class Board {
         midgrid  = new IComponent[HEIGHT][WIDTH];
         forgrid  = new IComponent[HEIGHT][WIDTH];
 
+        ArrayList<Object[]> newSpawnPositions = new ArrayList<>(8);
         for (int y = 0; y < background.getHeight(); y++) {
             for (int x = 0; x < background.getWidth(); x++) {
                 backgrid[HEIGHT-1-y][x] = ComponentFactory.spawnComponent(background.getCell(x, y));
                 midgrid[HEIGHT-1-y][x] = ComponentFactory.spawnComponent(middleground.getCell(x, y));
+
                 IComponent forcomp = ComponentFactory.spawnComponent(foreground.getCell(x, y));
                 forgrid[HEIGHT-1-y][x] = forcomp;
                 if (forcomp instanceof Flag) numberOfFlags++;
+                else if(forcomp instanceof Laser) laserPositions.put((Laser)forcomp, new Position(x, HEIGHT-1-y));
+                else if(forcomp instanceof SpawnPoint) newSpawnPositions.add(new Object[]{forcomp.getID(), new Position(x, HEIGHT-1-y)});
 
                 if (robots.getCell(x, y) != null){
-                    botgrid[HEIGHT-1-y][x] = new Robot("Robot" + (robots.getCell(x, y).getTile().getId() - 136), Color.WHITE); //Erstatt senere med custom navn og farger
+                    Robot bot = new Robot("Robot" + (robots.getCell(x, y).getTile().getId() - 136), Color.WHITE); //Erstatt senere med custom navn og farger
+                    botgrid[HEIGHT-1-y][x] = bot;
+                    botPositions.put(bot, new Position(x, HEIGHT-1-y));
                 }
             }
         }
+        newSpawnPositions.sort((o1, o2) -> Integer.compare(o1.hashCode(), o2.hashCode())); //Dette burde være det samme som å sortere etter lavest ID.
+        for(Object[] o : newSpawnPositions) availableSpawnPoints.addFirst((Position) o[1]);
     }
 
     /**
@@ -86,26 +99,19 @@ public class Board {
             if (card.getDistance() != 0) throw new IllegalArgumentException("A card has to be either a moving card, or a rotation card. This one is both!");
             return;
         }
-        int botX = -1;
-        int botY = -1;
+        Position pos = botPositions.get(bot);
+        if (pos == null) throw new IllegalArgumentException("Could not find the bot");
 
-        outer: for (int y = 0; y < HEIGHT; y++) {
-            for (int x = 0; x < WIDTH; x++) {
-                if (botgrid[y][x] == null) continue;
-                if (botgrid[y][x].equals(bot)) {
-                    botX = x;
-                    botY = y;
-                    break outer;
-                }
-            }
-        }
-        if (botX < 0) throw new IllegalStateException("Could not find the robot on the board?");
-
-        moveTowards(card.getDistance(), botX, botY, bot.getDirection());
+        moveTowards(card.getDistance(), pos.getX(), pos.getY(), bot.getDirection());
     }
 
-    public void afterPhase(){
-        // TODO: 11.02.2021 Det som skjer på slutten av hver fase. Lasere aktiveres, samlebånd går, etc.
+    /**
+     * Det som skal skje på slutten av hver fase.
+     * Lasere blir avfyrt, samlebånd går av, roboter blir reparert, etc.
+     * TODO: Alt unntatt lasere gjenstår.
+     */
+    public void endPhase(){
+        fireAllLasers();
     }
 
     /**
@@ -130,7 +136,7 @@ public class Board {
         int toX = fromX + directionToX(dir);
         int toY = fromY + directionToY(dir);
 
-        if(isOutOfBounds(toX, toY)){
+        if(outOfBounds(toX, toY)){
             botFellOff(bot);
             return true; //Eller false, avhengig av hva som skal skje når botten faller av brettet.
         }
@@ -143,17 +149,60 @@ public class Board {
         Robot target = botgrid[toY][toX];
         if (target != null && !moveTowards(1, toX, toY, dir)) return false; //Om botten kræsjet inn i en annen bot, og ikke klarte å dytte den.
 
-        //Flytter roboten, om det er mulig.
-        botgrid[toY][toX] = botgrid[fromY][fromX];
+        //Flytter roboten, endelig.
+        botgrid[toY][toX] = bot;
         botgrid[fromY][fromX] = null;
+        botPositions.put(bot, new Position(toX, toY));
         moveTowards(N_Moves-1, toX, toY, dir);
         return true;
     }
 
+    /**
+     * Avfyrer alle lasere. inkluderte de skutt av robotene.
+     */
+    private void fireAllLasers(){
+        for(Laser laser : laserPositions.keySet()){
+            Position pos = laserPositions.get(laser);
+            fireOneLaser(pos.getX(), pos.getY(), laser.getDirection(), laser.isDoubleLaser(), false);
+        }
+        for(Robot bot : botPositions.keySet()){
+            Position pos = botPositions.get(bot);
+            fireOneLaser(pos.getX(), pos.getY(), bot.getDirection(), false, true);
+        }
+    }
+
+    /**
+     * Skyter en laser ett og ett skritt, rekursivt.
+     * Om laseren er avfyrt av en robot, skal den første ruten ignoreres, slik at roboten ikke treffer seg selv.
+     *
+     * @param x x-posisjonen akkurat nå
+     * @param y y-posisjonen akkurat np
+     * @param dir retningen til laseren
+     * @param isDoubleLaser om det er en dobbellaser eller ikke.
+     * @param ignoreFirst om laseren er avfyrt av en robot.
+     */
+    private void fireOneLaser(int x, int y, int dir, boolean isDoubleLaser, boolean ignoreFirst){
+        if(!ignoreFirst && botgrid[y][x] != null){
+            botgrid[y][x].applyDamage(isDoubleLaser ? 2 : 1);
+            return;
+        }
+
+        if(midgrid[y][x] instanceof Wall && !((Wall) midgrid[y][x]).canLeaveInDirection(dir)) return;
+
+        int nextX = x + directionToX(dir);
+        int nextY = y + directionToY(dir);
+
+        if (outOfBounds(nextX, nextY)) return;
+        if (midgrid[nextY][nextX] instanceof Wall && !((Wall) midgrid[nextY][nextX]).canGoToInDirection(dir)) return;
+
+        fireOneLaser(nextX, nextY, dir, isDoubleLaser, false);
+    }
+
+
+
     private void botFellOff(Robot bot){
-        //Placeholdere, her skal botten drepes og respawnes ved forrige respawn-punkt.
+        // TODO: 17.02.2021 Her skal botten drepes og respawnes ved forrige respawn-punkt.
         System.out.println("Å nei! Du fallt utenfor brettet!");
-        bot.applyDamage();
     }
 
     public IComponent getBackgroundAt(int x, int y){
@@ -167,7 +216,17 @@ public class Board {
     }
     public Robot getRobotAt(int x, int y){ return botgrid[y][x]; }
 
-    public void placeRobotAt(int x, int y, Robot bot){ botgrid[y][x] = bot; }
+    public void placeRobotAt(int x, int y, Robot bot){
+        botPositions.put(bot, new Position(x, y));
+        botgrid[y][x] = bot;
+    }
+
+    public void spawnRobot(Robot bot){
+        if(availableSpawnPoints.isEmpty()) throw new IllegalStateException("Found no available spawnpoints! Perhaps you added more robots than the game could handle?");
+        Position pos = availableSpawnPoints.pollFirst();
+        bot.setRespawnPoint(pos);
+        placeRobotAt(pos.getX(), pos.getY(), bot);
+    }
 
     public int getHeight(){
         return HEIGHT;
@@ -203,8 +262,7 @@ public class Board {
         return (dir+1) % 2 * (dir - 1);
     }
 
-    private boolean isOutOfBounds(int x, int y){
+    private boolean outOfBounds(int x, int y){
         return !(x >= 0 && x < WIDTH && y >= 0 && y < HEIGHT);
     }
-
 }

@@ -1,11 +1,11 @@
 package Player;
 
+import Board.Position;
 import Components.Flag;
 import com.badlogic.gdx.graphics.Color;
-import Cards.ICard;
+import org.lwjgl.system.CallbackI;
 
 import java.util.ArrayList;
-import java.util.FormattableFlags;
 
 /**
  * 
@@ -13,13 +13,21 @@ import java.util.FormattableFlags;
  *
  */
 public class Robot{
+<<<<<<< HEAD
 	
 	private int lives = 10;
 	private int damage = 0;
+=======
+
+    public static final int INITIAL_HP = 10;
+	private int lives = 3;
+	private int hp = INITIAL_HP;
+>>>>>>> d7d28c1b386a31a239f651daa7b5c9a4b490e605
 	private String name;
 	private ArrayList<Flag> flags;
 	private Color color;
 	private int direction = 0;
+	private Position respawnPoint;
 	
 	
 	public Robot(String name, Color color){
@@ -42,22 +50,19 @@ public class Robot{
 	
 	/**
 	 * 
-	 * @return the damages on this robot
+	 * @return the hp of this robot
 	 */
-	public int getDamage() {
-		return damage;
+	public int getHP() {
+		return hp;
 	}
+
+
 	
 	/**
 	 * apply damage to this robot
 	 */
-	public void applyDamage() {
-		damage += 1;
-		if(damage == 9) {
-			lives -=1;
-			damage = 0;
-		}
-		System.out.println(toString());
+	public void applyDamage(int dmg) {
+		hp -= dmg;
 	}
 	
 	/**
@@ -78,13 +83,16 @@ public class Robot{
 	@Override
 	public String toString() {
 		return getName() + " has " + getRemainingLives() + " "
-				+ "lives and has " + getDamage() + " damage.";
+				+ "lives and has " + getHP() + " hp.";
 	}
 
 	/**
 	 * @return Gir oss flaggene som roboten har besøkt.
 	 */
 	public ArrayList<Flag> getVisitedFlags(){ return flags;}
+
+	public Position getRespawnPoint(){ return respawnPoint; }
+	public void setRespawnPoint(Position pos){ respawnPoint = pos; }
 	
 	/**
 	 * Should only be called when the robot visited a flag

@@ -1,6 +1,7 @@
 package Components;
 
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
+import org.w3c.dom.ls.LSException;
 
 public class ComponentFactory {
 
@@ -148,13 +149,28 @@ public class ComponentFactory {
                 return new ConveyorBelt(86, 2, 2);
 
             //Luft-ruter
+            case 48:
             case 56:
-                return null;
             case 64:
-                return null;
             case 72:
-                return null;
             case 80:
+            case 88:
+            case 96:
+            case 104:
+            case 111:
+            case 112:
+            case 119:
+            case 120:
+
+            case 125:
+            case 126:
+            case 127:
+            case 128:
+
+            case 133:
+            case 134:
+            case 135:
+            case 136:
                 return null;
 
             //Wall-ruter med en wall
@@ -174,6 +190,46 @@ public class ComponentFactory {
                 return new Wall(24,false,true,true,false); //Kan ikke gå til venstre eller opp (Dobbelvegg)
             case 32:
                 return new Wall(32,true,true,false,false); //Kan ikke gå til venstre eller ned (Dobbelvegg)
+
+
+            //Lasere
+            case 37:
+                return new Laser(37, 0, false);
+            case 38:
+                return new Laser(38, 1, false);
+            case 45:
+                return new Laser(45, 2, false);
+            case 46:
+                return new Laser(46, 3, false);
+
+            case 87:
+                return new Laser(87, 0, true);
+            case 93:
+                return new Laser(93, 1, true);
+            case 94:
+                return new Laser(94, 2, true);
+            case 95:
+                return new Laser(95, 3, true);
+
+
+            case 121:
+                return new SpawnPoint(121);
+            case 122:
+                return new SpawnPoint(122);
+            case 123:
+                return new SpawnPoint(123);
+            case 124:
+                return new SpawnPoint(124);
+
+            case 129:
+                return new SpawnPoint(129);
+            case 130:
+                return new SpawnPoint(130);
+            case 131:
+                return new SpawnPoint(131);
+            case 132:
+                return new SpawnPoint(132);
+
 
             default:
                 System.err.println("Could not recognize ID no. " + cell.getTile().getId() + ". Please go to ComponentFactory and add that case to the list. Or you could go complain to Steinar.");

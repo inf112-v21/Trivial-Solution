@@ -84,7 +84,7 @@ public class Board {
             }
         }
         newSpawnPositions.sort((o1, o2) -> Integer.compare(o1.hashCode(), o2.hashCode())); //Dette burde være det samme som å sortere etter lavest ID.
-        for(Object[] o : newSpawnPositions) availableSpawnPoints.add((Position) o[1]);
+        for(Object[] o : newSpawnPositions) availableSpawnPoints.addFirst((Position) o[1]);
     }
 
     /**

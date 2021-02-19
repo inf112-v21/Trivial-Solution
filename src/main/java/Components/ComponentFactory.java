@@ -149,10 +149,28 @@ public class ComponentFactory {
                 return new ConveyorBelt(86, 2, 2);
 
             //Luft-ruter
+            case 48:
             case 56:
             case 64:
             case 72:
             case 80:
+            case 88:
+            case 96:
+            case 104:
+            case 111:
+            case 112:
+            case 119:
+            case 120:
+
+            case 125:
+            case 126:
+            case 127:
+            case 128:
+
+            case 133:
+            case 134:
+            case 135:
+            case 136:
                 return null;
 
             //Wall-ruter med en wall

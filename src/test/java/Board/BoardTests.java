@@ -21,6 +21,7 @@ public class BoardTests {
     private static Robot robot2 = new Robot("Alexstrasza", Color.RED);
     private static Robot robot3 = new Robot("Gilgamesh", Color.YELLOW);
     private static Robot robot4 = new Robot("Ashurbarnipal", Color.GREEN);
+    private static Robot robot5 = new Robot("Andromeda", Color.PINK);
     private static GUI gui;
 
     /**
@@ -271,6 +272,40 @@ public class BoardTests {
 
         assertNull(bård.getRobotAt(7, 4));
         assertEquals(robot1, bård.getRobotAt(8, 4));
+    }
+
+    @Test
+    public void robotsSpawnInCorrectPlacesAndInCorrectOrder(){
+        assertNull(bård.getRobotAt(9, 3));
+        assertNull(bård.getRobotAt(4, 9));
+        assertNull(bård.getRobotAt(0, 4));
+        assertNull(bård.getRobotAt(5, 0));
+
+        bård.spawnRobot(robot1);
+        assertEquals(robot1, bård.getRobotAt(9, 3));
+
+        bård.spawnRobot(robot2);
+        assertEquals(robot2, bård.getRobotAt(4, 9));
+
+        bård.spawnRobot(robot3);
+        assertEquals(robot3, bård.getRobotAt(0, 4));
+
+        bård.spawnRobot(robot4);
+        assertEquals(robot4, bård.getRobotAt(5, 0));
+    }
+
+    @Test
+    public void spawningMoreRobotsThanTheMapAllowsYieldsError(){
+        bård.spawnRobot(robot1);
+        bård.spawnRobot(robot2);
+        bård.spawnRobot(robot3);
+        bård.spawnRobot(robot4);
+
+        try{
+            bård.spawnRobot(robot5);
+        } catch (IllegalStateException ex){
+            //Yay it worked
+        }
     }
 
     @Test

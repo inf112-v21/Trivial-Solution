@@ -77,7 +77,7 @@ public class Robot{
 	@Override
 	public String toString() {
 		return getName() + " has " + getRemainingLives() + " "
-				+ "lives and has " + getHP() + " damage.";
+				+ "lives and has " + getHP() + " hp.";
 	}
 
 	/**

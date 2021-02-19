@@ -1,27 +1,49 @@
 package Game;
 
 import Cards.Deck;
+import Cards.ICard;
 import Components.Flag;
+import Player.Register;
 import Player.Robot;
 
-import java.awt.*;
+import com.badlogic.gdx.graphics.Color;
 import java.util.ArrayList;
 
 public class Game {
-    protected int players;
-    Color[] Colours = new Color[]{Color.RED, Color.BLUE, Color.GREEN, Color.YELLOW, Color.PINK, Color.ORANGE, Color.WHITE, Color.BLACK};
-    ArrayList<Robot> Bots = new ArrayList<Robot>();
+
+    protected int numberOfPlayers;
+    Color[] colours = new Color[]{Color.RED, Color.BLUE, Color.GREEN, Color.YELLOW, Color.PINK, Color.ORANGE, Color.WHITE, Color.BLACK};
+    ArrayList<Robot> bots = new ArrayList<>();
+    ArrayList<Register> registers = new ArrayList<>();
+    ArrayList<ICard> tempRegister = new ArrayList<>();
     Deck Deck = new Deck();
-    public void Game(int player){
-        players = player;
-        for (int i=0; i < players; i++){
-            //Bots.add(new Robot());
+
+    public void Game(int players){
+        numberOfPlayers = players;
+        for (int i=0; i < numberOfPlayers; i++){
+            String name = "Player " +i+1;
+            bots.add(new Robot(name, colours[i]));
+            registers.add(new Register());
         }
 
     }
-    private void round(){
+    public void startRound(){
         Deck.shuffleDeck();
-
+        for (int i=0; i<numberOfPlayers; i++){
+            for (int amount=0; amount<bots.get(i).getRemainingLives(); amount++){
+                tempRegister.add(Deck.drawCard());
+            }
+            registers.get(i).setRegisterCards(tempRegister);
+            tempRegister.clear();
+        }
+    }
+    public void turn(){
+    }
+    public void endRound(){
+    }
+    public void destroyedBot(Robot bot){
+        registers.remove(bots.indexOf(bot));
+        bots.remove(bot);
     }
 
 

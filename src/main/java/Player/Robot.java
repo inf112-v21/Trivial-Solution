@@ -117,4 +117,8 @@ public class Robot{
     public void rotate(int degree) {
 	    direction = (direction + degree) % 4;
     }
+
+	public Color getColor() {
+		return color;
+	}
 }

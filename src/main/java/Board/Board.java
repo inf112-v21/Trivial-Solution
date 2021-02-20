@@ -19,7 +19,7 @@ public class Board {
     int WIDTH;
 
     //Grids. Disse må initialiseres i readFromTMX().
-    private Robot[][]      botgrid;
+    public Robot[][]      botgrid;
     private IComponent[][] backgrid;
     private IComponent[][] midgrid;
     private IComponent[][] forgrid;

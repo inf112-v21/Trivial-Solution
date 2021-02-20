@@ -1,6 +1,8 @@
 package GUIMain;
 
 import Board.Board;
+import Player.Robot;
+
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -10,6 +12,7 @@ import com.badlogic.gdx.graphics.GL30;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.tiled.TiledMap;
@@ -17,8 +20,6 @@ import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.tiles.StaticTiledMapTile;
-import com.badlogic.gdx.math.Vector2;
-import org.lwjgl.system.CallbackI;
 
 public class GUI extends InputAdapter implements ApplicationListener {
     private SpriteBatch batch;
@@ -30,15 +31,12 @@ public class GUI extends InputAdapter implements ApplicationListener {
     private TiledMapTileLayer foregroundLayer;
     private OrthogonalTiledMapRenderer renderer;
     private OrthographicCamera camera;
-    private TiledMapTileLayer.Cell playerCell;
-    private TiledMapTileLayer.Cell playerWonCell;
-    private TiledMapTileLayer.Cell playerDiedCell;
-    private com.badlogic.gdx.math.Vector2 playerPos;
-    private Board bård;
+    private Board board;
     private String mapName;
     private int CELL_SIZE = 300;
     private int HEIGHT;
     private int WIDTH;
+	private Sprite sprite;
 
     public GUI(String mapName){
         this.mapName = mapName;
@@ -65,51 +63,15 @@ public class GUI extends InputAdapter implements ApplicationListener {
         renderer = new OrthogonalTiledMapRenderer(map, 1);
         renderer.setView(camera);
 
-        Texture t = new Texture("player.png");
-        TextureRegion[][] tmp = new TextureRegion(t).split(CELL_SIZE,CELL_SIZE);
-
-        StaticTiledMapTile PlayerTile = new StaticTiledMapTile(tmp[0][0]);
-        StaticTiledMapTile PlayerDiedTile = new StaticTiledMapTile(tmp[0][1]);
-        StaticTiledMapTile playerWonTile = new StaticTiledMapTile(tmp[0][2]);
-
-        playerCell = new TiledMapTileLayer.Cell().setTile(PlayerTile);
-        playerDiedCell = new TiledMapTileLayer.Cell().setTile(PlayerDiedTile);
-        playerWonCell = new TiledMapTileLayer.Cell().setTile(playerWonTile);
-
-        playerPos = new Vector2(0,0);
-
-        // Legger til støtte for å flytte spilleren:
-        Gdx.input.setInputProcessor(this);
-
-
         batch = new SpriteBatch();
         font = new BitmapFont();
         font.setColor(Color.RED);
 
-        bård = new Board(mapName);
+        board = new Board(mapName);
     }
     @Override
     public boolean keyUp(int keyCode){
-        if(keyCode == Input.Keys.UP){
-            playerPos.y++;
-            playerLayer.setCell((int)playerPos.x,(int)playerPos.y-1,null);
-            return true;
-        }
-        if(keyCode == Input.Keys.DOWN){
-            playerPos.y--;
-            playerLayer.setCell((int)playerPos.x,(int)playerPos.y+1,null);
-            return true;
-        }
-        if(keyCode == Input.Keys.RIGHT){
-            playerPos.x++;
-            playerLayer.setCell((int)playerPos.x-1,(int)playerPos.y,null);
-            return true;
-        }
-        if(keyCode == Input.Keys.LEFT){
-            playerPos.x--;
-            playerLayer.setCell((int)playerPos.x+1,(int)playerPos.y,null);
-            return true;
-        }
+
         return false;
     }
 
@@ -124,35 +86,13 @@ public class GUI extends InputAdapter implements ApplicationListener {
 
         Gdx.gl.glClearColor(1, 1, 1, 1);
         Gdx.gl.glClear(GL30.GL_COLOR_BUFFER_BIT);
+        
+        displayRobots(getPlayerImage1("alive"), getPlayerCell(getPlayerImage("alive")));
         renderer.render();
-
-        // Denne logikken bør flyttes ut av GUI asap
-        playerLayer.setCell((int)playerPos.x,(int)playerPos.y, playerCell);
-
-        if(middlegroundLayer.getCell((int)playerPos.x, (int)playerPos.y) != null) {
-            if (middlegroundLayer.getCell((int) playerPos.x, (int) playerPos.y).getTile().getId() == 6)
-                playerLayer.setCell((int) playerPos.x, (int) playerPos.y, playerDiedCell);
-        }
-
-        if(foregroundLayer.getCell((int)playerPos.x, (int)playerPos.y) != null) {
-            switch (foregroundLayer.getCell((int) playerPos.x, (int) playerPos.y).getTile().getId()) {
-                //Dette er de 4 ID-ene som flaggikonene våre har.
-                case (55):
-                    playerLayer.setCell((int) playerPos.x, (int) playerPos.y, playerWonCell);
-                case (63):
-                    playerLayer.setCell((int) playerPos.x, (int) playerPos.y, playerWonCell);
-                case (71):
-                    playerLayer.setCell((int) playerPos.x, (int) playerPos.y, playerWonCell);
-                case (79):
-                    playerLayer.setCell((int) playerPos.x, (int) playerPos.y, playerWonCell);
-            }
-        }
-
-        foregroundLayer.getCell((int)playerPos.x, (int)playerPos.y);
-
+		
     }
 
-    public Board getBoard(){ return bård; }
+    public Board getBoard(){ return board; }
 
     @Override
     public void resize(int width, int height) {
@@ -164,5 +104,87 @@ public class GUI extends InputAdapter implements ApplicationListener {
 
     @Override
     public void resume() {
+    	
     }
+    
+    
+    
+    public void setPlayerCell(int x, int y, TiledMapTileLayer.Cell cell) {
+		playerLayer.setCell(x, y, cell);
+	}
+	
+	
+	public TiledMapTileLayer.Cell getPlayerCell(StaticTiledMapTile PlayerTile){
+		return new TiledMapTileLayer.Cell().setTile(PlayerTile);
+	}
+    
+    /**
+	 * Displays robot on screen in the given cell
+	 * @param t robot image
+	 * @param cell 
+	 */
+	public void displayRobots(TextureRegion t, TiledMapTileLayer.Cell cell) {
+	
+		for(int i = 0; i < board.botgrid.length; i++) {
+			for(int q = 0; q < board.botgrid[i].length; q++) {
+			if(!(board.botgrid[i][q] == null)) {
+				Robot r = board.botgrid[i][q];
+				
+				batch = new SpriteBatch();
+				sprite = new Sprite(t.getTexture());
+				
+				sprite.setColor(r.getColor());
+				batch.begin();
+				batch.draw(t.getTexture(), i, q);
+				sprite.draw(batch);
+				
+				setPlayerCell(i,q, cell);
+				
+				batch.end();
+				
+				}
+			}
+		}
+	}
+	
+	
+	/**
+	 * 
+	 * @param state
+	 * @return the players state as a tile
+	 */
+	public StaticTiledMapTile getPlayerImage(String state) {
+
+        Texture t = new Texture("player.png");
+        TextureRegion[][] tmp = new TextureRegion(t).split(300,300);
+		
+		if(state.equals("alive")) {
+			return  new StaticTiledMapTile(tmp[0][0]);
+		}
+		else if (state.equals("dead")) {
+			return  new StaticTiledMapTile(tmp[0][1]);
+		}
+		else if (state.equals("victory")) {
+			return new StaticTiledMapTile(tmp[0][2]);
+		}
+		return null;
+	}
+	
+	/**
+	 * 
+	 * @param state either dead, alive or victory
+	 * @return the players state as a texture which could be used as players image
+	 */
+	public TextureRegion getPlayerImage1(String state) {
+        Texture t = new Texture("player.png");
+        TextureRegion[][] tmp = new TextureRegion(t).split(300,300);
+        switch (state) {
+        case "dead":
+        	return tmp[0][1];
+        case "victory":
+        	return tmp[0][2];
+        default:
+        	return tmp[0][0];
+        }
+	}
 }

@@ -89,7 +89,6 @@ public class Game {
      * @return true if a robot won, false if there is no winner yet
      */
     public boolean hasWon(Robot rob) {
-        ArrayList<Flag> visitedFlags = rob.getVisitedFlags();
 
 
         return true;

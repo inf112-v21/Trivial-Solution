@@ -96,15 +96,6 @@ public class Robot{
 	 * @Return true hvis roboten greide å plukke opp flagget. false ellers.
 	 */
 	public boolean flagVisited(Flag flag) {
-		if (!flags.isEmpty()) {
-			Flag lastAdded = flags.get(flags.size() - 1);
-
-			if (lastAdded.compareTo(flag) < 0){
-
-			}
-
-		}
-		flags.add(flag);
 
 		return false;
 	}

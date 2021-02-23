@@ -43,6 +43,7 @@ public class Game {
             tempRegister.clear();
         }
     }
+
     public void phase(){
         ArrayList<ICard> orderedCards = new ArrayList<>();
         ArrayList<Robot> botOrder = new ArrayList<>();

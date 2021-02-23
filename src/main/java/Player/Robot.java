@@ -20,7 +20,7 @@ public class Robot{
 	private int hp = INITIAL_HP;
 
 	private String name;
-	private ArrayList<Flag> flags;
+	private int[] flags = {0,0,0,0};
 	private Color color;
 	private int direction = 0;
 	private Position respawnPoint;

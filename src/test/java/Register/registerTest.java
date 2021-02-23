@@ -6,6 +6,7 @@ import Player.Register;
 import Player.Robot;
 import com.badlogic.gdx.graphics.Color;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -21,17 +22,20 @@ public class registerTest {
     private static Integer numberOfDamageTokens = 10;
     private static Boolean initializePowerDown = false;
 
-    @BeforeAll
-    public static void setUp(){
-        allCards = new ArrayList<ICard>();
-        r = new Register(new Robot("testRobot", Color.RED));
-
+    @BeforeEach
+    public void setCards(){
         Deck d = new Deck();
         for(int i = 0; i < 6; i++){
             ICard card = d.drawCard();
             allCards.add(card);
         }
         r.setRegisterCards(allCards);
+    }
+    @BeforeAll
+    public static void setUp(){
+        allCards = new ArrayList<ICard>();
+        registerCards = new ArrayList<ICard>();
+        r = new Register(new Robot("testRobot", Color.RED));
     }
 
     @Test
@@ -40,25 +44,24 @@ public class registerTest {
     }
 
     @Test
-    void registerCanClearAllCardsBeforeEachNewGameRound(){
-        //clear register-list
-        r.clearAllRegisterCards();
-
-        assertTrue(r.getRegisterCards().isEmpty());
-    }
-    @Test
-    void registerCanHoldFiveCardsInOrderFromOneToFive(){
-
-    }
-
-    @Test
     void playerCanStoreTheirFiveChosenCardsInOrderInTheRegister(){
         for(int i = 0; i < 5; i++){
             r.addCardsToRegister(allCards.get(i));
             registerCards.add(allCards.get(i));
         }
-
         assertEquals(registerCards, r.getMaxFiveCardsFromRegister());
+    }
+
+    @Test
+    void registerCanHoldFiveCardsInOrderFromOneToFive(){
+    }
+
+    @Test
+    void registerCanClearAllCardsBeforeEachNewGameRound(){
+        //clear register-list
+        r.clearAllRegisterCards();
+
+        assertTrue(r.getRegisterCards().isEmpty());
     }
 
     @Test

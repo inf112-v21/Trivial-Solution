@@ -125,22 +125,22 @@ public class GUI extends InputAdapter implements ApplicationListener {
 	 */
 	public void displayRobots(TextureRegion t, TiledMapTileLayer.Cell cell) {
 	
-		for(int i = 0; i < board.botgrid.length; i++) {
-			for(int q = 0; q < board.botgrid[i].length; q++) {
-			if(!(board.botgrid[i][q] == null)) {
-				Robot r = board.botgrid[i][q];
-				
-				batch = new SpriteBatch();
-				sprite = new Sprite(t.getTexture());
-				
-				sprite.setColor(r.getColor());
-				batch.begin();
-				batch.draw(t.getTexture(), i, q);
-				sprite.draw(batch);
-				
-				setPlayerCell(i,q, cell);
-				
-				batch.end();
+		for(int i = 0; i < board.getHeight(); i++) {
+			for(int q = 0; q < board.getWidth(); q++) {
+                Robot r = board.getRobotAt(q, i);
+                if(r != null) {
+
+                    batch = new SpriteBatch();
+                    sprite = new Sprite(t.getTexture());
+
+                    sprite.setColor(r.getColor());
+                    batch.begin();
+                    batch.draw(t.getTexture(), i, q);
+                    sprite.draw(batch);
+
+                    setPlayerCell(i,q, cell);
+
+                    batch.end();
 				
 				}
 			}

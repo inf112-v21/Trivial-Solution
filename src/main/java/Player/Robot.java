@@ -16,11 +16,7 @@ public class Robot{
 
 	
 	private int lives = 10;
-	private int damage = 0;
-
-
     public static final int INITIAL_HP = 10;
-
 	private int hp = INITIAL_HP;
 
 	private String name;

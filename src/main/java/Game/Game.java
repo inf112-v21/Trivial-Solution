@@ -31,8 +31,8 @@ public class Game {
             bots.add(r);
             registers.add(new Register(r));
         }
-
     }
+
     public void startRound(){
         Deck.shuffleDeck();
         for (int i=0; i<registers.size(); i++){

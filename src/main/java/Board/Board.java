@@ -54,6 +54,8 @@ public class Board {
         TiledMapTileLayer background   = (TiledMapTileLayer) map.getLayers().get("Background");
         TiledMapTileLayer middleground = (TiledMapTileLayer) map.getLayers().get("Middleground");
         TiledMapTileLayer foreground   = (TiledMapTileLayer) map.getLayers().get("Foreground");
+
+        //Trenger muligens ikke lenger denne?
         TiledMapTileLayer robots       = (TiledMapTileLayer) map.getLayers().get("Robot");
 
         HEIGHT = background.getHeight();
@@ -77,7 +79,8 @@ public class Board {
                 else if(forcomp instanceof SpawnPoint) newSpawnPositions.add(new Object[]{forcomp.getID(), new Position(x, HEIGHT-1-y)});
             }
         }
-        newSpawnPositions.sort((o1, o2) -> Integer.compare(o1.hashCode(), o2.hashCode())); //Dette burde være det samme som å sortere etter lavest ID.
+        //Dette burde være det samme som å sortere etter lavest ID.
+        newSpawnPositions.sort((o1, o2) -> Integer.compare(o2[0].hashCode(), o1[0].hashCode()));
         for(Object[] o : newSpawnPositions) availableSpawnPoints.addFirst((Position) o[1]);
     }
 

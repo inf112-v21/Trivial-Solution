@@ -3,6 +3,8 @@ package Register;
 import Cards.Deck;
 import Cards.ICard;
 import Player.Register;
+import Player.Robot;
+import com.badlogic.gdx.graphics.Color;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -12,28 +14,29 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class registerTest {
 
-    private static ArrayList<ICard> cards;
+    private static ArrayList<ICard> allCards;
+    private static ArrayList<ICard> registerCards;
     private static Register r;
-    private static Integer numberOfLifeTokens = 1;
+    private static Integer numberOfLifeTokens = 10;
     private static Integer numberOfDamageTokens = 10;
     private static Boolean initializePowerDown = false;
 
     @BeforeAll
     public static void setUp(){
-        cards = new ArrayList<ICard>();
-        r = new Register();
+        allCards = new ArrayList<ICard>();
+        r = new Register(new Robot("testRobot", Color.RED));
 
         Deck d = new Deck();
         for(int i = 0; i < 6; i++){
             ICard card = d.drawCard();
-            cards.add(card);
+            allCards.add(card);
         }
-        r.setRegisterCards(cards);
+        r.setRegisterCards(allCards);
     }
 
     @Test
     void registerCanSetNineCards(){
-        assertEquals(cards, r.getRegisterCards());
+        assertEquals(allCards, r.getRegisterCards());
     }
 
     @Test
@@ -42,6 +45,20 @@ public class registerTest {
         r.clearAllRegisterCards();
 
         assertTrue(r.getRegisterCards().isEmpty());
+    }
+    @Test
+    void registerCanHoldFiveCardsInOrderFromOneToFive(){
+
+    }
+
+    @Test
+    void playerCanStoreTheirFiveChosenCardsInOrderInTheRegister(){
+        for(int i = 0; i < 5; i++){
+            r.addCardsToRegister(allCards.get(i));
+            registerCards.add(allCards.get(i));
+        }
+
+        assertEquals(registerCards, r.getMaxFiveCardsFromRegister());
     }
 
     @Test

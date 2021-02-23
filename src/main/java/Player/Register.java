@@ -5,37 +5,51 @@ import Cards.ICard;
 import java.util.ArrayList;
 
 /*
-* This class gets 9 cards from the Game-class, and needs to show these to the player. The player should then be able
-* to pick 5 of these cards, and put them in their own register.
+* Denne klassen får inn 9 kort fra Game-klassen, og må vise disse 9 kortene til spilleren.
+* Spilleren skal dermed plukke ut 5 kort av disse, og putte den i sitt eget register.
  */
 public class Register {
 
-    private ArrayList<ICard> registerCards = new ArrayList<ICard>();
+    private ArrayList<ICard> allRegisterCards = new ArrayList<ICard>(); //alle 9 kortene som spilleren får utdelt
+    private ArrayList<ICard> registerCards = new ArrayList<ICard>(5); //de 5 kortene som spilleren velger
+    // Det første kortet i listen er kort nr.1 i registeret, og det siste kortet er kort nr.5.
     private Integer lifeTokens;
     private Integer damageTokens;
     private Boolean powerDown;
 
     //Constructor
-    public Register(){ //Register(Robot robot) kanskje
-        // Register bør kanskje ta inn en robot som skal tilhøre registeret, slik at jeg kan hente ut liv og damage
-        // fra roboten sine egne metoder.
-        //TODO: Hente ut disse verdiene fra Robot-klassen.
-        //lifeTokens = numberOfLifeTokens;
-        //damageTokens = numberOfDamageTokens;
-        //powerDown = initializePowerDown;
+    public Register(Robot robot){
+        damageTokens = robot.getHP();
+        lifeTokens = robot.getRemainingLives();
+        powerDown = false;
     }
 
     /**
     * Denne metoden "setter" de 9 kortene som registerer får inn.
      */
     public void setRegisterCards(ArrayList<ICard> cards){
-        registerCards = cards;
+        allRegisterCards = cards;
     }
 
     /**
     * Denne metoden returnerer de 9 kortene som registeret holder.
      */
     public ArrayList<ICard> getRegisterCards(){
+        return allRegisterCards;
+    }
+
+    /**
+     * Denne metoden legger til et og et kort i rekkefølge i registeret utifra hva spilleren velger.
+     * @param chosenCard
+     */
+    public void addCardsToRegister(ICard chosenCard){
+        registerCards.add(chosenCard);
+    }
+
+    /**
+     * @return returnerer maks 5 kort fra registeret, kan returnere færre dersom roboten har mye damage.
+     */
+    public ArrayList<ICard> getMaxFiveCardsFromRegister(){
         return registerCards;
     }
 

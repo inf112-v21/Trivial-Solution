@@ -30,8 +30,8 @@ public class Game {
             bots.add(new Robot(name, colours[i]));
             registers.add(new Register(bots.get(i)));
         }
-
     }
+
     public void startRound(){
         Deck.shuffleDeck();
         for (int i=0; i<registers.size(); i++){

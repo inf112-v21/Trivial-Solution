@@ -23,8 +23,9 @@ public class Game {
         numberOfPlayers = players;
         for (int i=0; i < numberOfPlayers; i++){
             String name = "Player " +i+1;
-            bots.add(new Robot(name, colours[i]));
-            registers.add(new Register(10,10,false));
+            Robot r = new Robot(name, colours[i]);
+            bots.add(r);
+            registers.add(new Register(r));
         }
 
     }

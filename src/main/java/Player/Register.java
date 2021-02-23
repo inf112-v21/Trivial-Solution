@@ -57,7 +57,7 @@ public class Register {
      * Metode for å "cleare" alle kortene i registerne før en nye runde starter.
      */
     public void clearAllRegisterCards(){
-        registerCards.clear();
+        allRegisterCards.clear();
     }
 
     /**

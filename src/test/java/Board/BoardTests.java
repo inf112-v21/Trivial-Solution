@@ -65,6 +65,7 @@ public class BoardTests {
     public void canTurnTheRobotAroundWithRotationCard(){
         bård.placeRobotAt(0, 0, robot1);
         int direction = robot1.getDirection();
+
         bård.performMove(new ProgramCard(0, 1, 1), robot1);
 
         assertNotEquals(direction, robot1.getDirection());
@@ -74,6 +75,7 @@ public class BoardTests {
     public void canMoveTheRobotWithMoveCard(){
         bård.placeRobotAt(0, 0, robot1);
         robot1.setDirection(1);
+
         bård.performMove(new ProgramCard(1, 0, 1), robot1);
 
         assertNull(bård.getRobotAt(0, 0));

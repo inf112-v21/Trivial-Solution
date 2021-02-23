@@ -15,8 +15,8 @@ import java.util.TreeMap;
 public class Board {
 
 
-    int HEIGHT;
-    int WIDTH;
+    private int HEIGHT;
+    private int WIDTH;
 
     //Grids. Disse må initialiseres i readFromTMX().
     private Robot[][]      botgrid;

@@ -14,9 +14,11 @@ import java.util.ArrayList;
  */
 public class Robot{
 
+	
+	private int lives = 10;
     public static final int INITIAL_HP = 10;
-	private int lives = 3;
 	private int hp = INITIAL_HP;
+
 	private String name;
 	private ArrayList<Flag> flags;
 	private Color color;
@@ -89,17 +91,30 @@ public class Robot{
 	public void setRespawnPoint(Position pos){ respawnPoint = pos; }
 	
 	/**
-	 * Should only be called when the robot visited a flag
-	 * Denne funksjonen
+	 * Denne funksjonen sjekker om roboten hentet flagget på en sukksesful måte
+	 *
+	 * @Return true hvis roboten greide å plukke opp flagget. false ellers.
 	 */
-	public void flagVisited(Flag flag) {
-		
+	public boolean flagVisited(Flag flag) {
+		if (!flags.isEmpty()) {
+			Flag lastAdded = flags.get(flags.size() - 1);
 
+			if (lastAdded.compareTo(flag) < 0){
+
+			}
+
+		}
 		flags.add(flag);
+
+		return false;
 	}
 
 
     public void rotate(int degree) {
 	    direction = (direction + degree) % 4;
     }
+
+	public Color getColor() {
+		return color;
+	}
 }

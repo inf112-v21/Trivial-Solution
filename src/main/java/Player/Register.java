@@ -1,7 +1,5 @@
 package Player;
 
-import Cards.Deck;
-import Cards.ProgramCard;
 import Cards.ICard;
 
 import java.util.ArrayList;
@@ -18,10 +16,13 @@ public class Register {
     private Boolean powerDown;
 
     //Constructor
-    public Register(Integer numberOfLifeTokens, Integer numberOfDamageTokens, Boolean initializePowerDown){
-        lifeTokens = numberOfLifeTokens;
-        damageTokens = numberOfDamageTokens;
-        powerDown = initializePowerDown;
+    public Register(){ //Register(Robot robot) kanskje
+        // Register bør kanskje ta inn en robot som skal tilhøre registeret, slik at jeg kan hente ut liv og damage
+        // fra roboten sine egne metoder.
+        //TODO: Hente ut disse verdiene fra Robot-klassen.
+        //lifeTokens = numberOfLifeTokens;
+        //damageTokens = numberOfDamageTokens;
+        //powerDown = initializePowerDown;
     }
 
     /**
@@ -45,7 +46,6 @@ public class Register {
         registerCards.clear();
     }
 
-    //TODO
     /**
      * Returnerer antallet "life tokens" som registeret har.
      * @return lifeTokens
@@ -54,7 +54,6 @@ public class Register {
         return lifeTokens;
     }
 
-    //TODO
     /**
      * Returnerer antallet "damage tokens" som registeret inneholder.
      * @return damageTokens

@@ -14,13 +14,14 @@ public class registerTest {
 
     private static ArrayList<ICard> cards;
     private static Register r;
-    private static Integer numberOfLifeTokens = 5;
-    private static Integer numberOfDamageTokens = 7;
+    private static Integer numberOfLifeTokens = 1;
+    private static Integer numberOfDamageTokens = 10;
+    private static Boolean initializePowerDown = false;
 
     @BeforeAll
     public static void setUp(){
         cards = new ArrayList<ICard>();
-        r = new Register(numberOfLifeTokens, numberOfDamageTokens,false);
+        r = new Register();
 
         Deck d = new Deck();
         for(int i = 0; i < 6; i++){
@@ -45,12 +46,12 @@ public class registerTest {
 
     @Test
     void registerHoldsCorrectAmountOfDamageTokens(){
-        assertEquals(7, r.getDamageTokens());
+        assertEquals(numberOfDamageTokens, r.getDamageTokens());
     }
 
     @Test
     void registerHoldsCorrectAmountOfLifeTokens(){
-        assertEquals(5, r.getLifeTokens());
+        assertEquals(numberOfLifeTokens, r.getLifeTokens());
     }
 
     @Test

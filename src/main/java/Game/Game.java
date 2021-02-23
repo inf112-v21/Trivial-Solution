@@ -27,8 +27,9 @@ public class Game {
         numberOfPlayers = players;
         for (int i=0; i < numberOfPlayers; i++){
             String name = "Player " +i+1;
-            bots.add(new Robot(name, colours[i]));
-            registers.add(new Register(bots.get(i)));
+            Robot r = new Robot(name, colours[i]);
+            bots.add(r);
+            registers.add(new Register(r));
         }
 
     }
@@ -45,9 +46,8 @@ public class Game {
     public void phase(){
         ArrayList<ICard> orderedCards = new ArrayList<>();
         ArrayList<Robot> botOrder = new ArrayList<>();
-        //getRegisterCards is placeholder for 5 cars the players want to play
         for (int i = 0; i< registers.size(); i++){
-            phaseRegisters.add(registers.get(i).getRegisterCards());
+            phaseRegisters.add(registers.get(i).getMaxFiveCardsFromRegister());
         }
         for(int turnCard = 0; turnCard < 5; turnCard++){
             for (int r = 0; r < phaseRegisters.size(); r++){

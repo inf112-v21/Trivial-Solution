@@ -1,5 +1,6 @@
 package Game;
 
+import Board.Board;
 import Cards.Deck;
 import Cards.ICard;
 import Components.Flag;
@@ -18,20 +19,22 @@ public class Game {
     ArrayList<ICard> tempRegister = new ArrayList<>();
     ArrayList<ArrayList<ICard>> phaseRegisters = new ArrayList<>();
     Deck Deck = new Deck();
+    Board Board;
 
     public void Game(int players, String mapname){
+        Board madeBoard = new Board(mapname);
+        Board = madeBoard;
         numberOfPlayers = players;
         for (int i=0; i < numberOfPlayers; i++){
             String name = "Player " +i+1;
-            Robot r = new Robot(name, colours[i]);
-            bots.add(r);
-            registers.add(new Register(r));
+            bots.add(new Robot(name, colours[i]));
+            registers.add(new Register(bots.get(i)));
         }
 
     }
     public void startRound(){
         Deck.shuffleDeck();
-        for (int i=0; i<numberOfPlayers; i++){
+        for (int i=0; i<registers.size(); i++){
             for (int amount=0; amount<bots.get(i).getRemainingLives(); amount++){
                 tempRegister.add(Deck.drawCard());
             }
@@ -63,11 +66,6 @@ public class Game {
                         pri = shortlist.get(turnCard).priority();
                         order = shortlist.get(turnCard);
                         botInUse = bots.get(registerInUse);
-                        shortlist.remove(turnCard);
-                    }
-                    else{
-                        //temp
-                        break;
                     }
                 }
                 orderedCards.add(order);
@@ -75,9 +73,8 @@ public class Game {
             }
         }
         for (int p = 0; p < orderedCards.size(); p++){
-            //board.performove(orderedCards.get(p), botOrder.get(p))
+            Board.performMove(orderedCards.get(p), botOrder.get(p));
         }
-
     }
     public void endRound(){
     }

@@ -75,12 +75,6 @@ public class Board {
                 if (forcomp instanceof Flag) numberOfFlags++;
                 else if(forcomp instanceof Laser) laserPositions.put((Laser)forcomp, new Position(x, HEIGHT-1-y));
                 else if(forcomp instanceof SpawnPoint) newSpawnPositions.add(new Object[]{forcomp.getID(), new Position(x, HEIGHT-1-y)});
-
-                if (robots.getCell(x, y) != null){
-                    Robot bot = new Robot("Robot" + (robots.getCell(x, y).getTile().getId() - 136), Color.WHITE); //Erstatt senere med custom navn og farger
-                    botgrid[HEIGHT-1-y][x] = bot;
-                    botPositions.put(bot, new Position(x, HEIGHT-1-y));
-                }
             }
         }
         newSpawnPositions.sort((o1, o2) -> Integer.compare(o1.hashCode(), o2.hashCode())); //Dette burde være det samme som å sortere etter lavest ID.

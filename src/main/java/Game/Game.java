@@ -1,5 +1,6 @@
 package Game;
 
+import Board.Board;
 import Cards.Deck;
 import Cards.ICard;
 import Components.Flag;
@@ -18,8 +19,11 @@ public class Game {
     ArrayList<ICard> tempRegister = new ArrayList<>();
     ArrayList<ArrayList<ICard>> phaseRegisters = new ArrayList<>();
     Deck Deck = new Deck();
+    Board Board;
 
     public void Game(int players, String mapname){
+        Board madeBoard = new Board(mapname);
+        Board = madeBoard;
         numberOfPlayers = players;
         for (int i=0; i < numberOfPlayers; i++){
             String name = "Player " +i+1;
@@ -27,11 +31,11 @@ public class Game {
             bots.add(r);
             registers.add(new Register(r));
         }
-
     }
+
     public void startRound(){
         Deck.shuffleDeck();
-        for (int i=0; i<numberOfPlayers; i++){
+        for (int i=0; i<registers.size(); i++){
             for (int amount=0; amount<bots.get(i).getRemainingLives(); amount++){
                 tempRegister.add(Deck.drawCard());
             }
@@ -42,9 +46,8 @@ public class Game {
     public void phase(){
         ArrayList<ICard> orderedCards = new ArrayList<>();
         ArrayList<Robot> botOrder = new ArrayList<>();
-        //getRegisterCards is placeholder for 5 cars the players want to play
         for (int i = 0; i< registers.size(); i++){
-            phaseRegisters.add(registers.get(i).getRegisterCards());
+            phaseRegisters.add(registers.get(i).getMaxFiveCardsFromRegister());
         }
         for(int turnCard = 0; turnCard < 5; turnCard++){
             for (int r = 0; r < phaseRegisters.size(); r++){
@@ -63,11 +66,6 @@ public class Game {
                         pri = shortlist.get(turnCard).priority();
                         order = shortlist.get(turnCard);
                         botInUse = bots.get(registerInUse);
-                        shortlist.remove(turnCard);
-                    }
-                    else{
-                        //temp
-                        break;
                     }
                 }
                 orderedCards.add(order);
@@ -75,9 +73,8 @@ public class Game {
             }
         }
         for (int p = 0; p < orderedCards.size(); p++){
-            //board.performove(orderedCards.get(p), botOrder.get(p))
+            Board.performMove(orderedCards.get(p), botOrder.get(p));
         }
-
     }
     public void endRound(){
     }

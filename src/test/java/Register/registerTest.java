@@ -76,8 +76,10 @@ public class registerTest {
     }
 
     @Test
-    void isRegisterPoweredDown(){
-        assertEquals(false, r.isPowerDownAnnounced());
+    void canRegisterPowerDownARobot(){
+        r.powerDownRobot();
+
+        assertEquals(true, r.isPowerDownAnnounced());
     }
 
 }

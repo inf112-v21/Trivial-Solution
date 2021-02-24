@@ -88,7 +88,7 @@ public class Register {
     /**
      * Denne metoden endrer powerDown til true dersom knappen for powerDown blir trykket på i GUI-en for registeret.
      */
-    public void PowerDownRobot(){
+    public void powerDownRobot(){
         powerDown = true;
     }
 }

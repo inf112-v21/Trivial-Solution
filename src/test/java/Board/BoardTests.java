@@ -17,11 +17,11 @@ public class BoardTests {
 
     private static Board bård;
     private static String defaultMapName = "TestMap.tmx";
-    private static final Robot robot1 = new Robot("Nebuchadnezzar", Color.BLUE);
-    private static final Robot robot2 = new Robot("Alexstrasza", Color.RED);
-    private static final Robot robot3 = new Robot("Gilgamesh", Color.YELLOW);
-    private static final Robot robot4 = new Robot("Ashurbarnipal", Color.GREEN);
-    private static final Robot robot5 = new Robot("Andromeda", Color.PINK);
+    private static Robot robot1;
+    private static Robot robot2;
+    private static Robot robot3;
+    private static Robot robot4;
+    private static Robot robot5;
     private static GUI gui;
 
     /**
@@ -42,8 +42,14 @@ public class BoardTests {
      * Resetter alle posisjonene på brettet, slik at alle testene har det samme utgangspunktet.
      */
     @BeforeEach
-    public void resetBoard(){
+    public void resetState(){
         bård = new Board(defaultMapName);
+        robot1 = new Robot("Nebuchadnezzar", Color.BLUE);
+        robot2 = new Robot("Alexstrasza", Color.RED);
+        robot3 = new Robot("Gilgamesh", Color.YELLOW);
+        robot4 = new Robot("Ashurbarnipal", Color.GREEN);
+        robot5 = new Robot("Andromeda", Color.PINK);
+
     }
 
     @Test

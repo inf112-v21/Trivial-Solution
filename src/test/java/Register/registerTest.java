@@ -18,8 +18,9 @@ public class registerTest {
     private static ArrayList<ICard> allCards;
     private static ArrayList<ICard> registerCards;
     private static Register r;
-    private static Integer numberOfLifeTokens = 10;
-    private static Integer numberOfDamageTokens = 10;
+    private static Robot robot;
+    private static Integer numberOfLifeTokens;
+    private static Integer numberOfDamageTokens;
     private static Boolean initializePowerDown = false;
 
     @BeforeEach
@@ -30,12 +31,16 @@ public class registerTest {
             allCards.add(card);
         }
         r.setRegisterCards(allCards);
+
+        numberOfLifeTokens = robot.getRemainingLives();
+        numberOfDamageTokens = robot.getHP();
     }
     @BeforeAll
     public static void setUp(){
         allCards = new ArrayList<ICard>();
         registerCards = new ArrayList<ICard>();
-        r = new Register(new Robot("testRobot", Color.RED));
+        robot = new Robot("testRobot", Color.RED);
+        r = new Register(robot);
     }
 
     @Test
@@ -50,10 +55,6 @@ public class registerTest {
             registerCards.add(allCards.get(i));
         }
         assertEquals(registerCards, r.getMaxFiveCardsFromRegister());
-    }
-
-    @Test
-    void registerCanHoldFiveCardsInOrderFromOneToFive(){
     }
 
     @Test

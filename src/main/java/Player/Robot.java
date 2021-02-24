@@ -14,9 +14,10 @@ import java.util.ArrayList;
  */
 public class Robot{
 
-	
-	private int lives = 10;
     public static final int INITIAL_HP = 10;
+    public static final int INITIAL_LIVES = 3;
+
+    private int lives = INITIAL_LIVES;
 	private int hp = INITIAL_HP;
 
 	private String name;

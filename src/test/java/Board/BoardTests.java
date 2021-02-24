@@ -311,6 +311,66 @@ public class BoardTests {
     }
 
     @Test
+    public void drivingOffTheMapRemovesOneOfTheRobotsLivesAndReducesMaxHP(){
+        bård.placeRobotAt(0, 0, robot1);
+        robot1.setDirection(0);
+
+        bård.performMove(new ProgramCard(1, 0, 1), robot1);
+
+        assertTrue(robot1.getRemainingLives() < Robot.INITIAL_LIVES);
+        assertTrue(robot1.getHP() < Robot.INITIAL_HP);
+    }
+
+    @Test
+    public void drivingIntoAHoleActsAsJumpingOffTheMap(){
+        bård.spawnRobot(robot1);
+        robot1.setDirection(3);
+
+        bård.performMove(new ProgramCard(3, 1, 1), robot1);
+
+        assertNull(bård.getRobotAt(6, 3));
+        assertNull(bård.getRobotAt(7, 3));
+        assertNull(bård.getRobotAt(8, 3));
+        assertEquals(robot1, bård.getRobotAt(9, 3));
+        assertTrue(robot1.getHP() < Robot.INITIAL_HP);
+    }
+
+    @Test
+    public void whenDestroyedTheRobotRespawnsAtTheCheckPoint(){
+        bård.spawnRobot(robot1);
+        robot1.setDirection(2);
+
+        //Kjører vekk fra checkpointet
+        bård.performMove(new ProgramCard(1, 0, 1), robot1);
+        robot1.setDirection(1);
+
+        //Kjører av brettet
+        bård.performMove(new ProgramCard(1, 0, 1), robot1);
+
+        assertNull(bård.getRobotAt(9, 4));
+        assertEquals(robot1, bård.getRobotAt(9, 3));
+    }
+
+    @Test
+    public void endingPhaseOnCheckPointSetNewSpawnPoint(){
+        bård.placeRobotAt(9, 3, robot1);
+        robot1.setDirection(2);
+        bård.performMove(new ProgramCard(2, 0, 1), robot1);
+        robot1.setDirection(3);
+
+        //Her står botten oppå respawnpointet
+        bård.performMove(new ProgramCard(2, 0, 1), robot1);
+
+        bård.endPhase();
+
+        //Hopper nedi hullet
+        bård.performMove(new ProgramCard(1, 0, 1), robot1);
+
+        assertNull(bård.getRobotAt(9, 3));
+        assertEquals(robot1, bård.getRobotAt(7, 5));
+    }
+
+    @Test
     public void tryingToMoveNonExistentRobotYieldsError(){
         try{
             bård.performMove(new ProgramCard(1, 0, 10), robot1);

@@ -1,5 +1,7 @@
 package Game;
 
+import java.util.ArrayList;
+
 public enum WinConditions {
 
     /**
@@ -11,13 +13,16 @@ public enum WinConditions {
     FOURFLAGS(55,63,71,79);
 
     //Vinner kombinasjonen for spillet.
-    private final int[] winningCombo;
+    private final ArrayList<Integer> winningCombo = new ArrayList<>(4);
 
     WinConditions(int f1, int f2, int f3, int f4) {
-        winningCombo = new int[]{f1, f2, f3, f4};
+        this.winningCombo.add(f1);
+        this.winningCombo.add(f2);
+        this.winningCombo.add(f3);
+        this.winningCombo.add(f4);
     }
 
-    public int[] getWinningCombo() {
+    public ArrayList<Integer> getWinningCombo() {
         return winningCombo;
     }
 }

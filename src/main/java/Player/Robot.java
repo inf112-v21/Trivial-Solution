@@ -2,6 +2,7 @@ package Player;
 
 import Board.Position;
 import Components.Flag;
+import Game.WinConditions;
 import com.badlogic.gdx.graphics.Color;
 import org.lwjgl.system.CallbackI;
 
@@ -20,10 +21,12 @@ public class Robot{
 	private int hp = INITIAL_HP;
 
 	private String name;
-	private int[] flags = {0,0,0,0};
 	private Color color;
 	private int direction = 0;
 	private Position respawnPoint;
+
+	private ArrayList<Flag> flags = new ArrayList<>();
+	private WinConditions checkOrder = WinConditions.THREEFLAGS;
 	
 	
 	public Robot(String name, Color color){
@@ -95,10 +98,19 @@ public class Robot{
 	 *
 	 * @Return true hvis roboten greide å plukke opp flagget. false ellers.
 	 */
-	public boolean flagVisited(Flag flag) {
+	public boolean flagNotVisited(Flag flag) {
 
-		return false;
+		checkOrder.getWinningCombo();
+
+		boolean notVisited = true;
+		for (Flag value : flags) {
+			if (flag.compareTo(value) == 0) {
+				notVisited = false;
+			}
+		}
+		return notVisited;
 	}
+
 
 
     public void rotate(int degree) {

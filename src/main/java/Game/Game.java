@@ -22,8 +22,7 @@ public class Game {
     Board Board;
 
     public void Game(int players, String mapname){
-        Board madeBoard = new Board(mapname);
-        Board = madeBoard;
+        Board Board = new Board(mapname);
         numberOfPlayers = players;
         for (int i=0; i < numberOfPlayers; i++){
             String name = "Player " +i+1;
@@ -32,7 +31,6 @@ public class Game {
             registers.add(new Register(r));
         }
     }
-
     public void startRound(){
         Deck.shuffleDeck();
         for (int i=0; i<registers.size(); i++){
@@ -43,6 +41,7 @@ public class Game {
             tempRegister.clear();
         }
     }
+
     public void phase(){
         ArrayList<ICard> orderedCards = new ArrayList<>();
         ArrayList<Robot> botOrder = new ArrayList<>();
@@ -89,7 +88,6 @@ public class Game {
      * @return true if a robot won, false if there is no winner yet
      */
     public boolean hasWon(Robot rob) {
-        ArrayList<Flag> visitedFlags = rob.getVisitedFlags();
 
 
         return true;

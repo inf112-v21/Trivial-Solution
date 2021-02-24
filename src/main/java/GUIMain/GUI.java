@@ -125,9 +125,9 @@ public class GUI extends InputAdapter implements ApplicationListener {
 	 */
 	public void displayRobots(TextureRegion t, TiledMapTileLayer.Cell cell) {
 	
-		for(int i = 0; i < board.getHeight(); i++) {
-			for(int q = 0; q < board.getWidth(); q++) {
-                Robot r = board.getRobotAt(q, i);
+		for(int y = 0; y < board.getHeight(); y++) {
+			for(int x = 0; x < board.getWidth(); x++) {
+                Robot r = board.getRobotAt(x, y);
                 if(r != null) {
 
                     batch = new SpriteBatch();
@@ -135,10 +135,11 @@ public class GUI extends InputAdapter implements ApplicationListener {
 
                     sprite.setColor(r.getColor());
                     batch.begin();
-                    batch.draw(t.getTexture(), i, q);
+                    batch.draw(t.getTexture(), x, HEIGHT - y - 1);
                     sprite.draw(batch);
 
-                    setPlayerCell(i,q, cell);
+                    // TODO: 23.02.2021 Obs obs! Board og GUI er uenige i koordinatsystemer, Board sier at (0, 0) er oppe til venstre, mens GUI sier det er nede til venstre.
+                    setPlayerCell(x,HEIGHT - y - 1, cell);
 
                     batch.end();
 				

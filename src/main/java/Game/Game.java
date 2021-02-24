@@ -22,8 +22,7 @@ public class Game {
     Board Board;
 
     public void Game(int players, String mapname){
-        Board madeBoard = new Board(mapname);
-        Board = madeBoard;
+        Board Board = new Board(mapname);
         numberOfPlayers = players;
         for (int i=0; i < numberOfPlayers; i++){
             String name = "Player " +i+1;

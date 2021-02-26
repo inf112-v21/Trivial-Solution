@@ -34,7 +34,7 @@ public class BoardTests {
         Lwjgl3ApplicationConfiguration cfg = new Lwjgl3ApplicationConfiguration();
         cfg.setTitle("CLOSE THIS WINDOW TO START THE TESTS");
         cfg.setWindowedMode(500, 100);
-        gui = new GUI(defaultMapName);
+        gui = new GUI(defaultMapName, true);
         new Lwjgl3Application(gui, cfg);
     }
 

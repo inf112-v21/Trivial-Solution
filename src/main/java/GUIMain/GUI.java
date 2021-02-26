@@ -40,8 +40,21 @@ public class GUI extends InputAdapter implements ApplicationListener {
     private int HEIGHT;
     private int WIDTH;
 	private Sprite sprite;
+	private boolean isInDebugMode;
 
-    public GUI(String mapName){
+    /**
+     *
+     * @param mapName navnet på filen som mappet skal baseres på. Husk .tmx!
+     */
+	public GUI(String mapName){ this(mapName, false); }
+
+    /**
+     *
+     * @param mapName navnet på filen.
+     * @param isInDebugMode Om denne er true blir vinduet lukket automatisk ved oppstart. Slik at vi kan kjøre testene.
+     */
+    public GUI(String mapName, boolean isInDebugMode){
+        this.isInDebugMode = isInDebugMode;
         this.mapName = mapName;
     }
 
@@ -71,12 +84,7 @@ public class GUI extends InputAdapter implements ApplicationListener {
         font.setColor(Color.RED);
 
         board = new Board(mapName);
-    }
-
-    @Override
-    public boolean keyUp(int keyCode){
-
-        return false;
+        if (isInDebugMode) Gdx.app.exit(); //Lukker vinduet, om vi startet GUI-en kun for å teste ting.
     }
 
     @Override

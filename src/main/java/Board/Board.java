@@ -30,6 +30,7 @@ public class Board {
 
     //Antall flagg i spillet.
     private int numberOfFlags = 0;
+    private final static ArrayList<Flag> winCondition = new ArrayList<>();
 
     public Board(String filename){
         readFromTMX(filename);
@@ -74,7 +75,11 @@ public class Board {
 
                 IComponent forcomp = ComponentFactory.spawnComponent(foreground.getCell(x, y));
                 forgrid[HEIGHT-1-y][x] = forcomp;
-                if (forcomp instanceof Flag) numberOfFlags++;
+                if (forcomp instanceof Flag) {
+                    Flag newFlag = (Flag)forcomp;
+
+                    winCondition.sort(newFlag);  // TODO: Må teste denne
+                    numberOfFlags++; } // Skape list med flagID'er
                 else if(forcomp instanceof Laser) laserPositions.put((Laser)forcomp, new Position(x, HEIGHT-1-y));
                 else if(forcomp instanceof SpawnPoint) newSpawnPositions.add(new Object[]{forcomp.getID(), new Position(x, HEIGHT-1-y)});
             }

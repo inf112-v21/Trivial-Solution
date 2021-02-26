@@ -26,7 +26,7 @@ public class Robot{
 	private Position respawnPoint;
 
 	private ArrayList<Flag> flags = new ArrayList<>();
-	private WinConditions checkOrder = WinConditions.THREEFLAGS;
+	private ArrayList<Integer> winningCombo = WinConditions.THREEFLAGS.getWinningCombo();
 	
 	
 	public Robot(String name, Color color){
@@ -79,7 +79,7 @@ public class Robot{
 	    direction = dir;
 	}
 
-	@Override
+	@Override 
 	public String toString() {
 		return getName() + " has " + getRemainingLives() + " "
 				+ "lives and has " + getHP() + " hp.";
@@ -99,8 +99,20 @@ public class Robot{
 	 * @Return true hvis roboten greide å plukke opp flagget. false ellers.
 	 */
 	public boolean flagNotVisited(Flag flag) {
+		if (!flags.isEmpty()){
+			int currentFlagIndex = winningCombo.indexOf(flag.getID());
+			
 
-		checkOrder.getWinningCombo();
+
+
+
+			if (flag.getID() == winningCombo.get(newFlagIndex)){
+
+			}
+
+		}
+
+
 
 		boolean notVisited = true;
 		for (Flag value : flags) {

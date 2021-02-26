@@ -55,9 +55,6 @@ public class Board {
         TiledMapTileLayer middleground = (TiledMapTileLayer) map.getLayers().get("Middleground");
         TiledMapTileLayer foreground   = (TiledMapTileLayer) map.getLayers().get("Foreground");
 
-        //Trenger muligens ikke lenger denne?
-        TiledMapTileLayer robots       = (TiledMapTileLayer) map.getLayers().get("Robot");
-
         HEIGHT = background.getHeight();
         WIDTH  = background.getWidth();
 
@@ -179,8 +176,8 @@ public class Board {
         }
 
         //Om botten kræsjer inn i en vegg.
-        if(midgrid[fromY][fromX] instanceof Wall && !((Wall)midgrid[fromY][fromX]).canLeaveInDirection(dir)) return false;
-        if(midgrid[toY][toX] instanceof Wall && !((Wall) midgrid[toY][toX]).canGoToInDirection(dir)) return false;
+        if(forgrid[fromY][fromX] instanceof Wall && !((Wall)forgrid[fromY][fromX]).canLeaveInDirection(dir)) return false;
+        if(forgrid[toY][toX] instanceof Wall && !((Wall) forgrid[toY][toX]).canGoToInDirection(dir)) return false;
 
         //Om botten prøver å dytte en annen robot.
         Robot target = botgrid[toY][toX];

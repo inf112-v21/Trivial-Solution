@@ -278,8 +278,8 @@ public class BoardTests {
 
         bård.performMove(new ProgramCard(1, 0, 1), robot1);
 
-        assertNull(bård.getRobotAt(7, 4));
-        assertEquals(robot1, bård.getRobotAt(8, 4));
+        assertEquals(robot1, bård.getRobotAt(7, 4));
+        assertNull(bård.getRobotAt(8, 4));
     }
 
     @Test

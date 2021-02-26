@@ -3,7 +3,6 @@ package Game;
 import Board.Board;
 import Cards.Deck;
 import Cards.ICard;
-import Components.Flag;
 import Player.Register;
 import Player.Robot;
 
@@ -13,16 +12,16 @@ import java.util.ArrayList;
 public class Game {
 
     protected int numberOfPlayers;
-    Color[] colours = new Color[]{Color.RED, Color.BLUE, Color.GREEN, Color.YELLOW, Color.PINK, Color.ORANGE, Color.WHITE, Color.BLACK};
-    ArrayList<Robot> bots = new ArrayList<>();
-    ArrayList<Register> registers = new ArrayList<>();
-    ArrayList<ICard> tempRegister = new ArrayList<>();
-    ArrayList<ArrayList<ICard>> phaseRegisters = new ArrayList<>();
-    Deck Deck = new Deck();
-    Board Board;
+    final Color[] colours = new Color[]{Color.RED, Color.BLUE, Color.GREEN, Color.YELLOW, Color.PINK, Color.ORANGE, Color.WHITE, Color.BLACK};
+    final ArrayList<Robot> bots = new ArrayList<>();
+    final ArrayList<Register> registers = new ArrayList<>();
+    final ArrayList<ICard> tempRegister = new ArrayList<>();
+    final ArrayList<ArrayList<ICard>> phaseRegisters = new ArrayList<>();
+    final Deck Deck = new Deck();
+    public Board Board;
 
-    public void Game(int players, String mapname){
-        Board Board = new Board(mapname);
+    public void Game(int players, String mapName){
+        Board = new Board(mapName);
         numberOfPlayers = players;
         for (int i=0; i < numberOfPlayers; i++){
             String name = "Player " +i+1;
@@ -74,8 +73,15 @@ public class Game {
         for (int p = 0; p < orderedCards.size(); p++){
             Board.performMove(orderedCards.get(p), botOrder.get(p));
         }
+        /*orderedCards.clear();
+        botOrder.clear();*/
     }
     public void endRound(){
+        for (int i = 0; i< registers.size(); i++){
+            ArrayList<ICard> noCards = new ArrayList<>();
+            phaseRegisters.clear();
+            registers.get(i).setRegisterCards(noCards);
+        }
     }
     public void destroyedBot(Robot bot){
         registers.remove(bots.indexOf(bot));
@@ -84,12 +90,10 @@ public class Game {
 
     /**
      * Metode som sjekker om en spiller har vunnet
-     * @param rob
+     * @param rob is the bot to check.
      * @return true if a robot won, false if there is no winner yet
      */
     public boolean hasWon(Robot rob) {
-
-
         return true;
     }
 

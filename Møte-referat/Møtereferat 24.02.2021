@@ -24,7 +24,7 @@ flere kan spille på en gang. Denne vil da ha det overordnede
 ansvaret for at denne implementasjonen blir implementert.
 
 ○ GUI-ansvarlig - Ilyas
-Hvis vi skal implementer en fancy GUI mot slutten av prosjektet så kunne
+Hvis vi skal implementere en fancy GUI mot slutten av prosjektet så kan
 det være bra å ha en person som er ansvarlig for det også. Ilyas har hovedansvaret
 for at dette blir implementert.
 
@@ -33,7 +33,7 @@ Personene som er ansvarlige for disse kan delegere oppgavene videre hvis de tren
 ○ Testansvarlig - Sander
 Vi trenger en testansvarlig for å dobbelsjekke at testene er gode og at det 
 ikke er noen logiske feil i koden. Dette blir viktigere desto lengre vi kommer i 
-prosjektet. Sander tar hovedansvaret for at dette blir implementert.
+prosjektet. Sander har hovedansvaret for at dette blir implementert.
 
 
 Rollene vi ikke trenger:
@@ -69,11 +69,11 @@ skal handle om prosjektstruktur, ikke kode. Dere kan selvsagt diskutere kode, me
 om feilretting, men om hvordan man jobber og kommuniserer.
 
 Vi har valgt å bruke Kanban som hoved prosjektmetodikk og det har som sagt virket bra. Det vi likte med Kanban og grunnen
-til at vi valgte denne metodikken er at målet er å ike produsere et overskudd. Vi brukte da
+til at vi valgte denne metodikken er at målet er å ikke produsere et overskudd. Vi brukte da
 et Kanban board (github issues boardet) for å visualisere hvor langt vi har kommet i prosjektet
 og hvilke oppgaver som måtte gjøres videre.
 
-Takket være arbeidsmetodikken så har vi implementert mye av backend-koden. Takk være Kanban så har vi valgt å
+Takket være arbeidsmetodikken så har vi implementert mye av backend-koden. Takket være Kanban så har vi valgt å
 fokusere på fundamentene som har virket bra. På grunn av at Kanban også fokuserer på veldig konkrete issues så har det
 vært få misforståelsder i kommunikasjonen.
 
@@ -88,7 +88,7 @@ Commit statiskken henter vi fra github.
 Skillet i antall linjer skrevet kommer fra blant annet:
 -kompleksitet i arbeidsoppgaver varierer veldig, så mange linjer reflekterer nødvendigvis ikke tiden som er brukt på
 hver issue. Koden i ComponentFactory er for eksmepel mest gruntwork. Enkelte ting krever dessuten research og at man
-leser seg opp på dommenet ting omhandler. Koden på disse er ikke nødvendigvis ikke lang, men heller ommfattende.
+leser seg opp på domenet ting omhandler. Koden på disse er ikke nødvendigvis ikke lang, men heller ommfattende.
 
 -Dårlig bruk av git merge har resultert i at det ser ut som at
 en person har skrevet kode som en annen har gjort. Dette er kommentert i koden.

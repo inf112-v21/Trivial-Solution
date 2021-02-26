@@ -16,7 +16,7 @@ import java.util.ArrayList;
 public class Robot{
 
 	
-	private int lives = 10;
+	private int lives = 3;
     public static final int INITIAL_HP = 10;
 	private int hp = INITIAL_HP;
 
@@ -26,7 +26,7 @@ public class Robot{
 	private Position respawnPoint;
 
 	private ArrayList<Flag> flags = new ArrayList<>();
-	private ArrayList<Integer> winningCombo = WinConditions.THREEFLAGS.getWinningCombo();
+	private final static ArrayList<Integer> winningCombo = WinConditions.THREEFLAGS.getWinningCombo();
 	
 	
 	public Robot(String name, Color color){
@@ -98,25 +98,37 @@ public class Robot{
 	 *
 	 * @Return true hvis roboten greide å plukke opp flagget. false ellers.
 	 */
-	public boolean flagVisited(Flag flag) {
+	public String flagVisited(Flag flag) {
+		String status = "";
+
 		if (!flags.isEmpty()){
 			int currentFlagIndex = winningCombo.indexOf(flag.getID());
+			int visitedFlagID = flag.getID();
+			int lastAddedFlagID = flags.get(flags.size()-1).getID();
+
+
+
+
+
+			if (flags.contains(flag)){
+				status = "You've already picked up this flag";
+				return status;
+			}
 			
 			if (flag.getID() == winningCombo.get(currentFlagIndex)){
 
 			}
 
-		}
-
-
-
-		boolean notVisited = true;
-		for (Flag value : flags) {
-			if (flag.compareTo(value) == 0) {
-				notVisited = false;
+		} else {
+			if (flag.getID() == winningCombo.get(0)){
+				status = "First flag has been picked up";
+				flags.add(flag);
+			} else {
+				status = "This is the %s, not flag1"; //Kan legge til formattering etter hvert.
 			}
 		}
-		return notVisited;
+
+		return status;
 	}
 
 

@@ -26,6 +26,7 @@ public class Board {
     private final TreeMap<Robot, Position> botPositions = new TreeMap<>((Object bot1, Object bot2) -> Integer.compare(bot1.hashCode(), bot2.hashCode()));
     private final TreeMap<Laser, Position> laserPositions = new TreeMap<>((Object laser1, Object laser2) -> Integer.compare(laser1.hashCode(), laser2.hashCode()));
     private final LinkedList<Position> availableSpawnPoints = new LinkedList<>();
+    private final LinkedList<Robot> robotsWaitingToBeRespawned = new LinkedList<>();
 
     //Antall flagg i spillet.
     private int numberOfFlags = 0;
@@ -107,7 +108,47 @@ public class Board {
      * TODO: Alt unntatt lasere gjenstår.
      */
     public void endPhase(){
+        updateRespawnPoints();
         fireAllLasers();
+        removeDestroyedRobots();
+        respawnRobots();
+    }
+
+    private void updateRespawnPoints(){
+        for (Robot bot : botPositions.keySet()){
+            Position pos = botPositions.get(bot);
+            if (midgrid[pos.getY()][pos.getX()] instanceof CheckPoint){
+                bot.setRespawnPoint(pos);
+            }
+        }
+    }
+
+    private void respawnRobots(){
+        for(Robot bot : robotsWaitingToBeRespawned){
+            Position spawnpoint = bot.getRespawnPoint();
+            if (spawnpoint == null) throw new IllegalStateException("This bot has no spawnpoint. Try spawning it with spawnRobot() instead of placeRobotAt() if you want to respawn it automatically.");
+
+            if(botgrid[spawnpoint.getY()][spawnpoint.getX()] == null){
+                botgrid[spawnpoint.getY()][spawnpoint.getX()] = bot;
+                robotsWaitingToBeRespawned.removeFirst();
+                botPositions.put(bot, spawnpoint);
+                bot.respawn();
+            }
+        }
+    }
+
+    private void removeDestroyedRobots(){
+        for (Robot bot : botPositions.keySet()){
+            if(bot.isDestroyed()){
+                bot.takeLife();
+                if (!bot.hasRemainingLives()){
+                    robotsWaitingToBeRespawned.addLast(bot);
+                }
+                botgrid[botPositions.get(bot).getY()][botPositions.get(bot).getX()] = null;
+                botPositions.remove(bot);
+            }
+            // TODO: 26.02.2021 Skal vi kanskje gjøre noe spesiellt når noen har dødd for tredje og siste gang? Si ifra til brukeren?
+        }
     }
 
     /**
@@ -132,9 +173,9 @@ public class Board {
         int toX = fromX + directionToX(dir);
         int toY = fromY + directionToY(dir);
 
-        if(outOfBounds(toX, toY)){
+        if(outOfBounds(toX, toY) || midgrid[toY][toX] instanceof Hole){
             botFellOff(bot);
-            return true; //Eller false, avhengig av hva som skal skje når botten faller av brettet.
+            return true;
         }
 
         //Om botten kræsjer inn i en vegg.
@@ -197,19 +238,12 @@ public class Board {
 
 
     private void botFellOff(Robot bot){
-        // TODO: 17.02.2021 Her skal botten drepes og respawnes ved forrige respawn-punkt.
-        System.out.println("Å nei! Du fallt utenfor brettet!");
+        bot.takeLife();
+        robotsWaitingToBeRespawned.addLast(bot);
+        botgrid[botPositions.get(bot).getY()][botPositions.get(bot).getX()] = null;
+        botPositions.remove(bot);
     }
 
-    public IComponent getBackgroundAt(int x, int y){
-        return backgrid[y][x];
-    }
-    public IComponent getMiddlegroundAt(int x, int y){
-        return midgrid[y][x];
-    }
-    public IComponent getForegroundAt(int x, int y){
-        return forgrid[y][x];
-    }
     public Robot getRobotAt(int x, int y){ return botgrid[y][x]; }
 
     public void placeRobotAt(int x, int y, Robot bot){

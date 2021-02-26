@@ -7,6 +7,7 @@ import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
+import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL30;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -20,6 +21,8 @@ import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.tiles.StaticTiledMapTile;
+
+import javax.swing.JOptionPane;
 
 public class GUI extends InputAdapter implements ApplicationListener {
     private SpriteBatch batch;
@@ -69,6 +72,7 @@ public class GUI extends InputAdapter implements ApplicationListener {
 
         board = new Board(mapName);
     }
+
     @Override
     public boolean keyUp(int keyCode){
 
@@ -89,7 +93,14 @@ public class GUI extends InputAdapter implements ApplicationListener {
         
         displayRobots(getPlayerImage1("alive"), getPlayerCell(getPlayerImage("alive")));
         renderer.render();
-		
+    }
+
+    /**
+     * Metode som viser et popup-vindu med en valgt beskjed.
+     * @param message
+     */
+    public void showPopUp(String message, String windowTitle){
+        JOptionPane.showMessageDialog(null, message, windowTitle, JOptionPane.INFORMATION_MESSAGE);
     }
 
     public Board getBoard(){ return board; }
@@ -106,9 +117,7 @@ public class GUI extends InputAdapter implements ApplicationListener {
     public void resume() {
     	
     }
-    
-    
-    
+
     public void setPlayerCell(int x, int y, TiledMapTileLayer.Cell cell) {
 		playerLayer.setCell(x, y, cell);
 	}

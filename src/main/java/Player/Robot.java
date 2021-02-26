@@ -98,15 +98,11 @@ public class Robot{
 	 *
 	 * @Return true hvis roboten greide å plukke opp flagget. false ellers.
 	 */
-	public boolean flagNotVisited(Flag flag) {
+	public boolean flagVisited(Flag flag) {
 		if (!flags.isEmpty()){
 			int currentFlagIndex = winningCombo.indexOf(flag.getID());
 			
-
-
-
-
-			if (flag.getID() == winningCombo.get(newFlagIndex)){
+			if (flag.getID() == winningCombo.get(currentFlagIndex)){
 
 			}
 

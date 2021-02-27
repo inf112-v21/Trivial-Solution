@@ -4,7 +4,6 @@ import Board.Position;
 import Components.Flag;
 import Game.WinConditions;
 import com.badlogic.gdx.graphics.Color;
-import org.lwjgl.system.CallbackI;
 
 import java.util.ArrayList;
 
@@ -16,22 +15,23 @@ import java.util.ArrayList;
 public class Robot{
 
 	
-	private int lives = 3;
+	private final int lives = 3;
     public static final int INITIAL_HP = 10;
 	private int hp = INITIAL_HP;
 
-	private String name;
-	private Color color;
+	private final String name;
+	private final Color color;
 	private int direction = 0;
 	private Position respawnPoint;
 
-	private ArrayList<Flag> flags = new ArrayList<>();
-	private final static ArrayList<Integer> winningCombo = WinConditions.THREEFLAGS.getWinningCombo();
+	private final ArrayList<Flag> flags = new ArrayList<>();
+	private final static ArrayList<Flag> winningCombo = new ArrayList<>();
 	
 	
-	public Robot(String name, Color color){
+	public Robot(String name, Color color, ArrayList<Flag> flagWinningFormation){
 		this.name = name;
 		this.color = color;
+		winningCombo.addAll(flagWinningFormation);
 	}
 	
 	public String getName() {

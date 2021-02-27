@@ -24,7 +24,7 @@ public class registerTest {
     @BeforeAll
     public static void setUp(){
         allCards = new ArrayList<ICard>();
-        r = new Register(new Robot("testRobot", Color.RED));
+        r = new Register(new Robot("testRobot", Color.RED, flagWinningFormation));
 
         Deck d = new Deck();
         for(int i = 0; i < 6; i++){

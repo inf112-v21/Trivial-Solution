@@ -20,14 +20,16 @@ public class Game {
     ArrayList<ArrayList<ICard>> phaseRegisters = new ArrayList<>();
     Deck Deck = new Deck();
     Board Board;
+    private final static ArrayList<Flag> flagWinningFormation = new ArrayList<>();
 
     public void Game(int players, String mapname){
         Board madeBoard = new Board(mapname);
         Board = madeBoard;
         numberOfPlayers = players;
+        flagWinningFormation.addAll(madeBoard.getWinningCombo());
         for (int i=0; i < numberOfPlayers; i++){
             String name = "Player " +i+1;
-            Robot r = new Robot(name, colours[i]);
+            Robot r = new Robot(name, colours[i], flagWinningFormation);
             bots.add(r);
             registers.add(new Register(r));
         }

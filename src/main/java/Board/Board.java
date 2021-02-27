@@ -31,7 +31,7 @@ public class Board {
 
     //Antall flagg i spillet.
     private int numberOfFlags = 0;
-    private final ArrayList<Flag> winCondition = new ArrayList<>();
+    private final ArrayList<Flag> flagWinningFormation = new ArrayList<>();
 
     public Board(String filename){
         readFromTMX(filename);
@@ -79,8 +79,8 @@ public class Board {
                 if (forcomp instanceof Flag) {
                     Flag newFlag = (Flag)forcomp;
 
-                    winCondition.add(newFlag);
-                    winCondition.sort(new Flag.CompareID());  // TODO: Må teste denne
+                    flagWinningFormation.add(newFlag);
+                    flagWinningFormation.sort(new Flag.CompareID());  // TODO: Må teste denne
                     numberOfFlags++;
                 } // Skape list med flagID'er
                 else if(forcomp instanceof Laser) laserPositions.put((Laser)forcomp, new Position(x, HEIGHT-1-y));
@@ -270,4 +270,6 @@ public class Board {
     private boolean outOfBounds(int x, int y){
         return !(x >= 0 && x < WIDTH && y >= 0 && y < HEIGHT);
     }
+
+    public ArrayList<Flag> getWinningCombo() { return flagWinningFormation;}
 }

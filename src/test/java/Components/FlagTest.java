@@ -1,6 +1,7 @@
 package Components;
 
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -9,9 +10,9 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class FlagTest {
 
-    @Set
-    //Her tester vi om comparatoren vil generere flaggene i riktig rekkefølge
     private static final ArrayList<Flag> winCondition = new ArrayList<>();
+    //Her tester vi om comparatoren vil generere flaggene i riktig rekkefølge
+
 
     @Test
     void testIfTheFlagsGetSortedCorrectly() {

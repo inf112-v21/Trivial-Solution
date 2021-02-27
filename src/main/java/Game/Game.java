@@ -91,9 +91,11 @@ public class Game {
      * @return true if a robot won, false if there is no winner yet
      */
     public boolean hasWon(Robot rob) {
-
-
-        return true;
+        ArrayList<Flag> visitedFlags = rob.getVisitedFlags();
+        if (visitedFlags.equals(flagWinningFormation)){
+            return true;
+        }
+        return false;
     }
 
 

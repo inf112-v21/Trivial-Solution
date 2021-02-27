@@ -2,7 +2,6 @@ package Player;
 
 import Board.Position;
 import Components.Flag;
-import Game.WinConditions;
 import com.badlogic.gdx.graphics.Color;
 
 import java.util.ArrayList;

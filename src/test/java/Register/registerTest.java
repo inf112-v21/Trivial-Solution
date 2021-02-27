@@ -2,6 +2,7 @@ package Register;
 
 import Cards.Deck;
 import Cards.ICard;
+import Components.Flag;
 import Player.Register;
 import Player.Robot;
 import com.badlogic.gdx.graphics.Color;
@@ -24,7 +25,7 @@ public class registerTest {
     @BeforeAll
     public static void setUp(){
         allCards = new ArrayList<ICard>();
-        r = new Register(new Robot("testRobot", Color.RED, flagWinningFormation));
+        r = new Register(new Robot("testRobot", Color.RED, new ArrayList<Flag>()));
 
         Deck d = new Deck();
         for(int i = 0; i < 6; i++){

@@ -120,12 +120,12 @@ public class Robot{
 			}
 
 		} else {
-			if (flag.getID() == winningCombo.get(0)){
+
 				status = "First flag has been picked up";
 				flags.add(flag);
-			} else {
+
 				status = "This is the %s, not flag1"; //Kan legge til formattering etter hvert.
-			}
+
 		}
 
 		return status;

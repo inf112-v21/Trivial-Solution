@@ -1,6 +1,7 @@
 package Board;
 
 import Cards.ICard;
+import Components.Flag.*;
 import Components.*;
 import Player.Robot;
 import com.badlogic.gdx.graphics.Color;
@@ -78,8 +79,10 @@ public class Board {
                 if (forcomp instanceof Flag) {
                     Flag newFlag = (Flag)forcomp;
 
-                    winCondition.sort(newFlag);  // TODO: Må teste denne
-                    numberOfFlags++; } // Skape list med flagID'er
+                    winCondition.add(newFlag);
+                    winCondition.sort(new Flag.CompareID());  // TODO: Må teste denne
+                    numberOfFlags++;
+                } // Skape list med flagID'er
                 else if(forcomp instanceof Laser) laserPositions.put((Laser)forcomp, new Position(x, HEIGHT-1-y));
                 else if(forcomp instanceof SpawnPoint) newSpawnPositions.add(new Object[]{forcomp.getID(), new Position(x, HEIGHT-1-y)});
             }

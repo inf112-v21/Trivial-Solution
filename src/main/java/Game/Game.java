@@ -13,20 +13,22 @@ import java.util.ArrayList;
 public class Game {
 
     protected int numberOfPlayers;
-    Color[] colours = new Color[]{Color.RED, Color.BLUE, Color.GREEN, Color.YELLOW, Color.PINK, Color.ORANGE, Color.WHITE, Color.BLACK};
-    ArrayList<Robot> bots = new ArrayList<>();
-    ArrayList<Register> registers = new ArrayList<>();
-    ArrayList<ICard> tempRegister = new ArrayList<>();
-    ArrayList<ArrayList<ICard>> phaseRegisters = new ArrayList<>();
-    Deck Deck = new Deck();
-    Board Board;
+
     private final static ArrayList<Flag> flagWinningFormation = new ArrayList<>();
 
-    public void Game(int players, String mapname){
-        Board madeBoard = new Board(mapname);
-        Board = madeBoard;
+    final Color[] colours = new Color[]{Color.RED, Color.BLUE, Color.GREEN, Color.YELLOW, Color.PINK, Color.ORANGE, Color.WHITE, Color.BLACK};
+    final ArrayList<Robot> bots = new ArrayList<>();
+    final ArrayList<Register> registers = new ArrayList<>();
+    final ArrayList<ICard> tempRegister = new ArrayList<>();
+    final ArrayList<ArrayList<ICard>> phaseRegisters = new ArrayList<>();
+    final Deck Deck = new Deck();
+    public Board Board;
+
+
+    public void Game(int players, String mapName){
+        Board = new Board(mapName);
         numberOfPlayers = players;
-        flagWinningFormation.addAll(madeBoard.getWinningCombo());
+        flagWinningFormation.addAll(Board.getWinningCombo());
         for (int i=0; i < numberOfPlayers; i++){
             String name = "Player " +i+1;
             Robot r = new Robot(name, colours[i]);
@@ -77,8 +79,15 @@ public class Game {
         for (int p = 0; p < orderedCards.size(); p++){
             Board.performMove(orderedCards.get(p), botOrder.get(p));
         }
+        /*orderedCards.clear();
+        botOrder.clear();*/
     }
     public void endRound(){
+        for (int i = 0; i< registers.size(); i++){
+            ArrayList<ICard> noCards = new ArrayList<>();
+            phaseRegisters.clear();
+            registers.get(i).setRegisterCards(noCards);
+        }
     }
     public void destroyedBot(Robot bot){
         registers.remove(bots.indexOf(bot));
@@ -87,10 +96,11 @@ public class Game {
 
     /**
      * Metode som sjekker om en spiller har vunnet
-     * @param rob
+     * @param rob is the bot to check.
      * @return true if a robot won, false if there is no winner yet
      */
     public boolean hasWon(Robot rob) {
+
         ArrayList<Flag> visitedFlags = rob.getVisitedFlags();
         if (visitedFlags.equals(flagWinningFormation)){
             return true;

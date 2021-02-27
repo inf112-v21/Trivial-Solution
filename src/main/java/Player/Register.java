@@ -7,21 +7,20 @@ import java.util.ArrayList;
 /*
 * Denne klassen får inn 9 kort fra Game-klassen, og må vise disse 9 kortene til spilleren.
 * Spilleren skal dermed plukke ut 5 kort av disse, og putte den i sitt eget register.
+* @author sandersig
  */
 public class Register {
 
     private ArrayList<ICard> allRegisterCards = new ArrayList<ICard>(); //alle 9 kortene som spilleren får utdelt
     private ArrayList<ICard> registerCards = new ArrayList<ICard>(5); //de 5 kortene som spilleren velger
     // Det første kortet i listen er kort nr.1 i registeret, og det siste kortet er kort nr.5.
-    private Integer lifeTokens;
-    private Integer damageTokens;
-    private Boolean powerDown;
+    private boolean powerDown;
+    private Robot bot;
 
     //Constructor
     public Register(Robot robot){
-        damageTokens = robot.getHP();
-        lifeTokens = robot.getRemainingLives();
         powerDown = false;
+        bot = robot;
     }
 
     /**
@@ -64,16 +63,16 @@ public class Register {
      * Returnerer antallet "life tokens" som registeret har.
      * @return lifeTokens
      */
-    public Integer getLifeTokens(){
-        return lifeTokens;
+    public int getLifeTokens(){
+        return bot.getRemainingLives();
     }
 
     /**
      * Returnerer antallet "damage tokens" som registeret inneholder.
      * @return damageTokens
      */
-    public Integer getDamageTokens(){
-        return damageTokens;
+    public int getDamageTokens(){
+        return bot.getHP();
     }
 
     /**
@@ -84,4 +83,10 @@ public class Register {
         return powerDown;
     }
 
+    /**
+     * Denne metoden endrer powerDown til true dersom knappen for powerDown blir trykket på i GUI-en for registeret.
+     */
+    public void powerDownRobot(){
+        powerDown = true;
+    }
 }

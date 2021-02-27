@@ -13,9 +13,13 @@ import java.util.ArrayList;
  */
 public class Robot{
 
-	
-	private final int lives = 3;
+
+
+
     public static final int INITIAL_HP = 10;
+    public static final int INITIAL_LIVES = 3;
+
+    private int lives = INITIAL_LIVES;
 	private int hp = INITIAL_HP;
 
 	private final String name;
@@ -61,14 +65,28 @@ public class Robot{
 	public void applyDamage(int dmg) {
 		hp -= dmg;
 	}
+
+	public void takeLife(){ lives--; }
 	
 	/**
 	 * 
-	 * @return true if the robot is destroyed, e.g. has used all 3 lives, false otherwise
+	 * @return true if the robot is destroyed, ie. has no hp, false otherwise
 	 */
 	public boolean isDestroyed() {
-		return lives < 1;
+		return hp < 1;
 	}
+
+    /**
+     *
+     * @return true if it has no remaining lives, false otherwise
+     */
+	public boolean hasRemainingLives(){
+	    return lives > 0;
+    }
+
+    public void respawn(){
+	    hp = INITIAL_HP - 2;
+    }
 
 	public int getDirection(){ return direction; }
 

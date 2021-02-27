@@ -16,12 +16,12 @@ import static org.junit.jupiter.api.Assertions.fail;
 public class BoardTests {
 
     private static Board bård;
-    private static String defaultMapName = "TestMap.tmx";
-    private static final Robot robot1 = new Robot("Nebuchadnezzar", Color.BLUE);
-    private static final Robot robot2 = new Robot("Alexstrasza", Color.RED);
-    private static final Robot robot3 = new Robot("Gilgamesh", Color.YELLOW);
-    private static final Robot robot4 = new Robot("Ashurbarnipal", Color.GREEN);
-    private static final Robot robot5 = new Robot("Andromeda", Color.PINK);
+    private final static String defaultMapName = "TestMap.tmx";
+    private static Robot robot1;
+    private static Robot robot2;
+    private static Robot robot3;
+    private static Robot robot4;
+    private static Robot robot5;
     private static GUI gui;
 
     /**
@@ -34,7 +34,7 @@ public class BoardTests {
         Lwjgl3ApplicationConfiguration cfg = new Lwjgl3ApplicationConfiguration();
         cfg.setTitle("CLOSE THIS WINDOW TO START THE TESTS");
         cfg.setWindowedMode(500, 100);
-        gui = new GUI(defaultMapName);
+        gui = new GUI(defaultMapName, true);
         new Lwjgl3Application(gui, cfg);
     }
 
@@ -42,8 +42,14 @@ public class BoardTests {
      * Resetter alle posisjonene på brettet, slik at alle testene har det samme utgangspunktet.
      */
     @BeforeEach
-    public void resetBoard(){
+    public void resetState(){
         bård = new Board(defaultMapName);
+        robot1 = new Robot("Nebuchadnezzar", Color.BLUE);
+        robot2 = new Robot("Alexstrasza", Color.RED);
+        robot3 = new Robot("Gilgamesh", Color.YELLOW);
+        robot4 = new Robot("Ashurbarnipal", Color.GREEN);
+        robot5 = new Robot("Andromeda", Color.PINK);
+
     }
 
     @Test
@@ -308,6 +314,91 @@ public class BoardTests {
         } catch (IllegalStateException ex){
             //Yay it worked
         }
+    }
+
+    @Test
+    public void drivingOffTheMapRemovesOneOfTheRobotsLivesAndReducesMaxHP(){
+        bård.spawnRobot(robot1);
+        robot1.setDirection(1);
+
+        bård.performMove(new ProgramCard(1, 0, 1), robot1);
+        bård.endPhase();
+
+        assertTrue(robot1.getRemainingLives() < Robot.INITIAL_LIVES);
+        assertTrue(robot1.getHP() < Robot.INITIAL_HP);
+    }
+
+    @Test
+    public void drivingIntoAHoleActsAsJumpingOffTheMap(){
+        bård.spawnRobot(robot1);
+        robot1.setDirection(3);
+
+        bård.performMove(new ProgramCard(3, 0, 1), robot1);
+        bård.endPhase();
+
+        assertNull(bård.getRobotAt(6, 3));
+        assertNull(bård.getRobotAt(7, 3));
+        assertNull(bård.getRobotAt(8, 3));
+        assertEquals(robot1, bård.getRobotAt(9, 3));
+        assertTrue(robot1.getHP() < Robot.INITIAL_HP);
+    }
+
+    @Test
+    public void whenDestroyedTheRobotRespawnsAtTheCheckPoint(){
+        bård.spawnRobot(robot1);
+        robot1.setDirection(2);
+
+        //Kjører vekk fra checkpointet
+        bård.performMove(new ProgramCard(1, 0, 1), robot1);
+        robot1.setDirection(1);
+
+        //Kjører av brettet
+        bård.performMove(new ProgramCard(1, 0, 1), robot1);
+        bård.endPhase();
+
+        assertNull(bård.getRobotAt(9, 4));
+        assertEquals(robot1, bård.getRobotAt(9, 3));
+    }
+
+    @Test
+    public void endingPhaseOnCheckPointSetNewSpawnPoint(){
+        bård.spawnRobot(robot1);
+        robot1.setDirection(2);
+        bård.performMove(new ProgramCard(2, 0, 1), robot1);
+        robot1.setDirection(3);
+
+        //Her står botten oppå respawnpointet
+        bård.performMove(new ProgramCard(2, 0, 1), robot1);
+
+        bård.endPhase();
+
+        //Hopper nedi hullet
+        bård.performMove(new ProgramCard(1, 0, 1), robot1);
+
+        bård.endPhase();
+
+        assertNull(bård.getRobotAt(9, 3));
+        assertEquals(robot1, bård.getRobotAt(7, 5));
+    }
+
+    @Test
+    public void cannotRespawnIfCheckPointIsOccupied(){
+        bård.spawnRobot(robot1);
+        robot1.setDirection(3);
+        bård.performMove(new ProgramCard(2, 0, 1), robot1);
+        bård.placeRobotAt(9, 3, robot2);
+
+        bård.performMove(new ProgramCard(1, 0, 1), robot1);
+        bård.endPhase();
+
+        //Nå er checkpointet okkupert
+        assertEquals(robot2, bård.getRobotAt(9, 3));
+
+        bård.performMove(new ProgramCard(1, 0, 1), robot2);
+        bård.endPhase();
+
+        //Nå er checkpointet ledig igjen
+        assertEquals(robot1, bård.getRobotAt(9, 3));
     }
 
     @Test

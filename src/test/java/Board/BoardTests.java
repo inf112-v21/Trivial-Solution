@@ -17,11 +17,11 @@ public class BoardTests {
 
     private static Board bård;
     private static String defaultMapName = "TestMap.tmx";
-    private static final Robot robot1 = new Robot("Nebuchadnezzar", Color.BLUE, bård.getWinningCombo());
-    private static final Robot robot2 = new Robot("Alexstrasza", Color.RED, bård.getWinningCombo());
-    private static final Robot robot3 = new Robot("Gilgamesh", Color.YELLOW, bård.getWinningCombo());
-    private static final Robot robot4 = new Robot("Ashurbarnipal", Color.GREEN, bård.getWinningCombo());
-    private static final Robot robot5 = new Robot("Andromeda", Color.PINK, bård.getWinningCombo());
+    private static final Robot robot1 = new Robot("Nebuchadnezzar", Color.BLUE);
+    private static final Robot robot2 = new Robot("Alexstrasza", Color.RED);
+    private static final Robot robot3 = new Robot("Gilgamesh", Color.YELLOW);
+    private static final Robot robot4 = new Robot("Ashurbarnipal", Color.GREEN);
+    private static final Robot robot5 = new Robot("Andromeda", Color.PINK);
     private static GUI gui;
 
     /**

@@ -24,14 +24,13 @@ public class Robot{
 	private int direction = 0;
 	private Position respawnPoint;
 
-	private final ArrayList<Flag> flags = new ArrayList<>();
-	private final static ArrayList<Flag> winningCombo = new ArrayList<>();
+	private final ArrayList<Flag> flagsVisited = new ArrayList<>();
 	
 	
-	public Robot(String name, Color color, ArrayList<Flag> flagWinningFormation){
+	public Robot(String name, Color color){
 		this.name = name;
 		this.color = color;
-		winningCombo.addAll(flagWinningFormation);
+
 	}
 	
 	public String getName() {
@@ -88,49 +87,15 @@ public class Robot{
 	/**
 	 * @return Gir oss flaggene som roboten har besøkt.
 	 */
-	public ArrayList<Flag> getVisitedFlags(){ return flags;}
+	public ArrayList<Flag> getVisitedFlags(){ return flagsVisited;}
 
 	public Position getRespawnPoint(){ return respawnPoint; }
 	public void setRespawnPoint(Position pos){ respawnPoint = pos; }
 	
 	/**
-	 * Denne funksjonen sjekker om roboten hentet flagget på en sukksesful måte
-	 *
-	 * @Return true hvis roboten greide å plukke opp flagget. false ellers.
+	 * Denne funksjonen leggr til et flag som en roboten henter
 	 */
-	public String flagVisited(Flag flag) {
-		String status = "";
-
-		if (!flags.isEmpty()){
-			int currentFlagIndex = winningCombo.indexOf(flag.getID());
-			int visitedFlagID = flag.getID();
-			int lastAddedFlagID = flags.get(flags.size()-1).getID();
-
-
-
-
-
-			if (flags.contains(flag)){
-				status = "You've already picked up this flag";
-				return status;
-			}
-			
-			if (flag.getID() == winningCombo.get(currentFlagIndex)){
-
-			}
-
-		} else {
-
-				status = "First flag has been picked up";
-				flags.add(flag);
-
-				status = "This is the %s, not flag1"; //Kan legge til formattering etter hvert.
-
-		}
-
-		return status;
-	}
-
+	public void addToFlagsVisited(Flag flag) { flagsVisited.add(flag);}
 
 
     public void rotate(int degree) {

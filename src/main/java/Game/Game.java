@@ -29,7 +29,7 @@ public class Game {
         flagWinningFormation.addAll(madeBoard.getWinningCombo());
         for (int i=0; i < numberOfPlayers; i++){
             String name = "Player " +i+1;
-            Robot r = new Robot(name, colours[i], flagWinningFormation);
+            Robot r = new Robot(name, colours[i]);
             bots.add(r);
             registers.add(new Register(r));
         }

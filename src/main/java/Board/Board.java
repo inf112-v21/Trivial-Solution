@@ -31,7 +31,7 @@ public class Board {
 
     //Antall flagg i spillet.
     private int numberOfFlags = 0;
-    private final static ArrayList<Flag> winCondition = new ArrayList<>();
+    private final ArrayList<Flag> winCondition = new ArrayList<>();
 
     public Board(String filename){
         readFromTMX(filename);

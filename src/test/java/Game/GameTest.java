@@ -1,5 +1,8 @@
 package Game;
 
+import Components.Flag;
+import Player.Robot;
+import com.badlogic.gdx.graphics.Color;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -10,11 +13,11 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class GameTest {
 
-    private Game robotRally = new Game(4, "assets/TestMap.tmx");
+    private Game robotRally;
 
     @BeforeEach
     void setUp(){
-
+        robotRally = new Game(4, "TestMap.tmx");
     }
 
     @Test
@@ -35,7 +38,8 @@ class GameTest {
 
     @Test
     void hasWon() {
+        //Må finne ut hvordan denne skal testes
+        Robot rob = new Robot("Nebuchadnezzar", Color.BLUE);
 
-        Game roboRally =
     }
 }

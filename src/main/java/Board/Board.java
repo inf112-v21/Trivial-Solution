@@ -104,10 +104,84 @@ public class Board {
             if (card.getDistance() != 0) throw new IllegalArgumentException("A card has to be either a moving card, or a rotation card. This one is both!");
             return;
         }
+
+        //Posisjonene til boten
         Position pos = botPositions.get(bot);
+        int fromX = pos.getX();
+        int fromY = pos.getY();
+        int dir = bot.getDirection();
+        int distanceToTravel = card.getDistance();
+
+
         if (pos == null) throw new IllegalArgumentException("Could not find the bot");
 
-        moveTowards(card.getDistance(), pos.getX(), pos.getY(), bot.getDirection());
+        moveTowards(distanceToTravel, fromX, fromY, dir);
+
+        checkForFlag(bot);//TODO Lag tester for å sjekke denne (Spør Steinar om representasjonen)
+
+        }
+
+    private void checkForFlag(Robot bot) {
+        Flag newFlag = botLandsOnFlag(distanceToTravel, fromX, fromY, dir);
+        if(newFlag != null){
+
+            if(robotCanPickUpFlag(bot,newFlag)){
+                bot.addToFlagsVisited(newFlag);
+            }
+        }
+
+    }
+
+    ;
+    }
+
+    /**
+     *Denne metoden sjekker om vi roboten landet på et flagg.
+     * moweToward() metoden sjekket om roboten støttet på en vegg
+     * eller andre ting. Denne metoden kalles
+     *
+     *
+     * @param distanceToTravel
+     * @param fromX
+     * @param fromY
+     * @param dir
+     * @return
+     */
+    private Flag botLandsOnFlag(int distanceToTravel, int fromX, int fromY, int dir) {
+        int toX = 0;
+        int toY = 0;
+
+        for(int i=0; i < distanceToTravel; i++){
+            toX = fromX + directionToX(dir);
+            toY = fromY + directionToY(dir);
+        }
+        if (forgrid[toX][toY] instanceof Flag){
+            return (Flag) forgrid[toX][toY];
+        }
+        return null;
+    }
+
+    /**
+     *
+     * @param bot
+     * @param foundFlag
+     * @return
+     */
+    private boolean robotCanPickUpFlag(Robot bot, Flag foundFlag) {
+
+        ArrayList<Flag> visited = bot.getVisitedFlags();
+        if (!visited.isEmpty()){
+
+            //Finn siste besøkte flagg og finn ut hvilket det neste flagget som skal besøkes er
+            Flag lastVisitedFlag = visited.get(visited.size()-1);
+            int nextFlag = flagWinningFormation.indexOf(lastVisitedFlag) + 1;
+
+            //Hvis neste flagg er det flagget roboten fant så kan vi plukke det opp.
+            return foundFlag.equals(flagWinningFormation.get(nextFlag));
+        }
+        else if (foundFlag.equals(flagWinningFormation.get(0))) return true;
+
+        return false;
     }
 
     /**
@@ -194,6 +268,7 @@ public class Board {
         Robot target = botgrid[toY][toX];
         if (target != null && !moveTowards(1, toX, toY, dir)) return false; //Om botten kræsjet inn i en annen bot, og ikke klarte å dytte den.
 
+
         //Flytter roboten, endelig.
         botgrid[toY][toX] = bot;
         botgrid[fromY][fromX] = null;
@@ -201,6 +276,8 @@ public class Board {
         moveTowards(N_Moves-1, toX, toY, dir);
         return true;
     }
+
+
 
     /**
      * Avfyrer alle lasere. inkluderte de skutt av robotene.

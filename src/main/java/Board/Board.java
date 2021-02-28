@@ -106,7 +106,7 @@ public class Board {
         }
 
         Position pos = botPositions.get(bot);
-        
+
         if (pos == null) throw new IllegalArgumentException("Could not find the bot");
 
         moveTowards(card.getDistance(), pos.getX(),pos.getY(),bot.getDirection());

@@ -14,7 +14,7 @@ public class Game {
 
     protected int numberOfPlayers;
 
-    private final static ArrayList<Flag> flagWinningFormation = new ArrayList<>();
+    private final ArrayList<Flag> flagWinningFormation = new ArrayList<>();
 
     final Color[] colours = new Color[]{Color.RED, Color.BLUE, Color.GREEN, Color.YELLOW, Color.PINK, Color.ORANGE, Color.WHITE, Color.BLACK};
     final ArrayList<Robot> bots = new ArrayList<>();

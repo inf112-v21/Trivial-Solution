@@ -1,10 +1,21 @@
 package Game;
 
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class GameTest {
+
+    private Game robotRally = new Game(4, "assets/TestMap.tmx");
+
+    @BeforeEach
+    void setUp(){
+
+    }
 
     @Test
     void startRound() {
@@ -24,5 +35,7 @@ class GameTest {
 
     @Test
     void hasWon() {
+
+        Game roboRally =
     }
 }

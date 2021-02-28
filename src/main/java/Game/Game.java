@@ -25,7 +25,7 @@ public class Game {
     public Board Board;
 
 
-    public void Game(int players, String mapName){
+    public Game(int players, String mapName){
         Board = new Board(mapName);
         numberOfPlayers = players;
         flagWinningFormation.addAll(Board.getWinningCombo());

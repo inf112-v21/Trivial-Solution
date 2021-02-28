@@ -147,9 +147,9 @@ public class Board {
 
 
     /**
-     *Denne metoden den globale variabelen flagWinningFormation
-     * for å forsikre seg om at riktig flag blir plukket opp/registrert
-     * på dette tidspunktet
+     *Denne metoden bruker den globale variabelen flagWinningFormation
+     * for å forsikre seg om at flaggene blir plukket opp/registrert
+     * i riktig rekkefølge
      *
      * @param bot - roboten vår
      * @param foundFlag - flagget som roboten landet på

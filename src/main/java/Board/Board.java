@@ -121,9 +121,22 @@ public class Board {
 
         }
 
+    /**
+     * Sjekker om roboten landet på et flag eller ikke
+     * Hvis roboten gjorde det så vil vi se om roboten kan plukke opp
+     * flagget. Den kan deg kun gjøre hvis det neste flagget er det
+     * rette flagget i rekkefølgen.
+     *
+     * @param bot - roboten som spiller
+     */
     private void checkForFlag(Robot bot) {
-        Flag newFlag = botLandsOnFlag(distanceToTravel, fromX, fromY, dir);
-        if(newFlag != null){
+
+        Position pos = botPositions.get(bot);
+        int posX = pos.getX();
+        int posY = pos.getY();
+
+        if (forgrid[posX][posY] instanceof Flag){
+            Flag newFlag = (Flag) forgrid[posX][posY];
 
             if(robotCanPickUpFlag(bot,newFlag)){
                 bot.addToFlagsVisited(newFlag);
@@ -132,54 +145,31 @@ public class Board {
 
     }
 
-    ;
-    }
 
     /**
-     *Denne metoden sjekker om vi roboten landet på et flagg.
-     * moweToward() metoden sjekket om roboten støttet på en vegg
-     * eller andre ting. Denne metoden kalles
+     *Denne metoden den globale variabelen flagWinningFormation
+     * for å forsikre seg om at riktig flag blir plukket opp/registrert
+     * på dette tidspunktet
      *
-     *
-     * @param distanceToTravel
-     * @param fromX
-     * @param fromY
-     * @param dir
-     * @return
-     */
-    private Flag botLandsOnFlag(int distanceToTravel, int fromX, int fromY, int dir) {
-        int toX = 0;
-        int toY = 0;
-
-        for(int i=0; i < distanceToTravel; i++){
-            toX = fromX + directionToX(dir);
-            toY = fromY + directionToY(dir);
-        }
-        if (forgrid[toX][toY] instanceof Flag){
-            return (Flag) forgrid[toX][toY];
-        }
-        return null;
-    }
-
-    /**
-     *
-     * @param bot
-     * @param foundFlag
-     * @return
+     * @param bot - roboten vår
+     * @param foundFlag - flagget som roboten landet på
+     * @return -true hvis roboten kan plukke opp/registrere flagget. Flase ellers.
      */
     private boolean robotCanPickUpFlag(Robot bot, Flag foundFlag) {
 
         ArrayList<Flag> visited = bot.getVisitedFlags();
         if (!visited.isEmpty()){
 
-            //Finn siste besøkte flagg og finn ut hvilket det neste flagget som skal besøkes er
+            //Finn siste besøkte flagg og hvilket det neste flagget som skal besøkes er
             Flag lastVisitedFlag = visited.get(visited.size()-1);
             int nextFlag = flagWinningFormation.indexOf(lastVisitedFlag) + 1;
 
-            //Hvis neste flagg er det flagget roboten fant så kan vi plukke det opp.
+            //Hvis neste flagg som skal registreres er det flagget roboten fant så kan vi registrere det.
             return foundFlag.equals(flagWinningFormation.get(nextFlag));
         }
-        else if (foundFlag.equals(flagWinningFormation.get(0))) return true;
+
+        //Hvis inget flagg er registrert så sjekker vi om roboten landet på det første flagget
+        if (foundFlag.equals(flagWinningFormation.get(0))) return true;
 
         return false;
     }

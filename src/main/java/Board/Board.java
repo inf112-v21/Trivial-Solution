@@ -105,17 +105,11 @@ public class Board {
             return;
         }
 
-        //Posisjonene til boten
         Position pos = botPositions.get(bot);
-        int fromX = pos.getX();
-        int fromY = pos.getY();
-        int dir = bot.getDirection();
-        int distanceToTravel = card.getDistance();
-
-
+        
         if (pos == null) throw new IllegalArgumentException("Could not find the bot");
 
-        moveTowards(distanceToTravel, fromX, fromY, dir);
+        moveTowards(card.getDistance(), pos.getX(),pos.getY(),bot.getDirection());
 
         checkForFlag(bot);//TODO Lag tester for å sjekke denne (Spør Steinar om representasjonen)
 

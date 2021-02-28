@@ -78,11 +78,12 @@ public class Board {
                 forgrid[HEIGHT-1-y][x] = forcomp;
                 if (forcomp instanceof Flag) {
                     Flag newFlag = (Flag)forcomp;
-
                     flagWinningFormation.add(newFlag);
-                    flagWinningFormation.sort(new Flag.CompareID());  // TODO: Må teste denne
+
+                    // Sorterer flaggene slik at roboten kan hente de i riktig rekkefølge
+                    flagWinningFormation.sort(new Flag.CompareID());
                     numberOfFlags++;
-                } // Skape list med flagID'er
+                }
                 else if(forcomp instanceof Laser) laserPositions.put((Laser)forcomp, new Position(x, HEIGHT-1-y));
                 else if(forcomp instanceof SpawnPoint) newSpawnPositions.add(new Object[]{forcomp.getID(), new Position(x, HEIGHT-1-y)});
             }
@@ -118,7 +119,7 @@ public class Board {
     /**
      * Sjekker om roboten landet på et flag eller ikke
      * Hvis roboten gjorde det så vil vi se om roboten kan plukke opp
-     * flagget. Den kan deg kun gjøre hvis det neste flagget er det
+     * flagget. Det kan den kun gjøre hvis det neste flagget er det
      * rette flagget i rekkefølgen.
      *
      * @param bot - roboten som spiller

@@ -19,17 +19,17 @@ public class Deck {
     public Deck(){
         for (int i=0; i<6; i++){
             cards.add(new ProgramCard(0,2,10, new Texture(Gdx.files.internal("1 Red HULK X90/010 U-TURN 1Red 4.png"))));
-            cards.add(new ProgramCard(0,-1,20,new Texture(Gdx.files.internal("1 Red HULK X90/020 ROTATE LEFT 1Red 3.png"))));
-            cards.add(new ProgramCard(0,1,30,new Texture(Gdx.files.internal("1 Red HULK X90/030 ROTATE RIGHT 1Red 3.png"))));
-            cards.add(new ProgramCard(0,-1,40,new Texture(Gdx.files.internal("1 Red HULK X90/040 ROTATE LEFT 1Red 3.png"))));
-            cards.add(new ProgramCard(0,1,50,new Texture(Gdx.files.internal("1 Red HULK X90/030 ROTATE RIGHT 1Red 3.png"))));
+            cards.add(new ProgramCard(0,-1,20, new Texture(Gdx.files.internal("1 Red HULK X90/020 ROTATE LEFT 1Red 3.png"))));
+            cards.add(new ProgramCard(0,1,30, new Texture(Gdx.files.internal("1 Red HULK X90/030 ROTATE RIGHT 1Red 3.png"))));
+            cards.add(new ProgramCard(0,-1,40, new Texture(Gdx.files.internal("1 Red HULK X90/040 ROTATE LEFT 1Red 3.png"))));
+            cards.add(new ProgramCard(0,1,50, new Texture(Gdx.files.internal("1 Red HULK X90/030 ROTATE RIGHT 1Red 3.png"))));
             cards.add(new ProgramCard(0,-1,60,new Texture(Gdx.files.internal("1 Red HULK X90/060 ROTATE LEFT 1Red 3.png"))));
-            cards.add(new ProgramCard(0,1,70,new Texture(Gdx.files.internal("1 Red HULK X90/070 ROTATE RIGHT 1Red 3.png"))));
+            cards.add(new ProgramCard(0,1,70, new Texture(Gdx.files.internal("1 Red HULK X90/070 ROTATE RIGHT 1Red 3.png"))));
             cards.add(new ProgramCard(-1,0,80, new Texture(Gdx.files.internal("1 Red HULK X90/080 BACK-UP 1Red 3.png"))));
             cards.add(new ProgramCard(1,0,90, new Texture(Gdx.files.internal("1 Red HULK X90/090 MOVE1 1Red 3.png"))));
             cards.add(new ProgramCard(1,0,100, new Texture(Gdx.files.internal("1 Red HULK X90/100 MOVE1 1Red 3.png"))));
             cards.add(new ProgramCard(1,0,110, new Texture(Gdx.files.internal("1 Red HULK X90/110 MOVE1 1Red 3.png"))));
-            cards.add(new ProgramCard(2,0,130, new Texture(Gdx.files.internal("1 Red HULK X90/130 MOVE1 1Red 3.png"))));
+            cards.add(new ProgramCard(2,0,140, new Texture(Gdx.files.internal("1 Red HULK X90/140 MOVE2 1Red 3.png"))));
             cards.add(new ProgramCard(2,0,150, new Texture(Gdx.files.internal("1 Red HULK X90/150 MOVE2 1Red 3.png"))));
             cards.add(new ProgramCard(3,0,170, new Texture(Gdx.files.internal("1 Red HULK X90/170 MOVE3 1Red 3.png"))));
 

@@ -16,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 public class BoardTests {
 
     private static Board bård;
-    private static String defaultMapName = "TestMap.tmx";
+    private final static String defaultMapName = "TestMap.tmx";
     private static Robot robot1;
     private static Robot robot2;
     private static Robot robot3;
@@ -34,7 +34,7 @@ public class BoardTests {
         Lwjgl3ApplicationConfiguration cfg = new Lwjgl3ApplicationConfiguration();
         cfg.setTitle("CLOSE THIS WINDOW TO START THE TESTS");
         cfg.setWindowedMode(500, 100);
-        gui = new GUI(defaultMapName);
+        gui = new GUI(defaultMapName, true);
         new Lwjgl3Application(gui, cfg);
     }
 
@@ -318,10 +318,11 @@ public class BoardTests {
 
     @Test
     public void drivingOffTheMapRemovesOneOfTheRobotsLivesAndReducesMaxHP(){
-        bård.placeRobotAt(0, 0, robot1);
-        robot1.setDirection(0);
+        bård.spawnRobot(robot1);
+        robot1.setDirection(1);
 
         bård.performMove(new ProgramCard(1, 0, 1), robot1);
+        bård.endPhase();
 
         assertTrue(robot1.getRemainingLives() < Robot.INITIAL_LIVES);
         assertTrue(robot1.getHP() < Robot.INITIAL_HP);
@@ -332,7 +333,8 @@ public class BoardTests {
         bård.spawnRobot(robot1);
         robot1.setDirection(3);
 
-        bård.performMove(new ProgramCard(3, 1, 1), robot1);
+        bård.performMove(new ProgramCard(3, 0, 1), robot1);
+        bård.endPhase();
 
         assertNull(bård.getRobotAt(6, 3));
         assertNull(bård.getRobotAt(7, 3));
@@ -352,6 +354,7 @@ public class BoardTests {
 
         //Kjører av brettet
         bård.performMove(new ProgramCard(1, 0, 1), robot1);
+        bård.endPhase();
 
         assertNull(bård.getRobotAt(9, 4));
         assertEquals(robot1, bård.getRobotAt(9, 3));
@@ -359,7 +362,7 @@ public class BoardTests {
 
     @Test
     public void endingPhaseOnCheckPointSetNewSpawnPoint(){
-        bård.placeRobotAt(9, 3, robot1);
+        bård.spawnRobot(robot1);
         robot1.setDirection(2);
         bård.performMove(new ProgramCard(2, 0, 1), robot1);
         robot1.setDirection(3);
@@ -372,8 +375,30 @@ public class BoardTests {
         //Hopper nedi hullet
         bård.performMove(new ProgramCard(1, 0, 1), robot1);
 
+        bård.endPhase();
+
         assertNull(bård.getRobotAt(9, 3));
         assertEquals(robot1, bård.getRobotAt(7, 5));
+    }
+
+    @Test
+    public void cannotRespawnIfCheckPointIsOccupied(){
+        bård.spawnRobot(robot1);
+        robot1.setDirection(3);
+        bård.performMove(new ProgramCard(2, 0, 1), robot1);
+        bård.placeRobotAt(9, 3, robot2);
+
+        bård.performMove(new ProgramCard(1, 0, 1), robot1);
+        bård.endPhase();
+
+        //Nå er checkpointet okkupert
+        assertEquals(robot2, bård.getRobotAt(9, 3));
+
+        bård.performMove(new ProgramCard(1, 0, 1), robot2);
+        bård.endPhase();
+
+        //Nå er checkpointet ledig igjen
+        assertEquals(robot1, bård.getRobotAt(9, 3));
     }
 
     @Test

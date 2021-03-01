@@ -3,7 +3,6 @@ package Player;
 import Board.Position;
 import Components.Flag;
 import com.badlogic.gdx.graphics.Color;
-import org.lwjgl.system.CallbackI;
 
 import java.util.ArrayList;
 
@@ -14,22 +13,27 @@ import java.util.ArrayList;
  */
 public class Robot{
 
+
+
+
     public static final int INITIAL_HP = 10;
     public static final int INITIAL_LIVES = 3;
 
     private int lives = INITIAL_LIVES;
 	private int hp = INITIAL_HP;
 
-	private String name;
-	private ArrayList<Flag> flags;
-	private Color color;
+	private final String name;
+	private final Color color;
 	private int direction = 0;
 	private Position respawnPoint;
+
+	private final ArrayList<Flag> flagsVisited = new ArrayList<>();
 	
 	
 	public Robot(String name, Color color){
 		this.name = name;
 		this.color = color;
+
 	}
 	
 	public String getName() {
@@ -61,14 +65,28 @@ public class Robot{
 	public void applyDamage(int dmg) {
 		hp -= dmg;
 	}
+
+	public void takeLife(){ lives--; }
 	
 	/**
 	 * 
-	 * @return true if the robot is destroyed, e.g. has used all 3 lives, false otherwise
+	 * @return true if the robot is destroyed, ie. has no hp, false otherwise
 	 */
 	public boolean isDestroyed() {
-		return lives < 1;
+		return hp < 1;
 	}
+
+    /**
+     *
+     * @return true if it has no remaining lives, false otherwise
+     */
+	public boolean hasRemainingLives(){
+	    return lives > 0;
+    }
+
+    public void respawn(){
+	    hp = INITIAL_HP - 2;
+    }
 
 	public int getDirection(){ return direction; }
 
@@ -77,7 +95,7 @@ public class Robot{
 	    direction = dir;
 	}
 
-	@Override
+	@Override 
 	public String toString() {
 		return getName() + " has " + getRemainingLives() + " "
 				+ "lives and has " + getHP() + " hp.";
@@ -86,20 +104,15 @@ public class Robot{
 	/**
 	 * @return Gir oss flaggene som roboten har besøkt.
 	 */
-	public ArrayList<Flag> getVisitedFlags(){ return flags;}
+	public ArrayList<Flag> getVisitedFlags(){ return flagsVisited;}
 
 	public Position getRespawnPoint(){ return respawnPoint; }
 	public void setRespawnPoint(Position pos){ respawnPoint = pos; }
 	
 	/**
-	 * Denne funksjonen sjekker om roboten hentet flagget på en sukksesful måte
-	 *
-	 * @Return true hvis roboten greide å plukke opp flagget. false ellers.
+	 * Denne funksjonen leggr til et flag som en roboten henter
 	 */
-	public boolean flagVisited(Flag flag) {
-
-		return false;
-	}
+	public void addToFlagsVisited(Flag flag) { flagsVisited.add(flag);}
 
 
     public void rotate(int degree) {

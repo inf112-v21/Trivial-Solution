@@ -1,6 +1,7 @@
 package Board;
 
 import Cards.ICard;
+import Components.Flag.*;
 import Components.*;
 import Player.Robot;
 import com.badlogic.gdx.maps.tiled.TiledMap;
@@ -26,9 +27,11 @@ public class Board {
     private final TreeMap<Robot, Position> botPositions = new TreeMap<>((Object bot1, Object bot2) -> Integer.compare(bot1.hashCode(), bot2.hashCode()));
     private final TreeMap<Laser, Position> laserPositions = new TreeMap<>((Object laser1, Object laser2) -> Integer.compare(laser1.hashCode(), laser2.hashCode()));
     private final LinkedList<Position> availableSpawnPoints = new LinkedList<>();
+    private final LinkedList<Robot> robotsWaitingToBeRespawned = new LinkedList<>();
 
     //Antall flagg i spillet.
     private int numberOfFlags = 0;
+    private final ArrayList<Flag> flagWinningFormation = new ArrayList<>();
 
     public Board(String filename){
         readFromTMX(filename);
@@ -73,7 +76,14 @@ public class Board {
 
                 IComponent forcomp = ComponentFactory.spawnComponent(foreground.getCell(x, y));
                 forgrid[HEIGHT-1-y][x] = forcomp;
-                if (forcomp instanceof Flag) numberOfFlags++;
+                if (forcomp instanceof Flag) {
+                    Flag newFlag = (Flag)forcomp;
+                    flagWinningFormation.add(newFlag);
+
+                    // Sorterer flaggene slik at roboten kan hente de i riktig rekkefølge
+                    flagWinningFormation.sort(new Flag.CompareID());
+                    numberOfFlags++;
+                }
                 else if(forcomp instanceof Laser) laserPositions.put((Laser)forcomp, new Position(x, HEIGHT-1-y));
                 else if(forcomp instanceof SpawnPoint) newSpawnPositions.add(new Object[]{forcomp.getID(), new Position(x, HEIGHT-1-y)});
             }
@@ -95,10 +105,68 @@ public class Board {
             if (card.getDistance() != 0) throw new IllegalArgumentException("A card has to be either a moving card, or a rotation card. This one is both!");
             return;
         }
+
         Position pos = botPositions.get(bot);
+
         if (pos == null) throw new IllegalArgumentException("Could not find the bot");
 
-        moveTowards(card.getDistance(), pos.getX(), pos.getY(), bot.getDirection());
+        moveTowards(card.getDistance(), pos.getX(),pos.getY(),bot.getDirection());
+
+        checkForFlag(bot);//TODO Lag tester for å sjekke denne (Spør Steinar om representasjonen)
+
+        }
+
+    /**
+     * Sjekker om roboten landet på et flag eller ikke
+     * Hvis roboten gjorde det så vil vi se om roboten kan plukke opp
+     * flagget. Det kan den kun gjøre hvis det neste flagget er det
+     * rette flagget i rekkefølgen.
+     *
+     * @param bot - roboten som spiller
+     */
+    private void checkForFlag(Robot bot) {
+
+        Position pos = botPositions.get(bot);
+        int posX = pos.getX();
+        int posY = pos.getY();
+
+        if (forgrid[posX][posY] instanceof Flag){
+            Flag newFlag = (Flag) forgrid[posX][posY];
+
+            if(robotCanPickUpFlag(bot,newFlag)){
+                bot.addToFlagsVisited(newFlag);
+            }
+        }
+
+    }
+
+
+    /**
+     *Denne metoden bruker den globale variabelen flagWinningFormation
+     * for å forsikre seg om at flaggene blir plukket opp/registrert
+     * i riktig rekkefølge
+     *
+     * @param bot - roboten vår
+     * @param foundFlag - flagget som roboten landet på
+     * @return -true hvis roboten kan plukke opp/registrere flagget. Flase ellers.
+     */
+    private boolean robotCanPickUpFlag(Robot bot, Flag foundFlag) {
+
+        ArrayList<Flag> visited = bot.getVisitedFlags();
+        if (!visited.isEmpty()){
+
+            //Finn siste besøkte flagg og hvilket det neste flagget som skal besøkes er
+            Flag lastVisitedFlag = visited.get(visited.size()-1);
+            int nextFlag = flagWinningFormation.indexOf(lastVisitedFlag) + 1;
+
+            //Hvis neste flagg som skal registreres er det flagget roboten fant så kan vi registrere det.
+            return foundFlag.equals(flagWinningFormation.get(nextFlag));
+        }
+
+        //Hvis inget flagg er registrert så sjekker vi om roboten landet på det første flagget
+        if (foundFlag.equals(flagWinningFormation.get(0))) return true;
+
+        return false;
     }
 
     /**
@@ -107,7 +175,47 @@ public class Board {
      * TODO: Alt unntatt lasere gjenstår.
      */
     public void endPhase(){
+        updateRespawnPoints();
         fireAllLasers();
+        removeDestroyedRobots();
+        respawnRobots();
+    }
+
+    private void updateRespawnPoints(){
+        for (Robot bot : botPositions.keySet()){
+            Position pos = botPositions.get(bot);
+            if (midgrid[pos.getY()][pos.getX()] instanceof CheckPoint){
+                bot.setRespawnPoint(pos);
+            }
+        }
+    }
+
+    private void respawnRobots(){
+        for(Robot bot : robotsWaitingToBeRespawned){
+            Position spawnpoint = bot.getRespawnPoint();
+            if (spawnpoint == null) throw new IllegalStateException("This bot has no spawnpoint. Try spawning it with spawnRobot() instead of placeRobotAt() if you want to respawn it automatically.");
+
+            if(botgrid[spawnpoint.getY()][spawnpoint.getX()] == null){
+                botgrid[spawnpoint.getY()][spawnpoint.getX()] = bot;
+                robotsWaitingToBeRespawned.removeFirst();
+                botPositions.put(bot, spawnpoint);
+                bot.respawn();
+            }
+        }
+    }
+
+    private void removeDestroyedRobots(){
+        for (Robot bot : botPositions.keySet()){
+            if(bot.isDestroyed()){
+                bot.takeLife();
+                if (!bot.hasRemainingLives()){
+                    robotsWaitingToBeRespawned.addLast(bot);
+                }
+                botgrid[botPositions.get(bot).getY()][botPositions.get(bot).getX()] = null;
+                botPositions.remove(bot);
+            }
+            // TODO: 26.02.2021 Skal vi kanskje gjøre noe spesiellt når noen har dødd for tredje og siste gang? Si ifra til brukeren?
+        }
     }
 
     /**
@@ -132,18 +240,19 @@ public class Board {
         int toX = fromX + directionToX(dir);
         int toY = fromY + directionToY(dir);
 
-        if(outOfBounds(toX, toY)){
+        if(outOfBounds(toX, toY) || midgrid[toY][toX] instanceof Hole){
             botFellOff(bot);
-            return true; //Eller false, avhengig av hva som skal skje når botten faller av brettet.
+            return true;
         }
 
         //Om botten kræsjer inn i en vegg.
-        if(midgrid[fromY][fromX] instanceof Wall && !((Wall)midgrid[fromY][fromX]).canLeaveInDirection(dir)) return false;
-        if(midgrid[toY][toX] instanceof Wall && !((Wall) midgrid[toY][toX]).canGoToInDirection(dir)) return false;
+        if(forgrid[fromY][fromX] instanceof Wall && !((Wall)forgrid[fromY][fromX]).canLeaveInDirection(dir)) return false;
+        if(forgrid[toY][toX] instanceof Wall && !((Wall) forgrid[toY][toX]).canGoToInDirection(dir)) return false;
 
         //Om botten prøver å dytte en annen robot.
         Robot target = botgrid[toY][toX];
         if (target != null && !moveTowards(1, toX, toY, dir)) return false; //Om botten kræsjet inn i en annen bot, og ikke klarte å dytte den.
+
 
         //Flytter roboten, endelig.
         botgrid[toY][toX] = bot;
@@ -152,6 +261,8 @@ public class Board {
         moveTowards(N_Moves-1, toX, toY, dir);
         return true;
     }
+
+
 
     /**
      * Avfyrer alle lasere. inkluderte de skutt av robotene.
@@ -197,19 +308,12 @@ public class Board {
 
 
     private void botFellOff(Robot bot){
-        // TODO: 17.02.2021 Her skal botten drepes og respawnes ved forrige respawn-punkt.
-        System.out.println("Å nei! Du fallt utenfor brettet!");
+        bot.takeLife();
+        robotsWaitingToBeRespawned.addLast(bot);
+        botgrid[botPositions.get(bot).getY()][botPositions.get(bot).getX()] = null;
+        botPositions.remove(bot);
     }
 
-    public IComponent getBackgroundAt(int x, int y){
-        return backgrid[y][x];
-    }
-    public IComponent getMiddlegroundAt(int x, int y){
-        return midgrid[y][x];
-    }
-    public IComponent getForegroundAt(int x, int y){
-        return forgrid[y][x];
-    }
     public Robot getRobotAt(int x, int y){ return botgrid[y][x]; }
 
     public void placeRobotAt(int x, int y, Robot bot){
@@ -261,4 +365,6 @@ public class Board {
     private boolean outOfBounds(int x, int y){
         return !(x >= 0 && x < WIDTH && y >= 0 && y < HEIGHT);
     }
+
+    public ArrayList<Flag> getWinningCombo() { return flagWinningFormation;}
 }

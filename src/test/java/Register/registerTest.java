@@ -2,6 +2,7 @@ package Register;
 
 import Cards.Deck;
 import Cards.ICard;
+import Components.Flag;
 import Player.Register;
 import Player.Robot;
 import com.badlogic.gdx.graphics.Color;

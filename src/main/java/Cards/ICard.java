@@ -1,5 +1,9 @@
 package Cards;
 
+import com.badlogic.gdx.graphics.Texture;
+
+import java.awt.*;
+
 /**
  *
  * @author Samueljacoo
@@ -25,4 +29,10 @@ public interface ICard {
      * Alle kort har unik prioritet.
      */
     int priority();
+
+    /**
+     *
+     * @return Bilde av et kort
+     */
+     Texture getCardImage();
 }

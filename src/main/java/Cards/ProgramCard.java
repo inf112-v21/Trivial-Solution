@@ -1,5 +1,12 @@
 package Cards;
 
+import com.badlogic.gdx.graphics.Texture;
+
+import javax.imageio.ImageIO;
+import java.awt.*;
+import java.io.File;
+import java.io.IOException;
+
 /**
  *
  * @author Samueljacoo
@@ -10,6 +17,7 @@ public class ProgramCard implements ICard{
     int distance;
     int rotation;
     int priority;
+    Texture cardImage;
 
     /**
      * @param dist The distance the card tells the robot to move.
@@ -17,10 +25,11 @@ public class ProgramCard implements ICard{
      * @param priority The priority the card has.
      */
 
-    public ProgramCard(int dist, int rotation, int priority) {
+    public ProgramCard(int dist, int rotation, int priority, Texture cardImage) { //
         this.distance = dist;
         this.rotation = rotation;
         this.priority = priority;
+        this.cardImage = cardImage;
     }
 
     @Override
@@ -36,5 +45,11 @@ public class ProgramCard implements ICard{
     @Override
     public int priority() {
         return priority;
+    }
+
+    @Override
+    public Texture getCardImage(){
+        return cardImage;
+
     }
 }

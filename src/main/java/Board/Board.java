@@ -1,6 +1,7 @@
 package Board;
 
 import Cards.ICard;
+import Components.Flag.*;
 import Components.*;
 import Player.Robot;
 import com.badlogic.gdx.maps.tiled.TiledMap;
@@ -30,6 +31,7 @@ public class Board {
 
     //Antall flagg i spillet.
     private int numberOfFlags = 0;
+    private final ArrayList<Flag> flagWinningFormation = new ArrayList<>();
 
     public Board(String filename){
         readFromTMX(filename);
@@ -71,7 +73,14 @@ public class Board {
 
                 IComponent forcomp = ComponentFactory.spawnComponent(foreground.getCell(x, y));
                 forgrid[HEIGHT-1-y][x] = forcomp;
-                if (forcomp instanceof Flag) numberOfFlags++;
+                if (forcomp instanceof Flag) {
+                    Flag newFlag = (Flag)forcomp;
+                    flagWinningFormation.add(newFlag);
+
+                    // Sorterer flaggene slik at roboten kan hente de i riktig rekkefølge
+                    flagWinningFormation.sort(new Flag.CompareID());
+                    numberOfFlags++;
+                }
                 else if(forcomp instanceof Laser) laserPositions.put((Laser)forcomp, new Position(x, HEIGHT-1-y));
                 else if(forcomp instanceof SpawnPoint) newSpawnPositions.add(new Object[]{forcomp.getID(), new Position(x, HEIGHT-1-y)});
             }
@@ -93,10 +102,68 @@ public class Board {
             if (card.getDistance() != 0) throw new IllegalArgumentException("A card has to be either a moving card, or a rotation card. This one is both!");
             return;
         }
+
         Position pos = botPositions.get(bot);
+
         if (pos == null) throw new IllegalArgumentException("Could not find the bot");
 
-        moveTowards(card.getDistance(), pos.getX(), pos.getY(), bot.getDirection());
+        moveTowards(card.getDistance(), pos.getX(),pos.getY(),bot.getDirection());
+
+        checkForFlag(bot);//TODO Lag tester for å sjekke denne (Spør Steinar om representasjonen)
+
+        }
+
+    /**
+     * Sjekker om roboten landet på et flag eller ikke
+     * Hvis roboten gjorde det så vil vi se om roboten kan plukke opp
+     * flagget. Det kan den kun gjøre hvis det neste flagget er det
+     * rette flagget i rekkefølgen.
+     *
+     * @param bot - roboten som spiller
+     */
+    private void checkForFlag(Robot bot) {
+
+        Position pos = botPositions.get(bot);
+        int posX = pos.getX();
+        int posY = pos.getY();
+
+        if (forgrid[posX][posY] instanceof Flag){
+            Flag newFlag = (Flag) forgrid[posX][posY];
+
+            if(robotCanPickUpFlag(bot,newFlag)){
+                bot.addToFlagsVisited(newFlag);
+            }
+        }
+
+    }
+
+
+    /**
+     *Denne metoden bruker den globale variabelen flagWinningFormation
+     * for å forsikre seg om at flaggene blir plukket opp/registrert
+     * i riktig rekkefølge
+     *
+     * @param bot - roboten vår
+     * @param foundFlag - flagget som roboten landet på
+     * @return -true hvis roboten kan plukke opp/registrere flagget. Flase ellers.
+     */
+    private boolean robotCanPickUpFlag(Robot bot, Flag foundFlag) {
+
+        ArrayList<Flag> visited = bot.getVisitedFlags();
+        if (!visited.isEmpty()){
+
+            //Finn siste besøkte flagg og hvilket det neste flagget som skal besøkes er
+            Flag lastVisitedFlag = visited.get(visited.size()-1);
+            int nextFlag = flagWinningFormation.indexOf(lastVisitedFlag) + 1;
+
+            //Hvis neste flagg som skal registreres er det flagget roboten fant så kan vi registrere det.
+            return foundFlag.equals(flagWinningFormation.get(nextFlag));
+        }
+
+        //Hvis inget flagg er registrert så sjekker vi om roboten landet på det første flagget
+        if (foundFlag.equals(flagWinningFormation.get(0))) return true;
+
+        return false;
     }
 
     /**
@@ -183,6 +250,7 @@ public class Board {
         Robot target = botgrid[toY][toX];
         if (target != null && !moveTowards(1, toX, toY, dir)) return false; //Om botten kræsjet inn i en annen bot, og ikke klarte å dytte den.
 
+
         //Flytter roboten, endelig.
         botgrid[toY][toX] = bot;
         botgrid[fromY][fromX] = null;
@@ -190,6 +258,8 @@ public class Board {
         moveTowards(N_Moves-1, toX, toY, dir);
         return true;
     }
+
+
 
     /**
      * Avfyrer alle lasere. inkluderte de skutt av robotene.
@@ -292,4 +362,6 @@ public class Board {
     private boolean outOfBounds(int x, int y){
         return !(x >= 0 && x < WIDTH && y >= 0 && y < HEIGHT);
     }
+
+    public ArrayList<Flag> getWinningCombo() { return flagWinningFormation;}
 }

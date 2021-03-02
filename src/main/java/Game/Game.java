@@ -3,6 +3,7 @@ package Game;
 import Board.Board;
 import Cards.Deck;
 import Cards.ICard;
+import Components.Flag;
 import Player.Register;
 import Player.Robot;
 
@@ -12,6 +13,9 @@ import java.util.ArrayList;
 public class Game {
 
     protected int numberOfPlayers;
+
+    private final ArrayList<Flag> flagWinningFormation = new ArrayList<>();
+
     final Color[] colours = new Color[]{Color.RED, Color.BLUE, Color.GREEN, Color.YELLOW, Color.PINK, Color.ORANGE, Color.WHITE, Color.BLACK};
     final ArrayList<Robot> bots = new ArrayList<>();
     final ArrayList<Register> registers = new ArrayList<>();
@@ -20,9 +24,11 @@ public class Game {
     final Deck Deck = new Deck();
     public Board Board;
 
-    public void Game(int players, String mapName){
+
+    public Game(int players, String mapName){
         Board = new Board(mapName);
         numberOfPlayers = players;
+        flagWinningFormation.addAll(Board.getWinningCombo());
         for (int i=0; i < numberOfPlayers; i++){
             String name = "Player " +i+1;
             Robot r = new Robot(name, colours[i]);
@@ -94,7 +100,12 @@ public class Game {
      * @return true if a robot won, false if there is no winner yet
      */
     public boolean hasWon(Robot rob) {
-        return true;
+
+        ArrayList<Flag> visitedFlags = rob.getVisitedFlags();
+        if (visitedFlags.equals(flagWinningFormation)){
+            return true;
+        }
+        return false;
     }
 
 

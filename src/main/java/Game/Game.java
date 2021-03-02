@@ -3,12 +3,14 @@ package Game;
 import Board.Board;
 import Cards.Deck;
 import Cards.ICard;
+import Cards.ProgramCard;
 import Components.Flag;
 import Player.Register;
 import Player.Robot;
 
 import com.badlogic.gdx.graphics.Color;
 import java.util.ArrayList;
+import java.util.Comparator;
 
 public class Game {
 
@@ -16,42 +18,52 @@ public class Game {
 
     private final ArrayList<Flag> flagWinningFormation = new ArrayList<>();
 
-    final Color[] colours = new Color[]{Color.RED, Color.BLUE, Color.GREEN, Color.YELLOW, Color.PINK, Color.ORANGE, Color.WHITE, Color.BLACK};
-    final ArrayList<Robot> bots = new ArrayList<>();
+    public static final Color[] colours = new Color[]{Color.RED, Color.BLUE, Color.GREEN, Color.YELLOW, Color.PINK, Color.ORANGE, Color.WHITE, Color.BLACK};
     final ArrayList<Register> registers = new ArrayList<>();
-    final ArrayList<ICard> tempRegister = new ArrayList<>();
     final ArrayList<ArrayList<ICard>> phaseRegisters = new ArrayList<>();
-    final Deck Deck = new Deck();
-    public Board Board;
+    final Deck deck = new Deck();
+    private Board board;
 
 
     public Game(int players, String mapName){
-        Board = new Board(mapName);
+        board = new Board(mapName);
         numberOfPlayers = players;
-        flagWinningFormation.addAll(Board.getWinningCombo());
+        flagWinningFormation.addAll(board.getWinningCombo());
         for (int i=0; i < numberOfPlayers; i++){
             String name = "Player " +i+1;
             Robot r = new Robot(name, colours[i]);
-            bots.add(r);
             registers.add(new Register(r));
         }
     }
     public void startRound(){
-        Deck.shuffleDeck();
-        for (int i=0; i<registers.size(); i++){
-            for (int amount=0; amount<bots.get(i).getRemainingLives(); amount++){
-                tempRegister.add(Deck.drawCard());
+        deck.shuffleDeck();
+        for (Register reg : registers){
+            ArrayList<ICard> cardlist = new ArrayList<>();
+            for (int amount=0; amount<reg.getDamageTokens(); amount++){
+                cardlist.add(deck.drawCard());
             }
-            registers.get(i).setRegisterCards(tempRegister);
-            tempRegister.clear();
+            reg.setRegisterCards(cardlist);
         }
     }
 
-    public void phase(){
+
+    /**
+     *
+     * @param phasenumber Hvilken fase vi er i. OBS! Starter på 0!
+     */
+    public void phase(int phasenumber){
+        registers.sort(new RegisterComparator(phasenumber));
+        for(Register reg : registers){
+            ICard card = reg.getRegisterCards().get(phasenumber);
+            board.performMove(card, reg.getRobot());
+        }
+        board.endPhase();
+
+        /*
         ArrayList<ICard> orderedCards = new ArrayList<>();
         ArrayList<Robot> botOrder = new ArrayList<>();
-        for (int i = 0; i< registers.size(); i++){
-            phaseRegisters.add(registers.get(i).getMaxFiveCardsFromRegister());
+        for (Register reg : registers){
+            phaseRegisters.add(reg.getMaxFiveCardsFromRegister());
         }
         for(int turnCard = 0; turnCard < 5; turnCard++){
             for (int r = 0; r < phaseRegisters.size(); r++){
@@ -77,8 +89,10 @@ public class Game {
             }
         }
         for (int p = 0; p < orderedCards.size(); p++){
-            Board.performMove(orderedCards.get(p), botOrder.get(p));
+            board.performMove(orderedCards.get(p), botOrder.get(p));
         }
+
+         */
         /*orderedCards.clear();
         botOrder.clear();*/
     }
@@ -88,10 +102,6 @@ public class Game {
             phaseRegisters.clear();
             registers.get(i).setRegisterCards(noCards);
         }
-    }
-    public void destroyedBot(Robot bot){
-        registers.remove(bots.indexOf(bot));
-        bots.remove(bot);
     }
 
     /**
@@ -108,5 +118,15 @@ public class Game {
         return false;
     }
 
+    public Board getBoard(){ return board; }
 
+
+    private static class RegisterComparator implements Comparator<Register> {
+        int phase;
+        public RegisterComparator(int phase){ this.phase = phase; }
+
+        public int compare(Register o1, Register o2) {
+            return o2.getRegisterCards().get(phase).priority() - o1.getRegisterCards().get(phase).priority();
+        }
+    }
 }

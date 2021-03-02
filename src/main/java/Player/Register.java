@@ -91,4 +91,6 @@ public class Register {
     public void powerDownRobot(){
         powerDown = true;
     }
+
+    public Robot getRobot(){ return bot; }
 }

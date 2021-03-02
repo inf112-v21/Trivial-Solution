@@ -169,7 +169,7 @@ public class Board {
     /**
      * Det som skal skje på slutten av hver fase.
      * Lasere blir avfyrt, samlebånd går av, roboter blir reparert, etc.
-     * TODO: Alt unntatt lasere gjenstår.
+     * TODO: Flagg skal bli plukket opp
      */
     public void endPhase(){
         updateRespawnPoints();

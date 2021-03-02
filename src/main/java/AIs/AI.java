@@ -5,11 +5,6 @@ import Player.Register;
 
 public interface AI {
     /**
-     * Et interface for alle robot-AI-er. Gitt et Register og et Game, skal botten selv velge hvilke kort fra det registeret som skal brukes.
-     */
-
-
-    /**
      * Gitt et Board og et Register, velg kort for det registeret.
      *
      * Alle kortene som botten kan velge mellom finnes i reg.getRegisterCards().

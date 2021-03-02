@@ -57,8 +57,8 @@ public class BoardFlagPickUpTest {
     }
 
     @Test
-    public void checkIfRobotCanPickUpFlag2First(){
-        assertFalse(bård.robotCanPickUpFlag(ourRobot,(Flag) forgrid[Flag2[0]][Flag2[1]]));
+    public void checkIfRobotCanPickUpFlag2BeforeFlag1() {
+        assertFalse(bård.robotCanPickUpFlag(ourRobot, (Flag) forgrid[Flag2[0]][Flag2[1]]));
     }
 
     @Test
@@ -66,11 +66,6 @@ public class BoardFlagPickUpTest {
         assertFalse(bård.robotCanPickUpFlag(ourRobot,(Flag) forgrid[Flag3[0]][Flag3[1]]));
     }
 
-
-    @Test
-    public void checkIfRobotCanPickUpFlag2BeforeFlag1(){
-        assertFalse(bård.robotCanPickUpFlag(ourRobot,(Flag) forgrid[Flag2[0]][Flag2[1]]));
-    }
 
     @Test
     public void checkIfRobotCanPickUpFlag2AfterFlag1(){

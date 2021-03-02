@@ -112,29 +112,28 @@ public class Board {
 
         moveTowards(card.getDistance(), pos.getX(),pos.getY(),bot.getDirection());
 
-        checkForFlag(bot);//TODO Lag tester for å sjekke denne (Spør Steinar om representasjonen)
-
-        }
+    }
 
     /**
-     * Sjekker om roboten landet på et flag eller ikke
+     * Sjekker om en av roboten landet på et flag eller ikke.
      * Hvis roboten gjorde det så vil vi se om roboten kan plukke opp
-     * flagget. Det kan den kun gjøre hvis det neste flagget er det
-     * rette flagget i rekkefølgen.
+     * flagget (Metode robotCanPickUpFlag)
      *
-     * @param bot - roboten som spiller
      */
-    private void checkForFlag(Robot bot) {
+    private void checkIfRobotIsOnFlag() {
 
-        Position pos = botPositions.get(bot);
-        int posX = pos.getX();
-        int posY = pos.getY();
+        for (Robot bot : botPositions.keySet()) {
+            Position pos = botPositions.get(bot);
 
-        if (forgrid[posX][posY] instanceof Flag){
-            Flag newFlag = (Flag) forgrid[posX][posY];
+            int posY = pos.getY();
+            int posX = pos.getX();
 
-            if(robotCanPickUpFlag(bot,newFlag)){
-                bot.addToFlagsVisited(newFlag);
+            if (forgrid[posY][posX] instanceof Flag) {
+                Flag newFlag = (Flag) forgrid[posY][posX];
+
+                if (robotCanPickUpFlag(bot, newFlag)) {
+                    bot.addToFlagsVisited(newFlag);
+                }
             }
         }
 
@@ -146,11 +145,13 @@ public class Board {
      * for å forsikre seg om at flaggene blir plukket opp/registrert
      * i riktig rekkefølge
      *
+     * TODO: Skriv test til denne!!
+     *
      * @param bot - roboten vår
      * @param foundFlag - flagget som roboten landet på
      * @return -true hvis roboten kan plukke opp/registrere flagget. Flase ellers.
      */
-    private boolean robotCanPickUpFlag(Robot bot, Flag foundFlag) {
+    public boolean robotCanPickUpFlag(Robot bot, Flag foundFlag) {
 
         ArrayList<Flag> visited = bot.getVisitedFlags();
         if (!visited.isEmpty()){
@@ -175,6 +176,7 @@ public class Board {
      * TODO: Alt unntatt lasere gjenstår.
      */
     public void endPhase(){
+        checkIfRobotIsOnFlag();
         updateRespawnPoints();
         fireAllLasers();
         removeDestroyedRobots();

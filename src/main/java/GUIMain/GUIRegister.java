@@ -12,6 +12,7 @@ public class GUIRegister implements ActionListener {
     private JFrame frame;
     private JPanel panel;
     private JButton button;
+    private JButton button1;
 
     public static void main(String[] args){
         new GUIRegister();
@@ -21,23 +22,33 @@ public class GUIRegister implements ActionListener {
         button = new JButton("Click me");
         button.addActionListener(this);
         label = new JLabel("Number of clicks: 0");
+        button1 = new JButton("Reset");
+        button1.addActionListener(this);
         panel = new JPanel();
-        panel.setBorder(BorderFactory.createEmptyBorder(30,30,10,30));
+        panel.setBorder(BorderFactory.createEmptyBorder(300,300,100,300));
         panel.setLayout(new GridLayout(0,1));
         panel.add(button);
         panel.add(label);
+        panel.add(button1);
 
         frame.add(panel,BorderLayout.CENTER);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setResizable(false);
         frame.setTitle(("GUIRegister Test"));
         frame.pack();
+        frame.setLocationRelativeTo(null);
         frame.setVisible(true);
 
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        count++;
+        if (e.getSource() == button1){
+            count = 0;
+        }
+        else {
+            count++;
+        }
         label.setText("Number of clicks: "+count);
     }
 }

@@ -12,7 +12,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeAll;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.fail;
+
 
 public class BoardFlagPickUpTest {
 
@@ -25,9 +25,9 @@ public class BoardFlagPickUpTest {
 
     //Posisjonene til de ulike flaggene i griden. Kan ses i tmxfilen.
     //PosY er først og PosX er nummer2
-    private int[] Flag1 = {3,3};
-    private int[] Flag2 = {6,5};
-    private int[] Flag3 = {2,6};
+    private final int[] Flag1 = {3,3};
+    private final int[] Flag2 = {6,5};
+    private final int[] Flag3 = {2,6};
 
     /**
      * Denne sjiten her må kjøres før Libgdx-biblioteket klarer å lese noen tmx-filer.
@@ -45,7 +45,7 @@ public class BoardFlagPickUpTest {
     }
 
     @BeforeEach
-    public void resetRobotPosAndFlagsVisited(){
+    public void resetBoardAndFlagsVisited(){
         bård = new Board(defaultMapName);
         forgrid = bård.getFrontGrid();
         ourRobot = new Robot("Jack&Dexter", Color.LIME);

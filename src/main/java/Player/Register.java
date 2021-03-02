@@ -41,9 +41,11 @@ public class Register {
      * Denne metoden legger til et og et kort i rekkefølge i registeret utifra hva spilleren velger.
      * @param chosenCard
      */
-    public void addCardsToRegister(ICard chosenCard){
+    public void addCardToRegister(ICard chosenCard){
         registerCards.add(chosenCard);
     }
+
+    public void removeCardFromRegister(ICard unchosenCard){ registerCards.remove(unchosenCard); }
 
     /**
      * @return returnerer maks 5 kort fra registeret, kan returnere færre dersom roboten har mye damage.

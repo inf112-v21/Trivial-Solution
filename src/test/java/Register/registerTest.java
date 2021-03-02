@@ -2,7 +2,6 @@ package Register;
 
 import Cards.Deck;
 import Cards.ICard;
-import Components.Flag;
 import Player.Register;
 import Player.Robot;
 import com.badlogic.gdx.graphics.Color;
@@ -52,7 +51,7 @@ public class registerTest {
     @Test
     void playerCanStoreTheirFiveChosenCardsInOrderInTheRegister(){
         for(int i = 0; i < 5; i++){
-            r.addCardsToRegister(allCards.get(i));
+            r.addCardToRegister(allCards.get(i));
             registerCards.add(allCards.get(i));
         }
         assertEquals(registerCards, r.getMaxFiveCardsFromRegister());

@@ -80,7 +80,7 @@ public class BoardFlagPickUpTest {
 
     @Test
     public void checkIfRobotCanPickUpFlag3BeforeFlag2WhenFlag1HasBeenPickedUp(){
-        ourRobot.addToFlagsVisited((Flag) forgrid[Flag1[0]][Flag1[1]]); //Henter første flagget
+        ourRobot.addToFlagsVisited((Flag) forgrid[Flag1[0]][Flag1[1]]); //Første flagg er hentet
         assertFalse(bård.robotCanPickUpFlag(ourRobot,(Flag) forgrid[Flag3[0]][Flag3[1]]));
     }
 
@@ -90,21 +90,5 @@ public class BoardFlagPickUpTest {
         ourRobot.addToFlagsVisited((Flag) forgrid[Flag2[0]][Flag2[1]]); //Henter andre flagget
         assertTrue(bård.robotCanPickUpFlag(ourRobot,(Flag) forgrid[Flag3[0]][Flag3[1]]));
     }
-    
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 }

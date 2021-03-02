@@ -24,13 +24,16 @@ public class Board {
     private IComponent[][] midgrid;
     private IComponent[][] forgrid;
 
+    public TreeMap<Robot, Position> getBotPositions() {
+        return botPositions;
+    }
+
     private final TreeMap<Robot, Position> botPositions = new TreeMap<>((Object bot1, Object bot2) -> Integer.compare(bot1.hashCode(), bot2.hashCode()));
     private final TreeMap<Laser, Position> laserPositions = new TreeMap<>((Object laser1, Object laser2) -> Integer.compare(laser1.hashCode(), laser2.hashCode()));
     private final LinkedList<Position> availableSpawnPoints = new LinkedList<>();
     private final LinkedList<Robot> robotsWaitingToBeRespawned = new LinkedList<>();
 
     //Antall flagg i spillet.
-    private int numberOfFlags = 0;
     private final ArrayList<Flag> flagWinningFormation = new ArrayList<>();
 
     public Board(String filename){
@@ -82,7 +85,6 @@ public class Board {
 
                     // Sorterer flaggene slik at roboten kan hente de i riktig rekkefølge
                     flagWinningFormation.sort(new Flag.CompareID());
-                    numberOfFlags++;
                 }
                 else if(forcomp instanceof Laser) laserPositions.put((Laser)forcomp, new Position(x, HEIGHT-1-y));
                 else if(forcomp instanceof SpawnPoint) newSpawnPositions.add(new Object[]{forcomp.getID(), new Position(x, HEIGHT-1-y)});

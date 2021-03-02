@@ -24,8 +24,8 @@ public class Board {
     private IComponent[][] midgrid;
     private IComponent[][] forgrid;
 
-    public TreeMap<Robot, Position> getBotPositions() {
-        return botPositions;
+    public IComponent[][] getFrontGrid() {
+        return forgrid;
     }
 
     private final TreeMap<Robot, Position> botPositions = new TreeMap<>((Object bot1, Object bot2) -> Integer.compare(bot1.hashCode(), bot2.hashCode()));

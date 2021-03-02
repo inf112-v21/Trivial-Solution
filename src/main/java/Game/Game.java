@@ -105,17 +105,18 @@ public class Game {
     }
 
     /**
-     * Metode som sjekker om en spiller har vunnet
-     * @param rob is the bot to check.
-     * @return true if a robot won, false if there is no winner yet
+     * Metode som sjekker om en spiller har vunnet eller ikke.
+     * Kan brukes av GUI.
+     *
+     * @return - Roboten som vant, hvis roboten vant, null ellers
      */
-    public boolean hasWon(Robot rob) {
-
-        ArrayList<Flag> visitedFlags = rob.getVisitedFlags();
-        if (visitedFlags.equals(flagWinningFormation)){
-            return true;
+    public Robot hasWon() {
+        for (Robot bot : bots) {
+            if (bot.getVisitedFlags().equals(flagWinningFormation)) {
+                return bot;
+            }
         }
-        return false;
+        return null;
     }
 
     public Board getBoard(){ return board; }

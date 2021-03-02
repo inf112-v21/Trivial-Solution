@@ -287,6 +287,12 @@ public class BoardTests {
     }
 
     @Test
+    public void checkIfTheRobotCanPickUpAFlag(){
+        Position botPos = bård.getBotPositions().get(robot1);
+
+    }
+
+    @Test
     public void robotsSpawnInCorrectPlacesAndInCorrectOrder(){
         assertNull(bård.getRobotAt(9, 3));
         assertNull(bård.getRobotAt(4, 9));

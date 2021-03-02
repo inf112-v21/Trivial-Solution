@@ -24,13 +24,16 @@ public class Board {
     private IComponent[][] midgrid;
     private IComponent[][] forgrid;
 
+    public TreeMap<Robot, Position> getBotPositions() {
+        return botPositions;
+    }
+
     private final TreeMap<Robot, Position> botPositions = new TreeMap<>((Object bot1, Object bot2) -> Integer.compare(bot1.hashCode(), bot2.hashCode()));
     private final TreeMap<Laser, Position> laserPositions = new TreeMap<>((Object laser1, Object laser2) -> Integer.compare(laser1.hashCode(), laser2.hashCode()));
     private final LinkedList<Position> availableSpawnPoints = new LinkedList<>();
     private final LinkedList<Robot> robotsWaitingToBeRespawned = new LinkedList<>();
 
     //Antall flagg i spillet.
-    private int numberOfFlags = 0;
     private final ArrayList<Flag> flagWinningFormation = new ArrayList<>();
 
     public Board(String filename){
@@ -79,7 +82,6 @@ public class Board {
 
                     // Sorterer flaggene slik at roboten kan hente de i riktig rekkefølge
                     flagWinningFormation.sort(new Flag.CompareID());
-                    numberOfFlags++;
                 }
                 else if(forcomp instanceof Laser) laserPositions.put((Laser)forcomp, new Position(x, HEIGHT-1-y));
                 else if(forcomp instanceof SpawnPoint) newSpawnPositions.add(new Object[]{forcomp.getID(), new Position(x, HEIGHT-1-y)});
@@ -109,29 +111,28 @@ public class Board {
 
         moveTowards(card.getDistance(), pos.getX(),pos.getY(),bot.getDirection());
 
-        checkForFlag(bot);//TODO Lag tester for å sjekke denne (Spør Steinar om representasjonen)
-
-        }
+    }
 
     /**
-     * Sjekker om roboten landet på et flag eller ikke
+     * Sjekker om en av roboten landet på et flag eller ikke.
      * Hvis roboten gjorde det så vil vi se om roboten kan plukke opp
-     * flagget. Det kan den kun gjøre hvis det neste flagget er det
-     * rette flagget i rekkefølgen.
+     * flagget (Metode robotCanPickUpFlag)
      *
-     * @param bot - roboten som spiller
      */
-    private void checkForFlag(Robot bot) {
+    private void checkIfRobotIsOnFlag() {
 
-        Position pos = botPositions.get(bot);
-        int posX = pos.getX();
-        int posY = pos.getY();
+        for (Robot bot : botPositions.keySet()) {
+            Position pos = botPositions.get(bot);
 
-        if (forgrid[posX][posY] instanceof Flag){
-            Flag newFlag = (Flag) forgrid[posX][posY];
+            int posY = pos.getY();
+            int posX = pos.getX();
 
-            if(robotCanPickUpFlag(bot,newFlag)){
-                bot.addToFlagsVisited(newFlag);
+            if (forgrid[posY][posX] instanceof Flag) {
+                Flag newFlag = (Flag) forgrid[posY][posX];
+
+                if (robotCanPickUpFlag(bot, newFlag)) {
+                    bot.addToFlagsVisited(newFlag);
+                }
             }
         }
 
@@ -143,11 +144,13 @@ public class Board {
      * for å forsikre seg om at flaggene blir plukket opp/registrert
      * i riktig rekkefølge
      *
+     * TODO: Skriv test til denne!!
+     *
      * @param bot - roboten vår
      * @param foundFlag - flagget som roboten landet på
      * @return -true hvis roboten kan plukke opp/registrere flagget. Flase ellers.
      */
-    private boolean robotCanPickUpFlag(Robot bot, Flag foundFlag) {
+    public boolean robotCanPickUpFlag(Robot bot, Flag foundFlag) {
 
         ArrayList<Flag> visited = bot.getVisitedFlags();
         if (!visited.isEmpty()){
@@ -172,6 +175,7 @@ public class Board {
      * TODO: Flagg skal bli plukket opp
      */
     public void endPhase(){
+        checkIfRobotIsOnFlag();
         updateRespawnPoints();
         fireAllLasers();
         removeDestroyedRobots();

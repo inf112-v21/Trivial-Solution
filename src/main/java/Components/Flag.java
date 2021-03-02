@@ -15,7 +15,9 @@ public class Flag extends SimpleComponent{
     }
 
     /**
-     * Sammenligner ID'en til flaggene. Dette brukes for å sjekke hvilke flagg en robot har plukket opp.
+     * Sammenligner ID'en til flaggene. Dette brukes for å bestemmer rekkefølgen som robotene
+     * må plukke opp flag i. Resultatet er altså den globale variabelen flagWinningFormation i Board
+     * klassen.
      */
     public static class CompareID implements Comparator<Flag> {
         @Override

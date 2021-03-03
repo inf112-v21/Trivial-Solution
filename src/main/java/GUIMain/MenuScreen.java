@@ -34,6 +34,12 @@ public class MenuScreen extends InputAdapter implements Screen {
     protected TextButton options;
     protected TextButton quit;
     private ArrayList<Robot> robots;
+    private GUI2 gui;
+
+    public MenuScreen(GUI2 gui){
+        super();
+        this.gui = gui;
+    }
 
     @Override
     public void show() {
@@ -106,23 +112,23 @@ public class MenuScreen extends InputAdapter implements Screen {
         Dialog dia = new Dialog("Create your robot", skin);
         dia.setScale(2);
 
-        dia.addActor(new Label("Name of robot: ", skin));
-        dia.row();
-
-        TextField textfield = new TextField("", skin);
-        dia.add(textfield);
-
-        dia.row();
-
         CheckBox AI = new CheckBox("AI", skin);
         dia.add(AI);
+        AI.align(Align.bottomLeft);
+
+        TextField textfield = new TextField("", skin);
+        dia.add(textfield).align(Align.center);
+        dia.row();
+
+        //dia.addActor(new Label("Name of robot: ", skin));
+        //dia.row();
 
         dia.setPosition(500, 500);
+        dia.button("Confirm").align(Align.bottomRight);
+
         stage.addActor(dia);
 
-        dia.button("Confirm");
-
-        return new Robot(textfield.getMessageText(), BLUE, AI.isChecked());
+        return new Robot(textfield.getMessageText() + textfield.getText() + textfield.getName(), BLUE, AI.isChecked());
     }
 
     @Override
@@ -164,15 +170,5 @@ public class MenuScreen extends InputAdapter implements Screen {
 
     @Override
     public void dispose() {
-    }
-
-    private class MenuListener extends ClickListener {
-
-
-        @Override
-        public void clicked(InputEvent event, float x, float y) {
-
-            System.out.println(isPressed());
-        }
     }
 }

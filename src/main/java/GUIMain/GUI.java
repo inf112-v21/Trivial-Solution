@@ -79,8 +79,8 @@ public class GUI extends Game implements ApplicationListener {
         WIDTH = backgroundLayer.getWidth();
 
         camera = new OrthographicCamera();
-        camera.setToOrtho(false, CELL_SIZE*WIDTH, CELL_SIZE*HEIGHT);
-        camera.position.x = CELL_SIZE*WIDTH / 2;
+        camera.setToOrtho(false, CELL_SIZE * WIDTH, CELL_SIZE * HEIGHT);
+        camera.position.x = CELL_SIZE * WIDTH / 2;
         camera.update();
 
         renderer = new OrthogonalTiledMapRenderer(map, 1);
@@ -92,17 +92,6 @@ public class GUI extends Game implements ApplicationListener {
 
         board = new Board(mapName);
         if (isInDebugMode) Gdx.app.exit(); //Lukker vinduet, om vi startet GUI-en kun for å teste ting.
-
-        startTheGame();
-    }
-
-    private void startTheGame(){ // TODO: 02.03.2021
-        ArrayList<Register> registers = new ArrayList<>();
-        setScreen(new MenuScreen());
-    }
-
-    private Robot createRobot(){
-        return null; // TODO: 02.03.2021  
     }
 
     @Override

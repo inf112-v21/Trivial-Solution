@@ -1,0 +1,7 @@
+Vi har implementert winconditions i backend. Trenger bare å lage noe gui for det.
+Vi har slitt mye med å få til GUI for registre, det går senere enn ventet. Vi må fokusere mye mer på det, samt GUI generellt, før oblig 2.
+Dusan har begynt på networking. Det er vanskelig.
+Vi har fått et par nye bugs i GUI-en som også må fikses.
+Sander har fikset representasjon av kort, nå må vi klare å implementere dem i registerets GUI.
+
+Generellt har vi altfor mye som gjenstår før fredag. Vi må ta et ordentlig skippertak.

@@ -39,7 +39,7 @@ public class registerTest {
     public static void setUp(){
         allCards = new ArrayList<ICard>();
         registerCards = new ArrayList<ICard>();
-        robot = new Robot("testRobot", Color.RED);
+        robot = new Robot("testRobot", Color.RED, false);
         r = new Register(robot);
     }
 

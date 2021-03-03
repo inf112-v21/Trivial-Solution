@@ -39,7 +39,7 @@ class GameTest {
     @Test
     void hasWon() {
         //Må finne ut hvordan denne skal testes
-        Robot rob = new Robot("Nebuchadnezzar", Color.BLUE);
+        Robot rob = new Robot("Nebuchadnezzar", Color.BLUE, false);
 
     }
 }

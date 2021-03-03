@@ -19,9 +19,8 @@ public class Game {
     private final ArrayList<Flag> flagWinningFormation = new ArrayList<>();
 
     public static final Color[] colours = new Color[]{Color.RED, Color.BLUE, Color.GREEN, Color.YELLOW, Color.PINK, Color.ORANGE, Color.WHITE, Color.BLACK};
-    final ArrayList<Register> registers = new ArrayList<>();
-    final ArrayList<ArrayList<ICard>> phaseRegisters = new ArrayList<>();
-    final Deck deck = new Deck();
+    private final ArrayList<Register> registers = new ArrayList<>();
+    private final Deck deck = new Deck();
     private Board board;
 
 
@@ -31,7 +30,7 @@ public class Game {
         flagWinningFormation.addAll(board.getWinningCombo());
         for (int i=0; i < numberOfPlayers; i++){
             String name = "Player " +i+1;
-            Robot r = new Robot(name, colours[i]);
+            Robot r = new Robot(name, colours[i], false);
             registers.add(new Register(r));
         }
     }
@@ -58,48 +57,11 @@ public class Game {
             board.performMove(card, reg.getRobot());
         }
         board.endPhase();
-
-        /*
-        ArrayList<ICard> orderedCards = new ArrayList<>();
-        ArrayList<Robot> botOrder = new ArrayList<>();
-        for (Register reg : registers){
-            phaseRegisters.add(reg.getMaxFiveCardsFromRegister());
-        }
-        for(int turnCard = 0; turnCard < 5; turnCard++){
-            for (int r = 0; r < phaseRegisters.size(); r++){
-                int pri = 0;
-                ICard order = null;
-                Robot botInUse = null;
-                for(int registerInUse = 0; registerInUse < phaseRegisters.size(); registerInUse++){
-                    ArrayList<ICard> shortlist = phaseRegisters.get(registerInUse);
-                    if(shortlist.get(turnCard) == null){
-                        break;
-                    }
-                    if (orderedCards.contains(shortlist.get(turnCard))){
-                        break;
-                    }
-                    if(pri < shortlist.get(turnCard).priority()){
-                        pri = shortlist.get(turnCard).priority();
-                        order = shortlist.get(turnCard);
-                        botInUse = bots.get(registerInUse);
-                    }
-                }
-                orderedCards.add(order);
-                botOrder.add(botInUse);
-            }
-        }
-        for (int p = 0; p < orderedCards.size(); p++){
-            board.performMove(orderedCards.get(p), botOrder.get(p));
-        }
-
-         */
-        /*orderedCards.clear();
-        botOrder.clear();*/
     }
+
     public void endRound(){
         for (int i = 0; i< registers.size(); i++){
             ArrayList<ICard> noCards = new ArrayList<>();
-            phaseRegisters.clear();
             registers.get(i).setRegisterCards(noCards);
         }
     }
@@ -111,7 +73,8 @@ public class Game {
      * @return - Roboten som vant, hvis roboten vant, null ellers
      */
     public Robot hasWon() {
-        for (Robot bot : bots) {
+        for (Register reg : registers) {
+            Robot bot = reg.getRobot();
             if (bot.getVisitedFlags().equals(flagWinningFormation)) {
                 return bot;
             }
@@ -126,6 +89,7 @@ public class Game {
         int phase;
         public RegisterComparator(int phase){ this.phase = phase; }
 
+        /** Obs obs! Sorterer slik at høyeste prioritet kommer først. */
         public int compare(Register o1, Register o2) {
             return o2.getRegisterCards().get(phase).priority() - o1.getRegisterCards().get(phase).priority();
         }

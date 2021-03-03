@@ -1,11 +1,11 @@
 package GUIMain;
 
 import Board.Board;
+import Player.Register;
 import Player.Robot;
 
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL30;
@@ -20,8 +20,12 @@ import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.tiles.StaticTiledMapTile;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
 import javax.swing.JOptionPane;
+import java.util.ArrayList;
 
 public class GUI extends InputAdapter implements ApplicationListener {
     private SpriteBatch batch;
@@ -34,6 +38,7 @@ public class GUI extends InputAdapter implements ApplicationListener {
     private OrthogonalTiledMapRenderer renderer;
     private OrthographicCamera camera;
     private Board board;
+    private Stage stage;
     private String mapName;
     private int CELL_SIZE = 300;
     private int HEIGHT;
@@ -59,6 +64,8 @@ public class GUI extends InputAdapter implements ApplicationListener {
 
     @Override
     public void create() {
+        stage = new Stage();
+
         TmxMapLoader tmx = new TmxMapLoader();
         map = tmx.load(mapName);
 
@@ -84,6 +91,19 @@ public class GUI extends InputAdapter implements ApplicationListener {
 
         board = new Board(mapName);
         if (isInDebugMode) Gdx.app.exit(); //Lukker vinduet, om vi startet GUI-en kun for å teste ting.
+
+        startTheGame();
+    }
+
+    private void startTheGame(){ // TODO: 02.03.2021
+        ArrayList<Register> registers = new ArrayList<>();
+        Skin skin = new Skin(Gdx.files.internal("assets/default/skin/uiskin.json"));
+        Dialog dialog = new Dialog("test", skin);
+        stage.addActor(dialog);
+    }
+
+    private Robot createRobot(){
+        return null; // TODO: 02.03.2021  
     }
 
     @Override
@@ -140,7 +160,7 @@ public class GUI extends InputAdapter implements ApplicationListener {
 	 * @param cell 
 	 */
 	public void displayRobots(TextureRegion t, TiledMapTileLayer.Cell cell) {
-	
+
 		for(int y = 0; y < board.getHeight(); y++) {
 			for(int x = 0; x < board.getWidth(); x++) {
                 Robot r = board.getRobotAt(x, y);

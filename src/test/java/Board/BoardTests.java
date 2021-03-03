@@ -48,11 +48,11 @@ public class BoardTests {
     @BeforeEach
     public void resetState(){
         bård = new Board(defaultMapName);
-        robot1 = new Robot("Nebuchadnezzar", Color.BLUE);
-        robot2 = new Robot("Alexstrasza", Color.RED);
-        robot3 = new Robot("Gilgamesh", Color.YELLOW);
-        robot4 = new Robot("Ashurbarnipal", Color.GREEN);
-        robot5 = new Robot("Andromeda", Color.PINK);
+        robot1 = new Robot("Nebuchadnezzar", Color.BLUE, false);
+        robot2 = new Robot("Alexstrasza", Color.RED, false);
+        robot3 = new Robot("Gilgamesh", Color.YELLOW, false);
+        robot4 = new Robot("Ashurbarnipal", Color.GREEN, false);
+        robot5 = new Robot("Andromeda", Color.PINK, false);
 
     }
 

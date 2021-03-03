@@ -20,21 +20,16 @@ class GameTest {
 
 
     @Test
-    void startRound() {
-        assertTrue(true);
-    }
+    void startRound() {}
 
     @Test
-    void phase() { assertTrue(true);
-    }
+    void phase() {}
 
     @Test
-    void endRound() { assertTrue(true);
-    }
+    void endRound() {}
 
     @Test
-    void destroyedBot() { assertTrue(true);
-    }
+    void destroyedBot() {}
 
     @Test
     void hasWon() {

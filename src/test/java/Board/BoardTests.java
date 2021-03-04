@@ -30,12 +30,12 @@ public class BoardTests {
     private static Robot robot5;
     private static GUI gui;
 
-    //Posisjonene til de ulike flaggene i griden. Kan ses i tmxfilen.
+
     //Disse brukes for å teste om Flagene blir hentet på riktig måte
-    private final int[] Flag1 = {3,3};
-    private final int[] Flag2 = {6,5};
-    private final int[] Flag3 = {2,6};
-    private IComponent[][] forgrid;
+    private Flag Flag1;
+    private Flag Flag2;
+    private Flag Flag3;
+
 
     /**
      * Denne sjiten her må kjøres før Libgdx-biblioteket klarer å lese noen tmx-filer.
@@ -62,7 +62,12 @@ public class BoardTests {
         robot3 = new Robot("Gilgamesh", Color.YELLOW, false);
         robot4 = new Robot("Ashurbarnipal", Color.GREEN, false);
         robot5 = new Robot("Andromeda", Color.PINK, false);
-        //forgrid = bård.getFrontGrid();
+
+        //Flaggene med de tilhørende posisjonene i griden. posY og PosX Kan ses i tmxfilen.
+        Flag1 = bård.getFlagInForgridAt(3,3 );
+        Flag2 = bård.getFlagInForgridAt( 6,5);
+        Flag3 = bård.getFlagInForgridAt(2,6);
+
     }
 
     @Test
@@ -441,37 +446,37 @@ public class BoardTests {
      */
     @Test
     public void checkIfRobotCanPickUpFlag1First(){
-        assertTrue(bård.robotCanPickUpFlag(robot1,(Flag) forgrid[Flag1[0]][Flag1[1]]));
+        assertTrue(bård.robotCanPickUpFlag(robot1,Flag1));
     }
 
     @Test
     public void checkIfRobotCanPickUpFlag2BeforeFlag1() {
-        assertFalse(bård.robotCanPickUpFlag(robot1, (Flag) forgrid[Flag2[0]][Flag2[1]]));
+        assertFalse(bård.robotCanPickUpFlag(robot1, Flag2));
     }
 
     @Test
     public void checkIfRobotCanPickUpFlag3First(){
-        assertFalse(bård.robotCanPickUpFlag(robot1,(Flag) forgrid[Flag3[0]][Flag3[1]]));
+        assertFalse(bård.robotCanPickUpFlag(robot1,Flag3));
     }
 
 
     @Test
     public void checkIfRobotCanPickUpFlag2AfterFlag1(){
-        robot1.addToFlagsVisited((Flag) forgrid[Flag1[0]][Flag1[1]]); //Henter første flagget
-        assertTrue(bård.robotCanPickUpFlag(robot1,(Flag) forgrid[Flag2[0]][Flag2[1]]));
+        robot1.addToFlagsVisited(Flag1); //Henter første flagget
+        assertTrue(bård.robotCanPickUpFlag(robot1,Flag2));
     }
 
     @Test
     public void checkIfRobotCanPickUpFlag3BeforeFlag2WhenFlag1HasBeenPickedUp(){
-        robot1.addToFlagsVisited((Flag) forgrid[Flag1[0]][Flag1[1]]); //Første flagg er hentet
-        assertFalse(bård.robotCanPickUpFlag(robot1,(Flag) forgrid[Flag3[0]][Flag3[1]]));
+        robot1.addToFlagsVisited(Flag1); //Første flagg er hentet
+        assertFalse(bård.robotCanPickUpFlag(robot1,Flag3));
     }
 
     @Test
     public void checkIfRobotCanPickUpFlag3AfterFlag2AndFlag1(){
-        robot1.addToFlagsVisited((Flag) forgrid[Flag1[0]][Flag1[1]]); //Henter første flagget
-        robot1.addToFlagsVisited((Flag) forgrid[Flag2[0]][Flag2[1]]); //Henter andre flagget
-        assertTrue(bård.robotCanPickUpFlag(robot1,(Flag) forgrid[Flag3[0]][Flag3[1]]));
+        robot1.addToFlagsVisited(Flag1); //Henter første flagget
+        robot1.addToFlagsVisited(Flag2); //Henter andre flagget
+        assertTrue(bård.robotCanPickUpFlag(robot1,Flag3));
     }
 
 }

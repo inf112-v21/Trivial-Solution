@@ -5,12 +5,8 @@ package GUIMain;
         import com.badlogic.gdx.Game;
         import com.badlogic.gdx.Gdx;
         import com.badlogic.gdx.graphics.GL30;
-
         import java.util.ArrayList;
 
-/**
- * GameScreen kun for å teste ting
- */
 public class GUI extends Game {
     @Override
     public void create() {

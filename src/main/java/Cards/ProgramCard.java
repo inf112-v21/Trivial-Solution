@@ -50,6 +50,16 @@ public class ProgramCard implements ICard{
     @Override
     public Texture getCardImage(){
         return cardImage;
-
     }
+
+    public String toString(){
+        if(rotation != 0){
+            if (rotation == -1) return "TURN LEFT "  + priority;
+            if (rotation == 1 ) return "TURN RIGHT " + priority;
+            if (rotation == 2 ) return "TURN AROUND "+ priority;
+        }
+        if (distance == -1) return "BACK UP " + priority;
+        return "MOVE " + distance + " " + priority;
+    }
+
 }

@@ -1,7 +1,9 @@
 package GUIMain;
 
+import Cards.ICard;
 import GameBoard.Board;
 import GameBoard.GameBoard;
+import Player.Register;
 import Player.Robot;
 
 import com.badlogic.gdx.ApplicationListener;
@@ -22,9 +24,11 @@ import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.tiles.StaticTiledMapTile;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.actions.ScaleByAction;
 
 import javax.swing.JOptionPane;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 public class GameScreen extends Game implements Screen {
     private SpriteBatch batch;
@@ -118,6 +122,24 @@ public class GameScreen extends Game implements Screen {
         renderer.render();
     }
 
+    public void pickCardsFromTerminal(Register reg){
+        ArrayList<ICard> availableCards = reg.getRegisterCards();
+        Scanner scan = new Scanner(System.in);
+        System.out.println("Please type a line of ints to choose cards.");
+        System.out.println("If you want card number 1, 4, 7, 5, 2 in that order, type '1 4 7 5 2'.");
+        for (int i = 0; i < availableCards.size(); i++) {
+            System.out.println(i+1 + ": " + availableCards.get(i));
+        }
+        for (int i = 0; i < reg.getDamageTokens(); i++) {
+            int pick = scan.nextInt();
+            if (pick < 0 || pick >= availableCards.size()) {
+                System.err.println("Please choose one of the available cards.");
+                i--;
+            }
+            reg.addCardToRegister(availableCards.get(pick));
+        }
+    }
+
     @Override
     public void create() {
         // TODO: 04.03.2021 Vetsje hva som skulle vært her? Kanskje bare show()?
@@ -170,7 +192,6 @@ public class GameScreen extends Game implements Screen {
                     batch.draw(t.getTexture(), x, HEIGHT - y - 1);
                     sprite.draw(batch);
 
-                    // TODO: 23.02.2021 Obs obs! Board og GameScreen er uenige i koordinatsystemer, Board sier at (0, 0) er oppe til venstre, mens GameScreen sier det er nede til venstre.
                     setPlayerCell(x,HEIGHT - y - 1, cell);
 
                     batch.end();

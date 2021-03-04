@@ -69,7 +69,6 @@ public class BoardTests {
         Flag1 = bård.getFlagInForgridAt(3,3 );
         Flag2 = bård.getFlagInForgridAt( 6,5);
         Flag3 = bård.getFlagInForgridAt(2,6);
-
     }
 
     @Test

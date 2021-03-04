@@ -24,21 +24,6 @@ public class Board {
     private IComponent[][] midgrid;
     private IComponent[][] forgrid;
 
-    /**
-     * Henter flaggene fra forgriden slik at vi kan bruke Flaggene for
-     * å teste at robotene henter riktige flagg i BoardTest.
-     *
-     * @param posY y posisjonen til flagget i tmx-filen
-     * @param posX x posisjonene til flagget i tmx-filen
-     * @return Flagget fra den posisjonen
-     */
-    public Flag getFlagInForgridAt(int posY, int posX) {
-        if (!(forgrid[posY][posX] instanceof Flag)){
-            throw new IllegalStateException("Du har angit en posisjon som ikke inneholder et flag.");
-        }
-        return (Flag) forgrid[posY][posX];
-    }
-
     private final TreeMap<Robot, Position> botPositions = new TreeMap<>((Object bot1, Object bot2) -> Integer.compare(bot1.hashCode(), bot2.hashCode()));
     private final TreeMap<Laser, Position> laserPositions = new TreeMap<>((Object laser1, Object laser2) -> Integer.compare(laser1.hashCode(), laser2.hashCode()));
     private final LinkedList<Position> availableSpawnPoints = new LinkedList<>();
@@ -327,6 +312,21 @@ public class Board {
     }
 
     public Robot getRobotAt(int x, int y){ return botgrid[y][x]; }
+
+    /**
+     * Henter flaggene fra forgriden slik at vi kan bruke Flaggene for
+     * å teste at robotene henter riktige flagg i BoardTest.
+     *
+     * @param posY y posisjonen til flagget i tmx-filen
+     * @param posX x posisjonene til flagget i tmx-filen
+     * @return Flagget fra den posisjonen
+     */
+    public Flag getFlagInForgridAt(int posY, int posX) {
+        if (!(forgrid[posY][posX] instanceof Flag)){
+            throw new IllegalStateException("Du har angit en posisjon som ikke inneholder et flag.");
+        }
+        return (Flag) forgrid[posY][posX];
+    }
 
     public void placeRobotAt(int x, int y, Robot bot){
         botPositions.put(bot, new Position(x, y));

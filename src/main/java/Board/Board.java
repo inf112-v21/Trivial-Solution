@@ -25,8 +25,8 @@ public class Board {
     private IComponent[][] forgrid;
 
     /**
-     * Henter flaggene fra forgriden slik at vi kan bruke de i for
-     * å teste at robotene henter riktige flagg.
+     * Henter flaggene fra forgriden slik at vi kan bruke Flaggene for
+     * å teste at robotene henter riktige flagg i BoardTest.
      *
      * @param posY y posisjonen til flagget i tmx-filen
      * @param posX x posisjonene til flagget i tmx-filen

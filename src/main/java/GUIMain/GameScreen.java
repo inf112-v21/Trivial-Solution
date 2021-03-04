@@ -1,12 +1,12 @@
 package GUIMain;
 
+import Cards.Deck;
 import Cards.ICard;
-import GameBoard.Board;
+import Cards.ProgramCard;
 import GameBoard.GameBoard;
 import Player.Register;
 import Player.Robot;
 
-import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
@@ -24,7 +24,6 @@ import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.tiles.StaticTiledMapTile;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.actions.ScaleByAction;
 
 import javax.swing.JOptionPane;
 import java.util.ArrayList;
@@ -122,21 +121,23 @@ public class GameScreen extends Game implements Screen {
         renderer.render();
     }
 
-    public void pickCardsFromTerminal(Register reg){
+    public static void pickCardsFromTerminal(Register reg){
         ArrayList<ICard> availableCards = reg.getRegisterCards();
-        Scanner scan = new Scanner(System.in);
+        if (availableCards.size() == 0) throw new IllegalStateException("This register has no available cards");
         System.out.println("Please type a line of ints to choose cards.");
-        System.out.println("If you want card number 1, 4, 7, 5, 2 in that order, type '1 4 7 5 2'.");
+        System.out.println("If you want card number 1, 4, 7, 5, 2 in that order, type '1 4 7 5 2'.\n");
         for (int i = 0; i < availableCards.size(); i++) {
             System.out.println(i+1 + ": " + availableCards.get(i));
         }
-        for (int i = 0; i < reg.getDamageTokens(); i++) {
-            int pick = scan.nextInt();
+        System.out.println();
+        Scanner in = new Scanner(System.in);
+        for (int i = 0; i < Math.min(reg.getDamageTokens(), 5); i++) {
+            int pick = in.nextInt() - 1;
             if (pick < 0 || pick >= availableCards.size()) {
                 System.err.println("Please choose one of the available cards.");
                 i--;
             }
-            reg.addCardToRegister(availableCards.get(pick));
+            else reg.addCardToRegister(availableCards.get(pick));
         }
     }
     int phaseNr = 0;

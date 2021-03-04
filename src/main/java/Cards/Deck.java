@@ -33,6 +33,7 @@ public class Deck {
             cards.add(new ProgramCard(2,0,150, new Texture(Gdx.files.internal("1 Red HULK X90/150 MOVE2 1Red 3.png"))));
             cards.add(new ProgramCard(3,0,170, new Texture(Gdx.files.internal("1 Red HULK X90/170 MOVE3 1Red 3.png"))));
         }
+        shuffleDeck();
     }
 
     /**
@@ -58,6 +59,7 @@ public class Deck {
             cards.add(new ProgramCard(2,0,150, null));
             cards.add(new ProgramCard(3,0,170, null));
         }
+        shuffleDeck();
     }
 
     /**

@@ -151,7 +151,7 @@ public class Board {
 
 
     /**
-     *Denne metoden bruker den globale variabelen flagWinningFormation
+     * Denne metoden bruker den globale variabelen flagWinningFormation
      * for å forsikre seg om at flaggene blir plukket opp/registrert
      * i riktig rekkefølge
      *

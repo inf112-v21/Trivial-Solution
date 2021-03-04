@@ -25,7 +25,7 @@ public class registerTest {
 
     @BeforeEach
     public void setCards(){
-        Deck d = new Deck();
+        Deck d = new Deck(false);
         for(int i = 0; i < 6; i++){
             ICard card = d.drawCard();
             allCards.add(card);

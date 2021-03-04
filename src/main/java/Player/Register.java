@@ -5,7 +5,7 @@ import Cards.ICard;
 import java.util.ArrayList;
 
 /*
-* Denne klassen får inn 9 kort fra Game-klassen, og må vise disse 9 kortene til spilleren.
+* Denne klassen får inn 9 kort fra GameBoard-klassen, og må vise disse 9 kortene til spilleren.
 * Spilleren skal dermed plukke ut 5 kort av disse, og putte den i sitt eget register.
 * @author sandersig
  */
@@ -86,7 +86,7 @@ public class Register {
     }
 
     /**
-     * Denne metoden endrer powerDown til true dersom knappen for powerDown blir trykket på i GUI-en for registeret.
+     * Denne metoden endrer powerDown til true dersom knappen for powerDown blir trykket på i GameScreen-en for registeret.
      */
     public void powerDownRobot(){
         powerDown = true;

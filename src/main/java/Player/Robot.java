@@ -1,6 +1,6 @@
 package Player;
 
-import Board.Position;
+import GameBoard.Position;
 import Components.Flag;
 import com.badlogic.gdx.graphics.Color;
 

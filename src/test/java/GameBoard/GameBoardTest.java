@@ -1,26 +1,20 @@
-package Game;
+package GameBoard;
 
-import Components.Flag;
-import Components.IComponent;
-import GUIMain.GUI;
-import GUIMain.GUI2;
+import GUIMain.GameScreen;
 import Player.Robot;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
 import com.badlogic.gdx.graphics.Color;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 
-import static org.junit.jupiter.api.Assertions.*;
+class GameBoardTest {
 
-class GameTest {
-
-    private static GUI gui;
+    private static GameScreen gameScreen;
     private final static String defaultMapName = "TestMap.tmx";
-    private static Game robotRally;
+    private static GameBoard robotRally;
 
     /**
      * GDX-initialiserings koden må være kjørt før "Gdx.files.internal" i game-konstruktøren skal klare lese
@@ -31,9 +25,14 @@ class GameTest {
         Lwjgl3ApplicationConfiguration cfg = new Lwjgl3ApplicationConfiguration();
         cfg.setTitle("CLOSE THIS WINDOW TO START THE TESTS");
         cfg.setWindowedMode(500, 100);
-        gui = new GUI(defaultMapName, true);
-        new Lwjgl3Application(gui, cfg);
-        robotRally = new Game(4, defaultMapName);
+        gameScreen = new GameScreen(null, defaultMapName, true);
+        new Lwjgl3Application(gameScreen, cfg);
+
+        ArrayList<Robot> robots = new ArrayList<Robot>();
+        robots.add(new Robot("Nebuchadnezzar", Color.BLUE, false));
+        robots.add(new Robot("Andromeda", Color.PINK, false));
+        robots.add(new Robot("Ashurbarnipal", Color.YELLOW, false));
+        robotRally = new GameBoard(robots, defaultMapName);
     }
 
     @Test

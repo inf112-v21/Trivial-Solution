@@ -1,6 +1,6 @@
 package AIs;
 
-import Board.Board;
+import GameBoard.Board;
 import Player.Register;
 
 public interface AI {

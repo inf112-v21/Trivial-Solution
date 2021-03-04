@@ -1,4 +1,4 @@
-package Board;
+package GameBoard;
 
 import Cards.ICard;
 import Components.Flag.*;

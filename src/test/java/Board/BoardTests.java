@@ -2,8 +2,8 @@ package Board;
 
 import Cards.ProgramCard;
 import Components.Flag;
-import Components.IComponent;
-import GUIMain.GUI;
+import GUIMain.GameScreen;
+import GameBoard.Board;
 import Player.Robot;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
@@ -13,8 +13,6 @@ import com.badlogic.gdx.graphics.Texture;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeAll;
-
-import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.fail;
@@ -28,7 +26,7 @@ public class BoardTests {
     private static Robot robot3;
     private static Robot robot4;
     private static Robot robot5;
-    private static GUI gui;
+    private static GameScreen gameScreen;
 
 
     //Disse brukes for å teste om Flagene blir hentet på riktig måte
@@ -47,8 +45,8 @@ public class BoardTests {
         Lwjgl3ApplicationConfiguration cfg = new Lwjgl3ApplicationConfiguration();
         cfg.setTitle("CLOSE THIS WINDOW TO START THE TESTS");
         cfg.setWindowedMode(500, 100);
-        gui = new GUI(defaultMapName, true);
-        new Lwjgl3Application(gui, cfg);
+        gameScreen = new GameScreen(null, defaultMapName, true);
+        new Lwjgl3Application(gameScreen, cfg);
     }
 
     /**

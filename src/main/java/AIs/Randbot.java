@@ -1,6 +1,6 @@
 package AIs;
 
-import Board.Board;
+import GameBoard.Board;
 import Cards.ICard;
 import Player.Register;
 

@@ -1,9 +1,7 @@
-package Game;
+package GameBoard;
 
-import Board.Board;
 import Cards.Deck;
 import Cards.ICard;
-import Cards.ProgramCard;
 import Components.Flag;
 import Player.Register;
 import Player.Robot;
@@ -12,7 +10,7 @@ import com.badlogic.gdx.graphics.Color;
 import java.util.ArrayList;
 import java.util.Comparator;
 
-public class Game {
+public class GameBoard {
 
     protected int numberOfPlayers;
 
@@ -24,14 +22,13 @@ public class Game {
     private Board board;
 
 
-    public Game(int players, String mapName){
+    public GameBoard(ArrayList<Robot> robots, String mapName){
         board = new Board(mapName);
-        numberOfPlayers = players;
+        numberOfPlayers = robots.size();
         flagWinningFormation.addAll(board.getWinningCombo());
-        for (int i=0; i < numberOfPlayers; i++){
-            String name = "Player " +i+1;
-            Robot r = new Robot(name, colours[i], false);
-            registers.add(new Register(r));
+        for(Robot bot : robots){
+            board.spawnRobot(bot);
+            registers.add(new Register(bot));
         }
     }
     public void startRound(){
@@ -68,7 +65,7 @@ public class Game {
 
     /**
      * Metode som sjekker om en spiller har vunnet eller ikke.
-     * Kan brukes av GUI.
+     * Kan brukes av GameScreen.
      *
      * @return - Roboten som vant, hvis roboten vant, null ellers
      */
@@ -94,4 +91,8 @@ public class Game {
             return o2.getRegisterCards().get(phase).priority() - o1.getRegisterCards().get(phase).priority();
         }
     }
+
+    public int getHeight(){ return board.getHeight(); }
+    public int getWidth(){ return board.getWidth(); }
+    public Robot getRobotAt(int x, int y){ return board.getRobotAt(x, y);}
 }

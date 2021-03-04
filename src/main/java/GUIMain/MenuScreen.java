@@ -34,11 +34,12 @@ public class MenuScreen extends InputAdapter implements Screen {
     protected TextButton options;
     protected TextButton quit;
     private ArrayList<Robot> robots = new ArrayList<>();
-    private GUI2 gui;
+    private GUI gui;
     private int numberOfRobots = 4; // TODO: 04.03.2021 La brukeren velge antall spillere
     private TextField textField;
+    private static String defaultMapName = "TestMap.tmx";
 
-    public MenuScreen(GUI2 gui){
+    public MenuScreen(GUI gui){
         super();
         this.gui = gui;
     }
@@ -169,7 +170,7 @@ public class MenuScreen extends InputAdapter implements Screen {
         stage.getBatch().end();
         stage.draw();
         if (robots.size() == numberOfRobots){
-            System.out.println(robots);
+            gui.startGame(robots, defaultMapName);
         }
 
     }

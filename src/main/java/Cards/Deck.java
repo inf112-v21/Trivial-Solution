@@ -36,6 +36,31 @@ public class Deck {
     }
 
     /**
+     * En konstruktør for testing, denne kan kjøres uten å starte opp hele libgdx.
+     * @param hasImages Om vi vil ha
+     */
+    public Deck(boolean hasImages){
+        if (hasImages){
+           throw new IllegalArgumentException("I cannot figure out how to add a constructor here, please use the other version of Deck() if you want images.");
+        }else {
+            cards.add(new ProgramCard(0,2,10, null));
+            cards.add(new ProgramCard(0,-1,20, null));
+            cards.add(new ProgramCard(0,1,30, null));
+            cards.add(new ProgramCard(0,-1,40, null));
+            cards.add(new ProgramCard(0,1,50, null));
+            cards.add(new ProgramCard(0,-1,60, null));
+            cards.add(new ProgramCard(0,1,70, null));
+            cards.add(new ProgramCard(-1,0,80, null));
+            cards.add(new ProgramCard(1,0,90, null));
+            cards.add(new ProgramCard(1,0,100, null));
+            cards.add(new ProgramCard(1,0,110, null));
+            cards.add(new ProgramCard(2,0,140, null));
+            cards.add(new ProgramCard(2,0,150, null));
+            cards.add(new ProgramCard(3,0,170, null));
+        }
+    }
+
+    /**
      * Blander alle kortene i bunken, og resetter counteren for hvor mange kort som er trukket.
      */
     public void shuffleDeck(){

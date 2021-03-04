@@ -5,6 +5,7 @@ import Player.Register;
 import Player.Robot;
 
 import com.badlogic.gdx.ApplicationListener;
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.graphics.Color;
@@ -27,7 +28,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import javax.swing.JOptionPane;
 import java.util.ArrayList;
 
-public class GUI extends InputAdapter implements ApplicationListener {
+public class GUI extends Game implements ApplicationListener {
     private SpriteBatch batch;
     private BitmapFont font;
     private TiledMap map;
@@ -78,8 +79,8 @@ public class GUI extends InputAdapter implements ApplicationListener {
         WIDTH = backgroundLayer.getWidth();
 
         camera = new OrthographicCamera();
-        camera.setToOrtho(false, CELL_SIZE*WIDTH, CELL_SIZE*HEIGHT);
-        camera.position.x = CELL_SIZE*WIDTH / 2;
+        camera.setToOrtho(false, CELL_SIZE * WIDTH, CELL_SIZE * HEIGHT);
+        camera.position.x = CELL_SIZE * WIDTH / 2;
         camera.update();
 
         renderer = new OrthogonalTiledMapRenderer(map, 1);
@@ -91,19 +92,6 @@ public class GUI extends InputAdapter implements ApplicationListener {
 
         board = new Board(mapName);
         if (isInDebugMode) Gdx.app.exit(); //Lukker vinduet, om vi startet GUI-en kun for å teste ting.
-
-        startTheGame();
-    }
-
-    private void startTheGame(){ // TODO: 02.03.2021
-        ArrayList<Register> registers = new ArrayList<>();
-        Skin skin = new Skin(Gdx.files.internal("assets/default/skin/uiskin.json"));
-        Dialog dialog = new Dialog("test", skin);
-        stage.addActor(dialog);
-    }
-
-    private Robot createRobot(){
-        return null; // TODO: 02.03.2021  
     }
 
     @Override

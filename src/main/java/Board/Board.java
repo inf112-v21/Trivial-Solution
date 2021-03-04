@@ -24,8 +24,19 @@ public class Board {
     private IComponent[][] midgrid;
     private IComponent[][] forgrid;
 
-    public IComponent[][] getFrontGrid() {
-        return forgrid;
+    /**
+     * Henter flaggene fra forgriden slik at vi kan bruke Flaggene for
+     * å teste at robotene henter riktige flagg i BoardTest.
+     *
+     * @param posY y posisjonen til flagget i tmx-filen
+     * @param posX x posisjonene til flagget i tmx-filen
+     * @return Flagget fra den posisjonen
+     */
+    public Flag getFlagInForgridAt(int posY, int posX) {
+        if (!(forgrid[posY][posX] instanceof Flag)){
+            throw new IllegalStateException("Du har angit en posisjon som ikke inneholder et flag.");
+        }
+        return (Flag) forgrid[posY][posX];
     }
 
     private final TreeMap<Robot, Position> botPositions = new TreeMap<>((Object bot1, Object bot2) -> Integer.compare(bot1.hashCode(), bot2.hashCode()));

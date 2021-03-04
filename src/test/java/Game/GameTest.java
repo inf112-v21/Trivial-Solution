@@ -2,7 +2,11 @@ package Game;
 
 import Components.Flag;
 import Components.IComponent;
+import GUIMain.GUI;
+import GUIMain.GUI2;
 import Player.Robot;
+import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
+import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
 import com.badlogic.gdx.graphics.Color;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -14,13 +18,27 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class GameTest {
 
-    //private final Game robotRally = new Game(4, "TestMap.tmx");
-    //TODO: Finne ut hvorfor det kommer NullpointException fra Deck klassen når man kaller Game
+    private static GUI gui;
+    private final static String defaultMapName = "TestMap.tmx";
+    private static Game robotRally;
 
-
+    /**
+     * GDX-initialiserings koden må være kjørt før "Gdx.files.internal" i game-konstruktøren skal klare lese
+     * PNG-filene med bilder av kortene. Får NullPointerException hvis dette ikke blir gjort.
+     */
+    @BeforeAll
+    public static void setUp(){
+        Lwjgl3ApplicationConfiguration cfg = new Lwjgl3ApplicationConfiguration();
+        cfg.setTitle("CLOSE THIS WINDOW TO START THE TESTS");
+        cfg.setWindowedMode(500, 100);
+        gui = new GUI(defaultMapName, true);
+        new Lwjgl3Application(gui, cfg);
+        robotRally = new Game(4, defaultMapName);
+    }
 
     @Test
-    void startRound() {}
+    void startRound() {
+    }
 
     @Test
     void phase() {}

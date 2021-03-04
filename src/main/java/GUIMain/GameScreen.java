@@ -139,6 +139,25 @@ public class GameScreen extends Game implements Screen {
             reg.addCardToRegister(availableCards.get(pick));
         }
     }
+    int phaseNr = 0;
+    public void simulateRound(){
+        // 1. Vise alle registerkortene samtidig. showAllRegisterCards() eller noe.
+        GameBoard gb = getGameBoard();
+        gb.startRound();
+        if(gb.hasWon() != null) {
+            gb.endRound();
+            phaseNr = 0;
+            showPopUp("The winner of this round is: " + gb.hasWon(), "Round finished!");
+            return;
+        }
+        if(phaseNr == 5){
+            showPopUp("This round is finished with no winner.", "Round finished");
+            return;
+        }
+        gb.phase(phaseNr);
+        phaseNr++;
+        //her må GUI oppdateres
+    }
 
     @Override
     public void create() {

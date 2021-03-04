@@ -1,22 +1,12 @@
 package Game;
 
-import Components.Flag;
-import Components.IComponent;
 import GUIMain.GUI;
-import GUIMain.GUI2;
-import Player.Robot;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
-import com.badlogic.gdx.graphics.Color;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
-
-import static org.junit.jupiter.api.Assertions.*;
-
-class GameTest {
+class Game1Test {
 
     private static GUI gui;
     private final static String defaultMapName = "TestMap.tmx";

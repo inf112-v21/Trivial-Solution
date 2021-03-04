@@ -1,13 +1,13 @@
 package GUIMain;
 
 import Board.Board;
+import Cards.ICard;
 import Player.Register;
 import Player.Robot;
+import Game.Game;
 
 import com.badlogic.gdx.ApplicationListener;
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL30;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -22,13 +22,10 @@ import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.tiles.StaticTiledMapTile;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
 import javax.swing.JOptionPane;
-import java.util.ArrayList;
 
-public class GUI extends Game implements ApplicationListener {
+public class GUI extends com.badlogic.gdx.Game implements ApplicationListener {
     private SpriteBatch batch;
     private BitmapFont font;
     private TiledMap map;
@@ -116,7 +113,25 @@ public class GUI extends Game implements ApplicationListener {
      * Må gå litt mer tid mellom hver fase.
      */
     public void simulateRound(){
+        // 1. reveal program cards -> register GUI?
+        // 2. Robots move, gui må oppdateres hver gang en robot flytter seg. en robot skal flyttes om gangen
+        Game game = new Game(4, mapName); // endre denne til å ta inn antall spillere valgt fra hovedmenyen
+        game.startRound();
+        while(game.hasWon() == null){
+            int registerCardNr = 0;
+            for(int i = 0; i < 4; i++){
+                Register r = game.registers.get(registerCardNr);
+                for(ICard card : r.getRegisterCards()){
+                }
+        }
 
+        }
+
+        // 3. Board elements Move
+
+        // 4. Lasers fire
+
+        // 5. Touch checkpoints
     }
 
     /**

@@ -16,6 +16,7 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 
 import java.util.ArrayList;
+import java.util.Scanner;
 
 import static com.badlogic.gdx.graphics.Color.*;
 
@@ -34,7 +35,7 @@ public class MenuScreen extends InputAdapter implements Screen {
     protected TextButton quit;
     private ArrayList<Robot> robots = new ArrayList<>();
     private GUI2 gui;
-    private int numberOfRobots = 4; // TODO: 04.03.2021 Fiks dette senere
+    private int numberOfRobots = 4; // TODO: 04.03.2021 La brukeren velge antall spillere
     private TextField textField;
 
     public MenuScreen(GUI2 gui){
@@ -50,6 +51,7 @@ public class MenuScreen extends InputAdapter implements Screen {
         font.setColor(RED);
 
         Gdx.input.setInputProcessor(stage);
+
         skin = new Skin(Gdx.files.internal("assets/default/skin/uiskin.json"));
         table = new Table();
         table.setFillParent(true);
@@ -63,20 +65,15 @@ public class MenuScreen extends InputAdapter implements Screen {
         table.add(undertitle);
         table.row();
 
-        Label singlelabel = getButtonLabel("Singleplayer");
-        Label multilabel = getButtonLabel("Multiplayer");
-        Label optionlabel = getButtonLabel("Options");
-        Label quitlabel = getButtonLabel("Quit");
-
         singleplayer = new TextButton("Singleplayer", skin);
         multiplayer = new TextButton("Multiplayer", skin);
         options = new TextButton("Options", skin);
         quit = new TextButton("Quit", skin);
 
-        singleplayer.setLabel(singlelabel);
-        multiplayer.setLabel(multilabel);
-        options.setLabel(optionlabel);
-        quit.setLabel(quitlabel);
+        singleplayer.setLabel(getButtonLabel("Singleplayer"));
+        multiplayer.setLabel(getButtonLabel("Multiplayer"));
+        options.setLabel(getButtonLabel("Options"));
+        quit.setLabel(getButtonLabel("Quit"));
 
         textField = new TextField("", skin);
 
@@ -84,9 +81,9 @@ public class MenuScreen extends InputAdapter implements Screen {
             @Override
             public void changed(ChangeEvent changeEvent, Actor actor) {
                 robots.clear();
-                createRobot();
+                createRobot3();
                 robots.add(new Robot("Nebuchadnezzar", RED, true));
-                robots.add(new Robot("Alexstrasza", GREEN, true));
+                robots.add(new Robot("Andromeda", GREEN, true));
                 robots.add(new Robot("Ashurbarnipal", YELLOW, true));
             }
         });
@@ -108,6 +105,9 @@ public class MenuScreen extends InputAdapter implements Screen {
         table.add(quit).prefWidth(200.0f).prefHeight(100.0f);
 
         stage.addActor(table);
+
+
+
     }
 
     public void createRobot2() {
@@ -117,7 +117,7 @@ public class MenuScreen extends InputAdapter implements Screen {
                 robots.add(new Robot(textField.getText(), BLUE, false));
             }
         };
-        dia.setScale(3);
+        dia.setScale(2.5f);
 
         Table diatable = new Table();
 
@@ -151,7 +151,14 @@ public class MenuScreen extends InputAdapter implements Screen {
             @Override
             public void canceled() { }
         }, "Create your robot", "", "name");
-        System.out.println("ok");
+    }
+
+    // TODO: 04.03.2021 Temp, vennligst slett når vi får til popupvinduer
+    public void createRobot3(){
+        Scanner scan = new Scanner(System.in);
+        System.out.println("Name of your robot: ");
+        String name = scan.nextLine();
+        robots.add(new Robot(name,BLUE, false));
     }
 
 

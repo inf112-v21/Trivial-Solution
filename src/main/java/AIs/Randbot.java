@@ -9,6 +9,10 @@ import java.util.Random;
 
 public class Randbot implements AI{
 
+    /**
+     * En veldig dum AI som alltid velger tilfeldige kort.
+     */
+
     private Random r = new Random();
 
 

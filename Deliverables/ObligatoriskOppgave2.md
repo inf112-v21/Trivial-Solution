@@ -87,7 +87,8 @@ og det har vi gjort under arbeidet i for denne Obligen. Dette har Dusan hatt pro
 skrevne linjer enn det som står oppgitt i git hub statiskken. 
 
 Ilyas og Samuel har færre linjer skrevet siden de har holdt på med spesifikke GUI-relaterte issues, som har krevd mer reasearch på
-dette stadiet av prosjektet så derfor har de ikke commitetet like mye. 
+dette stadiet av prosjektet så derfor har de ikke commitetet like mye. Det de holder på emd er å finne
+ut hvordan vi kan få det til at registeret med kortene og selve spillebrettet vises i samme vindu.
 
 Steinar har fokusert mest på backenden av proskjektet på dette tidspunktet og har dermed skrevet flere linjer. Han begynner på
 GUI-delen snart. Det er et par ting igjen på Backend, men vi er fornøyde med hvor langt vi har komt her generelt nå.
@@ -95,8 +96,8 @@ GUI-delen snart. Det er et par ting igjen på Backend, men vi er fornøyde med h
 Sander fokuserte også stort sett på GUI-delene av prosjektet (spesifikkt kort implementasjonen) og har brukt en stor del
 av tiden på å researche dette.
 
-Dusan har gjort en del av backend og har vært ansvarlig for at spilleren kan vinne etter å hente flaggene i det siste. Det
-kravet er nå ferdig så han har begynte med å reaserche hvordan vi skal sette opp nettverket.
+Dusan har gjort en del av backend og har vært ansvarlig for at spilleren kan vinne etter å hente flaggene i det siste. Det er nå
+implementert på backenden så han har begynt med å reaserche hvordan vi skal sette opp nettworkingen (Multiplayer)
 
 
 
@@ -106,4 +107,52 @@ Bli enige om maks tre forbedringspunkter fra retrospektivet, som skal følges op
 
 
 #Deloppgave 2 - Krav
+
+###Brukerhistorier, Akseptansekrav, arbeidsoppgaver
+Du kan finne disse hvis du går inn på github prosjektet vårt.
+Gå deretter til Projects og klick på Trivial-Solution. Dette
+er prosjektbrettet vårt. Her skriver vi nå Brukerhistorier, Akseptansekrav og Arbeidsoppgaver
+for hver issue. Vi skriver også tilhørende tester som blir skrevet med tanke på akseptansekravene.
+Disse finenr man i test packagen.
+
+Vi har noen oppgaver som vi har startet med nå, men akseptansekrav er ikke definert.
+
+###Prioritering fremover
+Fremover så kommer vi prioritere networking(Sette opp multiplayer) og gui'en.
+Vi har prioritert disse oppgavene fordi vi ligger litt back her. På andre siden så er backenden
+for hele spillet stort sett ferdig. Så nå må vi bare implementere Gui'en og Mutiplayer som mangler.
+
+###Justeringer i MVP krav
+Vi har ike gjort noen forandringer i MVP kravene per say. Men vi har prioritert andre ting som vi syntes var viktigere. Nemlig
+å få spill-logikken på plass. MVP krav 1-5 og 7-9 illustrere til en viss grad hva dette innebærer, men vi ville ha selve spill-logikken
+på plass før vi begynte med resten. Da tenkte vi på komponentene i spillet som laserer, vegger, gear, wrench og andre slike
+ting som en del av spillet. Tanken vår var at hvis vi gjorde det på denne måten så ville vi få en bedre oversikt over hvordan vi skulle
+gå videre med å lage spillet. Dette var en god måte å bli bedre kjent med spillet på og vi tenkte at vi kunne gjøre en bedre jobb
+hvis vi gjorde det på denne måten. 
+
+MultiPlayer er også et viktig MVP-krav men vi mener at spillet og komponentene fungerer på en 
+logisk måte er viktigere på dette tidspunktet. Dessuten så kan det være problematisk å implementere logikken til for eksempel en
+vegg senere. Målet vårt er tross alt til syvende og sist å ha et full-fledged spill og ikke bare det som er beskrevet i MVP. Med tanke
+på dette så har vi prioritert alitt annerledes.
+
+Det skal sies at vi kanskje brukte mer tid enn det som var optimalt på å lage komponentene til brettet. Denne tiden kunne
+gått til mutiplayer, men vi er glade for å ha komponentene på plass nå. De er tross alt med i brettet og dermed
+en viktig faktor for spillet. På en måte så kan man kanskje si at siden vi prioriterte dette sterkere i begynnelsen
+så kan vi telle det som et
+
+###Prioriterte krav
+Vi prioriterte Krav 1-3 og 7-8 under Oblig1. Vi har fortsatt med
+disse nå også, samt at vi har fullført 4-5 og 9 også. 6 er det
+neste som skal inn, samt GUI-fin pussing.
+
+###Bugs i kravene
+Krav 2 (Vise brikke på spillebrett): Et undermål for dette kravet
+er at roboten ikke skal vises på ruten den har gått ifra. Det gjør den
+nå.
+
+Legg til flere Bugs imorgen hvis vi har noen!
+
+
+#Deloppgave 3
+
 

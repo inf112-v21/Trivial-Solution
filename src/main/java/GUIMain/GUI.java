@@ -111,6 +111,15 @@ public class GUI extends Game implements ApplicationListener {
     }
 
     /**
+     * Denne metoden skal oppdatere GUI-en når roboter flyttes.
+     * Må gå litt tid mellom hvert trekk, slik at bruker kan se hva som skjer.
+     * Må gå litt mer tid mellom hver fase.
+     */
+    public void simulateRound(){
+
+    }
+
+    /**
      * Metode som viser et popup-vindu med en valgt beskjed.
      * @param message
      */

@@ -1,5 +1,7 @@
 package GUIMain;
 
+import AIs.AI;
+import AIs.Randbot;
 import Cards.Deck;
 import Cards.ICard;
 import Cards.ProgramCard;
@@ -23,7 +25,12 @@ import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.tiles.StaticTiledMapTile;
+import com.badlogic.gdx.scenes.scene2d.Event;
+import com.badlogic.gdx.scenes.scene2d.EventListener;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Cell;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 import javax.swing.JOptionPane;
 import java.util.ArrayList;
@@ -48,15 +55,16 @@ public class GameScreen extends Game implements Screen {
 	private boolean isInDebugMode;
 	private GameBoard gameboard;
 	private ArrayList<Robot> robots;
+	private AI ai = new Randbot();
 
     /**
-     *
+     * @param robots robotene som skal være med å spille
      * @param mapName navnet på filen som mappet skal baseres på. Husk .tmx!
      */
 	public GameScreen(ArrayList<Robot> robots, String mapName){ this(robots, mapName, false); }
 
     /**
-     *
+     * @param robots robotene som skal være med å spille
      * @param mapName navnet på filen.
      * @param isInDebugMode Om denne er true blir vinduet lukket automatisk ved oppstart. Slik at vi kan kjøre testene.
      */
@@ -87,6 +95,14 @@ public class GameScreen extends Game implements Screen {
         gameboard = new GameBoard(robots, mapName);
         if (isInDebugMode) Gdx.app.exit(); //Lukker vinduet, om vi startet GameScreen-en kun for å teste ting.
         stage = new Stage();
+        Gdx.input.setInputProcessor(stage);
+        stage.addCaptureListener(new ClickListener(){
+            @Override
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                simulateRound2();
+                return true;
+            }
+        });
 
         TmxMapLoader tmx = new TmxMapLoader();
         map = tmx.load(mapName);
@@ -110,6 +126,24 @@ public class GameScreen extends Game implements Screen {
         batch = new SpriteBatch();
         font = new BitmapFont();
         font.setColor(Color.RED);
+    }
+
+    public void simulateRound2(){
+        //updateRobotPositions();
+        displayRobots(getPlayerImage1("alive"), getPlayerCell(getPlayerImage("alive")));
+        renderer.render();
+
+        gameboard.startRound();
+        for (Register reg : gameboard.getRegisters()) {
+            if (reg.getRobot().isControlledByAI()) ai.chooseCards(reg, gameboard.getBoard());
+            else pickCardsFromTerminal(reg);
+        }
+        for (int i = 0; i < 5; i++) {
+            gameboard.phase(i);
+            //updateRobotPositions();
+            displayRobots(getPlayerImage1("alive"), getPlayerCell(getPlayerImage("alive")));
+        }
+        gameboard.endRound();
     }
 
     @Override
@@ -217,10 +251,13 @@ public class GameScreen extends Game implements Screen {
                     batch.end();
 				
 				}
+                else{
+                    TiledMapTileLayer.Cell c = playerLayer.getCell(x, HEIGHT-y-1);
+                    if (c != null) playerLayer.getCell(x, HEIGHT-y-1).setTile(null);
+                }
 			}
 		}
 	}
-	
 	
 	/**
 	 * 

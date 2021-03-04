@@ -76,7 +76,7 @@ public class Board {
                     Flag newFlag = (Flag)forcomp;
                     flagWinningFormation.add(newFlag);
 
-                    // Sorterer flaggene slik at roboten kan hente de i riktig rekkefølge
+                    // Sorterer flaggene slik at roboten kan hente dem i riktig rekkefølge
                     flagWinningFormation.sort(new Flag.CompareID());
                 }
                 else if(forcomp instanceof Laser) laserPositions.put((Laser)forcomp, new Position(x, HEIGHT-1-y));
@@ -140,8 +140,6 @@ public class Board {
      * for å forsikre seg om at flaggene blir plukket opp/registrert
      * i riktig rekkefølge
      *
-     * TODO: Skriv test til denne!!
-     *
      * @param bot - roboten vår
      * @param foundFlag - flagget som roboten landet på
      * @return -true hvis roboten kan plukke opp/registrere flagget. Flase ellers.
@@ -188,28 +186,30 @@ public class Board {
     }
 
     private void respawnRobots(){
+        ArrayList<Robot> successfullRespawns = new ArrayList<>();
         for(Robot bot : robotsWaitingToBeRespawned){
             Position spawnpoint = bot.getRespawnPoint();
             if (spawnpoint == null) throw new IllegalStateException("This bot has no spawnpoint. Try spawning it with spawnRobot() instead of placeRobotAt() if you want to respawn it automatically.");
 
             if(botgrid[spawnpoint.getY()][spawnpoint.getX()] == null){
                 botgrid[spawnpoint.getY()][spawnpoint.getX()] = bot;
-                robotsWaitingToBeRespawned.removeFirst();
+                successfullRespawns.add(bot);
                 botPositions.put(bot, spawnpoint);
                 bot.respawn();
             }
         }
+        for (Robot bot : successfullRespawns) robotsWaitingToBeRespawned.remove(bot);
     }
 
     private void removeDestroyedRobots(){
         for (Robot bot : botPositions.keySet()){
             if(bot.isDestroyed()){
                 bot.takeLife();
-                if (!bot.hasRemainingLives()){
+                if (bot.hasRemainingLives()){
                     robotsWaitingToBeRespawned.addLast(bot);
                 }
                 botgrid[botPositions.get(bot).getY()][botPositions.get(bot).getX()] = null;
-                botPositions.remove(bot);
+                //botPositions.remove(bot);
             }
             // TODO: 26.02.2021 Skal vi kanskje gjøre noe spesiellt når noen har dødd for tredje og siste gang? Si ifra til brukeren?
         }

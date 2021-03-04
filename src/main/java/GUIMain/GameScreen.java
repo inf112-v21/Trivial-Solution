@@ -1,12 +1,12 @@
 package GUIMain;
 
-import Cards.Deck;
 import Cards.ICard;
-import Cards.ProgramCard;
+import GameBoard.Board;
 import GameBoard.GameBoard;
 import Player.Register;
 import Player.Robot;
 
+import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
@@ -24,6 +24,9 @@ import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.tiles.StaticTiledMapTile;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.actions.ScaleByAction;
+import com.badlogic.gdx.utils.viewport.ExtendViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
 
 import javax.swing.JOptionPane;
 import java.util.ArrayList;
@@ -39,6 +42,7 @@ public class GameScreen extends Game implements Screen {
     private TiledMapTileLayer foregroundLayer;
     private OrthogonalTiledMapRenderer renderer;
     private OrthographicCamera camera;
+    private OrthographicCamera regCamera;
     private Stage stage;
     private String mapName;
     private int CELL_SIZE = 300;
@@ -48,6 +52,8 @@ public class GameScreen extends Game implements Screen {
 	private boolean isInDebugMode;
 	private GameBoard gameboard;
 	private ArrayList<Robot> robots;
+	private Viewport gameAreaViewport;
+    private Viewport controlAreaViewport;
 
     /**
      *
@@ -103,6 +109,14 @@ public class GameScreen extends Game implements Screen {
         camera.setToOrtho(false, CELL_SIZE * WIDTH, CELL_SIZE * HEIGHT);
         camera.position.x = CELL_SIZE * WIDTH / 2;
         camera.update();
+        gameAreaViewport = new ExtendViewport(CELL_SIZE * WIDTH, CELL_SIZE * HEIGHT, camera);
+
+        regCamera = new OrthographicCamera();
+        regCamera.setToOrtho(false, CELL_SIZE * WIDTH, CELL_SIZE);
+        regCamera.position.x = CELL_SIZE * WIDTH / 2;
+        regCamera.update();
+        controlAreaViewport = new ExtendViewport(CELL_SIZE * WIDTH, CELL_SIZE, regCamera);
+
 
         renderer = new OrthogonalTiledMapRenderer(map, 1);
         renderer.setView(camera);
@@ -116,48 +130,28 @@ public class GameScreen extends Game implements Screen {
     public void render(float v) {
         Gdx.gl.glClearColor(1, 1, 1, 1);
         Gdx.gl.glClear(GL30.GL_COLOR_BUFFER_BIT);
-
-        displayRobots(getPlayerImage1("alive"), getPlayerCell(getPlayerImage("alive")));
-        renderer.render();
+        drawGameArea();
+        drawControlArea();
+        //displayRobots(getPlayerImage1("alive"), getPlayerCell(getPlayerImage("alive")));
+        //renderer.render();
     }
 
-    public static void pickCardsFromTerminal(Register reg){
+    public void pickCardsFromTerminal(Register reg){
         ArrayList<ICard> availableCards = reg.getRegisterCards();
-        if (availableCards.size() == 0) throw new IllegalStateException("This register has no available cards");
+        Scanner scan = new Scanner(System.in);
         System.out.println("Please type a line of ints to choose cards.");
-        System.out.println("If you want card number 1, 4, 7, 5, 2 in that order, type '1 4 7 5 2'.\n");
+        System.out.println("If you want card number 1, 4, 7, 5, 2 in that order, type '1 4 7 5 2'.");
         for (int i = 0; i < availableCards.size(); i++) {
             System.out.println(i+1 + ": " + availableCards.get(i));
         }
-        System.out.println();
-        Scanner in = new Scanner(System.in);
-        for (int i = 0; i < Math.min(reg.getDamageTokens(), 5); i++) {
-            int pick = in.nextInt() - 1;
+        for (int i = 0; i < reg.getDamageTokens(); i++) {
+            int pick = scan.nextInt();
             if (pick < 0 || pick >= availableCards.size()) {
                 System.err.println("Please choose one of the available cards.");
                 i--;
             }
-            else reg.addCardToRegister(availableCards.get(pick));
+            reg.addCardToRegister(availableCards.get(pick));
         }
-    }
-    int phaseNr = 0;
-    public void simulateRound(){
-        // 1. Vise alle registerkortene samtidig. showAllRegisterCards() eller noe.
-        GameBoard gb = getGameBoard();
-        gb.startRound();
-        if(gb.hasWon() != null) {
-            gb.endRound();
-            phaseNr = 0;
-            showPopUp("The winner of this round is: " + gb.hasWon(), "Round finished!");
-            return;
-        }
-        if(phaseNr == 5){
-            showPopUp("This round is finished with no winner.", "Round finished");
-            return;
-        }
-        gb.phase(phaseNr);
-        phaseNr++;
-        //her må GUI oppdateres
     }
 
     @Override
@@ -261,4 +255,14 @@ public class GameScreen extends Game implements Screen {
         	return tmp[0][0];
         }
 	}
+	public void drawGameArea(){
+        Gdx.gl.glViewport( 0,Gdx.graphics.getHeight()-(Gdx.graphics.getHeight()-CELL_SIZE ),Gdx.graphics.getWidth(),Gdx.graphics.getHeight());
+        batch.setProjectionMatrix(regCamera.combined);
+    }
+    public void drawControlArea(){
+        Gdx.gl.glViewport( 0,0,Gdx.graphics.getWidth(),Gdx.graphics.getHeight()-(Gdx.graphics.getHeight()-CELL_SIZE) );
+        batch.setProjectionMatrix(camera.combined);
+        displayRobots(getPlayerImage1("alive"), getPlayerCell(getPlayerImage("alive")));
+        renderer.render();
+    }
 }

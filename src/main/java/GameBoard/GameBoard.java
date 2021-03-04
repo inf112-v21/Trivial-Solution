@@ -9,6 +9,7 @@ import Player.Robot;
 import com.badlogic.gdx.graphics.Color;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.Iterator;
 
 public class GameBoard {
 
@@ -50,8 +51,10 @@ public class GameBoard {
     public void phase(int phasenumber){
         registers.sort(new RegisterComparator(phasenumber));
         for(Register reg : registers){
-            ICard card = reg.getRegisterCards().get(phasenumber);
-            board.performMove(card, reg.getRobot());
+            if (reg.getLifeTokens() > 0 && reg.getMaxFiveCardsFromRegister().size() > phasenumber) {
+                ICard card = reg.getMaxFiveCardsFromRegister().get(phasenumber);
+                board.performMove(card, reg.getRobot());
+            }
         }
         board.endPhase();
     }
@@ -80,6 +83,7 @@ public class GameBoard {
     }
 
     public Board getBoard(){ return board; }
+    public ArrayList<Register> getRegisters(){ return registers; }
 
 
     private static class RegisterComparator implements Comparator<Register> {
@@ -88,7 +92,11 @@ public class GameBoard {
 
         /** Obs obs! Sorterer slik at høyeste prioritet kommer først. */
         public int compare(Register o1, Register o2) {
-            return o2.getRegisterCards().get(phase).priority() - o1.getRegisterCards().get(phase).priority();
+            try{
+                return o2.getRegisterCards().get(phase).priority() - o1.getRegisterCards().get(phase).priority();
+            }catch (IndexOutOfBoundsException ex){
+                return 0;
+            }
         }
     }
 

@@ -1,12 +1,14 @@
 package GUIMain;
 
+import AIs.AI;
+import AIs.Randbot;
+import Cards.Deck;
 import Cards.ICard;
-import GameBoard.Board;
+import Cards.ProgramCard;
 import GameBoard.GameBoard;
 import Player.Register;
 import Player.Robot;
 
-import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
@@ -23,10 +25,12 @@ import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.tiles.StaticTiledMapTile;
+import com.badlogic.gdx.scenes.scene2d.Event;
+import com.badlogic.gdx.scenes.scene2d.EventListener;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.actions.ScaleByAction;
-import com.badlogic.gdx.utils.viewport.ExtendViewport;
-import com.badlogic.gdx.utils.viewport.Viewport;
+import com.badlogic.gdx.scenes.scene2d.ui.Cell;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 import javax.swing.JOptionPane;
 import java.util.ArrayList;
@@ -42,7 +46,6 @@ public class GameScreen extends Game implements Screen {
     private TiledMapTileLayer foregroundLayer;
     private OrthogonalTiledMapRenderer renderer;
     private OrthographicCamera camera;
-    private OrthographicCamera regCamera;
     private Stage stage;
     private String mapName;
     private int CELL_SIZE = 300;
@@ -52,17 +55,16 @@ public class GameScreen extends Game implements Screen {
 	private boolean isInDebugMode;
 	private GameBoard gameboard;
 	private ArrayList<Robot> robots;
-	private Viewport gameAreaViewport;
-    private Viewport controlAreaViewport;
+	private AI ai = new Randbot();
 
     /**
-     *
+     * @param robots robotene som skal være med å spille
      * @param mapName navnet på filen som mappet skal baseres på. Husk .tmx!
      */
 	public GameScreen(ArrayList<Robot> robots, String mapName){ this(robots, mapName, false); }
 
     /**
-     *
+     * @param robots robotene som skal være med å spille
      * @param mapName navnet på filen.
      * @param isInDebugMode Om denne er true blir vinduet lukket automatisk ved oppstart. Slik at vi kan kjøre testene.
      */
@@ -93,6 +95,14 @@ public class GameScreen extends Game implements Screen {
         gameboard = new GameBoard(robots, mapName);
         if (isInDebugMode) Gdx.app.exit(); //Lukker vinduet, om vi startet GameScreen-en kun for å teste ting.
         stage = new Stage();
+        Gdx.input.setInputProcessor(stage);
+        stage.addCaptureListener(new ClickListener(){
+            @Override
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                simulateRound2();
+                return true;
+            }
+        });
 
         TmxMapLoader tmx = new TmxMapLoader();
         map = tmx.load(mapName);
@@ -109,14 +119,6 @@ public class GameScreen extends Game implements Screen {
         camera.setToOrtho(false, CELL_SIZE * WIDTH, CELL_SIZE * HEIGHT);
         camera.position.x = CELL_SIZE * WIDTH / 2;
         camera.update();
-        gameAreaViewport = new ExtendViewport(CELL_SIZE * WIDTH, CELL_SIZE * HEIGHT, camera);
-
-        regCamera = new OrthographicCamera();
-        regCamera.setToOrtho(false, CELL_SIZE * WIDTH, CELL_SIZE);
-        regCamera.position.x = CELL_SIZE * WIDTH / 2;
-        regCamera.update();
-        controlAreaViewport = new ExtendViewport(CELL_SIZE * WIDTH, CELL_SIZE, regCamera);
-
 
         renderer = new OrthogonalTiledMapRenderer(map, 1);
         renderer.setView(camera);
@@ -126,32 +128,70 @@ public class GameScreen extends Game implements Screen {
         font.setColor(Color.RED);
     }
 
+    public void simulateRound2(){
+        //updateRobotPositions();
+        displayRobots(getPlayerImage1("alive"), getPlayerCell(getPlayerImage("alive")));
+        renderer.render();
+
+        gameboard.startRound();
+        for (Register reg : gameboard.getRegisters()) {
+            if (reg.getRobot().isControlledByAI()) ai.chooseCards(reg, gameboard.getBoard());
+            else pickCardsFromTerminal(reg);
+        }
+        for (int i = 0; i < 5; i++) {
+            gameboard.phase(i);
+            //updateRobotPositions();
+            displayRobots(getPlayerImage1("alive"), getPlayerCell(getPlayerImage("alive")));
+        }
+        gameboard.endRound();
+    }
+
     @Override
     public void render(float v) {
         Gdx.gl.glClearColor(1, 1, 1, 1);
         Gdx.gl.glClear(GL30.GL_COLOR_BUFFER_BIT);
-        drawGameArea();
-        drawControlArea();
-        //displayRobots(getPlayerImage1("alive"), getPlayerCell(getPlayerImage("alive")));
-        //renderer.render();
+
+        displayRobots(getPlayerImage1("alive"), getPlayerCell(getPlayerImage("alive")));
+        renderer.render();
     }
 
-    public void pickCardsFromTerminal(Register reg){
+    public static void pickCardsFromTerminal(Register reg){
         ArrayList<ICard> availableCards = reg.getRegisterCards();
-        Scanner scan = new Scanner(System.in);
+        if (availableCards.size() == 0) throw new IllegalStateException("This register has no available cards");
         System.out.println("Please type a line of ints to choose cards.");
-        System.out.println("If you want card number 1, 4, 7, 5, 2 in that order, type '1 4 7 5 2'.");
+        System.out.println("If you want card number 1, 4, 7, 5, 2 in that order, type '1 4 7 5 2'.\n");
         for (int i = 0; i < availableCards.size(); i++) {
             System.out.println(i+1 + ": " + availableCards.get(i));
         }
-        for (int i = 0; i < reg.getDamageTokens(); i++) {
-            int pick = scan.nextInt();
+        System.out.println();
+        Scanner in = new Scanner(System.in);
+        for (int i = 0; i < Math.min(reg.getDamageTokens(), 5); i++) {
+            int pick = in.nextInt() - 1;
             if (pick < 0 || pick >= availableCards.size()) {
                 System.err.println("Please choose one of the available cards.");
                 i--;
             }
-            reg.addCardToRegister(availableCards.get(pick));
+            else reg.addCardToRegister(availableCards.get(pick));
         }
+    }
+    int phaseNr = 0;
+    public void simulateRound(){
+        // 1. Vise alle registerkortene samtidig. showAllRegisterCards() eller noe.
+        GameBoard gb = getGameBoard();
+        gb.startRound();
+        if(gb.hasWon() != null) {
+            gb.endRound();
+            phaseNr = 0;
+            showPopUp("The winner of this round is: " + gb.hasWon(), "Round finished!");
+            return;
+        }
+        if(phaseNr == 5){
+            showPopUp("This round is finished with no winner.", "Round finished");
+            return;
+        }
+        gb.phase(phaseNr);
+        phaseNr++;
+        //her må GUI oppdateres
     }
 
     @Override
@@ -211,10 +251,13 @@ public class GameScreen extends Game implements Screen {
                     batch.end();
 				
 				}
+                else{
+                    TiledMapTileLayer.Cell c = playerLayer.getCell(x, HEIGHT-y-1);
+                    if (c != null) playerLayer.getCell(x, HEIGHT-y-1).setTile(null);
+                }
 			}
 		}
 	}
-	
 	
 	/**
 	 * 
@@ -255,16 +298,4 @@ public class GameScreen extends Game implements Screen {
         	return tmp[0][0];
         }
 	}
-
-	public void drawGameArea(){
-        Gdx.gl.glViewport( 0,Gdx.graphics.getHeight()-(Gdx.graphics.getHeight()-CELL_SIZE ),Gdx.graphics.getWidth(),Gdx.graphics.getHeight());
-        batch.setProjectionMatrix(regCamera.combined);
-    }
-
-    public void drawControlArea(){
-        Gdx.gl.glViewport( 0,0,Gdx.graphics.getWidth(),Gdx.graphics.getHeight()-(Gdx.graphics.getHeight()-CELL_SIZE) );
-        batch.setProjectionMatrix(camera.combined);
-        displayRobots(getPlayerImage1("alive"), getPlayerCell(getPlayerImage("alive")));
-        renderer.render();
-    }
 }

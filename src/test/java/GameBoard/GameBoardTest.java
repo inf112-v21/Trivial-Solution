@@ -3,17 +3,21 @@ package GameBoard;
 import GUIMain.GameScreen;
 import Player.Robot;
 import GUIMain.GUI;
+import com.badlogic.gdx.Game;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
+import java.awt.*;
 import java.util.ArrayList;
+
+import static com.badlogic.gdx.graphics.Color.*;
 
 class GameBoardTest {
 
     private static GameScreen gameScreen;
-class Game1Test {
 
     private static GUI gui;
     private final static String defaultMapName = "TestMap.tmx";
@@ -28,13 +32,17 @@ class Game1Test {
         Lwjgl3ApplicationConfiguration cfg = new Lwjgl3ApplicationConfiguration();
         cfg.setTitle("CLOSE THIS WINDOW TO START THE TESTS");
         cfg.setWindowedMode(500, 100);
-        gameScreen = new GameScreen(null, defaultMapName, true);
-        new Lwjgl3Application(gameScreen, cfg);
+        new Lwjgl3Application(new Game() {
+            @Override
+            public void create() {
+                Gdx.app.exit();
+            }
+        }, cfg);
 
         ArrayList<Robot> robots = new ArrayList<Robot>();
-        robots.add(new Robot("Nebuchadnezzar", Color.BLUE, false));
-        robots.add(new Robot("Andromeda", Color.PINK, false));
-        robots.add(new Robot("Ashurbarnipal", Color.YELLOW, false));
+        robots.add(new Robot("Nebuchadnezzar", BLUE, false));
+        robots.add(new Robot("Andromeda", PINK, false));
+        robots.add(new Robot("Ashurbarnipal", YELLOW, false));
         robotRally = new GameBoard(robots, defaultMapName);
     }
 

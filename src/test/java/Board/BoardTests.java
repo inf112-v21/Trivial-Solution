@@ -5,6 +5,7 @@ import Components.Flag;
 import GUIMain.GameScreen;
 import GameBoard.Board;
 import Player.Robot;
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
@@ -26,7 +27,6 @@ public class BoardTests {
     private static Robot robot3;
     private static Robot robot4;
     private static Robot robot5;
-    private static GameScreen gameScreen;
 
 
     //Disse brukes for å teste om Flagene blir hentet på riktig måte
@@ -45,8 +45,12 @@ public class BoardTests {
         Lwjgl3ApplicationConfiguration cfg = new Lwjgl3ApplicationConfiguration();
         cfg.setTitle("CLOSE THIS WINDOW TO START THE TESTS");
         cfg.setWindowedMode(500, 100);
-        gameScreen = new GameScreen(null, defaultMapName, true);
-        new Lwjgl3Application(gameScreen, cfg);
+        new Lwjgl3Application(new Game() {
+            @Override
+            public void create() {
+                Gdx.app.exit();
+            }
+        }, cfg);
     }
 
     /**

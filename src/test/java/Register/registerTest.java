@@ -2,6 +2,7 @@ package Register;
 
 import Cards.Deck;
 import Cards.ICard;
+import GUIMain.GameScreen;
 import Player.Register;
 import Player.Robot;
 import com.badlogic.gdx.graphics.Color;
@@ -10,6 +11,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
+import java.util.Scanner;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -26,7 +28,7 @@ public class registerTest {
     @BeforeEach
     public void setCards(){
         Deck d = new Deck(false);
-        for(int i = 0; i < 6; i++){
+        for(int i = 0; i < r.getDamageTokens(); i++){
             ICard card = d.drawCard();
             allCards.add(card);
         }
@@ -80,6 +82,19 @@ public class registerTest {
         r.powerDownRobot();
 
         assertEquals(true, r.isPowerDownAnnounced());
+    }
+
+    @Test
+    void canChooseCardsFromTerminal(){
+
+        Scanner in = new Scanner(System.in);
+        System.out.println(in.nextInt());
+
+        assertTrue(r.getMaxFiveCardsFromRegister().size() == 0);
+
+        GameScreen.pickCardsFromTerminal(r);
+
+        assertTrue(r.getMaxFiveCardsFromRegister().size() == Math.min(5, r.getDamageTokens()));
     }
 
 }

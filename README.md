@@ -20,4 +20,3 @@ Noen helt 책penbare ting du som spiller kanskje ser etter, men ikke kommer til �
 - Antall liv robotene.
 - Retningen robotene peker
 - En m책te 책 se forskjell p책 robotene
-S책 dette m책 du ogs책 bare holde styr p책 selv.

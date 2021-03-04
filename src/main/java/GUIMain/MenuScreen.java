@@ -2,6 +2,7 @@ package GUIMain;
 
 import Player.Robot;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -10,12 +11,10 @@ import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 
-import javax.swing.*;
 import java.util.ArrayList;
 
 import static com.badlogic.gdx.graphics.Color.*;
@@ -33,8 +32,10 @@ public class MenuScreen extends InputAdapter implements Screen {
     protected TextButton multiplayer;
     protected TextButton options;
     protected TextButton quit;
-    private ArrayList<Robot> robots;
+    private ArrayList<Robot> robots = new ArrayList<>();
     private GUI2 gui;
+    private int numberOfRobots = 4; // TODO: 04.03.2021 Fiks dette senere
+    private TextField textField;
 
     public MenuScreen(GUI2 gui){
         super();
@@ -77,15 +78,16 @@ public class MenuScreen extends InputAdapter implements Screen {
         options.setLabel(optionlabel);
         quit.setLabel(quitlabel);
 
+        textField = new TextField("", skin);
+
         singleplayer.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent changeEvent, Actor actor) {
-                robots = new ArrayList<>();
-                //Gdx.input.getTextInput;
-                for (int i = 0; i < 3; i++) {
-                    robots.add(createRobot());
-                }
-                System.out.println(robots);
+                robots.clear();
+                createRobot();
+                robots.add(new Robot("Nebuchadnezzar", RED, true));
+                robots.add(new Robot("Alexstrasza", GREEN, true));
+                robots.add(new Robot("Ashurbarnipal", YELLOW, true));
             }
         });
         //multiplayer.addListener(new MenuListener());
@@ -108,36 +110,60 @@ public class MenuScreen extends InputAdapter implements Screen {
         stage.addActor(table);
     }
 
-    public Robot createRobot(){
-        Dialog dia = new Dialog("Create your robot", skin);
-        dia.setScale(2);
+    public void createRobot2() {
+        Dialog dia = new Dialog("Create your robot:", skin) {
+            @Override
+            protected void result(Object object) {
+                robots.add(new Robot(textField.getText(), BLUE, false));
+            }
+        };
+        dia.setScale(3);
 
-        CheckBox AI = new CheckBox("AI", skin);
-        dia.add(AI);
-        AI.align(Align.bottomLeft);
+        Table diatable = new Table();
+
+        //diatable.addActor(new Label("Name of robot: ", skin));
+        //diatable.row();
 
         TextField textfield = new TextField("", skin);
-        dia.add(textfield).align(Align.center);
+        diatable.add(textfield);
+        diatable.row();
+
+        //CheckBox AI = new CheckBox("AI", skin);
+        //diatable.add(AI);
+        //diatable.row();
+
+        //dia.setPosition(500, 500);
+
+        dia.add(diatable).align(Align.top);
         dia.row();
+        dia.button("Confirm").align(Align.bottom);
 
-        //dia.addActor(new Label("Name of robot: ", skin));
-        //dia.row();
-
-        dia.setPosition(500, 500);
-        dia.button("Confirm").align(Align.bottomRight);
 
         stage.addActor(dia);
-
-        return new Robot(textfield.getMessageText() + textfield.getText() + textfield.getName(), BLUE, AI.isChecked());
     }
+
+    public void createRobot(){
+        Gdx.input.getTextInput(new Input.TextInputListener() {
+            @Override
+            public void input(String s) {
+                robots.add(new Robot(s, BLACK, false));
+            }
+            @Override
+            public void canceled() { }
+        }, "Create your robot", "", "name");
+        System.out.println("ok");
+    }
+
 
     @Override
     public void render(float v) {
         stage.act(Gdx.graphics.getDeltaTime());
         stage.getBatch().begin();
-        stage.getBatch().setColor(RED);
         stage.getBatch().end();
         stage.draw();
+        if (robots.size() == numberOfRobots){
+            System.out.println(robots);
+        }
 
     }
 

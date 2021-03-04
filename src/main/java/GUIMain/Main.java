@@ -12,7 +12,6 @@ public class Main {
         cfg.setTitle("Robo-Rally");
         cfg.setWindowedMode(1000, 1000);
         //new Lwjgl3Application(new GUI2(), cfg);
-        //new Lwjgl3Application(new MenuScreen(), cfg);
         new Lwjgl3Application(new GUI(defaultMapName), cfg);
     }
 }

@@ -255,10 +255,12 @@ public class GameScreen extends Game implements Screen {
         	return tmp[0][0];
         }
 	}
+
 	public void drawGameArea(){
         Gdx.gl.glViewport( 0,Gdx.graphics.getHeight()-(Gdx.graphics.getHeight()-CELL_SIZE ),Gdx.graphics.getWidth(),Gdx.graphics.getHeight());
         batch.setProjectionMatrix(regCamera.combined);
     }
+
     public void drawControlArea(){
         Gdx.gl.glViewport( 0,0,Gdx.graphics.getWidth(),Gdx.graphics.getHeight()-(Gdx.graphics.getHeight()-CELL_SIZE) );
         batch.setProjectionMatrix(camera.combined);

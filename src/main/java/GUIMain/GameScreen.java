@@ -2,9 +2,7 @@ package GUIMain;
 
 import AIs.AI;
 import AIs.Randbot;
-import Cards.Deck;
 import Cards.ICard;
-import Cards.ProgramCard;
 import GameBoard.GameBoard;
 import Player.Register;
 import Player.Robot;
@@ -25,11 +23,8 @@ import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.tiles.StaticTiledMapTile;
-import com.badlogic.gdx.scenes.scene2d.Event;
-import com.badlogic.gdx.scenes.scene2d.EventListener;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Cell;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 import javax.swing.JOptionPane;
@@ -174,24 +169,6 @@ public class GameScreen extends Game implements Screen {
         }
     }
     int phaseNr = 0;
-    public void simulateRound(){
-        // 1. Vise alle registerkortene samtidig. showAllRegisterCards() eller noe.
-        GameBoard gb = getGameBoard();
-        gb.startRound();
-        if(gb.hasWon() != null) {
-            gb.endRound();
-            phaseNr = 0;
-            showPopUp("The winner of this round is: " + gb.hasWon(), "Round finished!");
-            return;
-        }
-        if(phaseNr == 5){
-            showPopUp("This round is finished with no winner.", "Round finished");
-            return;
-        }
-        gb.phase(phaseNr);
-        phaseNr++;
-        //her må GUI oppdateres
-    }
 
     @Override
     public void create() {

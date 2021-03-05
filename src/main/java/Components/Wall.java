@@ -40,24 +40,4 @@ public class Wall extends SimpleComponent{
             default: throw new IllegalArgumentException();
         }
     }
-
-    //Kanskje vi kaller de noe annet etterpå. 
-    public boolean getNorth(){
-        return north;
-    }
-
-    public boolean getEast(){
-        return east;
-    }
-
-    public boolean getSouth(){
-        return south;
-    }
-
-    public boolean getWest(){
-        return west;
-    }
-
-    //public boolean en metode for å se hvordan ting virker? Kan en robot gå inn i denne ruten.
-
 }

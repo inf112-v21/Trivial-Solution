@@ -1,7 +1,6 @@
 package Components;
 
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
-import org.w3c.dom.ls.LSException;
 
 public class ComponentFactory {
 

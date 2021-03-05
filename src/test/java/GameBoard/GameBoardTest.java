@@ -12,17 +12,12 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
-import java.awt.*;
 import java.util.ArrayList;
-import java.util.function.BooleanSupplier;
 
 import static com.badlogic.gdx.graphics.Color.*;
 
 class GameBoardTest {
 
-    private static GameScreen gameScreen;
-
-    private static GUI gui;
     private final static String defaultMapName = "TestMap.tmx";
     private static GameBoard robotRally;
 

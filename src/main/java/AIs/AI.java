@@ -14,5 +14,5 @@ public interface AI {
      * @param reg
      * @param board
      */
-    public void chooseCards(Register reg, Board board);
+     void chooseCards(Register reg, Board board);
 }

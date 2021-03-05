@@ -9,6 +9,4 @@ public class Gear extends SimpleComponent {
         this.rotation = rotation;
         name = "Gear";
     }
-
-    public int getRotation(){ return rotation; }
 }

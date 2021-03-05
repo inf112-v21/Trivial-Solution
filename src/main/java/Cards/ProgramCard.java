@@ -1,12 +1,6 @@
 package Cards;
 
 import com.badlogic.gdx.graphics.Texture;
-
-import javax.imageio.ImageIO;
-import java.awt.*;
-import java.io.File;
-import java.io.IOException;
-
 /**
  *
  * @author Samueljacoo
@@ -45,11 +39,6 @@ public class ProgramCard implements ICard{
     @Override
     public int priority() {
         return priority;
-    }
-
-    @Override
-    public Texture getCardImage(){
-        return cardImage;
     }
 
     public String toString(){

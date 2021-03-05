@@ -5,11 +5,8 @@ import Cards.ICard;
 import Components.Flag;
 import Player.Register;
 import Player.Robot;
-
-import com.badlogic.gdx.graphics.Color;
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.Iterator;
 
 public class GameBoard {
 
@@ -17,7 +14,6 @@ public class GameBoard {
 
     private final ArrayList<Flag> flagWinningFormation = new ArrayList<>();
 
-    public static final Color[] colours = new Color[]{Color.RED, Color.BLUE, Color.GREEN, Color.YELLOW, Color.PINK, Color.ORANGE, Color.WHITE, Color.BLACK};
     public final ArrayList<Register> registers = new ArrayList<>();
     private final Deck deck = new Deck();
     private Board board;

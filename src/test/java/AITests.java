@@ -6,9 +6,7 @@ import Player.Robot;
 import com.badlogic.gdx.graphics.Color;
 import org.junit.jupiter.api.Test;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.concurrent.atomic.AtomicReferenceArray;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 

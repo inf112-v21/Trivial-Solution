@@ -82,7 +82,7 @@ public class MenuScreen extends InputAdapter implements Screen {
             @Override
             public void changed(ChangeEvent changeEvent, Actor actor) {
                 robots.clear();
-                createRobot3();
+                createRobot();
                 robots.add(new Robot("Nebuchadnezzar", RED, true));
                 robots.add(new Robot("Andromeda", GREEN, true));
                 robots.add(new Robot("Ashurbarnipal", YELLOW, true));
@@ -111,51 +111,8 @@ public class MenuScreen extends InputAdapter implements Screen {
 
     }
 
-    public void createRobot2() {
-        Dialog dia = new Dialog("Create your robot:", skin) {
-            @Override
-            protected void result(Object object) {
-                robots.add(new Robot(textField.getText(), BLUE, false));
-            }
-        };
-        dia.setScale(2.5f);
-
-        Table diatable = new Table();
-
-        //diatable.addActor(new Label("Name of robot: ", skin));
-        //diatable.row();
-
-        TextField textfield = new TextField("", skin);
-        diatable.add(textfield);
-        diatable.row();
-
-        //CheckBox AI = new CheckBox("AI", skin);
-        //diatable.add(AI);
-        //diatable.row();
-
-        //dia.setPosition(500, 500);
-
-        dia.add(diatable).align(Align.top);
-        dia.row();
-        dia.button("Confirm").align(Align.bottom);
-
-
-        stage.addActor(dia);
-    }
-
-    public void createRobot(){
-        Gdx.input.getTextInput(new Input.TextInputListener() {
-            @Override
-            public void input(String s) {
-                robots.add(new Robot(s, BLACK, false));
-            }
-            @Override
-            public void canceled() { }
-        }, "Create your robot", "", "name");
-    }
-
     // TODO: 04.03.2021 Temp, vennligst slett når vi får til popupvinduer
-    public void createRobot3(){
+    public void createRobot(){
         Scanner scan = new Scanner(System.in);
         System.out.println("Name of your robot: ");
         String name = scan.nextLine();

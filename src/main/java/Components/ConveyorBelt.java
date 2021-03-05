@@ -17,15 +17,4 @@ public class ConveyorBelt extends SimpleComponent{
         this.speed = speed;
         this.name = "ConveyorBelt";
     }
-
-
-    public int getDirection(){
-        return dir;
-    }
-
-    public int getSpeed(){
-        return speed;
-    }
-
-
 }

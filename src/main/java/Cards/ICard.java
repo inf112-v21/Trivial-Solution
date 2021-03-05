@@ -29,10 +29,4 @@ public interface ICard {
      * Alle kort har unik prioritet.
      */
     int priority();
-
-    /**
-     *
-     * @return Bilde av et kort
-     */
-     Texture getCardImage();
 }

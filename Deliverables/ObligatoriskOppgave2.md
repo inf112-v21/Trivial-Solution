@@ -37,7 +37,7 @@ nødvendig å ha en.
 ###Team-messig erfaring og prosjektmetodikk
 Vi synes at team-metodikken vi har valgt(Kanban) har funket veldig bra. Vi kunne ikke hatt Scrummøter hver eneste morgen
 med timeplanene vår så vi er glade for at vi valgte Kanban. Dessuten så har alle i gruppen andre forpliktelser også, og 
-takk vare Kanban så kan de kan ta færre issues den uken. Alle velger issuene de vil jobbe med selv på møtene og der
+takket være Kanban så kan de kan ta færre issues den uken. Alle velger issuene de vil jobbe med selv på møtene og der
 bestemmer vi hva vi skal fokusere på. Deretter er det enkelt å lage issuene (Kanban-kortene) som vi setter på
 Kanban brettet.
 
@@ -75,7 +75,7 @@ resultert i få misforståelser som nevt over, så på dette punktet synes vi at
 Forskjellen i antall linjer skrevet kommer fra blant annet:
 -kompleksitet i arbeidsoppgaver varierer veldig, så mange linjer reflekterer nødvendigvis ikke tiden som er brukt på
 hver issue. Koden i ComponentFactory er for eksmepel mest gruntwork. Enkelte ting krever dessuten research og at man
-leser seg opp på domenet ting omhandler. Koden på disse er ikke nødvendigvis ikke lang, men heller ommfattende.
+leser seg opp på domenet ting omhandler. Koden på disse er ikke nødvendigvis like lang, men heller ommfattende.
 
 -Dårlig bruk av git merge har resultert i at det ser ut som at
 en person har skrevet kode som en annen har gjort. Dette er kommentert i commitsene.
@@ -87,7 +87,7 @@ og det har vi gjort under arbeidet i for denne Obligen. Dette har Dusan hatt pro
 skrevne linjer enn det som står oppgitt i git hub statiskken. 
 
 Ilyas og Samuel har færre linjer skrevet siden de har holdt på med spesifikke GUI-relaterte issues, som har krevd mer reasearch på
-dette stadiet av prosjektet så derfor har de ikke commitetet like mye. Det de holder på emd er å finne
+dette stadiet av prosjektet så derfor har de ikke commitetet like mye. Det de holder på med er å finne
 ut hvordan vi kan få det til at registeret med kortene og selve spillebrettet vises i samme vindu.
 
 Steinar har fokusert mest på backenden av proskjektet på dette tidspunktet og har dermed skrevet flere linjer. Han begynner på
@@ -113,17 +113,17 @@ Du kan finne disse hvis du går inn på github prosjektet vårt.
 Gå deretter til Projects og klick på Trivial-Solution. Dette
 er prosjektbrettet vårt. Her skriver vi nå Brukerhistorier, Akseptansekrav og Arbeidsoppgaver
 for hver issue. Vi skriver også tilhørende tester som blir skrevet med tanke på akseptansekravene.
-Disse finenr man i test packagen.
+Disse finner man i test packagen.
 
 Vi har noen oppgaver som vi har startet med nå, men akseptansekrav er ikke definert.
 
 ###Prioritering fremover
 Fremover så kommer vi prioritere networking(Sette opp multiplayer) og gui'en.
-Vi har prioritert disse oppgavene fordi vi ligger litt back her. På andre siden så er backenden
+Vi har prioritert disse oppgavene fordi vi ligger litt bak her. På andre siden så er backenden
 for hele spillet stort sett ferdig. Så nå må vi bare implementere Gui'en og Mutiplayer som mangler.
 
 ###Justeringer i MVP krav
-Vi har ike gjort noen forandringer i MVP kravene per say. Men vi har prioritert andre ting som vi syntes var viktigere. Nemlig
+Vi har ikke gjort noen forandringer i MVP kravene per say. Men vi har prioritert andre ting som vi syntes var viktigere. Nemlig
 å få spill-logikken på plass. MVP krav 1-5 og 7-9 illustrere til en viss grad hva dette innebærer, men vi ville ha selve spill-logikken
 på plass før vi begynte med resten. Da tenkte vi på komponentene i spillet som laserer, vegger, gear, wrench og andre slike
 ting som en del av spillet. Tanken vår var at hvis vi gjorde det på denne måten så ville vi få en bedre oversikt over hvordan vi skulle

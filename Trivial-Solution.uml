@@ -7,37 +7,37 @@
     <node x="1497.0" y="891.0">GUIMain.MenuScreen</node>
     <node x="0.0" y="891.0">GameBoard.Board</node>
     <node x="909.0" y="1556.0">AIs.Randbot</node>
-    <node x="1417.0" y="361.0">Components.Flag</node>
+    <node x="1060.0" y="361.0">Components.Flag</node>
     <node x="0.0" y="1452.0">GameBoard.GameBoard</node>
     <node x="1479.0" y="1727.0">Board.AppTest</node>
-    <node x="849.0" y="361.0">Components.Wrench</node>
-    <node x="741.0" y="361.0">Components.Floor</node>
+    <node x="1612.0" y="361.0">Components.Wrench</node>
+    <node x="1728.0" y="361.0">Components.Floor</node>
     <node x="504.0" y="1727.0">GameBoard.Position</node>
     <node x="215.0" y="1870.0">GUIMain.Main</node>
     <node x="909.0" y="1452.0">AIs.AI</node>
     <node x="1226.0" y="1727.0">AITests</node>
-    <node x="1681.0" y="349.0">Components.Hole</node>
+    <node x="740.9999999999999" y="349.0">Components.Hole</node>
     <node x="314.0" y="1727.0">Cards.Deck</node>
-    <node x="1095.5" y="0.0">Components.IComponent</node>
+    <node x="1134.5" y="0.0">Components.IComponent</node>
     <node x="274.0" y="1452.0">Register.registerTest</node>
-    <node x="1269.0" y="361.0">Components.SpawnPoint</node>
+    <node x="1160.0" y="361.0">Components.SpawnPoint</node>
     <node x="1185.0" y="1452.0">Components.FlagTest</node>
     <node x="683.0" y="1727.0">Components.ComponentFactory</node>
     <node x="924.0" y="1061.0">Cards.ProgramCard</node>
-    <node x="1121.0" y="361.0">Components.CheckPoint</node>
+    <node x="1308.0" y="361.0">Components.CheckPoint</node>
     <node x="1142.0" y="891.0">Player.Register</node>
     <node x="970.0" y="1727.0">GameBoard.GameBoard.RegisterComparator</node>
     <node x="924.0" y="891.0">Cards.ICard</node>
     <node x="656.0" y="891.0">Player.Robot</node>
     <node x="0.0" y="1870.0">Components.Flag.CompareID</node>
     <node x="0.0" y="0.0">Board.BoardTests</node>
-    <node x="965.0" y="349.0">Components.Gear</node>
+    <node x="1456.0" y="349.0">Components.Gear</node>
     <node x="344.0" y="891.0">GUIMain.GameScreen</node>
-    <node x="500.0" y="294.0">Components.Wall</node>
-    <node x="1101.0" y="148.0">Components.SimpleComponent</node>
-    <node x="1517.0" y="338.0">Components.ConveyorBelt</node>
+    <node x="499.9999999999999" y="294.0">Components.Wall</node>
+    <node x="1140.0" y="148.0">Components.SimpleComponent</node>
+    <node x="895.9999999999999" y="338.0">Components.ConveyorBelt</node>
     <node x="0.0" y="1727.0">GUIMain.GUI</node>
-    <node x="522.5" y="508.0">Components.Laser</node>
+    <node x="522.4999999999999" y="508.0">Components.Laser</node>
   </nodes>
   <notes />
   <edges>
@@ -47,41 +47,41 @@
     </edge>
     <edge source="Components.Wall" target="Components.SimpleComponent">
       <point x="0.0" y="-82.0" />
-      <point x="610.5" y="244.0" />
-      <point x="1110.3333333333333" y="244.0" />
+      <point x="610.4999999999999" y="244.0" />
+      <point x="1149.333333333333" y="244.0" />
       <point x="-74.66666666666674" y="38.0" />
     </edge>
     <edge source="Components.Floor" target="Components.SimpleComponent">
       <point x="0.0" y="-15.0" />
-      <point x="785.0" y="254.0" />
-      <point x="1129.0" y="254.0" />
-      <point x="-56.0" y="38.0" />
+      <point x="1772.0" y="244.0" />
+      <point x="1298.6666666666665" y="244.0" />
+      <point x="74.66666666666674" y="38.0" />
     </edge>
     <edge source="Components.SpawnPoint" target="Components.SimpleComponent">
       <point x="0.0" y="-15.0" />
-      <point x="1333.0" y="274.0" />
-      <point x="1203.6666666666667" y="274.0" />
-      <point x="18.666666666666742" y="38.0" />
+      <point x="0.0" y="38.0" />
     </edge>
     <edge source="Components.CheckPoint" target="Components.SimpleComponent">
       <point x="0.0" y="-15.0" />
-      <point x="0.0" y="38.0" />
+      <point x="1372.0" y="274.0" />
+      <point x="1242.6666666666665" y="274.0" />
+      <point x="18.666666666666742" y="38.0" />
     </edge>
     <edge source="Components.Flag" target="Components.SimpleComponent">
       <point x="0.0" y="-15.0" />
-      <point x="1457.0" y="264.0" />
-      <point x="1222.3333333333333" y="264.0" />
-      <point x="37.33333333333326" y="38.0" />
+      <point x="1100.0" y="274.0" />
+      <point x="1205.333333333333" y="274.0" />
+      <point x="-18.666666666666742" y="38.0" />
     </edge>
     <edge source="Cards.ProgramCard" target="Cards.ICard">
       <point x="0.0" y="-71.0" />
       <point x="0.0" y="60.0" />
     </edge>
     <edge source="Components.ConveyorBelt" target="Components.SimpleComponent">
-      <point x="1.1368683772161603E-13" y="-38.0" />
-      <point x="1589.0" y="254.0" />
-      <point x="1241.0" y="254.0" />
-      <point x="56.0" y="38.0" />
+      <point x="0.0" y="-38.0" />
+      <point x="967.9999999999999" y="264.0" />
+      <point x="1186.6666666666665" y="264.0" />
+      <point x="-37.33333333333326" y="38.0" />
     </edge>
     <edge source="AIs.Randbot" target="AIs.AI">
       <point x="0.0" y="-27.0" />
@@ -93,26 +93,26 @@
     </edge>
     <edge source="Components.Hole" target="Components.SimpleComponent">
       <point x="0.0" y="-27.0" />
-      <point x="1748.5" y="244.0" />
-      <point x="1259.6666666666667" y="244.0" />
-      <point x="74.66666666666674" y="38.0" />
+      <point x="808.4999999999999" y="254.0" />
+      <point x="1168.0" y="254.0" />
+      <point x="-56.0" y="38.0" />
     </edge>
     <edge source="Components.Gear" target="Components.SimpleComponent">
       <point x="0.0" y="-27.0" />
-      <point x="1033.0" y="274.0" />
-      <point x="1166.3333333333333" y="274.0" />
-      <point x="-18.666666666666742" y="38.0" />
+      <point x="1524.0" y="264.0" />
+      <point x="1261.333333333333" y="264.0" />
+      <point x="37.33333333333326" y="38.0" />
     </edge>
     <edge source="Components.Wrench" target="Components.SimpleComponent">
       <point x="0.0" y="-15.0" />
-      <point x="897.0" y="264.0" />
-      <point x="1147.6666666666667" y="264.0" />
-      <point x="-37.33333333333326" y="38.0" />
+      <point x="1660.0" y="254.0" />
+      <point x="1280.0" y="254.0" />
+      <point x="56.0" y="38.0" />
     </edge>
   </edges>
-  <settings layout="Hierarchic Group" zoom="0.2114285714285715" x="1323.6449134562506" y="1091.0525663277954" />
+  <settings layout="Hierarchic Group" zoom="0.5114285714285715" x="921.1981599205831" y="786.4224551654456" />
   <SelectedNodes>
-    <node>GameBoard.GameBoardTest</node>
+    <node>Board.BoardTests</node>
   </SelectedNodes>
   <Categories>
     <Category>Methods</Category>

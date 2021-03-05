@@ -9,7 +9,7 @@ Prosjektet vil da bygges, kompileres og kjøres i din valgte IDE. For å få pro
 
 ## Hvordan spille spillet
 Start opp spillet. Klikk singleplayer. Du vil nå bli bedt om å gi et navn til roboten din i terminalen, skriv navnet der og trykk enter. 
-Spillet er nå startet, din robot er den helt til høyre, alle robotene er identiske så det må du bare huske. 
+Spillet er nå startet, din robot er den helt til høyre, og den ser mot nord, alle robotene er identiske så det må du bare huske. 
 
 For å spille en runde:
 1) Trykk på vinduet med musen
@@ -20,3 +20,4 @@ Noen helt åpenbare ting du som spiller kanskje ser etter, men ikke kommer til �
 - Antall liv robotene har.
 - Retningen robotene peker.
 - En måte å se forskjell på robotene.
+- Noe som stopper deg fra å velge det samme kortet flere ganger.

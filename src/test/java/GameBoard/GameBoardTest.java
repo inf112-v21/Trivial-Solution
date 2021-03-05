@@ -38,7 +38,7 @@ class GameBoardTest {
         new Lwjgl3Application(new Game() {
             @Override
             public void create() {
-                Gdx.app.exit();
+                Gdx.app.exit(); //Sørger for at vinduet lukkes umiddelbart
             }
         }, cfg);
 

@@ -1,7 +1,6 @@
 package GameBoard;
 
 import Cards.ICard;
-import Components.Flag.*;
 import Components.*;
 import Player.Robot;
 import com.badlogic.gdx.maps.tiled.TiledMap;
@@ -115,7 +114,7 @@ public class Board {
      * flagget (Metode robotCanPickUpFlag)
      *
      */
-    private void checkIfRobotIsOnFlag() {
+    private void pickUpFlags() {
 
         for (Robot bot : botPositions.keySet()) {
             Position pos = botPositions.get(bot);
@@ -166,10 +165,9 @@ public class Board {
     /**
      * Det som skal skje på slutten av hver fase.
      * Lasere blir avfyrt, samlebånd går av, roboter blir reparert, etc.
-     * TODO: Flagg skal bli plukket opp
      */
     public void endPhase(){
-        checkIfRobotIsOnFlag();
+        pickUpFlags();
         updateRespawnPoints();
         fireAllLasers();
         removeDestroyedRobots();
@@ -262,7 +260,7 @@ public class Board {
 
 
     /**
-     * Avfyrer alle lasere. inkluderte de skutt av robotene.
+     * Avfyrer alle lasere. inkludert de skutt av robotene.
      */
     private void fireAllLasers(){
         for(Laser laser : laserPositions.keySet()){

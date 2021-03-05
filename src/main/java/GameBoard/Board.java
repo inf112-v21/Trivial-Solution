@@ -104,7 +104,9 @@ public class Board {
 
         if (pos == null) throw new IllegalArgumentException("Could not find the bot");
 
-        moveTowards(card.getDistance(), pos.getX(),pos.getY(),bot.getDirection());
+        int dist = card.getDistance();
+        if (dist < 0 ) moveTowards(Math.abs(dist), pos.getX(), pos.getY(), (bot.getDirection() + 2) % 4);
+        else moveTowards(dist, pos.getX(), pos.getY(), bot.getDirection());
 
     }
 

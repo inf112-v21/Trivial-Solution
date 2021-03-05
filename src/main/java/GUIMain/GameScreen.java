@@ -56,6 +56,7 @@ public class GameScreen extends Game implements Screen {
 	private GameBoard gameboard;
 	private ArrayList<Robot> robots;
 	private AI ai = new Randbot();
+	private int currentPhase = 0;
 
     /**
      * @param robots robotene som skal være med å spille
@@ -129,7 +130,6 @@ public class GameScreen extends Game implements Screen {
     }
 
     public void simulateRound2(){
-        //updateRobotPositions();
         displayRobots(getPlayerImage1("alive"), getPlayerCell(getPlayerImage("alive")));
         renderer.render();
 
@@ -140,7 +140,6 @@ public class GameScreen extends Game implements Screen {
         }
         for (int i = 0; i < 5; i++) {
             gameboard.phase(i);
-            //updateRobotPositions();
             displayRobots(getPlayerImage1("alive"), getPlayerCell(getPlayerImage("alive")));
         }
         gameboard.endRound();

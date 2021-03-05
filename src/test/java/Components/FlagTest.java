@@ -6,7 +6,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
-import java.util.Random;
+import java.util.Collections;
+
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -19,51 +20,43 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class FlagTest {
 
-    private final ArrayList<Flag> winCondition = new ArrayList<>();
+    private final static ArrayList<Flag> winCondition = new ArrayList<>();
     private ArrayList<Flag> ourFlagArray = new ArrayList<>();
 
-    @BeforeEach
-    void setUp(){
-        Flag f1 = new Flag(63);
-        Flag f2 = new Flag(71);
-        Flag f3 = new Flag(55);
-        Flag f4 = new Flag(79);
+    //Disse simulerer flaggene i spillet.
+    private final static Flag f1 = new Flag(55);
+    private final static Flag f2 = new Flag(63);
+    private final static Flag f3 = new Flag(71);
+    private final static Flag f4 = new Flag(79);
 
-        //Riktig rekkeflge
-        winCondition.add(f3);
+    @BeforeAll
+    public static void setUpCorrectFlagFormation(){
+        //Dette er den riktig rekkefølgen som flaggene skal ende opp i.
         winCondition.add(f1);
         winCondition.add(f2);
+        winCondition.add(f3);
         winCondition.add(f4);
 
-        //Random rekkefølge
+    }
+
+    @BeforeEach
+    public void setUpRandomFlags(){
         ourFlagArray.add(f1);
         ourFlagArray.add(f2);
         ourFlagArray.add(f3);
         ourFlagArray.add(f4);
 
+        //Stokker om på flaggene slik at de kommer i en random rekkefølge
+        Collections.shuffle(ourFlagArray);
+
+        //Deretter sorterer vi flaggene
         ourFlagArray.sort(new Flag.CompareID());
-
     }
 
 
     @Test
-    void testIfTheFirstFlagsAreTheSame() {
-        assertEquals(winCondition.get(0), ourFlagArray.get(0));
-    }
-
-    @Test
-    void testIfTheSecondFlagsAreTheSame() {
-        assertEquals(winCondition.get(1), ourFlagArray.get(1));
-    }
-
-    @Test
-    void testIfTheThirdFlagsAreTheSame() {
-        assertEquals(winCondition.get(2), ourFlagArray.get(2));
-    }
-
-    @Test
-    void testIfTheLastFlagsAreTheSame() {
-        assertEquals(winCondition.get(3), ourFlagArray.get(3));
+    void checkIfOurFlagArrayIndeedHasTheFlagsOrganizedInThCorrectOrder() {
+        assertEquals(winCondition, ourFlagArray);
     }
 
 }

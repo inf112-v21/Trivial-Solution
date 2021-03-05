@@ -27,7 +27,7 @@ public class Wall extends SimpleComponent{
             case 1: return west;
             case 2: return north;
             case 3: return east;
-            default: throw new IllegalArgumentException();
+            default: throw new IllegalArgumentException("illegal direction: " + dir);
         }
     }
 

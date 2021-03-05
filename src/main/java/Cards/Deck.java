@@ -3,9 +3,6 @@ package Cards;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 
-import java.io.File;
-import java.nio.file.FileSystem;
-import java.nio.file.FileSystems;
 import java.util.ArrayList;
 import java.util.Collections;
 public class Deck {
@@ -18,7 +15,10 @@ public class Deck {
      */
     public Deck(){
         for (int i=0; i<6; i++){
-            cards.add(new ProgramCard(0,2,10, new Texture(Gdx.files.internal("1 Red HULK X90/010 U-TURN 1Red 4.png"))));
+            //endre slik at hvert programkort har unik prioritet
+            //TODO: Ser ut som at gdx.files.internal ikke klarer å lese filer før gdx er initialisert
+            // https://stackoverflow.com/questions/10690982/libgdx-external-storage-causes-nullpointerexception-on-android/12149817
+            cards.add(new ProgramCard(0,2,10, new Texture(Gdx.files.internal("assets/1 Red HULK X90/010 U-TURN 1Red 4.png"))));
             cards.add(new ProgramCard(0,-1,20, new Texture(Gdx.files.internal("1 Red HULK X90/020 ROTATE LEFT 1Red 3.png"))));
             cards.add(new ProgramCard(0,1,30, new Texture(Gdx.files.internal("1 Red HULK X90/030 ROTATE RIGHT 1Red 3.png"))));
             cards.add(new ProgramCard(0,-1,40, new Texture(Gdx.files.internal("1 Red HULK X90/040 ROTATE LEFT 1Red 3.png"))));
@@ -32,8 +32,34 @@ public class Deck {
             cards.add(new ProgramCard(2,0,140, new Texture(Gdx.files.internal("1 Red HULK X90/140 MOVE2 1Red 3.png"))));
             cards.add(new ProgramCard(2,0,150, new Texture(Gdx.files.internal("1 Red HULK X90/150 MOVE2 1Red 3.png"))));
             cards.add(new ProgramCard(3,0,170, new Texture(Gdx.files.internal("1 Red HULK X90/170 MOVE3 1Red 3.png"))));
-
         }
+        shuffleDeck();
+    }
+
+    /**
+     * En konstruktør for testing, denne kan kjøres uten å starte opp hele libgdx.
+     * @param hasImages Om vi vil ha
+     */
+    public Deck(boolean hasImages){
+        if (hasImages){
+           throw new IllegalArgumentException("I cannot figure out how to add a constructor here, please use the other version of Deck() if you want images.");
+        }else {
+            cards.add(new ProgramCard(0,2,10, null));
+            cards.add(new ProgramCard(0,-1,20, null));
+            cards.add(new ProgramCard(0,1,30, null));
+            cards.add(new ProgramCard(0,-1,40, null));
+            cards.add(new ProgramCard(0,1,50, null));
+            cards.add(new ProgramCard(0,-1,60, null));
+            cards.add(new ProgramCard(0,1,70, null));
+            cards.add(new ProgramCard(-1,0,80, null));
+            cards.add(new ProgramCard(1,0,90, null));
+            cards.add(new ProgramCard(1,0,100, null));
+            cards.add(new ProgramCard(1,0,110, null));
+            cards.add(new ProgramCard(2,0,140, null));
+            cards.add(new ProgramCard(2,0,150, null));
+            cards.add(new ProgramCard(3,0,170, null));
+        }
+        shuffleDeck();
     }
 
     /**

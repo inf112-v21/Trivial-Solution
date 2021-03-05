@@ -2,17 +2,22 @@ package Register;
 
 import Cards.Deck;
 import Cards.ICard;
-import Components.Flag;
+import GUIMain.GameScreen;
 import Player.Register;
 import Player.Robot;
 import com.badlogic.gdx.graphics.Color;
+import org.junit.Rule;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.lwjgl.system.linux.X11.InputOutput;
 
 public class registerTest {
 
@@ -26,8 +31,8 @@ public class registerTest {
 
     @BeforeEach
     public void setCards(){
-        Deck d = new Deck();
-        for(int i = 0; i < 6; i++){
+        Deck d = new Deck(false);
+        for(int i = 0; i < r.getDamageTokens(); i++){
             ICard card = d.drawCard();
             allCards.add(card);
         }
@@ -40,7 +45,7 @@ public class registerTest {
     public static void setUp(){
         allCards = new ArrayList<ICard>();
         registerCards = new ArrayList<ICard>();
-        robot = new Robot("testRobot", Color.RED);
+        robot = new Robot("testRobot", Color.RED, false);
         r = new Register(robot);
     }
 
@@ -52,7 +57,7 @@ public class registerTest {
     @Test
     void playerCanStoreTheirFiveChosenCardsInOrderInTheRegister(){
         for(int i = 0; i < 5; i++){
-            r.addCardsToRegister(allCards.get(i));
+            r.addCardToRegister(allCards.get(i));
             registerCards.add(allCards.get(i));
         }
         assertEquals(registerCards, r.getMaxFiveCardsFromRegister());
@@ -80,7 +85,7 @@ public class registerTest {
     void canRegisterPowerDownARobot(){
         r.powerDownRobot();
 
-        assertEquals(true, r.isPowerDownAnnounced());
+        assertTrue(r.isPowerDownAnnounced());
     }
 
 }

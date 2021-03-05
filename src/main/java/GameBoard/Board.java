@@ -1,7 +1,6 @@
-package Board;
+package GameBoard;
 
 import Cards.ICard;
-import Components.Flag.*;
 import Components.*;
 import Player.Robot;
 import com.badlogic.gdx.maps.tiled.TiledMap;
@@ -30,7 +29,6 @@ public class Board {
     private final LinkedList<Robot> robotsWaitingToBeRespawned = new LinkedList<>();
 
     //Antall flagg i spillet.
-    private int numberOfFlags = 0;
     private final ArrayList<Flag> flagWinningFormation = new ArrayList<>();
 
     public Board(String filename){
@@ -57,9 +55,6 @@ public class Board {
         TiledMapTileLayer middleground = (TiledMapTileLayer) map.getLayers().get("Middleground");
         TiledMapTileLayer foreground   = (TiledMapTileLayer) map.getLayers().get("Foreground");
 
-        //Trenger muligens ikke lenger denne?
-        TiledMapTileLayer robots       = (TiledMapTileLayer) map.getLayers().get("Robot");
-
         HEIGHT = background.getHeight();
         WIDTH  = background.getWidth();
 
@@ -80,9 +75,8 @@ public class Board {
                     Flag newFlag = (Flag)forcomp;
                     flagWinningFormation.add(newFlag);
 
-                    // Sorterer flaggene slik at roboten kan hente de i riktig rekkefølge
+                    // Sorterer flaggene slik at roboten kan hente dem i riktig rekkefølge
                     flagWinningFormation.sort(new Flag.CompareID());
-                    numberOfFlags++;
                 }
                 else if(forcomp instanceof Laser) laserPositions.put((Laser)forcomp, new Position(x, HEIGHT-1-y));
                 else if(forcomp instanceof SpawnPoint) newSpawnPositions.add(new Object[]{forcomp.getID(), new Position(x, HEIGHT-1-y)});
@@ -112,29 +106,28 @@ public class Board {
 
         moveTowards(card.getDistance(), pos.getX(),pos.getY(),bot.getDirection());
 
-        checkForFlag(bot);//TODO Lag tester for å sjekke denne (Spør Steinar om representasjonen)
-
-        }
+    }
 
     /**
-     * Sjekker om roboten landet på et flag eller ikke
+     * Sjekker om en av roboten landet på et flag eller ikke.
      * Hvis roboten gjorde det så vil vi se om roboten kan plukke opp
-     * flagget. Det kan den kun gjøre hvis det neste flagget er det
-     * rette flagget i rekkefølgen.
+     * flagget (Metode robotCanPickUpFlag)
      *
-     * @param bot - roboten som spiller
      */
-    private void checkForFlag(Robot bot) {
+    private void pickUpFlags() {
 
-        Position pos = botPositions.get(bot);
-        int posX = pos.getX();
-        int posY = pos.getY();
+        for (Robot bot : botPositions.keySet()) {
+            Position pos = botPositions.get(bot);
 
-        if (forgrid[posX][posY] instanceof Flag){
-            Flag newFlag = (Flag) forgrid[posX][posY];
+            int posY = pos.getY();
+            int posX = pos.getX();
 
-            if(robotCanPickUpFlag(bot,newFlag)){
-                bot.addToFlagsVisited(newFlag);
+            if (forgrid[posY][posX] instanceof Flag) {
+                Flag newFlag = (Flag) forgrid[posY][posX];
+
+                if (robotCanPickUpFlag(bot, newFlag)) {
+                    bot.addToFlagsVisited(newFlag);
+                }
             }
         }
 
@@ -142,7 +135,7 @@ public class Board {
 
 
     /**
-     *Denne metoden bruker den globale variabelen flagWinningFormation
+     * Denne metoden bruker den globale variabelen flagWinningFormation
      * for å forsikre seg om at flaggene blir plukket opp/registrert
      * i riktig rekkefølge
      *
@@ -150,7 +143,7 @@ public class Board {
      * @param foundFlag - flagget som roboten landet på
      * @return -true hvis roboten kan plukke opp/registrere flagget. Flase ellers.
      */
-    private boolean robotCanPickUpFlag(Robot bot, Flag foundFlag) {
+    public boolean robotCanPickUpFlag(Robot bot, Flag foundFlag) {
 
         ArrayList<Flag> visited = bot.getVisitedFlags();
         if (!visited.isEmpty()){
@@ -172,9 +165,9 @@ public class Board {
     /**
      * Det som skal skje på slutten av hver fase.
      * Lasere blir avfyrt, samlebånd går av, roboter blir reparert, etc.
-     * TODO: Alt unntatt lasere gjenstår.
      */
     public void endPhase(){
+        pickUpFlags();
         updateRespawnPoints();
         fireAllLasers();
         removeDestroyedRobots();
@@ -191,28 +184,30 @@ public class Board {
     }
 
     private void respawnRobots(){
+        ArrayList<Robot> successfullRespawns = new ArrayList<>();
         for(Robot bot : robotsWaitingToBeRespawned){
             Position spawnpoint = bot.getRespawnPoint();
             if (spawnpoint == null) throw new IllegalStateException("This bot has no spawnpoint. Try spawning it with spawnRobot() instead of placeRobotAt() if you want to respawn it automatically.");
 
             if(botgrid[spawnpoint.getY()][spawnpoint.getX()] == null){
                 botgrid[spawnpoint.getY()][spawnpoint.getX()] = bot;
-                robotsWaitingToBeRespawned.removeFirst();
+                successfullRespawns.add(bot);
                 botPositions.put(bot, spawnpoint);
                 bot.respawn();
             }
         }
+        for (Robot bot : successfullRespawns) robotsWaitingToBeRespawned.remove(bot);
     }
 
     private void removeDestroyedRobots(){
         for (Robot bot : botPositions.keySet()){
             if(bot.isDestroyed()){
                 bot.takeLife();
-                if (!bot.hasRemainingLives()){
+                if (bot.hasRemainingLives()){
                     robotsWaitingToBeRespawned.addLast(bot);
                 }
                 botgrid[botPositions.get(bot).getY()][botPositions.get(bot).getX()] = null;
-                botPositions.remove(bot);
+                //botPositions.remove(bot);
             }
             // TODO: 26.02.2021 Skal vi kanskje gjøre noe spesiellt når noen har dødd for tredje og siste gang? Si ifra til brukeren?
         }
@@ -265,7 +260,7 @@ public class Board {
 
 
     /**
-     * Avfyrer alle lasere. inkluderte de skutt av robotene.
+     * Avfyrer alle lasere. inkludert de skutt av robotene.
      */
     private void fireAllLasers(){
         for(Laser laser : laserPositions.keySet()){
@@ -315,6 +310,21 @@ public class Board {
     }
 
     public Robot getRobotAt(int x, int y){ return botgrid[y][x]; }
+
+    /**
+     * Henter flaggene fra forgriden slik at vi kan bruke Flaggene for
+     * å teste at robotene henter riktige flagg i BoardTest.
+     *
+     * @param posY y posisjonen til flagget i tmx-filen
+     * @param posX x posisjonene til flagget i tmx-filen
+     * @return Flagget fra den posisjonen
+     */
+    public Flag getFlagInForgridAt(int posY, int posX) {
+        if (!(forgrid[posY][posX] instanceof Flag)){
+            throw new IllegalStateException("Du har angit en posisjon som ikke inneholder et flag.");
+        }
+        return (Flag) forgrid[posY][posX];
+    }
 
     public void placeRobotAt(int x, int y, Robot bot){
         botPositions.put(bot, new Position(x, y));

@@ -5,7 +5,7 @@ import Cards.ICard;
 import java.util.ArrayList;
 
 /*
-* Denne klassen får inn 9 kort fra Game-klassen, og må vise disse 9 kortene til spilleren.
+* Denne klassen får inn 9 kort fra GameBoard-klassen, og må vise disse 9 kortene til spilleren.
 * Spilleren skal dermed plukke ut 5 kort av disse, og putte den i sitt eget register.
 * @author sandersig
  */
@@ -41,9 +41,11 @@ public class Register {
      * Denne metoden legger til et og et kort i rekkefølge i registeret utifra hva spilleren velger.
      * @param chosenCard
      */
-    public void addCardsToRegister(ICard chosenCard){
+    public void addCardToRegister(ICard chosenCard){
         registerCards.add(chosenCard);
     }
+
+    public void removeCardFromRegister(ICard unchosenCard){ registerCards.remove(unchosenCard); }
 
     /**
      * @return returnerer maks 5 kort fra registeret, kan returnere færre dersom roboten har mye damage.
@@ -84,9 +86,13 @@ public class Register {
     }
 
     /**
-     * Denne metoden endrer powerDown til true dersom knappen for powerDown blir trykket på i GUI-en for registeret.
+     * Denne metoden endrer powerDown til true dersom knappen for powerDown blir trykket på i GameScreen-en for registeret.
      */
     public void powerDownRobot(){
         powerDown = true;
     }
+
+    public Robot getRobot(){ return bot; }
+
+
 }

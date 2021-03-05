@@ -16,6 +16,6 @@ Issues for hva vi skal jobbe med videre:
 - Register-klassen skal implementeres, den må holde styr på roboten sin, og hvilke kort den har i hvilken posisjon, etc.
 - Roboter skal vinne ved å besøke flagg (i riktig rekkefølge)
 - Popup-vinduer med valgfri melding hadde vært fint å ha en egen metode for.
-- Bare-bones av Game-klassen skal implementeres.
+- Bare-bones av GameBoard-klassen skal implementeres.
 
 

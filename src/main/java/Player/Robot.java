@@ -1,6 +1,6 @@
 package Player;
 
-import Board.Position;
+import GameBoard.Position;
 import Components.Flag;
 import com.badlogic.gdx.graphics.Color;
 
@@ -26,14 +26,15 @@ public class Robot{
 	private final Color color;
 	private int direction = 0;
 	private Position respawnPoint;
+	private boolean isControlledByAI;
 
 	private final ArrayList<Flag> flagsVisited = new ArrayList<>();
 	
 	
-	public Robot(String name, Color color){
+	public Robot(String name, Color color, boolean isControlledByAI){
 		this.name = name;
 		this.color = color;
-
+		this.isControlledByAI = isControlledByAI;
 	}
 	
 	public String getName() {
@@ -122,4 +123,6 @@ public class Robot{
 	public Color getColor() {
 		return color;
 	}
+
+	public boolean isControlledByAI(){return isControlledByAI; }
 }

@@ -12,9 +12,9 @@ Start opp spillet. Klikk singleplayer. Du vil nå bli bedt om å gi et navn til 
 Spillet er nå startet, din robot er den helt til høyre, alle robotene er identiske så det må du bare huske. 
 
 For å spille en runde:
-1 Trykk på vinduet med musen
-2 Du vil bli bedt om å velge kort i terminalen, velg med å skrive inn heltall der
-3 Alle 5 fasene vil nå bli simullert umiddelbart, gå tilbake til steg 1 for å fortsette til neste runde
+1 - Trykk på vinduet med musen
+2 - Du vil bli bedt om å velge kort i terminalen, velg med å skrive inn heltall der
+3 - Alle 5 fasene vil nå bli simullert umiddelbart, gå tilbake til steg 1 for å fortsette til neste runde
 
 Noen helt åpenbare ting du som spiller kanskje ser etter, men ikke kommer til å finne:
 - Antall liv robotene har.

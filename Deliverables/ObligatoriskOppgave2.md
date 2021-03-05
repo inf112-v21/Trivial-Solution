@@ -6,7 +6,7 @@ Rollene i teamet fungerer bra, vi trenger oppdattere rollene litt da, men vi beh
 De rollene som er de samme som forrige gang:
 -Teamleader --> Steinar
 -Utvilkere --> Alle
--Referatansvarlig --> Vi rulere på denne, går på rundgang eller hvis noen har lyst den dagen.
+-Referatansvarlig --> Vi rulerer på denne, går på rundgang eller hvis noen har lyst den dagen.
 
 ###Trenger vi andre roller? Og hva innebærer de for oss
 De nye rollene vi introduserte mellom Oblig1 og Oblig2:
@@ -16,8 +16,7 @@ flere kan spille på en gang. Denne vil da ha det overordnede
 ansvaret for at denne implementasjonen blir implementert.
 
 ○ GUI-ansvarlig - Ilyas
-Hvis vi skal implementere en fancy GUI mot slutten av prosjektet så kan
-det være bra å ha en person som er ansvarlig for det også. Ilyas har hovedansvaret
+Det kan være bra å ha en person som er ansvarlig for GUI også. Ilyas har hovedansvaret
 for at dette blir implementert.
 
 Personene som er ansvarlige for disse kan delegere oppgavene videre hvis de trenger hjelp
@@ -31,23 +30,28 @@ prosjektet. Sander har hovedansvaret for at dette blir implementert.
 Rollene vi ikke trenger:
 Kundeansvarlig er ikke en rolle som vi har trengt per dags dato.
 Vi har tross alt ingen kunder her, så vi så ikke på det som
-nødvendig å ha en. 
+nødvendig å ha en. Det kan være nødvendig å utnevne en person som skal være kundeansvarling
+for presentasjonen neste uke da, men vi har ikke sett poenget med denne rollen inntil videre.
 
 
 ###Team-messig erfaring og prosjektmetodikk
 Vi synes at team-metodikken vi har valgt(Kanban) har funket veldig bra. Vi kunne ikke hatt Scrummøter hver eneste morgen
-med timeplanene vår så vi er glade for at vi valgte Kanban. Dessuten så har alle i gruppen andre forpliktelser også, og 
+med timeplanene våre så vi er glade for at vi valgte Kanban. Dessuten så har alle i gruppen andre forpliktelser også, og 
 takket være Kanban så kan de kan ta færre issues den uken. Alle velger issuene de vil jobbe med selv på møtene og der
 bestemmer vi hva vi skal fokusere på. Deretter er det enkelt å lage issuene (Kanban-kortene) som vi setter på
-Kanban brettet.
+Kanban brettet (Prosjektboardet i github).
+
+Vi har også brukt litt pair programming(altså XP). Vi har derimot ikke brukt noe Scrum siden Oblig1. På grunn av
+årsakene nevnt over har vi distansert oss fra Scrum.
 
 ###Hvordan er gruppedynamikken?
 Vi synes at vi har en god gruppedynamikken. Vi har snakket med hverandre i løpet av prosjektet og spesielt i møtene.
 Her har vi forklart planene våre. Alle har vært enige i hvilken rettning vi skal gå, så det har vært veldig få misforståelser.
 
+
 ###Hvordan fungerer kommunikasjonen for dere?
-Kommunikasjonen fungerer veldig bra. Å kommunisere med hverandre er viktig og det har vi gjort.
-Se svaret over.
+Kommunikasjonen fungerer veldig bra. Å kommunisere med hverandre er viktig og det har vi gjort, ellers ville vi
+ikke kom noen vei. Ellers så er tonen god, alles meninger blir hørt. Se svaret over.
 
 
 ###Gjør et kort retrospektiv hvor dere vurderer hva dere har klart til nå, og hva som kan forbedres.
@@ -60,13 +64,17 @@ Vi lagde derimot kanskje litt for mange issues og gikk litt vekk fra MVP
 kravene som ble fastsatt i Olbig1. Dette gjorde vi derimot fordi vi prioriterte andre ting. Vi ville ha et
 fungerende spill ferdig i så stor grad som mulig med tanke på spill-logikk før vi begynnte med frontend og nettverk.
 Tross at de siste to også er MVP krav så prioriterte vi de ikke like mye i starten. Det er kanskje noe vi burde gjort.
+Denne metoden vi har jobbet på hadde mest sannsynlig virket bedre hvis det kun var 1 innlevering i faget, men siden
+det er obliger annenhver uke så har vi jobbet på feil krav direkte. Samtidig så er hovedmålet å ha et godt
+fungerende spill (som vi har jobbet mot) så vi kommer hente oss igjen uten problemer.
 
-Men takket være arbeidsmetodikken så har vi implementert mye av backend-koden.På grunn av Kanban har vi også valgt å fokusere på veldig 
-konkrete issues så har det vært få misforståelsder i kommunikasjonen.
+Dermed har vi implementert mye av backend-koden (spill-logikken). Vi har derimot ikke implementert
+mye GUI og har dermed ikke en måte å vise det 100% enda (noe av GUI er implementert). 
 
-Vi har sammarbeidet på en god måte som nevnt over ved å møte på gruppetimene og våre individuelle møter. Det har også som sagt
-resultert i få misforståelser som nevt over, så på dette punktet synes vi at vi har gjort det veldig bra.
+På grunn av Kanban har vi også valgt å fokusere på veldig 
+konkrete issues, så det har vært få misforståelsder i kommunikasjonen (som nevnt over).
 
+Vi har sammarbeidet på en god måte som nevnt over ved å møte på gruppetimene og våre individuelle møter.
 
 
 
@@ -75,10 +83,11 @@ resultert i få misforståelser som nevt over, så på dette punktet synes vi at
 Forskjellen i antall linjer skrevet kommer fra blant annet:
 -kompleksitet i arbeidsoppgaver varierer veldig, så mange linjer reflekterer nødvendigvis ikke tiden som er brukt på
 hver issue. Koden i ComponentFactory er for eksmepel mest gruntwork. Enkelte ting krever dessuten research og at man
-leser seg opp på domenet ting omhandler. Koden på disse er ikke nødvendigvis like lang, men heller ommfattende.
+leser seg opp på domenet ting omhandler. Koden på disse er ikke nødvendigvis like lang, men heller ommfattende. Dette
+er noe av grunnen for at Samuel og Ilyas ligger bak antall commits/ linjer skrevet.
 
 -Dårlig bruk av git merge har resultert i at det ser ut som at
-en person har skrevet kode som en annen har gjort. Dette er kommentert i commitsene.
+en person har skrevet kode som en annen har gjort. Dette er kommentert i commitene.
 Hvordan dette har skjedd er at to personer har jobbet med forskjelige issues i samme fil
 som resulterer at en må pulle koden ned, sammtidig som den personen har skrevet egne commits. Dette resulterte i at git
 gav oss en mergeconflict når vi brukte git add . (punktum = add alt). Når personen som pullet skulle commite og pushe igjen ble de commitsene som en annen personen hadde
@@ -101,9 +110,16 @@ implementert på backenden så han har begynt med å reaserche hvordan vi skal s
 
 
 
-Referat fra møter siden forrige leveranse skal legges ved (mange av punktene over er typisk ting som
-havner i referat)..
-Bli enige om maks tre forbedringspunkter fra retrospektivet, som skal følges opp under neste sprint.
+###Referat fra møter
+For å se møtereferatene se under mappen Møte-referat. For å se møtene etter Oblig 1 se alle møtene med datoer etter
+12 Februar.
+
+### Forbedringspunkter
+1. Bruke branches mer (Nå når vi har et spillbart spill så er det viktigere å bruke branches for å unngå å
+   ødelegge noe midlertidlig.)
+2. Skrive flere tester (Dette har vi begynnt med allerede da)
+3. Vi har folk som er ansvarlige for sine spesifikke punkt. Akkurat nå så står disse oppsatt med issues som har et stort
+   arbeidskrav. Vi må ikke være redd for å delegere små issens videre. Dessuten så må vi begynne å lage spesifikke
 
 
 #Deloppgave 2 - Krav
@@ -115,44 +131,36 @@ er prosjektbrettet vårt. Her skriver vi nå Brukerhistorier, Akseptansekrav og 
 for hver issue. Vi skriver også tilhørende tester som blir skrevet med tanke på akseptansekravene.
 Disse finner man i test packagen.
 
-Vi har noen oppgaver som vi har startet med nå, men akseptansekrav er ikke definert.
-
 ###Prioritering fremover
-Fremover så kommer vi prioritere networking(Sette opp multiplayer) og gui'en.
+Fremover så kommer vi prioritere GUI først og fremst. Målet er å få til at Single player virker 
+før vi begynner på Multiplayer. Vi (Dusan) kommer fortsette å researche hvordan
+dette skal settes opp, men gruppens hoved prioritering blir å implementere GUI.
 Vi har prioritert disse oppgavene fordi vi ligger litt bak her. På andre siden så er backenden
-for hele spillet stort sett ferdig. Så nå må vi bare implementere Gui'en og Mutiplayer som mangler.
+for hele spillet stort sett ferdig. 
 
 ###Justeringer i MVP krav
-Vi har ikke gjort noen forandringer i MVP kravene per say. Men vi har prioritert andre ting som vi syntes var viktigere. Nemlig
-å få spill-logikken på plass. MVP krav 1-5 og 7-9 illustrere til en viss grad hva dette innebærer, men vi ville ha selve spill-logikken
+Vi har gjort 1 stor endring i MVP kravene som er at vi ikke har implementert Multiplayer enda. 
+
+Men vi har prioritert andre ting som vi syntes var viktigere. Nemlig
+å få spill-logikken på plass. MVP krav 1-5 og 7-9 illustrerer til en viss grad hva dette innebærer, men vi ville ha selve spill-logikken
 på plass før vi begynte med resten. Da tenkte vi på komponentene i spillet som laserer, vegger, gear, wrench og andre slike
 ting som en del av spillet. Tanken vår var at hvis vi gjorde det på denne måten så ville vi få en bedre oversikt over hvordan vi skulle
 gå videre med å lage spillet. Dette var en god måte å bli bedre kjent med spillet på og vi tenkte at vi kunne gjøre en bedre jobb
 hvis vi gjorde det på denne måten. 
 
-MultiPlayer er også et viktig MVP-krav men vi mener at spillet og komponentene fungerer på en 
-logisk måte er viktigere på dette tidspunktet. Dessuten så kan det være problematisk å implementere logikken til for eksempel en
-vegg senere. Målet vårt er tross alt til syvende og sist å ha et full-fledged spill og ikke bare det som er beskrevet i MVP. Med tanke
-på dette så har vi prioritert alitt annerledes.
+MultiPlayer er også et viktig MVP-krav men vi mener at måten spillet og komponentene fungerer på er viktigere på dette tidspunktet. 
+Dessuten så kan det være problematisk å implementere logikken til for eksempel en vegg senere. 
+Målet vårt er tross alt til syvende og sist å ha et full-fledged spill og ikke bare det som er beskrevet i MVP. Med tanke
+på dette så har vi prioritert litt annerledes.
 
-Det skal sies at vi kanskje brukte mer tid enn det som var optimalt på å lage komponentene til brettet. Denne tiden kunne
-gått til mutiplayer, men vi er glade for å ha komponentene på plass nå. De er tross alt med i brettet og dermed
-en viktig faktor for spillet. På en måte så kan man kanskje si at siden vi prioriterte dette sterkere i begynnelsen
-så kan vi telle det som et
 
 ###Prioriterte krav
-Vi prioriterte Krav 1-3 og 7-8 under Oblig1. Vi har fortsatt med
-disse nå også, samt at vi har fullført 4-5 og 9 også. 6 er det
-neste som skal inn, samt GUI-fin pussing.
+Vi prioriterte som nevnt over backend. GUI har vi stort sett ikke sett på før de siste to ukene, 
+og det har dessverre tatt mye lengre tid enn ventet. Fremover kommer vi til å fokusere på GUIen.
 
 ###Bugs i kravene
-Krav 2 (Vise brikke på spillebrett): Et undermål for dette kravet
-er at roboten ikke skal vises på ruten den har gått ifra. Det gjør den
-nå.
-
-Legg til flere Bugs imorgen hvis vi har noen!
+Noen ganger flytter roboten seg litt rart, vi vet ikke helt hvorfor ennå.
 
 
 #Deloppgave 3
-
-
+Se README-filen for teknisk oppsett, og spillguide.

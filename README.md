@@ -17,6 +17,6 @@ For å spille en runde:
 - Alle 5 fasene vil nå bli simulert umiddelbart, gå tilbake til steg 1 for å fortsette å spille
 
 Noen helt åpenbare ting du som spiller kanskje ser etter, men ikke kommer til å finne:
-- Antall liv robotene.
-- Retningen robotene peker
-- En måte å se forskjell på robotene
+- Antall liv robotene har.
+- Retningen robotene peker.
+- En måte å se forskjell på robotene.

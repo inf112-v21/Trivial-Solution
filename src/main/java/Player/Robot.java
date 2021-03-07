@@ -125,4 +125,14 @@ public class Robot{
 	}
 
 	public boolean isControlledByAI(){return isControlledByAI; }
+	
+	public String getPlayerState() {
+		if(lives == 0) {
+			return "dead";
+		}
+		if(this.getVisitedFlags().size() >= 3) {
+			return "victory";
+		}
+		return "alive";
+	}
 }

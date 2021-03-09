@@ -98,8 +98,10 @@ public class Robot{
 
 	@Override 
 	public String toString() {
-		return getName() + " has " + getRemainingLives() + " "
-				+ "lives and has " + getHP() + " hp.";
+		return "Name: " + name
+            +  "\nLives: " + lives
+            +  "\nHP: " + hp
+            +  "\nDirection: " + direction;
 	}
 
 	/**
@@ -117,7 +119,7 @@ public class Robot{
 
 
     public void rotate(int degree) {
-	    direction = (direction + degree) % 4;
+	    direction = Math.floorMod(direction + degree, 4);
     }
 
 	public Color getColor() {

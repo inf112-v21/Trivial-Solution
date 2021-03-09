@@ -60,10 +60,7 @@ public class GameBoard {
     }
 
     public void endRound(){
-        for (int i = 0; i< registers.size(); i++){
-            ArrayList<ICard> noCards = new ArrayList<>();
-            registers.get(i).setRegisterCards(noCards);
-        }
+        for (Register reg : registers) reg.resetCards();
     }
 
     /**

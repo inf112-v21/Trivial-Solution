@@ -11,6 +11,7 @@ public abstract class SimpleComponent implements IComponent {
 
     protected String name;
     protected int id;
+    protected char SYMBOL;
 
     public SimpleComponent(int id){
         this.id = id;
@@ -23,4 +24,6 @@ public abstract class SimpleComponent implements IComponent {
 
     @Override
     public int getID() { return id; }
+
+    public char getSymbol(){ return SYMBOL; }
 }

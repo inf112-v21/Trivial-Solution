@@ -105,7 +105,7 @@ public class Board {
         if (pos == null) throw new IllegalArgumentException("Could not find the bot");
 
         int dist = card.getDistance();
-        if (dist < 0 ) moveTowards(Math.abs(dist), pos.getX(), pos.getY(), (bot.getDirection() + 2) % 4);
+        if (dist < 0 ) moveTowards(Math.abs(dist), pos.getX(), pos.getY(), Math.floorMod(bot.getDirection() + 2, 4));
         else moveTowards(dist, pos.getX(), pos.getY(), bot.getDirection());
 
     }
@@ -323,7 +323,7 @@ public class Board {
      */
     public Flag getFlagInForgridAt(int posY, int posX) {
         if (!(forgrid[posY][posX] instanceof Flag)){
-            throw new IllegalStateException("Du har angit en posisjon som ikke inneholder et flag.");
+            throw new IllegalStateException("Du har angitt en posisjon som ikke inneholder et flagg.");
         }
         return (Flag) forgrid[posY][posX];
     }

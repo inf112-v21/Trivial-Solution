@@ -155,6 +155,7 @@ public class GameScreen extends Game implements Screen {
     }
 
     public static void pickCardsFromTerminal(Register reg){
+        System.out.println("\n" + reg.getRobot());
         ArrayList<ICard> availableCards = reg.getRegisterCards();
         if (availableCards.size() == 0) throw new IllegalStateException("This register has no available cards");
         System.out.println("Please type a line of ints to choose cards.");

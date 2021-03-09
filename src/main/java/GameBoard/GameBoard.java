@@ -54,7 +54,7 @@ public class GameBoard {
         registers.sort(new RegisterComparator(phasenumber));
         for(Register reg : registers){
             if (reg.getLifeTokens() > 0 && reg.getMaxFiveCardsFromRegister().size() > phasenumber) {
-            	executingMovement = true;
+
             	ICard card = reg.getMaxFiveCardsFromRegister().get(phasenumber);
                 board.performMove(card, reg.getRobot());
             }

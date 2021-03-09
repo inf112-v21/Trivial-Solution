@@ -6,7 +6,9 @@ import Components.Flag;
 import Player.Register;
 import Player.Robot;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
+
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Iterator;
@@ -52,7 +54,8 @@ public class GameBoard {
         registers.sort(new RegisterComparator(phasenumber));
         for(Register reg : registers){
             if (reg.getLifeTokens() > 0 && reg.getMaxFiveCardsFromRegister().size() > phasenumber) {
-                ICard card = reg.getMaxFiveCardsFromRegister().get(phasenumber);
+
+            	ICard card = reg.getMaxFiveCardsFromRegister().get(phasenumber);
                 board.performMove(card, reg.getRobot());
             }
         }
@@ -82,7 +85,7 @@ public class GameBoard {
     public Board getBoard(){ return board; }
     public ArrayList<Register> getRegisters(){ return registers; }
 
-
+   
     private static class RegisterComparator implements Comparator<Register> {
         int phase;
         public RegisterComparator(int phase){ this.phase = phase; }

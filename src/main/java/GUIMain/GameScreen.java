@@ -6,6 +6,7 @@ import Cards.Deck;
 import Cards.ICard;
 import Cards.ProgramCard;
 import GameBoard.GameBoard;
+import GameBoard.Position;
 import Player.Register;
 import Player.Robot;
 
@@ -34,6 +35,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 import javax.swing.JOptionPane;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Scanner;
 
 public class GameScreen extends Game implements Screen {
@@ -42,8 +44,7 @@ public class GameScreen extends Game implements Screen {
     private TiledMap map;
     private TiledMapTileLayer backgroundLayer;
     private TiledMapTileLayer playerLayer;
-    private TiledMapTileLayer middlegroundLayer;
-    private TiledMapTileLayer foregroundLayer;
+    
     private OrthogonalTiledMapRenderer renderer;
     private OrthographicCamera camera;
     private Stage stage;
@@ -57,6 +58,9 @@ public class GameScreen extends Game implements Screen {
 	private ArrayList<Robot> robots;
 	private AI ai = new Randbot();
 	private int currentPhase = 0;
+	private Textures playerTexture;
+	
+	private ArrayList<Textures> tes;
 
     /**
      * @param robots robotene som skal være med å spille
@@ -73,6 +77,8 @@ public class GameScreen extends Game implements Screen {
         this.isInDebugMode = isInDebugMode;
         this.mapName = mapName;
         this.robots = robots;
+        tes = new ArrayList<>();
+        
     }
 
     @Override
@@ -116,8 +122,12 @@ public class GameScreen extends Game implements Screen {
         HEIGHT = backgroundLayer.getHeight();
         WIDTH = backgroundLayer.getWidth();
 
+        
+        
         camera = new OrthographicCamera();
-        camera.setToOrtho(false, CELL_SIZE * WIDTH, CELL_SIZE * HEIGHT);
+//        camera.setToOrtho(false, CELL_SIZE * WIDTH, CELL_SIZE * HEIGHT);
+        camera.setToOrtho(false, WIDTH*CELL_SIZE, HEIGHT*315);
+        
         camera.position.x = CELL_SIZE * WIDTH / 2;
         camera.update();
 
@@ -126,13 +136,16 @@ public class GameScreen extends Game implements Screen {
 
         batch = new SpriteBatch();
         font = new BitmapFont();
-        font.setColor(Color.RED);
+        
+     
+      
     }
 
     public void simulateRound2(){
-        displayRobots(getPlayerImage1("alive"), getPlayerCell(getPlayerImage("alive")));
-        renderer.render();
-
+        
+    	renderer.render();
+//    	this.updataMoves();
+    	
         gameboard.startRound();
         for (Register reg : gameboard.getRegisters()) {
             if (reg.getRobot().isControlledByAI()) ai.chooseCards(reg, gameboard.getBoard());
@@ -140,18 +153,33 @@ public class GameScreen extends Game implements Screen {
         }
         for (int i = 0; i < 5; i++) {
             gameboard.phase(i);
-            displayRobots(getPlayerImage1("alive"), getPlayerCell(getPlayerImage("alive")));
+//            this.updataMoves();
+            
         }
         gameboard.endRound();
     }
 
     @Override
     public void render(float v) {
+    	
+    	
+    	
         Gdx.gl.glClearColor(1, 1, 1, 1);
         Gdx.gl.glClear(GL30.GL_COLOR_BUFFER_BIT);
-
-        displayRobots(getPlayerImage1("alive"), getPlayerCell(getPlayerImage("alive")));
         renderer.render();
+//        displayRobots(getPlayerImage1("alive"), getPlayerCell(getPlayerImage("alive")));
+
+                
+         for(Robot rob: robots) {
+        	Position pos = gameboard.getBoard().getRobotPosition(rob);
+        	
+        	tes.add(new Textures(rob, camera, pos.getX(), pos.getY(),
+        			rob.getColor())); for(Textures rob1: tes) {
+        		rob1.drawRobot();
+        	}  
+         }
+         
+        delay();
     }
 
     public static void pickCardsFromTerminal(Register reg){
@@ -233,6 +261,7 @@ public class GameScreen extends Game implements Screen {
 	 */
 	public void displayRobots(TextureRegion t, TiledMapTileLayer.Cell cell) {
 
+
 		for(int y = 0; y < gameboard.getHeight(); y++) {
 			for(int x = 0; x < gameboard.getWidth(); x++) {
                 Robot r = gameboard.getRobotAt(x, y);
@@ -246,6 +275,7 @@ public class GameScreen extends Game implements Screen {
                     batch.draw(t.getTexture(), x, HEIGHT - y - 1);
                     sprite.draw(batch);
 
+                  
                     setPlayerCell(x,HEIGHT - y - 1, cell);
 
                     batch.end();
@@ -258,6 +288,34 @@ public class GameScreen extends Game implements Screen {
 			}
 		}
 	}
+	
+	public void delay() {
+		try {
+			Thread.sleep(999);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * Maybe an alternative for {@link showPopUp()}
+	 * prints message at the top of GUI
+	 * @param msg
+	 */
+	public void printMessage(String msg) {batch.begin();
+		batch.setProjectionMatrix(camera.combined);
+		font.setColor(Color.RED);
+		System.out.println(Gdx.graphics.getWidth());
+		System.out.println("Widht: "+WIDTH);
+		
+		font.draw(batch, msg, WIDTH,  HEIGHT*310);
+		font.getData().setScale(5, 5);
+		batch.end();
+		
+	}
+	
+	
 	
 	/**
 	 * 
@@ -299,3 +357,62 @@ public class GameScreen extends Game implements Screen {
         }
 	}
 }
+
+class Textures{
+		private  static int x = 0;
+		private  static int y = 0;
+		static SpriteBatch batch;
+		static Color color;
+		static Sprite sprite;
+		OrthographicCamera camera;
+		Robot robot;
+		
+		public Textures(Robot robot, OrthographicCamera camera, int x, int y, Color c) {
+			this.robot = robot;
+			batch = new SpriteBatch();
+			this.camera = camera;
+			color = c;
+			this.x = x; this.y = y;
+			System.out.println(robot.getPlayerState());
+			batch.setProjectionMatrix(camera.combined);
+			sprite = new Sprite(getPlayerImage1(robot.getPlayerState()));
+			
+			System.out.println(robot.getName()+" is moving to ("+x+" - "+y+" )");
+			
+		}
+		
+		/**
+		 * Draws robot using sprite.
+		 * x and y coordinates needs to be multiplied with 300
+		 * to match a cell in the grid. 
+		 */
+		public  void drawRobot() {
+			batch.begin();
+			sprite.setColor(color);
+			sprite.draw(batch);
+			sprite.setPosition(x*300, 900-(y*300)+1800);
+			batch.end();
+		}
+		
+		public TextureRegion getPlayerImage1(String state) {
+	        Texture t = new Texture("player.png");
+	        TextureRegion[][] tmp = new TextureRegion(t).split(300,300);
+	        switch (state) {
+	        case "dead":
+	        	return tmp[0][1];
+	        case "victory":
+	        	return tmp[0][2];
+	        default:
+	        	return tmp[0][0];
+	        }
+		}
+		
+		public Robot getRobot() {
+			return robot;
+		}
+		
+		
+}
+	
+
+

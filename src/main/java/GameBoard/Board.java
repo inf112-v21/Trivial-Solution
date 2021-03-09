@@ -379,4 +379,11 @@ public class Board {
     }
 
     public ArrayList<Flag> getWinningCombo() { return flagWinningFormation;}
+    
+    public Position getRobotPosition(Robot r) {
+    	if(this.botPositions.containsKey(r)) {
+    		return botPositions.get(r);
+    	}
+    	return null;
+    }
 }

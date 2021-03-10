@@ -5,6 +5,8 @@ package GUIMain;
         import com.badlogic.gdx.Game;
         import com.badlogic.gdx.Gdx;
         import com.badlogic.gdx.graphics.GL30;
+
+        import javax.swing.*;
         import java.util.ArrayList;
 
 public class GUI extends Game {
@@ -21,6 +23,14 @@ public class GUI extends Game {
     }
 
     public void startGame(ArrayList<Robot> robots, String mapname){
-        setScreen(new GameScreen(robots, mapname));
+        setScreen(new GameScreen(robots, mapname, this));
+    }
+
+    /**
+     * Metode som viser et popup-vindu med en valgt beskjed.
+     * @param message
+     */
+    public void showPopUp(String message, String windowTitle){
+        JOptionPane.showMessageDialog(null, message, windowTitle, JOptionPane.INFORMATION_MESSAGE);
     }
 }

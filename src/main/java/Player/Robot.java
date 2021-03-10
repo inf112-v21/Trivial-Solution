@@ -29,6 +29,17 @@ public class Robot{
 	private boolean isControlledByAI;
 
 	private final ArrayList<Flag> flagsVisited = new ArrayList<>();
+
+	private static final Robot[] defaultRobots = {
+        new Robot("Nebuchadnezzar", Color.DARK_GRAY, true),
+        new Robot("Alexstrasza", Color.RED, true),
+        new Robot("Gilgamesh", Color.YELLOW, true),
+        new Robot("Ashurbarnipal", Color.GREEN, true),
+        new Robot("Andromeda", Color.PINK, true),
+        new Robot("Hephaistion", Color.CYAN, true),
+        new Robot("Styxifus", Color.BROWN, true),
+        new Robot("Promotheus", Color.GRAY, true)
+    };
 	
 	
 	public Robot(String name, Color color, boolean isControlledByAI){
@@ -129,7 +140,7 @@ public class Robot{
 	public boolean isControlledByAI(){return isControlledByAI; }
 	
 	public String getPlayerState() {
-		if(lives == 0) {
+		if(lives <= 0) {
 			return "dead";
 		}
 		if(this.getVisitedFlags().size() >= 3) {
@@ -137,4 +148,11 @@ public class Robot{
 		}
 		return "alive";
 	}
+
+	public static ArrayList<Robot> getDefaultRobots(int n){
+	    if (n < 0 || n > 8) throw new IllegalArgumentException("Expecteded >0 and <9 robots, but was " + n);
+        ArrayList<Robot> ret = new ArrayList<>();
+        for (int i = 0; i < n; i++) ret.add(defaultRobots[i]);
+        return ret;
+    }
 }

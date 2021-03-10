@@ -60,7 +60,7 @@ public class GameScreen extends Game implements Screen {
 	private ArrayList<Robot> robots;
 	private AI ai = new Randbot();
 	private int currentPhase = 0;
-	private Textures playerTexture;
+	private GUI gui;
 	
 	private ArrayList<Textures> tes;
 
@@ -68,14 +68,15 @@ public class GameScreen extends Game implements Screen {
      * @param robots robotene som skal være med å spille
      * @param mapName navnet på filen som mappet skal baseres på. Husk .tmx!
      */
-	public GameScreen(ArrayList<Robot> robots, String mapName){ this(robots, mapName, false); }
+	public GameScreen(ArrayList<Robot> robots, String mapName, GUI gui){ this(robots, mapName, gui, false); }
 
     /**
      * @param robots robotene som skal være med å spille
      * @param mapName navnet på filen.
      * @param isInDebugMode Om denne er true blir vinduet lukket automatisk ved oppstart. Slik at vi kan kjøre testene.
      */
-    public GameScreen(ArrayList<Robot> robots, String mapName, boolean isInDebugMode){
+    public GameScreen(ArrayList<Robot> robots, String mapName, GUI gui, boolean isInDebugMode){
+        this.gui = gui;
         this.isInDebugMode = isInDebugMode;
         this.mapName = mapName;
         this.robots = robots;
@@ -87,14 +88,6 @@ public class GameScreen extends Game implements Screen {
     public void dispose() {
         batch.dispose();
         font.dispose();
-    }
-
-    /**
-     * Metode som viser et popup-vindu med en valgt beskjed.
-     * @param message
-     */
-    public void showPopUp(String message, String windowTitle){
-        JOptionPane.showMessageDialog(null, message, windowTitle, JOptionPane.INFORMATION_MESSAGE);
     }
 
     public GameBoard getGameBoard(){ return gameboard; }
@@ -207,11 +200,11 @@ public class GameScreen extends Game implements Screen {
         if(gb.hasWon() != null) {
             gb.endRound();
             phaseNr = 0;
-            showPopUp("The winner of this round is: " + gb.hasWon(), "Round finished!");
+            gui.showPopUp("The winner of this round is: " + gb.hasWon(), "Round finished!");
             return;
         }
         if(phaseNr == 5){
-            showPopUp("This round is finished with no winner.", "Round finished");
+            gui.showPopUp("This round is finished with no winner.", "Round finished");
             return;
         }
         gb.phase(phaseNr);

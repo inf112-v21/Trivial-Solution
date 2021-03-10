@@ -33,11 +33,7 @@ public class MenuScreen extends InputAdapter implements Screen {
     protected TextButton multiplayer;
     protected TextButton options;
     protected TextButton quit;
-    private ArrayList<Robot> robots = new ArrayList<>();
     private GUI gui;
-    private int numberOfRobots = 4; // TODO: 04.03.2021 La brukeren velge antall spillere
-    private TextField textField;
-    private static String defaultMapName = "TestMap.tmx";
 
     public MenuScreen(GUI gui){
         super();
@@ -76,16 +72,13 @@ public class MenuScreen extends InputAdapter implements Screen {
         options.setLabel(getButtonLabel("Options"));
         quit.setLabel(getButtonLabel("Quit"));
 
-        textField = new TextField("", skin);
+
 
         singleplayer.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent changeEvent, Actor actor) {
-                robots.clear();
-                createRobot3();
-                robots.add(new Robot("Gilgamesh", RED, true));
-                robots.add(new Robot("Andromeda", GREEN, true));
-                robots.add(new Robot("Ashurbarnipal", YELLOW, true));
+                //createRobot2();
+                gui.setScreen(new CreateGameScreen(gui));
             }
         });
         //multiplayer.addListener(new MenuListener());
@@ -111,67 +104,12 @@ public class MenuScreen extends InputAdapter implements Screen {
 
     }
 
-    public void createRobot2() {
-        Dialog dia = new Dialog("Create your robot:", skin) {
-            @Override
-            protected void result(Object object) {
-                robots.add(new Robot(textField.getText(), BLUE, false));
-            }
-        };
-        dia.setScale(2.5f);
-
-        Table diatable = new Table();
-
-        //diatable.addActor(new Label("Name of robot: ", skin));
-        //diatable.row();
-
-        TextField textfield = new TextField("", skin);
-        diatable.add(textfield);
-        diatable.row();
-
-        //CheckBox AI = new CheckBox("AI", skin);
-        //diatable.add(AI);
-        //diatable.row();
-
-        //dia.setPosition(500, 500);
-
-        dia.add(diatable).align(Align.top);
-        dia.row();
-        dia.button("Confirm").align(Align.bottom);
-
-
-        stage.addActor(dia);
-    }
-
-    public void createRobot(){
-        Gdx.input.getTextInput(new Input.TextInputListener() {
-            @Override
-            public void input(String s) {
-                robots.add(new Robot(s, BLACK, false));
-            }
-            @Override
-            public void canceled() { }
-        }, "Create your robot", "", "name");
-    }
-
-    // TODO: 04.03.2021 Temp, vennligst slett når vi får til popupvinduer
-    public void createRobot3(){
-        Scanner scan = new Scanner(System.in);
-        System.out.println("Name of your robot: ");
-        String name = scan.nextLine();
-        robots.add(new Robot(name,BLUE, false));
-    }
-
 
     @Override
     public void render(float v) {
         stage.act(Gdx.graphics.getDeltaTime());
-        stage.getBatch().begin();
-        stage.getBatch().end();
         stage.draw();
-        if (robots.size() == numberOfRobots){
-            gui.startGame(robots, defaultMapName);
-        }
+
 
     }
 

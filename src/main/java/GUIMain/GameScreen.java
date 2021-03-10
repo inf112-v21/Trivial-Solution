@@ -43,6 +43,8 @@ public class GameScreen extends Game implements Screen {
     private BitmapFont font;
     private TiledMap map;
     private TiledMapTileLayer backgroundLayer;
+    private TiledMapTileLayer middlegroundLayer;
+    private TiledMapTileLayer foregroundLayer;
     private TiledMapTileLayer playerLayer;
     
     private OrthogonalTiledMapRenderer renderer;

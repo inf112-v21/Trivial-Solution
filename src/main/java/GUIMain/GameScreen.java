@@ -175,6 +175,8 @@ public class GameScreen extends Game implements Screen {
         		rob1.drawRobot();
         	}  
          }
+        Gdx.gl.glViewport( Gdx.graphics.getWidth()-CELL_SIZE,0,Gdx.graphics.getWidth()/2,Gdx.graphics.getHeight() );
+        Gdx.gl.glViewport( 0,0,Gdx.graphics.getWidth()-CELL_SIZE,Gdx.graphics.getHeight() );
          
         delay();
     }

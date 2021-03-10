@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Iterator;
 
+
 public class GameBoard {
 
     protected int numberOfPlayers;
@@ -38,8 +39,10 @@ public class GameBoard {
         deck.shuffleDeck();
         for (Register reg : registers){
             ArrayList<ICard> cardlist = new ArrayList<>();
-            for (int amount=0; amount<reg.getDamageTokens(); amount++){
-                cardlist.add(deck.drawCard());
+            for (int amount=0; amount<reg.getDamageTokens()-1; amount++){
+                ICard card =deck.drawCard();
+                cardlist.add(card);
+                System.out.print(card);
             }
             reg.setRegisterCards(cardlist);
         }

@@ -108,6 +108,17 @@ public class BoardTests {
     }
 
     @Test
+    public void canMoveRobotBackwards(){
+        bård.spawnRobot(robot1);
+        robot1.setDirection(0);
+
+        bård.performMove(new ProgramCard(-1, 0, 1, null), robot1);
+
+        assertNull(bård.getRobotAt(9, 3));
+        assertEquals(robot1, bård.getRobotAt(9, 4));
+    }
+
+    @Test
     public void cannotMoveIntoWallTileIfItFacesThatDirection(){
         bård.placeRobotAt(1, 3, robot1);
         robot1.setDirection(1);
@@ -330,6 +341,7 @@ public class BoardTests {
 
         try{
             bård.spawnRobot(robot5);
+            fail();
         } catch (IllegalStateException ex){
             //Yay it worked
         }
@@ -380,7 +392,7 @@ public class BoardTests {
     }
 
     @Test
-    public void endingPhaseOnCheckPointSetNewSpawnPoint(){
+    public void endingPhaseOnCheckPointSetsNewSpawnPoint(){
         bård.spawnRobot(robot1);
         robot1.setDirection(2);
         bård.performMove(new ProgramCard(2, 0, 140, new Texture(Gdx.files.internal("1 Red HULK X90/140 MOVE2 1Red 3.png"))), robot1);
@@ -440,11 +452,6 @@ public class BoardTests {
     @Test
     public void setUpActuallyCreatesTheBoardEveryTime(){ assertNotNull(bård); }
 
-
-    /**
-     * De neste testene fra linje 438-473 sjekker om robotene henter flaggene i riktig
-     * rekkefølge. Det er brettet som git Robotene lov å hente flaggene.
-     */
     @Test
     public void checkIfRobotCanPickUpFlag1First(){
         assertTrue(bård.robotCanPickUpFlag(robot1,Flag1));

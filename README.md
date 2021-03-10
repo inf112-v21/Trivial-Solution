@@ -9,14 +9,15 @@ Prosjektet vil da bygges, kompileres og kjøres i din valgte IDE. For å få pro
 
 ## Hvordan spille spillet
 Start opp spillet. Klikk singleplayer. Du vil nå bli bedt om å gi et navn til roboten din i terminalen, skriv navnet der og trykk enter. 
-Spillet er nå startet, din robot er den helt til høyre, alle robotene er identiske så det må du bare huske. 
+Spillet er nå startet, din robot er den helt til høyre, og den ser mot nord, alle robotene er identiske så det må du bare huske. 
 
 For å spille en runde:
-- Trykk på vinduet med musen
-- Du vil bli bedt om å velge kort i terminalen, velg med å skrive inn heltall der
-- Alle 5 fasene vil nå bli simulert umiddelbart, gå tilbake til steg 1 for å fortsette å spille
+1) Trykk på vinduet med musen
+2) Du vil bli bedt om å velge kort i terminalen, velg med å skrive inn heltall der
+3) Alle 5 fasene vil nå bli simullert umiddelbart, gå tilbake til steg 1 for å fortsette til neste runde
 
 Noen helt åpenbare ting du som spiller kanskje ser etter, men ikke kommer til å finne:
-- Antall liv robotene.
-- Retningen robotene peker
-- En måte å se forskjell på robotene
+- Antall liv robotene har.
+- Retningen robotene peker.
+- En måte å se forskjell på robotene.
+- Noe som stopper deg fra å velge det samme kortet flere ganger.

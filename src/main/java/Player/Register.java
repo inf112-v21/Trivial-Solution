@@ -30,6 +30,8 @@ public class Register {
         allRegisterCards = cards;
     }
 
+    public void resetCards(){ allRegisterCards.clear(); registerCards.clear(); }
+
     /**
     * Denne metoden returnerer de 9 kortene som registeret holder.
      */

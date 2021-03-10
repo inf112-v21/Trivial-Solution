@@ -1,7 +1,6 @@
 package GameBoard;
 
 import Cards.ICard;
-import Components.Flag.*;
 import Components.*;
 import Player.Robot;
 import com.badlogic.gdx.maps.tiled.TiledMap;
@@ -105,7 +104,9 @@ public class Board {
 
         if (pos == null) throw new IllegalArgumentException("Could not find the bot");
 
-        moveTowards(card.getDistance(), pos.getX(),pos.getY(),bot.getDirection());
+        int dist = card.getDistance();
+        if (dist < 0 ) moveTowards(Math.abs(dist), pos.getX(), pos.getY(), Math.floorMod(bot.getDirection() + 2, 4));
+        else moveTowards(dist, pos.getX(), pos.getY(), bot.getDirection());
 
     }
 
@@ -115,7 +116,7 @@ public class Board {
      * flagget (Metode robotCanPickUpFlag)
      *
      */
-    private void checkIfRobotIsOnFlag() {
+    private void pickUpFlags() {
 
         for (Robot bot : botPositions.keySet()) {
             Position pos = botPositions.get(bot);
@@ -166,10 +167,9 @@ public class Board {
     /**
      * Det som skal skje på slutten av hver fase.
      * Lasere blir avfyrt, samlebånd går av, roboter blir reparert, etc.
-     * TODO: Flagg skal bli plukket opp
      */
     public void endPhase(){
-        checkIfRobotIsOnFlag();
+        pickUpFlags();
         updateRespawnPoints();
         fireAllLasers();
         removeDestroyedRobots();
@@ -262,7 +262,7 @@ public class Board {
 
 
     /**
-     * Avfyrer alle lasere. inkluderte de skutt av robotene.
+     * Avfyrer alle lasere. inkludert de skutt av robotene.
      */
     private void fireAllLasers(){
         for(Laser laser : laserPositions.keySet()){
@@ -323,7 +323,7 @@ public class Board {
      */
     public Flag getFlagInForgridAt(int posY, int posX) {
         if (!(forgrid[posY][posX] instanceof Flag)){
-            throw new IllegalStateException("Du har angit en posisjon som ikke inneholder et flag.");
+            throw new IllegalStateException("Du har angitt en posisjon som ikke inneholder et flagg.");
         }
         return (Flag) forgrid[posY][posX];
     }
@@ -379,4 +379,11 @@ public class Board {
     }
 
     public ArrayList<Flag> getWinningCombo() { return flagWinningFormation;}
+    
+    public Position getRobotPosition(Robot r) {
+    	if(this.botPositions.containsKey(r)) {
+    		return botPositions.get(r);
+    	}
+    	return null;
+    }
 }

@@ -115,8 +115,8 @@ public class GameScreen extends Game implements Screen {
         map = tmx.load(mapName);
 
         backgroundLayer = (TiledMapTileLayer) map.getLayers().get("Background");
-        middlegroundLayer = (TiledMapTileLayer) map.getLayers().get("Middleground");
-        foregroundLayer = (TiledMapTileLayer) map.getLayers().get("Foreground");
+        //middlegroundLayer = (TiledMapTileLayer) map.getLayers().get("Middleground");
+        //foregroundLayer = (TiledMapTileLayer) map.getLayers().get("Foreground");
         playerLayer = (TiledMapTileLayer) map.getLayers().get("Robot");
 
         HEIGHT = backgroundLayer.getHeight();
@@ -144,7 +144,6 @@ public class GameScreen extends Game implements Screen {
     public void simulateRound2(){
         
     	renderer.render();
-//    	this.updataMoves();
     	
         gameboard.startRound();
         for (Register reg : gameboard.getRegisters()) {
@@ -153,7 +152,6 @@ public class GameScreen extends Game implements Screen {
         }
         for (int i = 0; i < 5; i++) {
             gameboard.phase(i);
-//            this.updataMoves();
             
         }
         gameboard.endRound();
@@ -161,9 +159,6 @@ public class GameScreen extends Game implements Screen {
 
     @Override
     public void render(float v) {
-    	
-    	
-    	
         Gdx.gl.glClearColor(1, 1, 1, 1);
         Gdx.gl.glClear(GL30.GL_COLOR_BUFFER_BIT);
         renderer.render();
@@ -312,7 +307,6 @@ public class GameScreen extends Game implements Screen {
 		font.draw(batch, msg, WIDTH,  HEIGHT*310);
 		font.getData().setScale(5, 5);
 		batch.end();
-		
 	}
 	
 	
@@ -356,62 +350,6 @@ public class GameScreen extends Game implements Screen {
         	return tmp[0][0];
         }
 	}
-}
-
-class Textures{
-		private  static int x = 0;
-		private  static int y = 0;
-		static SpriteBatch batch;
-		static Color color;
-		static Sprite sprite;
-		OrthographicCamera camera;
-		Robot robot;
-		
-		public Textures(Robot robot, OrthographicCamera camera, int x, int y, Color c) {
-			this.robot = robot;
-			batch = new SpriteBatch();
-			this.camera = camera;
-			color = c;
-			this.x = x; this.y = y;
-			System.out.println(robot.getPlayerState());
-			batch.setProjectionMatrix(camera.combined);
-			sprite = new Sprite(getPlayerImage1(robot.getPlayerState()));
-			
-			System.out.println(robot.getName()+" is moving to ("+x+" - "+y+" )");
-			
-		}
-		
-		/**
-		 * Draws robot using sprite.
-		 * x and y coordinates needs to be multiplied with 300
-		 * to match a cell in the grid. 
-		 */
-		public  void drawRobot() {
-			batch.begin();
-			sprite.setColor(color);
-			sprite.draw(batch);
-			sprite.setPosition(x*300, 900-(y*300)+1800);
-			batch.end();
-		}
-		
-		public TextureRegion getPlayerImage1(String state) {
-	        Texture t = new Texture("player.png");
-	        TextureRegion[][] tmp = new TextureRegion(t).split(300,300);
-	        switch (state) {
-	        case "dead":
-	        	return tmp[0][1];
-	        case "victory":
-	        	return tmp[0][2];
-	        default:
-	        	return tmp[0][0];
-	        }
-		}
-		
-		public Robot getRobot() {
-			return robot;
-		}
-		
-		
 }
 	
 

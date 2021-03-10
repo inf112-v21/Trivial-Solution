@@ -83,7 +83,7 @@ public class MenuScreen extends InputAdapter implements Screen {
             public void changed(ChangeEvent changeEvent, Actor actor) {
                 robots.clear();
                 createRobot3();
-                robots.add(new Robot("Nebuchadnezzar", RED, true));
+                robots.add(new Robot("Gilgamesh", RED, true));
                 robots.add(new Robot("Andromeda", GREEN, true));
                 robots.add(new Robot("Ashurbarnipal", YELLOW, true));
             }

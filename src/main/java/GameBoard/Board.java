@@ -117,7 +117,6 @@ public class Board {
      *
      */
     private void pickUpFlags() {
-
         for (Robot bot : botPositions.keySet()) {
             Position pos = botPositions.get(bot);
 
@@ -358,7 +357,7 @@ public class Board {
      *    3 -> -1
      */
     private int directionToX(int dir){
-        return - dir % 2 * (dir - 2);
+        return - Math.floorMod(dir, 2) * (dir - 2);
     }
 
     /**
@@ -371,7 +370,7 @@ public class Board {
      *    3 -> 0
      */
     private int directionToY(int dir){
-        return (dir+1) % 2 * (dir - 1);
+        return Math.floorMod(dir+1,  2) * (dir - 1);
     }
 
     private boolean outOfBounds(int x, int y){

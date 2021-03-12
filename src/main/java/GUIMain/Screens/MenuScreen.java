@@ -20,7 +20,6 @@ import static com.badlogic.gdx.graphics.Color.*;
 public class MenuScreen extends InputAdapter implements Screen {
 
     private Stage stage;
-    private Skin skin;
     private Table table;
     private SpriteBatch batch;
     private BitmapFont font;
@@ -46,23 +45,22 @@ public class MenuScreen extends InputAdapter implements Screen {
 
         Gdx.input.setInputProcessor(stage);
 
-        skin = new Skin(Gdx.files.internal("assets/default/skin/uiskin.json"));
         table = new Table();
         table.setFillParent(true);
-        title = new Label("Robo-Rally", skin);
+        title = new Label("Robo-Rally", gui.getSkin());
         title.setAlignment(Align.top);
         title.setFontScale(3);
         table.add(title);
         table.row();
-        undertitle = new Label("A Trivial Solution", skin);
+        undertitle = new Label("A Trivial Solution", gui.getSkin());
         undertitle.setFontScale(2);
         table.add(undertitle);
         table.row();
 
-        singleplayer = new TextButton("Singleplayer", skin);
-        multiplayer = new TextButton("Multiplayer", skin);
-        options = new TextButton("Options", skin);
-        quit = new TextButton("Quit", skin);
+        singleplayer = new TextButton("Singleplayer", gui.getSkin());
+        multiplayer = new TextButton("Multiplayer", gui.getSkin());
+        options = new TextButton("Options", gui.getSkin());
+        quit = new TextButton("Quit", gui.getSkin());
 
         singleplayer.setLabel(getButtonLabel("Singleplayer"));
         multiplayer.setLabel(getButtonLabel("Multiplayer"));
@@ -111,7 +109,7 @@ public class MenuScreen extends InputAdapter implements Screen {
     }
 
     public Label getButtonLabel(String text){
-        Label l = new Label(text, skin);
+        Label l = new Label(text, gui.getSkin());
         l.setAlignment(Align.center);
         return l;
     }

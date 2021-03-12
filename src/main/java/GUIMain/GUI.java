@@ -15,11 +15,11 @@ package GUIMain;
 public class GUI extends Game {
 
     private Skin skin;
-    private static String SKIN_NAME = "assets/default/skin/uiskin.json";
+    private static String SKIN_NAME = "assets/comic/skin/comic-ui.json";
 
     @Override
     public void create() {
-        skin = new Skin(Gdx.files.internal("assets/default/skin/uiskin.json"));
+        skin = new Skin(Gdx.files.internal(SKIN_NAME));
         setScreen(new MenuScreen(this));
     }
 

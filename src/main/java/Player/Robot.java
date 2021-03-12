@@ -26,7 +26,7 @@ public class Robot{
 	private final Color color;
 	private int direction = 0;
 	private Position respawnPoint;
-	private boolean isControlledByAI;
+	private final boolean isControlledByAI;
 
 	private final ArrayList<Flag> flagsVisited = new ArrayList<>();
 

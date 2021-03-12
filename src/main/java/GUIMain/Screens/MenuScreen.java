@@ -1,8 +1,8 @@
-package GUIMain;
+package GUIMain.Screens;
 
-import Player.Robot;
+import GUIMain.GUI;
+import GUIMain.Screens.CreateGameScreen;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -14,9 +14,6 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
-
-import java.util.ArrayList;
-import java.util.Scanner;
 
 import static com.badlogic.gdx.graphics.Color.*;
 

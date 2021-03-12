@@ -1,17 +1,25 @@
 package GUIMain;
 
 
+        import GUIMain.Screens.GameScreen;
+        import GUIMain.Screens.MenuScreen;
         import Player.Robot;
         import com.badlogic.gdx.Game;
         import com.badlogic.gdx.Gdx;
         import com.badlogic.gdx.graphics.GL30;
+        import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
         import javax.swing.*;
         import java.util.ArrayList;
 
 public class GUI extends Game {
+
+    private Skin skin;
+    private static String SKIN_NAME = "assets/default/skin/uiskin.json";
+
     @Override
     public void create() {
+        skin = new Skin(Gdx.files.internal("assets/default/skin/uiskin.json"));
         setScreen(new MenuScreen(this));
     }
 
@@ -33,4 +41,6 @@ public class GUI extends Game {
     public void showPopUp(String message, String windowTitle){
         JOptionPane.showMessageDialog(null, message, windowTitle, JOptionPane.INFORMATION_MESSAGE);
     }
+
+    public Skin getSkin(){ return skin; }
 }

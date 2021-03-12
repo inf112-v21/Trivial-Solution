@@ -1,10 +1,12 @@
-package GUIMain;
+package GUIMain.Screens;
 
 import AIs.AI;
 import AIs.Randbot;
 import Cards.Deck;
 import Cards.ICard;
 import Cards.ProgramCard;
+import GUIMain.GUI;
+import GUIMain.Textures;
 import GameBoard.GameBoard;
 import GameBoard.Position;
 import Player.Register;
@@ -289,7 +291,7 @@ public class GameScreen extends Game implements Screen {
 	}
 	
 	/**
-	 * Maybe an alternative for {@link showPopUp()}
+	 * Maybe an alternative for showPopUp()
 	 * prints message at the top of GUI
 	 * @param msg
 	 */

@@ -8,7 +8,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
-class Textures {
+public class Textures {
     private static int x = 0;
     private static int y = 0;
     static SpriteBatch batch;

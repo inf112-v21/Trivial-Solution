@@ -4,7 +4,7 @@
   <OriginalElement />
   <nodes>
     <node x="0.0" y="1916.0">GameBoard.GameBoardTest</node>
-    <node x="629.0" y="1112.0">GUIMain.MenuScreen</node>
+    <node x="629.0" y="1112.0">GUIMain.Screens.MenuScreen</node>
     <node x="0.0" y="1112.0">GameBoard.Board</node>
     <node x="712.0" y="2020.0">AIs.Randbot</node>
     <node x="1372.0" y="450.5">Components.Flag</node>
@@ -32,7 +32,7 @@
     <node x="503.0" y="2214.0">Components.Flag.CompareID</node>
     <node x="0.0" y="0.0">Board.BoardTests</node>
     <node x="1768.0" y="427.0">Components.Gear</node>
-    <node x="500.0" y="0.0">GUIMain.GameScreen</node>
+    <node x="500.0" y="0.0">GUIMain.Screens.GameScreen</node>
     <node x="811.9999999999999" y="339.0">Components.Wall</node>
     <node x="1452.0" y="148.0">Components.SimpleComponent</node>
     <node x="1208.0" y="405.0">Components.ConveyorBelt</node>

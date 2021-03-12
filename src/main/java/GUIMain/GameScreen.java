@@ -2,9 +2,7 @@ package GUIMain;
 
 import AIs.AI;
 import AIs.Randbot;
-import Cards.Deck;
 import Cards.ICard;
-import Cards.ProgramCard;
 import GameBoard.GameBoard;
 import GameBoard.Position;
 import Player.Register;
@@ -26,17 +24,13 @@ import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.tiles.StaticTiledMapTile;
-import com.badlogic.gdx.scenes.scene2d.Event;
-import com.badlogic.gdx.scenes.scene2d.EventListener;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Cell;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Timer;
 
 import javax.swing.JOptionPane;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Scanner;
 
 public class GameScreen extends Game implements Screen {
@@ -109,7 +103,7 @@ public class GameScreen extends Game implements Screen {
         stage.addCaptureListener(new ClickListener(){
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                simulateRound2();
+                simulateRound();
                 return true;
             }
         });
@@ -154,7 +148,7 @@ public class GameScreen extends Game implements Screen {
         }
     }
 
-    public void simulateRound2(){
+    public void simulateRound(){
         
     	renderer.render();
     	

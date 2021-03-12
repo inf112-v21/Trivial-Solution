@@ -32,6 +32,7 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Cell;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.utils.Timer;
 
 import javax.swing.JOptionPane;
 import java.util.ArrayList;
@@ -142,6 +143,12 @@ public class GameScreen extends Game implements Screen {
      
       
     }
+    int i = 0;
+    public void runGame(){
+        gameboard.phase(i);
+        renderer.render();
+        i++;
+    }
 
     public void simulateRound2(){
         
@@ -152,11 +159,22 @@ public class GameScreen extends Game implements Screen {
             if (reg.getRobot().isControlledByAI()) ai.chooseCards(reg, gameboard.getBoard());
             else pickCardsFromTerminal(reg);
         }
+        Timer.schedule(new Timer.Task(){
+                           @Override
+                           public void run() {
+                               runGame();
+                           }
+                       }
+                , 1        //    (delay)
+                , 3       //    (seconds)
+                , 5
+        );
+        /*
         for (int i = 0; i < 5; i++) {
             gameboard.phase(i);
-            
-        }
-        gameboard.endRound();
+        }*/
+        //gameboard.endRound();
+
     }
 
     @Override

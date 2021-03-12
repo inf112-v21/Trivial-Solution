@@ -1,6 +1,7 @@
 package GUIMain.Screens;
 
 import GUIMain.GUI;
+import Player.Robot;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -10,16 +11,20 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 import javax.security.auth.callback.TextInputCallback;
+import java.util.ArrayList;
 
-public class LoadingScreen implements Screen {
+public class GameLoadingScreen implements Screen {
 
     private GUI gui;
-    private Screen nextScreen;
     private Stage stage;
+    private ArrayList<Robot> robots;
+    private String mapname;
+    private boolean hasbeensetup = false;
 
-    public LoadingScreen(Screen nextScreen, GUI gui){
+    public GameLoadingScreen(ArrayList<Robot> robots, String mapname, GUI gui){
         this.gui = gui;
-        this.nextScreen = nextScreen;
+        this.robots = robots;
+        this.mapname = mapname;
     }
 
     @Override
@@ -39,7 +44,8 @@ public class LoadingScreen implements Screen {
     public void render(float v) {
         stage.act();
         stage.draw();
-        gui.setScreen(nextScreen);
+        if(hasbeensetup) gui.setScreen(new GameScreen(robots, mapname, gui));
+        else hasbeensetup = true;
     }
 
     @Override

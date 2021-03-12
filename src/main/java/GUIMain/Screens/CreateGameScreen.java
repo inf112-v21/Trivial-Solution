@@ -72,7 +72,7 @@ public class CreateGameScreen implements Screen {
                 }
                 ArrayList<Robot> robots = Robot.getDefaultRobots(numberOfRobots.getSelected()-1); // -1, siden spilleren inngår i disse robotene
                 robots.add(new Robot(textField.getText(), Color.BLUE, false));
-                gui.setScreen(new LoadingScreen(new GameScreen(robots, defaultMapName, gui), gui));
+                gui.setScreen(new GameLoadingScreen(robots, defaultMapName, gui));
 
                 return true;
             }

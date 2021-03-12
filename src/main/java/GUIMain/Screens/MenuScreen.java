@@ -76,8 +76,14 @@ public class MenuScreen extends InputAdapter implements Screen {
                 gui.setScreen(new CreateGameScreen(gui));
             }
         });
-        //multiplayer.addListener(new MenuListener());
-        //options.addListener(new ChangeListener());
+        multiplayer.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent changeEvent, Actor actor) {
+                gui.showPopUp("You don't have any friends lmao", "");
+            }
+        });
+        //options.addListener(new ChangeListener())
+
         quit.addListener(new ChangeListener() {
              @Override
              public void changed(ChangeEvent changeEvent, Actor actor) {

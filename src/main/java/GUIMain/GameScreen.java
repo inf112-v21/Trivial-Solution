@@ -144,10 +144,14 @@ public class GameScreen extends Game implements Screen {
       
     }
     int i = 0;
-    public void runGame(){
+    public void round(){
         gameboard.phase(i);
         renderer.render();
         i++;
+        if(i == 4){
+            gameboard.endRound();
+            i = 0;
+        }
     }
 
     public void simulateRound2(){
@@ -162,19 +166,13 @@ public class GameScreen extends Game implements Screen {
         Timer.schedule(new Timer.Task(){
                            @Override
                            public void run() {
-                               runGame();
+                               round();
                            }
                        }
                 , 1        //    (delay)
-                , 3       //    (seconds)
+                , 1       //    (seconds)
                 , 5
         );
-        /*
-        for (int i = 0; i < 5; i++) {
-            gameboard.phase(i);
-        }*/
-        //gameboard.endRound();
-
     }
 
     @Override
@@ -218,25 +216,6 @@ public class GameScreen extends Game implements Screen {
             }
             else reg.addCardToRegister(availableCards.get(pick));
         }
-    }
-    int phaseNr = 0;
-    public void simulateRound(){
-        // 1. Vise alle registerkortene samtidig. showAllRegisterCards() eller noe.
-        GameBoard gb = getGameBoard();
-        gb.startRound();
-        if(gb.hasWon() != null) {
-            gb.endRound();
-            phaseNr = 0;
-            showPopUp("The winner of this round is: " + gb.hasWon(), "Round finished!");
-            return;
-        }
-        if(phaseNr == 5){
-            showPopUp("This round is finished with no winner.", "Round finished");
-            return;
-        }
-        gb.phase(phaseNr);
-        phaseNr++;
-        //her må GUI oppdateres
     }
 
     @Override

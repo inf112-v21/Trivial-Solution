@@ -1,7 +1,7 @@
 package GameBoard;
 
 import Components.Flag;
-import GUIMain.GameScreen;
+import GUIMain.Screens.GameScreen;
 import Player.Robot;
 import GUIMain.GUI;
 import com.badlogic.gdx.Game;
@@ -12,9 +12,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
-import java.awt.*;
 import java.util.ArrayList;
-import java.util.function.BooleanSupplier;
 
 import static com.badlogic.gdx.graphics.Color.*;
 
@@ -23,7 +21,7 @@ class GameBoardTest {
     private static GameScreen gameScreen;
 
     private static GUI gui;
-    private final static String defaultMapName = "TestMap.tmx";
+    private final static String defaultMapName = "maps/TestMap.tmx";
     private static GameBoard robotRally;
 
     /**

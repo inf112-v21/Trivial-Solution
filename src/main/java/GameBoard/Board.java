@@ -37,7 +37,7 @@ public class Board {
 
     //Kun for testing.
     public Board(){
-        this("assets/TestMap.tmx");
+        this("assets/maps/TestMap.tmx");
     }
 
 

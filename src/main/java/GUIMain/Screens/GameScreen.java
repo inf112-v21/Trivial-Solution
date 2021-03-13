@@ -1,10 +1,10 @@
-package GUIMain;
+package GUIMain.Screens;
 
 import AIs.AI;
 import AIs.Randbot;
-import Cards.Deck;
 import Cards.ICard;
-import Cards.ProgramCard;
+import GUIMain.GUI;
+import GUIMain.Textures;
 import GameBoard.GameBoard;
 import GameBoard.Position;
 import Player.Register;
@@ -26,16 +26,11 @@ import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.tiles.StaticTiledMapTile;
-import com.badlogic.gdx.scenes.scene2d.Event;
-import com.badlogic.gdx.scenes.scene2d.EventListener;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Cell;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
-import javax.swing.JOptionPane;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Scanner;
 
 public class GameScreen extends Game implements Screen {
@@ -60,7 +55,7 @@ public class GameScreen extends Game implements Screen {
 	private ArrayList<Robot> robots;
 	private AI ai = new Randbot();
 	private int currentPhase = 0;
-	private Textures playerTexture;
+	private GUI gui;
 	
 	private ArrayList<Textures> tes;
 
@@ -68,14 +63,15 @@ public class GameScreen extends Game implements Screen {
      * @param robots robotene som skal være med å spille
      * @param mapName navnet på filen som mappet skal baseres på. Husk .tmx!
      */
-	public GameScreen(ArrayList<Robot> robots, String mapName){ this(robots, mapName, false); }
+	public GameScreen(ArrayList<Robot> robots, String mapName, GUI gui){ this(robots, mapName, gui, false); }
 
     /**
      * @param robots robotene som skal være med å spille
      * @param mapName navnet på filen.
      * @param isInDebugMode Om denne er true blir vinduet lukket automatisk ved oppstart. Slik at vi kan kjøre testene.
      */
-    public GameScreen(ArrayList<Robot> robots, String mapName, boolean isInDebugMode){
+    public GameScreen(ArrayList<Robot> robots, String mapName, GUI gui, boolean isInDebugMode){
+        this.gui = gui;
         this.isInDebugMode = isInDebugMode;
         this.mapName = mapName;
         this.robots = robots;
@@ -87,14 +83,6 @@ public class GameScreen extends Game implements Screen {
     public void dispose() {
         batch.dispose();
         font.dispose();
-    }
-
-    /**
-     * Metode som viser et popup-vindu med en valgt beskjed.
-     * @param message
-     */
-    public void showPopUp(String message, String windowTitle){
-        JOptionPane.showMessageDialog(null, message, windowTitle, JOptionPane.INFORMATION_MESSAGE);
     }
 
     public GameBoard getGameBoard(){ return gameboard; }
@@ -209,11 +197,11 @@ public class GameScreen extends Game implements Screen {
         if(gb.hasWon() != null) {
             gb.endRound();
             phaseNr = 0;
-            showPopUp("The winner of this round is: " + gb.hasWon(), "Round finished!");
+            gui.showPopUp("The winner of this round is: " + gb.hasWon(), "Round finished!");
             return;
         }
         if(phaseNr == 5){
-            showPopUp("This round is finished with no winner.", "Round finished");
+            gui.showPopUp("This round is finished with no winner.", "Round finished");
             return;
         }
         gb.phase(phaseNr);
@@ -298,7 +286,7 @@ public class GameScreen extends Game implements Screen {
 	}
 	
 	/**
-	 * Maybe an alternative for {@link showPopUp()}
+	 * Maybe an alternative for showPopUp()
 	 * prints message at the top of GUI
 	 * @param msg
 	 */

@@ -8,7 +8,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
-class Textures {
+public class Textures {
     private static int x = 0;
     private static int y = 0;
     static SpriteBatch batch;
@@ -44,7 +44,7 @@ class Textures {
     }
 
     public TextureRegion getPlayerImage1(String state) {
-        Texture t = new Texture("player.png");
+        Texture t = new Texture("mapassets/player.png");
         TextureRegion[][] tmp = new TextureRegion(t).split(300, 300);
         switch (state) {
             case "dead":

@@ -2,7 +2,6 @@ package Board;
 
 import Cards.ProgramCard;
 import Components.Flag;
-import GUIMain.GameScreen;
 import GameBoard.Board;
 import Player.Robot;
 import com.badlogic.gdx.Game;
@@ -21,7 +20,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 public class BoardTests {
 
     private static Board bård;
-    private final static String defaultMapName = "TestMap.tmx";
+    private final static String defaultMapName = "maps/TestMap.tmx";
     private static Robot robot1;
     private static Robot robot2;
     private static Robot robot3;

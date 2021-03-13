@@ -24,6 +24,4 @@ public abstract class SimpleComponent implements IComponent {
 
     @Override
     public int getID() { return id; }
-
-    public char getSymbol(){ return SYMBOL; }
 }

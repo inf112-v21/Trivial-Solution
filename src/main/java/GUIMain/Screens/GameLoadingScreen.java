@@ -2,15 +2,12 @@ package GUIMain.Screens;
 
 import GUIMain.GUI;
 import Player.Robot;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
-import javax.security.auth.callback.TextInputCallback;
 import java.util.ArrayList;
 
 public class GameLoadingScreen implements Screen {

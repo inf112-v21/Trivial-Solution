@@ -1,7 +1,6 @@
 package GUIMain.Screens;
 
 import GUIMain.GUI;
-import GUIMain.Screens.CreateGameScreen;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.Screen;

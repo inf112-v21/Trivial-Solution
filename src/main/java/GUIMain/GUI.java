@@ -1,21 +1,17 @@
 package GUIMain;
 
-
-        import GUIMain.Screens.GameScreen;
         import GUIMain.Screens.MenuScreen;
-        import Player.Robot;
         import com.badlogic.gdx.Game;
         import com.badlogic.gdx.Gdx;
         import com.badlogic.gdx.graphics.GL30;
         import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
         import javax.swing.*;
-        import java.util.ArrayList;
 
 public class GUI extends Game {
 
     private Skin skin;
-    private static String SKIN_NAME = "assets/comic/skin/comic-ui.json";
+    private static final String SKIN_NAME = "assets/comic/skin/comic-ui.json";
 
     @Override
     public void create() {
@@ -30,13 +26,9 @@ public class GUI extends Game {
         super.render();
     }
 
-    public void startGame(ArrayList<Robot> robots, String mapname){
-        setScreen(new GameScreen(robots, mapname, this));
-    }
-
     /**
      * Metode som viser et popup-vindu med en valgt beskjed.
-     * @param message
+     * @param message meldingen som skal vises på skjermen
      */
     public void showPopUp(String message, String windowTitle){
         JOptionPane.showMessageDialog(null, message, windowTitle, JOptionPane.INFORMATION_MESSAGE);

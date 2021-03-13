@@ -11,18 +11,20 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
+import java.io.File;
 import java.util.ArrayList;
 
 public class CreateGameScreen implements Screen {
 
+    private static final String MAP_LOCATIONS = "assets/maps";
     private Stage stage;
     private Table table;
     private SpriteBatch batch;
     private GUI gui;
     private TextButton start;
     private SelectBox<Integer> numberOfRobots;
+    private SelectBox<String> choosemapbox;
     private TextField textField;
-    private static String defaultMapName = "TestMap.tmx";
 
     public CreateGameScreen(GUI gui){
         super();
@@ -51,15 +53,26 @@ public class CreateGameScreen implements Screen {
         
         numberOfRobots = new SelectBox<>(gui.getSkin());
         numberOfRobots.setItems(2, 3, 4, 5, 6, 7, 8);
+        numberOfRobots.scaleBy(3);
         table.add(numberOfRobots);
         table.row();
 
         Label yourname = new Label("Your robot's name: ", gui.getSkin());
-        yourname.setFontScale(2);
+        //yourname.setFontScale(2);
         table.add(yourname);
 
         textField = new TextField("", gui.getSkin());
         table.add(textField);
+        table.row();
+
+        Label choosemaplabel = new Label("Choose map: ", gui.getSkin());
+        choosemaplabel.setFontScale(2);
+        table.add(choosemaplabel);
+
+        choosemapbox = new SelectBox<>(gui.getSkin());
+        choosemapbox.setItems(getMapnames());
+        //choosemapbox.scaleBy(3);
+        table.add(choosemapbox);
         table.row();
 
         start = new TextButton("Start game", gui.getSkin());
@@ -72,7 +85,9 @@ public class CreateGameScreen implements Screen {
                 }
                 ArrayList<Robot> robots = Robot.getDefaultRobots(numberOfRobots.getSelected()-1); // -1, siden spilleren inngår i disse robotene
                 robots.add(new Robot(textField.getText(), Color.BLUE, false));
-                gui.setScreen(new GameLoadingScreen(robots, defaultMapName, gui));
+                String map = MAP_LOCATIONS + "/" + choosemapbox.getSelected() + ".tmx";
+                System.out.println(map);
+                gui.setScreen(new GameLoadingScreen(robots, map, gui));
 
                 return true;
             }
@@ -114,5 +129,14 @@ public class CreateGameScreen implements Screen {
     @Override
     public void dispose() {
 
+    }
+
+    private String[] getMapnames(){
+        File f = new File(MAP_LOCATIONS);
+        String[] maplist = f.list();
+        for (int i = 0; i < maplist.length; i++) {
+            maplist[i] = maplist[i].substring(0, maplist[i].length()-4);
+        }
+        return maplist;
     }
 }

@@ -21,7 +21,7 @@ class GameBoardTest {
     private static GameScreen gameScreen;
 
     private static GUI gui;
-    private final static String defaultMapName = "TestMap.tmx";
+    private final static String defaultMapName = "maps/TestMap.tmx";
     private static GameBoard robotRally;
 
     /**

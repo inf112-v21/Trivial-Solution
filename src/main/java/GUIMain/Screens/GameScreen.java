@@ -38,8 +38,6 @@ public class GameScreen extends Game implements Screen {
     private BitmapFont font;
     private TiledMap map;
     private TiledMapTileLayer backgroundLayer;
-    private TiledMapTileLayer middlegroundLayer;
-    private TiledMapTileLayer foregroundLayer;
     private TiledMapTileLayer playerLayer;
     
     private OrthogonalTiledMapRenderer renderer;
@@ -57,7 +55,7 @@ public class GameScreen extends Game implements Screen {
 	private int currentPhase = 0;
 	private GUI gui;
 	
-	private ArrayList<Textures> tes;
+	private ArrayList<Textures> playerTextures;
 
     /**
      * @param robots robotene som skal være med å spille
@@ -75,7 +73,7 @@ public class GameScreen extends Game implements Screen {
         this.isInDebugMode = isInDebugMode;
         this.mapName = mapName;
         this.robots = robots;
-        tes = new ArrayList<>();
+        playerTextures = new ArrayList<>();
         
     }
 
@@ -105,8 +103,6 @@ public class GameScreen extends Game implements Screen {
         map = tmx.load(mapName);
 
         backgroundLayer = (TiledMapTileLayer) map.getLayers().get("Background");
-        //middlegroundLayer = (TiledMapTileLayer) map.getLayers().get("Middleground");
-        //foregroundLayer = (TiledMapTileLayer) map.getLayers().get("Foreground");
         playerLayer = (TiledMapTileLayer) map.getLayers().get("Robot");
 
         HEIGHT = backgroundLayer.getHeight();
@@ -115,7 +111,6 @@ public class GameScreen extends Game implements Screen {
         
         
         camera = new OrthographicCamera();
-//        camera.setToOrtho(false, CELL_SIZE * WIDTH, CELL_SIZE * HEIGHT);
         camera.setToOrtho(false, WIDTH*CELL_SIZE, HEIGHT*315);
         
         camera.position.x = CELL_SIZE * WIDTH / 2;
@@ -127,8 +122,10 @@ public class GameScreen extends Game implements Screen {
         batch = new SpriteBatch();
         font = new BitmapFont();
         
-     
-      
+        for(Robot rob: robots) {
+        	Position pos = gameboard.getBoard().getRobotPosition(rob);
+        	playerTextures.add(new Textures(rob, camera, pos)); 
+         }
     }
 
     public void simulateRound2(){
@@ -153,16 +150,16 @@ public class GameScreen extends Game implements Screen {
         Gdx.gl.glClear(GL30.GL_COLOR_BUFFER_BIT);
         renderer.render();
 //        displayRobots(getPlayerImage1("alive"), getPlayerCell(getPlayerImage("alive")));
-
-                
-         for(Robot rob: robots) {
-        	Position pos = gameboard.getBoard().getRobotPosition(rob);
-        	
-        	tes.add(new Textures(rob, camera, pos.getX(), pos.getY(),
-        			rob.getColor())); for(Textures rob1: tes) {
+ 
+         for(Textures rob1: playerTextures) {
         		rob1.drawRobot();
+        		Position p = gameboard.getBoard().getRobotPosition(rob1.getRobot());
+        		rob1.addNewPositions(p);
+        		if(! rob1.getRobot().hasRemainingLives()) {
+        			printMessage(rob1.getRobot().getName()+" is dead ");
+        		}
         	}  
-         }
+         
         Gdx.gl.glViewport( Gdx.graphics.getWidth()-CELL_SIZE,0,Gdx.graphics.getWidth()/2,Gdx.graphics.getHeight() );
         Gdx.gl.glViewport( 0,0,Gdx.graphics.getWidth()-CELL_SIZE,Gdx.graphics.getHeight() );
          
@@ -208,7 +205,7 @@ public class GameScreen extends Game implements Screen {
         phaseNr++;
         //her må GUI oppdateres
     }
-
+    
     @Override
     public void create() {
         // TODO: 04.03.2021 Vetsje hva som skulle vært her? Kanskje bare show()?
@@ -293,9 +290,6 @@ public class GameScreen extends Game implements Screen {
 	public void printMessage(String msg) {batch.begin();
 		batch.setProjectionMatrix(camera.combined);
 		font.setColor(Color.RED);
-		System.out.println(Gdx.graphics.getWidth());
-		System.out.println("Widht: "+WIDTH);
-		
 		font.draw(batch, msg, WIDTH,  HEIGHT*310);
 		font.getData().setScale(5, 5);
 		batch.end();
@@ -331,7 +325,7 @@ public class GameScreen extends Game implements Screen {
 	 * @return the players state as a texture which could be used as players image
 	 */
 	public TextureRegion getPlayerImage1(String state) {
-        Texture t = new Texture("player.png");
+        Texture t = new Texture("mapassets/player.png");
         TextureRegion[][] tmp = new TextureRegion(t).split(300,300);
         switch (state) {
         case "dead":

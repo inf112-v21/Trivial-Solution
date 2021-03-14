@@ -168,11 +168,26 @@ public class Board {
      * Lasere blir avfyrt, samlebånd går av, roboter blir reparert, etc.
      */
     public void endPhase(){
+        moveConveyorBelts();
+        turnGears();
+        repairRobots();
         pickUpFlags();
         updateRespawnPoints();
         fireAllLasers();
         removeDestroyedRobots();
         respawnRobots();
+    }
+
+    private void moveConveyorBelts(){
+
+    }
+
+    private void turnGears(){
+        // TODO: 14.03.2021
+    }
+
+    private void repairRobots(){
+        // TODO: 14.03.2021
     }
 
     private void updateRespawnPoints(){

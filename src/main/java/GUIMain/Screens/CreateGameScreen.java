@@ -16,7 +16,7 @@ import java.util.ArrayList;
 
 public class CreateGameScreen implements Screen {
 
-    private static final String MAP_LOCATIONS = "assets/maps";
+    private static final String MAP_LOCATION = "assets/maps";
     private Stage stage;
     private Table table;
     private SpriteBatch batch;
@@ -70,7 +70,7 @@ public class CreateGameScreen implements Screen {
         table.add(choosemaplabel);
 
         choosemapbox = new SelectBox<>(gui.getSkin());
-        choosemapbox.setItems(getMapnames());
+        choosemapbox.setItems(getMapNames());
         //choosemapbox.scaleBy(3);
         table.add(choosemapbox);
         table.row();
@@ -85,8 +85,7 @@ public class CreateGameScreen implements Screen {
                 }
                 ArrayList<Robot> robots = Robot.getDefaultRobots(numberOfRobots.getSelected()-1); // -1, siden spilleren inngår i disse robotene
                 robots.add(new Robot(textField.getText(), Color.BLUE, false));
-                String map = MAP_LOCATIONS + "/" + choosemapbox.getSelected() + ".tmx";
-                System.out.println(map);
+                String map = MAP_LOCATION + "/" + choosemapbox.getSelected() + ".tmx";
                 gui.setScreen(new GameLoadingScreen(robots, map, gui));
 
                 return true;
@@ -131,8 +130,8 @@ public class CreateGameScreen implements Screen {
 
     }
 
-    private String[] getMapnames(){
-        File f = new File(MAP_LOCATIONS);
+    private String[] getMapNames(){
+        File f = new File(MAP_LOCATION);
         String[] maplist = f.list();
         for (int i = 0; i < maplist.length; i++) {
             maplist[i] = maplist[i].substring(0, maplist[i].length()-4);

@@ -149,10 +149,19 @@ public class Robot{
 		return "alive";
 	}
 
+	public void resetState(){
+	    hp = INITIAL_HP;
+	    lives = INITIAL_LIVES;
+	    direction = 0;
+    }
+
 	public static ArrayList<Robot> getDefaultRobots(int n){
 	    if (n < 0 || n > 8) throw new IllegalArgumentException("Expecteded >0 and <9 robots, but was " + n);
         ArrayList<Robot> ret = new ArrayList<>();
-        for (int i = 0; i < n; i++) ret.add(defaultRobots[i]);
+        for (int i = 0; i < n; i++){
+            defaultRobots[i].resetState();
+            ret.add(defaultRobots[i]);
+        }
         return ret;
     }
 }

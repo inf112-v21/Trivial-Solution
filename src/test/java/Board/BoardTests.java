@@ -90,7 +90,7 @@ public class BoardTests {
         bård.placeRobotAt(0, 0, robot1);
         int direction = robot1.getDirection();
 
-        bård.performMove(new ProgramCard(0, 1, 30, new Texture(Gdx.files.internal("1 Red HULK X90/030 ROTATE RIGHT 1Red 3.png"))), robot1);
+        bård.performMove(new ProgramCard(0, 1, 30, new Texture(Gdx.files.internal("Cards/1 Red HULK X90/030 ROTATE RIGHT 1Red 3.png"))), robot1);
 
         assertNotEquals(direction, robot1.getDirection());
     }
@@ -100,7 +100,7 @@ public class BoardTests {
         bård.placeRobotAt(0, 0, robot1);
         robot1.setDirection(1);
 
-        bård.performMove(new ProgramCard(1, 0, 90, new Texture(Gdx.files.internal("1 Red HULK X90/090 MOVE1 1Red 3.png"))), robot1);
+        bård.performMove(new ProgramCard(1, 0, 90, new Texture(Gdx.files.internal("Cards/1 Red HULK X90/090 MOVE1 1Red 3.png"))), robot1);
 
         assertNull(bård.getRobotAt(0, 0));
         assertEquals(robot1, bård.getRobotAt(1, 0));
@@ -126,7 +126,7 @@ public class BoardTests {
         assertNull(bård.getRobotAt(2, 3));
 
         //Her prøver roboten å gå inn i en vegg. Da skal den ikke flyttes.
-        bård.performMove(new ProgramCard(1, 0, 90, new Texture(Gdx.files.internal("1 Red HULK X90/090 MOVE1 1Red 3.png"))), robot1);
+        bård.performMove(new ProgramCard(1, 0, 90, new Texture(Gdx.files.internal("Cards/1 Red HULK X90/090 MOVE1 1Red 3.png"))), robot1);
 
         assertEquals(robot1, bård.getRobotAt(1, 3));
         assertNull(bård.getRobotAt(2, 3));
@@ -137,7 +137,7 @@ public class BoardTests {
         bård.placeRobotAt(0, 0, robot1);
         robot1.setDirection(1);
 
-        bård.performMove(new ProgramCard(3, 0, 170, new Texture(Gdx.files.internal("1 Red HULK X90/170 MOVE3 1Red 3.png"))), robot1);
+        bård.performMove(new ProgramCard(3, 0, 170, new Texture(Gdx.files.internal("Cards/1 Red HULK X90/170 MOVE3 1Red 3.png"))), robot1);
 
         assertNull(bård.getRobotAt(0, 0));
         assertNull(bård.getRobotAt(1, 0));
@@ -151,7 +151,7 @@ public class BoardTests {
         robot1.setDirection(3);
 
         //Prøver å gå 3 skritt, skal bli stoppet av en vegg etter 2
-        bård.performMove(new ProgramCard(3, 0, 170, new Texture(Gdx.files.internal("1 Red HULK X90/170 MOVE3 1Red 3.png"))), robot1);
+        bård.performMove(new ProgramCard(3, 0, 170, new Texture(Gdx.files.internal("Cards/1 Red HULK X90/170 MOVE3 1Red 3.png"))), robot1);
 
         assertNull(bård.getRobotAt(4, 3));
         assertNull(bård.getRobotAt(3, 3));
@@ -167,7 +167,7 @@ public class BoardTests {
         assertEquals(robot1, bård.getRobotAt(2, 3));
         assertNull(bård.getRobotAt(1, 3));
 
-        bård.performMove(new ProgramCard(1, 0, 90, new Texture(Gdx.files.internal("1 Red HULK X90/090 MOVE1 1Red 3.png"))), robot1);
+        bård.performMove(new ProgramCard(1, 0, 90, new Texture(Gdx.files.internal("Cards/1 Red HULK X90/090 MOVE1 1Red 3.png"))), robot1);
 
         assertEquals(robot1, bård.getRobotAt(2, 3));
         assertNull(bård.getRobotAt(1, 3));
@@ -179,7 +179,7 @@ public class BoardTests {
         bård.placeRobotAt(1, 0, robot2);
         robot1.setDirection(1);
 
-        bård.performMove(new ProgramCard(1, 0, 90, new Texture(Gdx.files.internal("1 Red HULK X90/090 MOVE1 1Red 3.png"))), robot1);
+        bård.performMove(new ProgramCard(1, 0, 90, new Texture(Gdx.files.internal("Cards/1 Red HULK X90/090 MOVE1 1Red 3.png"))), robot1);
 
         assertNull(bård.getRobotAt(0, 0));
         assertEquals(robot1, bård.getRobotAt(1, 0));
@@ -192,7 +192,7 @@ public class BoardTests {
         bård.placeRobotAt(1, 0, robot2);
         robot1.setDirection(1);
 
-        bård.performMove(new ProgramCard(2, 0, 130, new Texture(Gdx.files.internal("1 Red HULK X90/130 MOVE1 1Red 3.png"))), robot1);
+        bård.performMove(new ProgramCard(2, 0, 130, new Texture(Gdx.files.internal("Cards/1 Red HULK X90/130 MOVE1 1Red 3.png"))), robot1);
 
         assertNull(bård.getRobotAt(0, 0));
         assertNull(bård.getRobotAt(1, 0));
@@ -207,7 +207,7 @@ public class BoardTests {
         robot1.setDirection(1);
 
         //Her treffer de veggen umiddelbart.
-        bård.performMove(new ProgramCard(3, 0, 170, new Texture(Gdx.files.internal("1 Red HULK X90/170 MOVE3 1Red 3.png"))), robot1);
+        bård.performMove(new ProgramCard(3, 0, 170, new Texture(Gdx.files.internal("Cards/1 Red HULK X90/170 MOVE3 1Red 3.png"))), robot1);
 
         assertEquals(robot1, bård.getRobotAt(0, 3));
         assertEquals(robot2, bård.getRobotAt(1, 3));
@@ -221,7 +221,7 @@ public class BoardTests {
         robot1.setDirection(3);
 
         //Har kan de gå ett skritt før de treffer veggen.
-        bård.performMove(new ProgramCard(3, 0, 170, new Texture(Gdx.files.internal("1 Red HULK X90/170 MOVE3 1Red 3.png"))), robot1);
+        bård.performMove(new ProgramCard(3, 0, 170, new Texture(Gdx.files.internal("Cards/1 Red HULK X90/170 MOVE3 1Red 3.png"))), robot1);
 
         assertNull(bård.getRobotAt(4, 3));
         assertEquals(robot1, bård.getRobotAt(3, 3));
@@ -305,7 +305,7 @@ public class BoardTests {
         bård.placeRobotAt(7, 4, robot1);
         robot1.setDirection(1);
 
-        bård.performMove(new ProgramCard(1, 0, 90, new Texture(Gdx.files.internal("1 Red HULK X90/090 MOVE1 1Red 3.png"))), robot1);
+        bård.performMove(new ProgramCard(1, 0, 90, new Texture(Gdx.files.internal("Cards/1 Red HULK X90/090 MOVE1 1Red 3.png"))), robot1);
 
         assertEquals(robot1, bård.getRobotAt(7, 4));
         assertNull(bård.getRobotAt(8, 4));
@@ -351,7 +351,7 @@ public class BoardTests {
         bård.spawnRobot(robot1);
         robot1.setDirection(1);
 
-        bård.performMove(new ProgramCard(1, 0, 90, new Texture(Gdx.files.internal("1 Red HULK X90/090 MOVE1 1Red 3.png"))), robot1);
+        bård.performMove(new ProgramCard(1, 0, 90, new Texture(Gdx.files.internal("Cards/1 Red HULK X90/090 MOVE1 1Red 3.png"))), robot1);
         bård.endPhase();
 
         assertTrue(robot1.getRemainingLives() < Robot.INITIAL_LIVES);
@@ -363,7 +363,7 @@ public class BoardTests {
         bård.spawnRobot(robot1);
         robot1.setDirection(3);
 
-        bård.performMove(new ProgramCard(3, 0, 170, new Texture(Gdx.files.internal("1 Red HULK X90/170 MOVE3 1Red 3.png"))), robot1);
+        bård.performMove(new ProgramCard(3, 0, 170, new Texture(Gdx.files.internal("Cards/1 Red HULK X90/170 MOVE3 1Red 3.png"))), robot1);
         bård.endPhase();
 
         assertNull(bård.getRobotAt(6, 3));
@@ -379,11 +379,11 @@ public class BoardTests {
         robot1.setDirection(2);
 
         //Kjører vekk fra checkpointet
-        bård.performMove(new ProgramCard(1, 0, 90, new Texture(Gdx.files.internal("1 Red HULK X90/090 MOVE1 1Red 3.png"))), robot1);
+        bård.performMove(new ProgramCard(1, 0, 90, new Texture(Gdx.files.internal("Cards/1 Red HULK X90/090 MOVE1 1Red 3.png"))), robot1);
         robot1.setDirection(1);
 
         //Kjører av brettet
-        bård.performMove(new ProgramCard(1, 0, 90, new Texture(Gdx.files.internal("1 Red HULK X90/090 MOVE1 1Red 3.png"))), robot1);
+        bård.performMove(new ProgramCard(1, 0, 90, new Texture(Gdx.files.internal("Cards/1 Red HULK X90/090 MOVE1 1Red 3.png"))), robot1);
         bård.endPhase();
 
         assertNull(bård.getRobotAt(9, 4));
@@ -394,16 +394,16 @@ public class BoardTests {
     public void endingPhaseOnCheckPointSetsNewSpawnPoint(){
         bård.spawnRobot(robot1);
         robot1.setDirection(2);
-        bård.performMove(new ProgramCard(2, 0, 140, new Texture(Gdx.files.internal("1 Red HULK X90/140 MOVE2 1Red 3.png"))), robot1);
+        bård.performMove(new ProgramCard(2, 0, 140, new Texture(Gdx.files.internal("Cards/1 Red HULK X90/140 MOVE2 1Red 3.png"))), robot1);
         robot1.setDirection(3);
 
         //Her står botten oppå respawnpointet
-        bård.performMove(new ProgramCard(2, 0, 140, new Texture(Gdx.files.internal("1 Red HULK X90/140 MOVE2 1Red 3.png"))), robot1);
+        bård.performMove(new ProgramCard(2, 0, 140, new Texture(Gdx.files.internal("Cards/1 Red HULK X90/140 MOVE2 1Red 3.png"))), robot1);
 
         bård.endPhase();
 
         //Hopper nedi hullet
-        bård.performMove(new ProgramCard(1, 0, 90, new Texture(Gdx.files.internal("1 Red HULK X90/090 MOVE1 1Red 3.png"))), robot1);
+        bård.performMove(new ProgramCard(1, 0, 90, new Texture(Gdx.files.internal("Cards/1 Red HULK X90/090 MOVE1 1Red 3.png"))), robot1);
 
         bård.endPhase();
 
@@ -415,16 +415,16 @@ public class BoardTests {
     public void cannotRespawnIfCheckPointIsOccupied(){
         bård.spawnRobot(robot1);
         robot1.setDirection(3);
-        bård.performMove(new ProgramCard(2, 0, 140, new Texture(Gdx.files.internal("1 Red HULK X90/140 MOVE2 1Red 3.png"))), robot1);
+        bård.performMove(new ProgramCard(2, 0, 140, new Texture(Gdx.files.internal("Cards/1 Red HULK X90/140 MOVE2 1Red 3.png"))), robot1);
         bård.placeRobotAt(9, 3, robot2);
 
-        bård.performMove(new ProgramCard(1, 0, 90, new Texture(Gdx.files.internal("1 Red HULK X90/090 MOVE1 1Red 3.png")) ), robot1);
+        bård.performMove(new ProgramCard(1, 0, 90, new Texture(Gdx.files.internal("Cards/1 Red HULK X90/090 MOVE1 1Red 3.png")) ), robot1);
         bård.endPhase();
 
         //Nå er checkpointet okkupert
         assertEquals(robot2, bård.getRobotAt(9, 3));
 
-        bård.performMove(new ProgramCard(1, 0, 90, new Texture(Gdx.files.internal("1 Red HULK X90/090 MOVE1 1Red 3.png"))), robot2);
+        bård.performMove(new ProgramCard(1, 0, 90, new Texture(Gdx.files.internal("Cards/1 Red HULK X90/090 MOVE1 1Red 3.png"))), robot2);
         bård.endPhase();
 
         //Nå er checkpointet ledig igjen
@@ -434,7 +434,7 @@ public class BoardTests {
     @Test
     public void tryingToMoveNonExistentRobotYieldsError(){
         try{
-            bård.performMove(new ProgramCard(1, 0, 90, new Texture(Gdx.files.internal("1 Red HULK X90/090 MOVE1 1Red 3.png"))), robot1);
+            bård.performMove(new ProgramCard(1, 0, 90, new Texture(Gdx.files.internal("Cards/1 Red HULK X90/090 MOVE1 1Red 3.png"))), robot1);
             fail();
         } catch (IllegalArgumentException ex){
             //Yay it worked

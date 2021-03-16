@@ -1,7 +1,10 @@
 package AIs;
 
+import Cards.ICard;
 import GameBoard.Board;
-import Player.Register;
+import Player.Robot;
+
+import java.util.ArrayList;
 
 public interface AI {
     /**
@@ -11,8 +14,8 @@ public interface AI {
      * For å velge et kort, bruk reg.addCardToRegister().
      * En smart bot bruker muligens metoder fra Board til å velge smarte kort, men det er ikke et krav.
      *
-     * @param reg
+     * @param bot
      * @param board
      */
-    public void chooseCards(Register reg, Board board);
+    public void chooseCards(Robot bot, Board board);
 }

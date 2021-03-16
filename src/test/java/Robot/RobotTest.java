@@ -1,4 +1,4 @@
-package Register;
+package Robot;
 
 import Cards.Deck;
 import Cards.ICard;
@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class registerTest {
+public class RobotTest {
 
     private static ArrayList<ICard> allCards;
     private static ArrayList<ICard> registerCards;

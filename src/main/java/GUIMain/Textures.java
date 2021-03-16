@@ -1,33 +1,25 @@
 package GUIMain;
 
 import Player.Robot;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import GameBoard.Position;
 
-class Textures {
-    private static int x = 0;
-    private static int y = 0;
-    static SpriteBatch batch;
-    static Color color;
-    static Sprite sprite;
-    OrthographicCamera camera;
-    Robot robot;
+public class Textures {
+	private Position pos;
+    private SpriteBatch batch;
+    private Sprite sprite;
+    private Robot robot;
 
-    public Textures(Robot robot, OrthographicCamera camera, int x, int y, Color c) {
+    public Textures(Robot robot, OrthographicCamera camera, Position pos) {
         this.robot = robot;
         batch = new SpriteBatch();
-        this.camera = camera;
-        color = c;
-        this.x = x;
-        this.y = y;
-        //System.out.println(robot.getPlayerState());
+        this.pos = pos;
         batch.setProjectionMatrix(camera.combined);
         sprite = new Sprite(getPlayerImage1(robot.getPlayerState()));
-        //System.out.println(robot.getName() + " is moving to (" + x + " - " + y + " )");
     }
 
     /**
@@ -37,14 +29,14 @@ class Textures {
      */
     public void drawRobot() {
         batch.begin();
-        sprite.setColor(color);
+        sprite.setColor(robot.getColor());
         sprite.draw(batch);
-        sprite.setPosition(x * 300, 900 - (y * 300) + 1800);
+        sprite.setPosition(pos.getX() * 300, 900 - (pos.getY() * 300) + 1800);
         batch.end();
     }
 
-    public TextureRegion getPlayerImage1(String state) {
-        Texture t = new Texture("player.png");
+    private TextureRegion getPlayerImage1(String state) {
+        Texture t = new Texture("mapassets/player.png");
         TextureRegion[][] tmp = new TextureRegion(t).split(300, 300);
         switch (state) {
             case "dead":
@@ -59,6 +51,9 @@ class Textures {
     public Robot getRobot() {
         return robot;
     }
-
+    
+    public void addNewPositions(Position p) {
+    	this.pos = p;
+    }
 
 }

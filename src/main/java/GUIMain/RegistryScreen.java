@@ -34,8 +34,6 @@ public class RegistryScreen extends InputAdapter implements Screen {
     protected TextButton quit;
     private ArrayList<Robot> robots = new ArrayList<>();
     private GUI gui;
-    private int numberOfRobots = 4; // TODO: 04.03.2021 La brukeren velge antall spillere
-    private static String defaultMapName = "TestMap.tmx";
 
     public RegistryScreen(GUI gui){
         super();
@@ -105,9 +103,6 @@ public class RegistryScreen extends InputAdapter implements Screen {
         stage.getBatch().begin();
         stage.getBatch().end();
         stage.draw();
-        if (robots.size() == numberOfRobots){
-            gui.startGame(robots, defaultMapName);
-        }
 
     }
 

@@ -2,22 +2,16 @@ package Register;
 
 import Cards.Deck;
 import Cards.ICard;
-import GUIMain.GameScreen;
 import Player.Register;
 import Player.Robot;
 import com.badlogic.gdx.graphics.Color;
-import org.junit.Rule;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Scanner;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.lwjgl.system.linux.X11.InputOutput;
 
 public class registerTest {
 

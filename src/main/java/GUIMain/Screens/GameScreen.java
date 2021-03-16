@@ -3,6 +3,8 @@ package GUIMain;
 import AIs.AI;
 import AIs.Randbot;
 import Cards.ICard;
+import GUIMain.GUI;
+import GUIMain.Textures;
 import GameBoard.GameBoard;
 import GameBoard.Position;
 import Player.Register;
@@ -29,7 +31,6 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Timer;
 
-import javax.swing.JOptionPane;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -38,8 +39,6 @@ public class GameScreen extends Game implements Screen {
     private BitmapFont font;
     private TiledMap map;
     private TiledMapTileLayer backgroundLayer;
-    private TiledMapTileLayer middlegroundLayer;
-    private TiledMapTileLayer foregroundLayer;
     private TiledMapTileLayer playerLayer;
     
     private OrthogonalTiledMapRenderer renderer;
@@ -55,26 +54,27 @@ public class GameScreen extends Game implements Screen {
 	private ArrayList<Robot> robots;
 	private AI ai = new Randbot();
 	private int currentPhase = 0;
-	private Textures playerTexture;
+	private GUI gui;
 	
-	private ArrayList<Textures> tes;
+	private ArrayList<Textures> playerTextures;
 
     /**
      * @param robots robotene som skal være med å spille
      * @param mapName navnet på filen som mappet skal baseres på. Husk .tmx!
      */
-	public GameScreen(ArrayList<Robot> robots, String mapName){ this(robots, mapName, false); }
+	public GameScreen(ArrayList<Robot> robots, String mapName, GUI gui){ this(robots, mapName, gui, false); }
 
     /**
      * @param robots robotene som skal være med å spille
      * @param mapName navnet på filen.
      * @param isInDebugMode Om denne er true blir vinduet lukket automatisk ved oppstart. Slik at vi kan kjøre testene.
      */
-    public GameScreen(ArrayList<Robot> robots, String mapName, boolean isInDebugMode){
+    public GameScreen(ArrayList<Robot> robots, String mapName, GUI gui, boolean isInDebugMode){
+        this.gui = gui;
         this.isInDebugMode = isInDebugMode;
         this.mapName = mapName;
         this.robots = robots;
-        tes = new ArrayList<>();
+        playerTextures = new ArrayList<>();
         
     }
 
@@ -82,14 +82,6 @@ public class GameScreen extends Game implements Screen {
     public void dispose() {
         batch.dispose();
         font.dispose();
-    }
-
-    /**
-     * Metode som viser et popup-vindu med en valgt beskjed.
-     * @param message
-     */
-    public void showPopUp(String message, String windowTitle){
-        JOptionPane.showMessageDialog(null, message, windowTitle, JOptionPane.INFORMATION_MESSAGE);
     }
 
     public GameBoard getGameBoard(){ return gameboard; }
@@ -112,8 +104,6 @@ public class GameScreen extends Game implements Screen {
         map = tmx.load(mapName);
 
         backgroundLayer = (TiledMapTileLayer) map.getLayers().get("Background");
-        //middlegroundLayer = (TiledMapTileLayer) map.getLayers().get("Middleground");
-        //foregroundLayer = (TiledMapTileLayer) map.getLayers().get("Foreground");
         playerLayer = (TiledMapTileLayer) map.getLayers().get("Robot");
 
         HEIGHT = backgroundLayer.getHeight();
@@ -122,7 +112,6 @@ public class GameScreen extends Game implements Screen {
         
         
         camera = new OrthographicCamera();
-//        camera.setToOrtho(false, CELL_SIZE * WIDTH, CELL_SIZE * HEIGHT);
         camera.setToOrtho(false, WIDTH*CELL_SIZE, HEIGHT*315);
         
         camera.position.x = CELL_SIZE * WIDTH / 2;
@@ -134,8 +123,10 @@ public class GameScreen extends Game implements Screen {
         batch = new SpriteBatch();
         font = new BitmapFont();
         
-     
-      
+        for(Robot rob: robots) {
+        	Position pos = gameboard.getBoard().getRobotPosition(rob);
+        	playerTextures.add(new Textures(rob, camera, pos));
+         }
     }
     int i = 0;
     public void round(){
@@ -176,15 +167,15 @@ public class GameScreen extends Game implements Screen {
         renderer.render();
 //        displayRobots(getPlayerImage1("alive"), getPlayerCell(getPlayerImage("alive")));
 
-                
-         for(Robot rob: robots) {
-        	Position pos = gameboard.getBoard().getRobotPosition(rob);
-        	
-        	tes.add(new Textures(rob, camera, pos.getX(), pos.getY(),
-        			rob.getColor())); for(Textures rob1: tes) {
+         for(Textures rob1: playerTextures) {
         		rob1.drawRobot();
-        	}  
-         }
+        		Position p = gameboard.getBoard().getRobotPosition(rob1.getRobot());
+        		rob1.addNewPositions(p);
+        		if(! rob1.getRobot().hasRemainingLives()) {
+        			printMessage(rob1.getRobot().getName()+" is dead ");
+        		}
+        	}
+
         Gdx.gl.glViewport( Gdx.graphics.getWidth()-CELL_SIZE,0,Gdx.graphics.getWidth()/2,Gdx.graphics.getHeight() );
         Gdx.gl.glViewport( 0,0,Gdx.graphics.getWidth()-CELL_SIZE,Gdx.graphics.getHeight() );
          
@@ -289,16 +280,13 @@ public class GameScreen extends Game implements Screen {
 	}
 	
 	/**
-	 * Maybe an alternative for {@link showPopUp()}
+	 * Maybe an alternative for showPopUp()
 	 * prints message at the top of GUI
 	 * @param msg
 	 */
 	public void printMessage(String msg) {batch.begin();
 		batch.setProjectionMatrix(camera.combined);
 		font.setColor(Color.RED);
-		System.out.println(Gdx.graphics.getWidth());
-		System.out.println("Widht: "+WIDTH);
-		
 		font.draw(batch, msg, WIDTH,  HEIGHT*310);
 		font.getData().setScale(5, 5);
 		batch.end();
@@ -334,7 +322,7 @@ public class GameScreen extends Game implements Screen {
 	 * @return the players state as a texture which could be used as players image
 	 */
 	public TextureRegion getPlayerImage1(String state) {
-        Texture t = new Texture("player.png");
+        Texture t = new Texture("mapassets/player.png");
         TextureRegion[][] tmp = new TextureRegion(t).split(300,300);
         switch (state) {
         case "dead":

@@ -1,4 +1,4 @@
-package GUIMain;
+package GUIMain.Screens;
 
 import AIs.AI;
 import AIs.Randbot;
@@ -155,7 +155,7 @@ public class GameScreen extends Game implements Screen {
                            }
                        }
                 , 1        //    (delay)
-                , 1       //    (seconds)
+                , 0       //    (seconds)
                 , 5
         );
     }
@@ -291,9 +291,7 @@ public class GameScreen extends Game implements Screen {
 		font.getData().setScale(5, 5);
 		batch.end();
 	}
-	
-	
-	
+
 	/**
 	 * 
 	 * @param state

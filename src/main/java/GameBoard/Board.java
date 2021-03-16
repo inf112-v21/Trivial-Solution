@@ -191,7 +191,17 @@ public class Board {
         }
     }
 
+    /**
+     * Flytter én robot ett skritt med et samlebånd. Om den er på vei til å dytte inn i en annen robot
+     * som også står på et samlebånd, gjør den først et rekursivt kall på den roboten før den flytter seg selv.
+     * Det er kritisk at denne metoden legger til de flyttede robotene i hasBeenPushed, slik at vi
+     * Ikke flytter enkelte roboter flere ganger når vi gjør dette rekursivt.
+     *
+     * Edge case: om n roboter står på en syklus av n samlebånd, får vi uendelig rekursjon.
+     * Dette er grunnen til at ingen maps får lov til å ha sykluser som er mindre eller lik antall roboter de støtter.
+     */
     private void pushRobotWithConveyorBelt(int oldX, int oldY, ArrayList<Robot> hasBeenPushed, boolean moveAll){
+        Robot bot = botgrid[oldY][oldX];
         ConveyorBelt belt = (ConveyorBelt) midgrid[oldY][oldX];
         int nextX = oldX + directionToX(belt.getDirection());
         int nextY = oldY + directionToY(belt.getDirection());
@@ -202,7 +212,7 @@ public class Board {
             pushRobotWithConveyorBelt(nextX, nextY, hasBeenPushed, moveAll);
         }
         moveTowards(1, oldX, oldY, belt.getDirection());
-        hasBeenPushed.add(botgrid[nextY][nextX]);
+        hasBeenPushed.add(bot);
     }
 
     private void turnGears(){
@@ -423,15 +433,5 @@ public class Board {
     		return botPositions.get(r);
     	}
     	return null;
-    }
-
-    private static class ConveyorBeltVector{
-        int dir;
-        Position pos;
-        boolean hasBeenExecuted = false;
-        public ConveyorBeltVector(int dir, Position pos) {
-            this.dir = dir;
-            this.pos = pos;
-        }
     }
 }

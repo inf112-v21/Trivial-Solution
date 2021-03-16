@@ -506,21 +506,6 @@ public class BoardTests {
         assertEquals(robot1, bård.getRobotAt(8, 7));
     }
 
-
-    /**
-     * Regelen er at først skal alle blå samlebånd flytte roboter ett skritt,
-     * så skal alle samlebånd (både blå OG gule) flytte roboter ett skritt.
-     * Så om et blått samlebånd flytter roboten mot et annet samlebånd blir roboten flyttet to skritt.
-     */
-    @Test
-    public void blueConveyorBeltsPushOneStepFirstThenLetOtherBeltsPushAfterWards(){
-        bård.placeRobotAt(8, 8, robot1);
-
-        bård.endPhase();
-
-        assertEquals(robot1, bård.getRobotAt(6, 8));
-    }
-
     @Test
     public void conveyorBeltPushingRobotIntoHoleKillsSaidRobot(){
         bård.spawnRobot(robot1); //Setter spawnpunkt, slik at den har et sted å respawne når den dør
@@ -581,7 +566,19 @@ public class BoardTests {
     }
 
     @Test
-    public void robotOnConveyorBeltPushingRobotOffTheMap(){
+    public void conveyorBeltPushingRobotOffTheMap(){
+        bård.spawnRobot(robot1); //Setter spawnpunktet
+        bård.placeRobotAt(0, 8, robot1);
+
+        bård.endPhase();
+
+        assertNull(bård.getRobotAt(0, 8));
+        assertEquals(robot1, bård.getRobotAt(9, 3));
+        assertTrue(robot1.getRemainingLives() < Robot.INITIAL_LIVES);
+    }
+
+    @Test
+    public void robotOnConveyorBeltPushingARobotThatPushesAnotherRobotOffTheMap(){
         bård.spawnRobot(robot2); //Bare for å sette spawnpunktet
         bård.placeRobotAt(9, 9, robot2);
         bård.placeRobotAt(9, 8, robot1);
@@ -590,5 +587,17 @@ public class BoardTests {
 
         assertEquals(robot1, bård.getRobotAt(9, 9));
         assertTrue(robot2.getRemainingLives() < Robot.INITIAL_LIVES);
+    }
+
+    @Test
+    public void conveyorBeltPushingBotCannotPushAnotherBotThroughAWall(){
+        bård.placeRobotAt(0, 7, robot1);
+        bård.placeRobotAt(0, 6, robot2);
+
+        bård.endPhase();
+
+        assertEquals(robot1, bård.getRobotAt(0, 7));
+        assertEquals(robot2, bård.getRobotAt(0, 6));
+        assertNull(bård.getRobotAt(0, 5));
     }
 }

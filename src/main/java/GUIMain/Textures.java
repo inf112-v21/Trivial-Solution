@@ -22,6 +22,7 @@ public class Textures {
         this.pos = pos;
         batch.setProjectionMatrix(camera.combined);
         sprite = new Sprite(getPlayerImage1(robot.getPlayerState()));
+        //sprite = new Sprite(tempGetPlayerImage());
     }
 
     /**

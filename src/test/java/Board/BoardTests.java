@@ -582,8 +582,9 @@ public class BoardTests {
 
     @Test
     public void robotOnConveyorBeltPushingRobotOffTheMap(){
-        bård.placeRobotAt(9, 8, robot1);
+        bård.spawnRobot(robot2); //Bare for å sette spawnpunktet
         bård.placeRobotAt(9, 9, robot2);
+        bård.placeRobotAt(9, 8, robot1);
 
         bård.endPhase();
 

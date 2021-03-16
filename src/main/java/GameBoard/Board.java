@@ -7,9 +7,7 @@ import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.TreeMap;
+import java.util.*;
 
 public class Board {
 
@@ -168,7 +166,8 @@ public class Board {
      * Lasere blir avfyrt, samlebånd går av, roboter blir reparert, etc.
      */
     public void endPhase(){
-        moveConveyorBelts();
+        moveConveyorBelts(false);
+        moveConveyorBelts(true);
         turnGears();
         repairRobots();
         pickUpFlags();
@@ -178,8 +177,32 @@ public class Board {
         respawnRobots();
     }
 
-    private void moveConveyorBelts(){
+    /** @param moveAll: om alle samlebånd skal flytte seg, eller kun de blå. */
+    private void moveConveyorBelts(boolean moveAll){
+        ArrayList<Robot> hasBeenPushed = new ArrayList<>();
+        for (Position pos : botPositions.values()) {
+            IComponent comp = midgrid[pos.getY()][pos.getX()];
+            if (comp instanceof ConveyorBelt) {
+                ConveyorBelt belt = (ConveyorBelt) comp;
+                if ((belt.getSpeed() > 1 || moveAll) && !hasBeenPushed.contains(botgrid[pos.getY()][pos.getX()])) {
+                    pushRobotWithConveyorBelt(pos.getX(), pos.getY(), hasBeenPushed, moveAll);
+                }
+            }
+        }
+    }
 
+    private void pushRobotWithConveyorBelt(int oldX, int oldY, ArrayList<Robot> hasBeenPushed, boolean moveAll){
+        ConveyorBelt belt = (ConveyorBelt) midgrid[oldY][oldX];
+        int nextX = oldX + directionToX(belt.getDirection());
+        int nextY = oldY + directionToY(belt.getDirection());
+        if(!outOfBounds(nextX, nextY)
+                && midgrid[nextY][nextX] instanceof ConveyorBelt
+                && (((ConveyorBelt)midgrid[nextY][nextX]).getSpeed() > 1 || moveAll)
+                && botgrid[nextY][nextX] != null) {
+            pushRobotWithConveyorBelt(nextX, nextY, hasBeenPushed, moveAll);
+        }
+        moveTowards(1, oldX, oldY, belt.getDirection());
+        hasBeenPushed.add(botgrid[nextY][nextX]);
     }
 
     private void turnGears(){
@@ -322,7 +345,7 @@ public class Board {
         bot.takeLife();
         robotsWaitingToBeRespawned.addLast(bot);
         botgrid[botPositions.get(bot).getY()][botPositions.get(bot).getX()] = null;
-        botPositions.remove(bot);
+        //botPositions.remove(bot);
     }
 
     public Robot getRobotAt(int x, int y){ return botgrid[y][x]; }
@@ -343,6 +366,7 @@ public class Board {
     }
 
     public void placeRobotAt(int x, int y, Robot bot){
+        if(outOfBounds(x, y)) throw new IllegalArgumentException("Coordinates (" + x + ", " + y + ") are out of bounds.");
         botPositions.put(bot, new Position(x, y));
         botgrid[y][x] = bot;
     }
@@ -399,5 +423,15 @@ public class Board {
     		return botPositions.get(r);
     	}
     	return null;
+    }
+
+    private static class ConveyorBeltVector{
+        int dir;
+        Position pos;
+        boolean hasBeenExecuted = false;
+        public ConveyorBeltVector(int dir, Position pos) {
+            this.dir = dir;
+            this.pos = pos;
+        }
     }
 }

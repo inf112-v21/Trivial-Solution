@@ -13,7 +13,7 @@ Program som vi kan bruke kan være KryoNet.
 
 Issues for hva vi skal jobbe med videre:
 - Board flytter roboter i henhold til kort
-- Register-klassen skal implementeres, den må holde styr på roboten sin, og hvilke kort den har i hvilken posisjon, etc.
+- Robot-klassen skal implementeres, den må holde styr på roboten sin, og hvilke kort den har i hvilken posisjon, etc.
 - Roboter skal vinne ved å besøke flagg (i riktig rekkefølge)
 - Popup-vinduer med valgfri melding hadde vært fint å ha en egen metode for.
 - Bare-bones av GameBoard-klassen skal implementeres.

@@ -486,4 +486,118 @@ public class BoardTests {
         assertTrue(bård.robotCanPickUpFlag(robot1,Flag3));
     }
 
+    @Test
+    public void conveyorBeltsPushesBotsInCorrectDirection(){
+        bård.placeRobotAt(1, 1, robot1);
+        bård.placeRobotAt(1, 5, robot2);
+
+        bård.endPhase();
+
+        assertEquals(robot1, bård.getRobotAt(2, 1));
+        assertEquals(robot2, bård.getRobotAt(1, 4));
+    }
+
+    @Test
+    public void blueConveyorBeltsPushTwoSteps(){
+        bård.placeRobotAt(8, 5, robot1);
+
+        bård.endPhase();
+
+        assertEquals(robot1, bård.getRobotAt(8, 7));
+    }
+
+    @Test
+    public void conveyorBeltPushingRobotIntoHoleKillsSaidRobot(){
+        bård.spawnRobot(robot1); //Setter spawnpunkt, slik at den har et sted å respawne når den dør
+        bård.placeRobotAt(7, 9, robot1);
+
+        bård.endPhase();
+
+        assertNull(bård.getRobotAt(8, 9));
+        assertNull(bård.getRobotAt(7, 9));
+        assertTrue(robot1.getRemainingLives() < Robot.INITIAL_LIVES);
+    }
+
+    @Test
+    public void twoRobotsNextToEachOtherOnTheSameConveyorBeltLine(){
+        bård.placeRobotAt(1, 6, robot1);
+        bård.placeRobotAt(1, 5, robot2);
+
+        bård.endPhase();
+
+        assertEquals(robot2, bård.getRobotAt(1, 4));
+        assertEquals(robot1, bård.getRobotAt(1, 5));
+    }
+
+    @Test
+    public void sameAsLastTestButOrderIsFlipped(){
+        bård.placeRobotAt(1, 5, robot1);
+        bård.placeRobotAt(1, 6, robot2);
+
+        bård.endPhase();
+
+        assertEquals(robot1, bård.getRobotAt(1, 4));
+        assertEquals(robot2, bård.getRobotAt(1, 5));
+    }
+
+    @Test
+    public void threeRobotsOnTheSameConveyorBeltLine(){
+        bård.placeRobotAt(1, 6, robot1);
+        bård.placeRobotAt(1, 5, robot2);
+        bård.placeRobotAt(1, 4, robot3);
+
+        bård.endPhase();
+
+        assertNull(bård.getRobotAt(1, 6));
+        assertEquals(robot1, bård.getRobotAt(1, 5));
+        assertEquals(robot2, bård.getRobotAt(1, 4));
+        assertEquals(robot3, bård.getRobotAt(1, 3));
+    }
+
+    @Test
+    public void robotOnConveyorBeltPushingRobotInFrontOfTheConveyorBelt(){
+        bård.placeRobotAt(2, 9, robot1);
+        bård.placeRobotAt(1, 9, robot2);
+
+        bård.endPhase();
+
+        assertEquals(robot1, bård.getRobotAt(1, 9));
+        assertEquals(robot2, bård.getRobotAt(0, 9));
+    }
+
+    @Test
+    public void conveyorBeltPushingRobotOffTheMap(){
+        bård.spawnRobot(robot1); //Setter spawnpunktet
+        bård.placeRobotAt(0, 8, robot1);
+
+        bård.endPhase();
+
+        assertNull(bård.getRobotAt(0, 8));
+        assertEquals(robot1, bård.getRobotAt(9, 3));
+        assertTrue(robot1.getRemainingLives() < Robot.INITIAL_LIVES);
+    }
+
+    @Test
+    public void robotOnConveyorBeltPushingARobotThatPushesAnotherRobotOffTheMap(){
+        bård.spawnRobot(robot2); //Bare for å sette spawnpunktet
+        bård.placeRobotAt(9, 9, robot2);
+        bård.placeRobotAt(9, 8, robot1);
+
+        bård.endPhase();
+
+        assertEquals(robot1, bård.getRobotAt(9, 9));
+        assertTrue(robot2.getRemainingLives() < Robot.INITIAL_LIVES);
+    }
+
+    @Test
+    public void conveyorBeltPushingBotCannotPushAnotherBotThroughAWall(){
+        bård.placeRobotAt(0, 7, robot1);
+        bård.placeRobotAt(0, 6, robot2);
+
+        bård.endPhase();
+
+        assertEquals(robot1, bård.getRobotAt(0, 7));
+        assertEquals(robot2, bård.getRobotAt(0, 6));
+        assertNull(bård.getRobotAt(0, 5));
+    }
 }

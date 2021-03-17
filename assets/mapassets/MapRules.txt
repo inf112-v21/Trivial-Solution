@@ -1,0 +1,11 @@
+Et kart skal bestå av 3 lag:
+
+Background: bakgrunnstiles som kun er visuelle og ikke har innvirkning på gameplay.
+Middleground: Samlebånd, hull, checkpoints, gears, skiftenøkler.
+Foreground: Vegger, lasere, flagg, spawnpunkter.
+
+Noen ekstra regler for samlebånd:
+- To samlebånd kan ikke peke mot hverandre.
+- To samlebånd kan heller ikke peke mot én felles tredje rute.
+- Samlebånd kan være plassert i sykluser, men da må vi ha flere samlebånd i den syklusen enn vi har roboter på mappet.
+    f. eks: om kartet støtter 4 spillere, må alle sykluser være på 5 eller flere samlebånd.

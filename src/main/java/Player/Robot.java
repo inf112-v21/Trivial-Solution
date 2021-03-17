@@ -1,5 +1,6 @@
 package Player;
 
+import Cards.ICard;
 import GameBoard.Position;
 import Components.Flag;
 import com.badlogic.gdx.graphics.Color;
@@ -27,8 +28,12 @@ public class Robot{
 	private int direction = 0;
 	private Position respawnPoint;
 	private final boolean isControlledByAI;
+	private boolean powerDown;
 
 	private final ArrayList<Flag> flagsVisited = new ArrayList<>();
+	private ArrayList<ICard> allRegisterCards = new ArrayList<ICard>(); //alle 9 kortene som spilleren får utdelt
+	private ArrayList<ICard> registerCards = new ArrayList<ICard>(5); //de 5 kortene som spilleren velger
+	// Det første kortet i listen er kort nr.1 i registeret, og det siste kortet er kort nr.5.
 
 	private static final Robot[] defaultRobots = {
         new Robot("Nebuchadnezzar", Color.DARK_GRAY, true),
@@ -46,6 +51,7 @@ public class Robot{
 		this.name = name;
 		this.color = color;
 		this.isControlledByAI = isControlledByAI;
+		powerDown = false;
 	}
 	
 	public String getName() {
@@ -164,4 +170,59 @@ public class Robot{
         }
         return ret;
     }
+	/**
+	 * Denne metoden "setter" de 9 kortene som registerer får inn.
+	 */
+	public void setAvailableCards(ArrayList<ICard> cards){
+		allRegisterCards = cards;
+	}
+
+	public void resetCards(){ allRegisterCards.clear(); registerCards.clear(); }
+
+	/**
+	 * Denne metoden returnerer de 9 kortene som registeret holder.
+	 * @return
+	 */
+	public ArrayList<ICard> getAvailableCards(){
+		return allRegisterCards;
+	}
+
+	/**
+	 * Denne metoden legger til et og et kort i rekkefølge i registeret utifra hva spilleren velger.
+	 * @param chosenCard
+	 */
+	public void addChosenCard(ICard chosenCard){
+		registerCards.add(chosenCard);
+	}
+
+	public void removeCardFromRegister(ICard unchosenCard){ registerCards.remove(unchosenCard); }
+
+	/**
+	 * @return returnerer maks 5 kort fra registeret, kan returnere færre dersom roboten har mye damage.
+	 */
+	public ArrayList<ICard> getMaxFiveCards(){
+		return registerCards;
+	}
+
+	/**
+	 * Metode for å "cleare" alle kortene i registerne før en nye runde starter.
+	 */
+	public void clearAllCards(){
+		allRegisterCards.clear();
+	}
+
+	/**
+	 * Returnerer "true" hvis roboten har en "powerdown", og "false" hvis den ikke har det.
+	 * @return Tilstanden til roboten
+	 */
+	public Boolean isPowerDownAnnounced(){
+		return powerDown;
+	}
+
+	/**
+	 * Denne metoden endrer powerDown til true dersom knappen for powerDown blir trykket på i GameScreen-en for registeret.
+	 */
+	public void powerDownRobot(){
+		powerDown = true;
+	}
 }

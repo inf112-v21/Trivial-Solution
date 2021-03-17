@@ -7,7 +7,6 @@ import GUIMain.GUI;
 import GUIMain.Textures;
 import GameBoard.GameBoard;
 import GameBoard.Position;
-import Player.Register;
 import Player.Robot;
 
 import com.badlogic.gdx.Game;
@@ -145,9 +144,9 @@ public class GameScreen extends Game implements Screen {
     	renderer.render();
     	
         gameboard.startRound();
-        for (Register reg : gameboard.getRegisters()) {
-            if (reg.getRobot().isControlledByAI()) ai.chooseCards(reg, gameboard.getBoard());
-            else pickCardsFromTerminal(reg);
+        for (Robot bot : gameboard.getBots()) {
+            if (bot.isControlledByAI()) ai.chooseCards(bot, gameboard.getBoard());
+            else pickCardsFromTerminal(bot);
         }
         Timer.schedule(new Timer.Task(){
                            @Override
@@ -166,6 +165,8 @@ public class GameScreen extends Game implements Screen {
     public void render(float v) {
         Gdx.gl.glClearColor(1, 1, 1, 1);
         Gdx.gl.glClear(GL30.GL_COLOR_BUFFER_BIT);
+        Gdx.gl.glViewport( Gdx.graphics.getWidth()-CELL_SIZE,0,Gdx.graphics.getWidth()/2,Gdx.graphics.getHeight() );
+        Gdx.gl.glViewport( 0,0,Gdx.graphics.getWidth()-CELL_SIZE,Gdx.graphics.getHeight() );
         renderer.render();
 //        displayRobots(getPlayerImage1("alive"), getPlayerCell(getPlayerImage("alive")));
 
@@ -177,16 +178,13 @@ public class GameScreen extends Game implements Screen {
         			printMessage(rob1.getRobot().getName()+" is dead ");
         		}
         	}
-
-        Gdx.gl.glViewport( Gdx.graphics.getWidth()-CELL_SIZE,0,Gdx.graphics.getWidth()/2,Gdx.graphics.getHeight() );
-        Gdx.gl.glViewport( 0,0,Gdx.graphics.getWidth()-CELL_SIZE,Gdx.graphics.getHeight() );
          
         delay();
     }
 
-    public static void pickCardsFromTerminal(Register reg){
-        System.out.println("\n" + reg.getRobot());
-        ArrayList<ICard> availableCards = reg.getRegisterCards();
+    public static void pickCardsFromTerminal(Robot bot){
+        System.out.println("\n" + bot);
+        ArrayList<ICard> availableCards = bot.getAvailableCards();
         if (availableCards.size() == 0) throw new IllegalStateException("This register has no available cards");
         System.out.println("Please type a line of ints to choose cards.");
         System.out.println("If you want card number 1, 4, 7, 5, 2 in that order, type '1 4 7 5 2'.\n");
@@ -195,13 +193,13 @@ public class GameScreen extends Game implements Screen {
         }
         System.out.println();
         Scanner in = new Scanner(System.in);
-        for (int i = 0; i < Math.min(reg.getDamageTokens(), 5); i++) {
+        for (int i = 0; i < Math.min(bot.getHP(), 5); i++) {
             int pick = in.nextInt() - 1;
             if (pick < 0 || pick >= availableCards.size()) {
                 System.err.println("Please choose one of the available cards.");
                 i--;
             }
-            else reg.addCardToRegister(availableCards.get(pick));
+            else bot.addChosenCard(availableCards.get(pick));
         }
     }
 

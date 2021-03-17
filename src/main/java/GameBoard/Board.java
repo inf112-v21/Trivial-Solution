@@ -7,9 +7,7 @@ import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.TreeMap;
+import java.util.*;
 
 public class Board {
 
@@ -168,11 +166,61 @@ public class Board {
      * Lasere blir avfyrt, samlebånd går av, roboter blir reparert, etc.
      */
     public void endPhase(){
+        moveConveyorBelts(false);
+        moveConveyorBelts(true);
+        turnGears();
+        repairRobots();
         pickUpFlags();
         updateRespawnPoints();
         fireAllLasers();
         removeDestroyedRobots();
         respawnRobots();
+    }
+
+    /** @param moveAll: om alle samlebånd skal flytte seg, eller kun de blå. */
+    private void moveConveyorBelts(boolean moveAll){
+        ArrayList<Robot> hasBeenPushed = new ArrayList<>();
+        for (Position pos : botPositions.values()) {
+            IComponent comp = midgrid[pos.getY()][pos.getX()];
+            if (comp instanceof ConveyorBelt) {
+                ConveyorBelt belt = (ConveyorBelt) comp;
+                if ((belt.getSpeed() > 1 || moveAll) && !hasBeenPushed.contains(botgrid[pos.getY()][pos.getX()])) {
+                    pushRobotWithConveyorBelt(pos.getX(), pos.getY(), hasBeenPushed, moveAll);
+                }
+            }
+        }
+    }
+
+    /**
+     * Flytter én robot ett skritt med et samlebånd. Om den er på vei til å dytte inn i en annen robot
+     * som også står på et samlebånd, gjør den først et rekursivt kall på den roboten før den flytter seg selv.
+     * Det er kritisk at denne metoden legger til de flyttede robotene i hasBeenPushed, slik at vi
+     * Ikke flytter enkelte roboter flere ganger når vi gjør dette rekursivt.
+     *
+     * Edge case: om n roboter står på en syklus av n samlebånd, får vi uendelig rekursjon.
+     * Dette er grunnen til at ingen maps får lov til å ha sykluser som er mindre eller lik antall roboter de støtter.
+     */
+    private void pushRobotWithConveyorBelt(int oldX, int oldY, ArrayList<Robot> hasBeenPushed, boolean moveAll){
+        Robot bot = botgrid[oldY][oldX];
+        ConveyorBelt belt = (ConveyorBelt) midgrid[oldY][oldX];
+        int nextX = oldX + directionToX(belt.getDirection());
+        int nextY = oldY + directionToY(belt.getDirection());
+        if(!outOfBounds(nextX, nextY)
+                && midgrid[nextY][nextX] instanceof ConveyorBelt
+                && (((ConveyorBelt)midgrid[nextY][nextX]).getSpeed() > 1 || moveAll)
+                && botgrid[nextY][nextX] != null) {
+            pushRobotWithConveyorBelt(nextX, nextY, hasBeenPushed, moveAll);
+        }
+        moveTowards(1, oldX, oldY, belt.getDirection());
+        hasBeenPushed.add(bot);
+    }
+
+    private void turnGears(){
+        // TODO: 14.03.2021
+    }
+
+    private void repairRobots(){
+        // TODO: 14.03.2021
     }
 
     private void updateRespawnPoints(){
@@ -307,7 +355,7 @@ public class Board {
         bot.takeLife();
         robotsWaitingToBeRespawned.addLast(bot);
         botgrid[botPositions.get(bot).getY()][botPositions.get(bot).getX()] = null;
-        botPositions.remove(bot);
+        //botPositions.remove(bot);
     }
 
     public Robot getRobotAt(int x, int y){ return botgrid[y][x]; }
@@ -328,6 +376,7 @@ public class Board {
     }
 
     public void placeRobotAt(int x, int y, Robot bot){
+        if(outOfBounds(x, y)) throw new IllegalArgumentException("Coordinates (" + x + ", " + y + ") are out of bounds.");
         botPositions.put(bot, new Position(x, y));
         botgrid[y][x] = bot;
     }

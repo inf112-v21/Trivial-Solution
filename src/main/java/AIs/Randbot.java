@@ -2,7 +2,7 @@ package AIs;
 
 import GameBoard.Board;
 import Cards.ICard;
-import Player.Register;
+import Player.Robot;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -17,10 +17,10 @@ public class Randbot implements AI{
 
 
     @Override
-    public void chooseCards(Register reg, Board board) {
-        ArrayList<ICard> cards = reg.getRegisterCards();
-        for (int i = 0; i < Math.min(reg.getRobot().getHP(), 5); i++) {
-            reg.addCardToRegister(cards.remove(r.nextInt(cards.size())));
+    public void chooseCards(Robot bot, Board board) {
+        ArrayList<ICard> cards = bot.getAvailableCards();
+        for (int i = 0; i < Math.min(bot.getHP(), 5); i++) {
+            bot.addChosenCard(cards.remove(r.nextInt(cards.size())));
         }
     }
 }

@@ -3,15 +3,12 @@ package GameBoard;
 import Cards.Deck;
 import Cards.ICard;
 import Components.Flag;
-import Player.Register;
 import Player.Robot;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.Iterator;
 
 
 public class GameBoard {
@@ -21,7 +18,7 @@ public class GameBoard {
     private final ArrayList<Flag> flagWinningFormation = new ArrayList<>();
 
     public static final Color[] colours = new Color[]{Color.RED, Color.BLUE, Color.GREEN, Color.YELLOW, Color.PINK, Color.ORANGE, Color.WHITE, Color.BLACK};
-    private final ArrayList<Register> registers = new ArrayList<>();
+    private ArrayList<Robot> bots = new ArrayList<>();
     private final Deck deck = new Deck();
     private Board board;
 
@@ -29,22 +26,22 @@ public class GameBoard {
     public GameBoard(ArrayList<Robot> robots, String mapName){
         board = new Board(mapName);
         numberOfPlayers = robots.size();
+        bots = robots;
         flagWinningFormation.addAll(board.getWinningCombo());
         for(Robot bot : robots){
             board.spawnRobot(bot);
-            registers.add(new Register(bot));
         }
     }
     public void startRound(){
         deck.shuffleDeck();
-        for (Register reg : registers){
+        for (Robot bot : bots){
             ArrayList<ICard> cardlist = new ArrayList<>();
-            for (int amount=0; amount<reg.getDamageTokens()-1; amount++){
+            for (int amount=0; amount<bot.getHP()-1; amount++){
                 ICard card =deck.drawCard();
                 cardlist.add(card);
                 System.out.print(card);
             }
-            reg.setRegisterCards(cardlist);
+            bot.setAvailableCards(cardlist);
         }
     }
 
@@ -54,19 +51,19 @@ public class GameBoard {
      * @param phasenumber Hvilken fase vi er i. OBS! Starter på 0!
      */
     public void phase(int phasenumber){
-        registers.sort(new RegisterComparator(phasenumber));
-        for(Register reg : registers){
-            if (reg.getLifeTokens() > 0 && reg.getMaxFiveCardsFromRegister().size() > phasenumber) {
+        bots.sort(new BotComparator(phasenumber));
+        for(Robot bot : bots){
+            if (bot.hasRemainingLives() && bot.getMaxFiveCards().size() > phasenumber) {
 
-            	ICard card = reg.getMaxFiveCardsFromRegister().get(phasenumber);
-                board.performMove(card, reg.getRobot());
+            	ICard card = bot.getMaxFiveCards().get(phasenumber);
+                board.performMove(card, bot);
             }
         }
         board.endPhase();
     }
 
     public void endRound(){
-        for (Register reg : registers) reg.resetCards();
+        for (Robot bot : bots) bot.resetCards();
     }
 
     /**
@@ -76,8 +73,7 @@ public class GameBoard {
      * @return - Roboten som vant, hvis roboten vant, null ellers
      */
     public Robot hasWon() {
-        for (Register reg : registers) {
-            Robot bot = reg.getRobot();
+        for (Robot bot : bots) {
             if (bot.getVisitedFlags().equals(flagWinningFormation)) {
                 return bot;
             }
@@ -86,17 +82,17 @@ public class GameBoard {
     }
 
     public Board getBoard(){ return board; }
-    public ArrayList<Register> getRegisters(){ return registers; }
+    public ArrayList<Robot> getBots(){ return bots; }
 
    
-    private static class RegisterComparator implements Comparator<Register> {
+    private static class BotComparator implements Comparator<Robot> {
         int phase;
-        public RegisterComparator(int phase){ this.phase = phase; }
+        public BotComparator(int phase){ this.phase = phase; }
 
         /** Obs obs! Sorterer slik at høyeste prioritet kommer først. */
-        public int compare(Register o1, Register o2) {
+        public int compare(Robot o1, Robot o2) {
             try{
-                return o2.getRegisterCards().get(phase).priority() - o1.getRegisterCards().get(phase).priority();
+                return o2.getAvailableCards().get(phase).priority() - o1.getAvailableCards().get(phase).priority();
             }catch (IndexOutOfBoundsException ex){
                 return 0;
             }

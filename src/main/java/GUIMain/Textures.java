@@ -8,8 +8,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import GameBoard.Position;
 
-import java.util.logging.SocketHandler;
-
 public class Textures {
 	private Position pos;
     private SpriteBatch batch;
@@ -32,21 +30,10 @@ public class Textures {
      */
     public void drawRobot() {
         batch.begin();
-        sprite.setColor(robot.getColor());
+        //sprite.setColor(robot.getImage());
         sprite.draw(batch);
         sprite.setPosition(pos.getX() * 300, 900 - (pos.getY() * 300) + 1800);
         batch.end();
-    }
-
-    /**
-     * Denne er hardkodet for å teste hvordan Liv's roboter ser ut på brettet.
-     * For å bruke denne: kommenter ut .getColor()-shittet i .drawRobot(),
-     *  og få sprite i konstruktøren til å kalle på denne metoden istedet.
-     */
-    private TextureRegion tempGetPlayerImage(){
-        Texture t = new Texture("mapassets/robot.png");
-        TextureRegion[][] tmp = new TextureRegion(t).split(300, 300);
-        return tmp[0][0];
     }
 
     private TextureRegion getPlayerImage1(String state) {

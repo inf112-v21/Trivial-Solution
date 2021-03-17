@@ -41,9 +41,9 @@ class GameBoardTest {
         }, cfg);
 
         ArrayList<Robot> robots = new ArrayList<Robot>();
-        robots.add(new Robot("Nebuchadnezzar", BLUE, false));
-        robots.add(new Robot("Andromeda", PINK, false));
-        robots.add(new Robot("Ashurbarnipal", YELLOW, false));
+        robots.add(new Robot("Nebuchadnezzar", false));
+        robots.add(new Robot("Andromeda", false));
+        robots.add(new Robot("Ashurbarnipal",false));
         robotRally = new GameBoard(robots, defaultMapName);
     }
 

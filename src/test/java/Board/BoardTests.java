@@ -58,11 +58,11 @@ public class BoardTests {
     @BeforeEach
     public void resetState(){
         bård = new Board(defaultMapName);
-        robot1 = new Robot("Nebuchadnezzar", Color.BLUE, false);
-        robot2 = new Robot("Alexstrasza", Color.RED, false);
-        robot3 = new Robot("Gilgamesh", Color.YELLOW, false);
-        robot4 = new Robot("Ashurbarnipal", Color.GREEN, false);
-        robot5 = new Robot("Andromeda", Color.PINK, false);
+        robot1 = new Robot("Nebuchadnezzar", false);
+        robot2 = new Robot("Alexstrasza", false);
+        robot3 = new Robot("Gilgamesh", false);
+        robot4 = new Robot("Ashurbarnipal", false);
+        robot5 = new Robot("Andromeda", false);
 
         //Flaggene med de tilhørende posisjonene i griden. posY og PosX Kan ses i tmxfilen.
         Flag1 = bård.getFlagInForgridAt(3,3 );

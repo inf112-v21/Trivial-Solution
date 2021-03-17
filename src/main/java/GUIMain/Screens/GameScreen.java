@@ -21,6 +21,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.tiled.TiledMap;
+import com.badlogic.gdx.maps.tiled.TiledMapTile;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
@@ -31,6 +32,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.util.concurrent.CancellationException;
 
 public class GameScreen extends Game implements Screen {
     private SpriteBatch batch;
@@ -47,33 +49,20 @@ public class GameScreen extends Game implements Screen {
     private int HEIGHT;
     private int WIDTH;
 	private Sprite sprite;
-	private boolean isInDebugMode;
 	private GameBoard gameboard;
 	private ArrayList<Robot> robots;
 	private AI ai = new Randbot();
 	private int currentPhase = 0;
 	private GUI gui;
-	
-	private ArrayList<Textures> playerTextures;
-
-    /**
-     * @param robots robotene som skal være med å spille
-     * @param mapName navnet på filen som mappet skal baseres på. Husk .tmx!
-     */
-	public GameScreen(ArrayList<Robot> robots, String mapName, GUI gui){ this(robots, mapName, gui, false); }
 
     /**
      * @param robots robotene som skal være med å spille
      * @param mapName navnet på filen.
-     * @param isInDebugMode Om denne er true blir vinduet lukket automatisk ved oppstart. Slik at vi kan kjøre testene.
      */
-    public GameScreen(ArrayList<Robot> robots, String mapName, GUI gui, boolean isInDebugMode){
+    public GameScreen(ArrayList<Robot> robots, String mapName, GUI gui){
         this.gui = gui;
-        this.isInDebugMode = isInDebugMode;
         this.mapName = mapName;
         this.robots = robots;
-        playerTextures = new ArrayList<>();
-        
     }
 
     @Override
@@ -87,7 +76,6 @@ public class GameScreen extends Game implements Screen {
     @Override
     public void show() {
         gameboard = new GameBoard(robots, mapName);
-        if (isInDebugMode) Gdx.app.exit(); //Lukker vinduet, om vi startet GameScreen-en kun for å teste ting.
         stage = new Stage();
         Gdx.input.setInputProcessor(stage);
         stage.addCaptureListener(new ClickListener(){
@@ -120,11 +108,6 @@ public class GameScreen extends Game implements Screen {
 
         batch = new SpriteBatch();
         font = new BitmapFont();
-        
-        for(Robot rob: robots) {
-        	Position pos = gameboard.getBoard().getRobotPosition(rob);
-        	playerTextures.add(new Textures(rob, camera, pos)); 
-         }
     }
 
     public void simulateRound2(){
@@ -145,23 +128,27 @@ public class GameScreen extends Game implements Screen {
 
     @Override
     public void render(float v) {
+        batch.begin();
         Gdx.gl.glClearColor(1, 1, 1, 1);
         Gdx.gl.glClear(GL30.GL_COLOR_BUFFER_BIT);
         Gdx.gl.glViewport( Gdx.graphics.getWidth()-CELL_SIZE,0,Gdx.graphics.getWidth()/2,Gdx.graphics.getHeight() );
         Gdx.gl.glViewport( 0,0,Gdx.graphics.getWidth()-CELL_SIZE,Gdx.graphics.getHeight() );
         renderer.render();
-//        displayRobots(getPlayerImage1("alive"), getPlayerCell(getPlayerImage("alive")));
- 
-         for(Textures rob1: playerTextures) {
-        		rob1.drawRobot();
-        		Position p = gameboard.getBoard().getRobotPosition(rob1.getRobot());
-        		rob1.addNewPositions(p);
-        		if(! rob1.getRobot().hasRemainingLives()) {
-        			printMessage(rob1.getRobot().getName()+" is dead ");
-        		}
-        	}
-         
-        delay();
+
+        for (int y = 0; y < gameboard.getHeight(); y++) {
+            for (int x = 0; x < gameboard.getWidth(); x++) {
+                Robot bot = gameboard.getRobotAt(x, gameboard.getHeight() - y - 1);
+                if(bot != null){
+                    Sprite sprt = new Sprite(bot.getImage());
+                    TiledMapTileLayer.Cell cell = new TiledMapTileLayer.Cell();
+                    cell.setTile(new StaticTiledMapTile(sprt));
+                    playerLayer.setCell(x, y, cell);
+                }
+                else playerLayer.setCell(x, y, new TiledMapTileLayer.Cell());
+            }
+        }
+        batch.end();
+        //delay();
     }
 
     public static void pickCardsFromTerminal(Robot bot){
@@ -242,8 +229,6 @@ public class GameScreen extends Game implements Screen {
 	 * @param cell 
 	 */
 	public void displayRobots(TextureRegion t, TiledMapTileLayer.Cell cell) {
-
-
 		for(int y = 0; y < gameboard.getHeight(); y++) {
 			for(int x = 0; x < gameboard.getWidth(); x++) {
                 Robot r = gameboard.getRobotAt(x, y);
@@ -252,7 +237,7 @@ public class GameScreen extends Game implements Screen {
                     batch = new SpriteBatch();
                     sprite = new Sprite(t.getTexture());
 
-                    sprite.setColor(r.getColor());
+                    //sprite.setColor(r.getImage());
                     batch.begin();
                     batch.draw(t.getTexture(), x, HEIGHT - y - 1);
                     sprite.draw(batch);

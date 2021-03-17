@@ -38,7 +38,7 @@ public class RobotTest {
     public static void setUp(){
         allCards = new ArrayList<ICard>();
         registerCards = new ArrayList<ICard>();
-        r = new Robot("testRobot", Color.RED, false);
+        r = new Robot("testRobot", false);
     }
 
     @Test

@@ -13,7 +13,7 @@ public class AITests {
 
     @Test
     public void AIAddsCardsToRegister(){
-        Robot bot = new Robot("Nebuchadnezzar", Color.BLUE, true);
+        Robot bot = new Robot("Nebuchadnezzar", true);
         AI randbot = new Randbot();
         Deck deck = new Deck(false);
         ArrayList availableCards = new ArrayList();

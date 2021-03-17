@@ -4,6 +4,8 @@ import Cards.ICard;
 import GameBoard.Position;
 import Components.Flag;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 import java.util.ArrayList;
 
@@ -13,10 +15,6 @@ import java.util.ArrayList;
  *
  */
 public class Robot{
-
-
-
-
     public static final int INITIAL_HP = 10;
     public static final int INITIAL_LIVES = 3;
 
@@ -24,7 +22,7 @@ public class Robot{
 	private int hp = INITIAL_HP;
 
 	private final String name;
-	private final Color color;
+	private TextureRegion image;
 	private int direction = 0;
 	private Position respawnPoint;
 	private final boolean isControlledByAI;
@@ -34,25 +32,19 @@ public class Robot{
 	private ArrayList<ICard> allRegisterCards = new ArrayList<ICard>(); //alle 9 kortene som spilleren får utdelt
 	private ArrayList<ICard> registerCards = new ArrayList<ICard>(5); //de 5 kortene som spilleren velger
 	// Det første kortet i listen er kort nr.1 i registeret, og det siste kortet er kort nr.5.
-
-	private static final Robot[] defaultRobots = {
-        new Robot("Nebuchadnezzar", Color.DARK_GRAY, true),
-        new Robot("Alexstrasza", Color.RED, true),
-        new Robot("Gilgamesh", Color.YELLOW, true),
-        new Robot("Ashurbarnipal", Color.GREEN, true),
-        new Robot("Andromeda", Color.PINK, true),
-        new Robot("Hephaistion", Color.CYAN, true),
-        new Robot("Styxifus", Color.BROWN, true),
-        new Robot("Promotheus", Color.GRAY, true)
-    };
 	
-	
-	public Robot(String name, Color color, boolean isControlledByAI){
+	public Robot(String name, int design, boolean isControlledByAI){
 		this.name = name;
-		this.color = color;
 		this.isControlledByAI = isControlledByAI;
+		this.image = new TextureRegion(new Texture("Robotdesigns/robots.png")).split(300, 300)[0][design];
 		powerDown = false;
 	}
+
+	public Robot(String name, boolean isControlledByAI){
+        this.name = name;
+        this.isControlledByAI = isControlledByAI;
+        powerDown = false;
+    }
 	
 	public String getName() {
 		return name;
@@ -139,8 +131,9 @@ public class Robot{
 	    direction = Math.floorMod(direction + degree, 4);
     }
 
-	public Color getColor() {
-		return color;
+	public TextureRegion getImage() {
+	    if (image == null) throw new IllegalStateException("This robot has no image. If it should have one, please use the other Robot constructor.");
+		return image;
 	}
 
 	public boolean isControlledByAI(){return isControlledByAI; }
@@ -163,6 +156,19 @@ public class Robot{
 
 	public static ArrayList<Robot> getDefaultRobots(int n){
 	    if (n < 0 || n > 8) throw new IllegalArgumentException("Expecteded >0 and <9 robots, but was " + n);
+        //Denne her kunne vært en statisk feltvariabel, men da kan vi ikke kjøre tester som bruker roboter uten at denne blir ærklert,
+        // og om GUI-en ikke har startet opp ennå får vi da feil når vi laster inn bildene.
+        final Robot[] defaultRobots = {
+                // TODO: 17.03.2021 Når Liv har tegnet flere enn 3 roboter må vi endre disse int-ene
+                new Robot("Nebuchadnezzar", 0, true),
+                new Robot("Alexstrasza", 1, true),
+                new Robot("Gilgamesh", 2, true),
+                new Robot("Ashurbarnipal", 0, true),
+                new Robot("Andromeda", 1, true),
+                new Robot("Hephaistion", 2, true),
+                new Robot("Styxifus", 0, true),
+                new Robot("Promotheus", 1, true)
+        };
         ArrayList<Robot> ret = new ArrayList<>();
         for (int i = 0; i < n; i++){
             defaultRobots[i].resetState();

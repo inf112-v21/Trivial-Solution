@@ -130,13 +130,14 @@ public class GameScreen extends Game implements Screen {
     }
     int i = 0;
     public void round(){
-        gameboard.phase(i);
-        renderer.render();
-        i++;
         if(i == 4){
             gameboard.endRound();
             i = 0;
+            return;
         }
+        gameboard.phase(i);
+        renderer.render();
+        i++;
     }
 
     public void simulateRound(){
@@ -151,11 +152,12 @@ public class GameScreen extends Game implements Screen {
         Timer.schedule(new Timer.Task(){
                            @Override
                            public void run() {
+                               System.out.println("One round done");
                                round();
                            }
                        }
                 , 1        //    (delay)
-                , 0       //    (seconds)
+                , 1       //    (seconds)
                 , 5
         );
     }

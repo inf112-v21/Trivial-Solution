@@ -142,6 +142,9 @@ public class GameScreen extends Game implements Screen {
                     Sprite sprt = new Sprite(bot.getImage());
                     TiledMapTileLayer.Cell cell = new TiledMapTileLayer.Cell();
                     cell.setTile(new StaticTiledMapTile(sprt));
+
+                    //Vi regner positiv rotasjon som med klokken, men libgdx sier det er mot klokken. Derfor tar vi 4-θ.
+                    cell.setRotation(4 - bot.getDirection());
                     playerLayer.setCell(x, y, cell);
                 }
                 else playerLayer.setCell(x, y, new TiledMapTileLayer.Cell());

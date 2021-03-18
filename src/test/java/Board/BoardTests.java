@@ -8,7 +8,6 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -364,7 +363,7 @@ public class BoardTests {
         bård.performMove(new ProgramCard(1, 0, 90, new Texture(Gdx.files.internal("Cards/1 Red HULK X90/090 MOVE1 1Red 3.png"))), robot1);
         bård.endPhase();
 
-        assertTrue(robot1.getRemainingLives() < Robot.INITIAL_LIVES);
+        assertTrue(robot1.getLives() < Robot.INITIAL_LIVES);
         assertTrue(robot1.getHP() < Robot.INITIAL_HP);
     }
 
@@ -525,7 +524,7 @@ public class BoardTests {
 
         assertNull(bård.getRobotAt(8, 9));
         assertNull(bård.getRobotAt(7, 9));
-        assertTrue(robot1.getRemainingLives() < Robot.INITIAL_LIVES);
+        assertTrue(robot1.getLives() < Robot.INITIAL_LIVES);
     }
 
     @Test
@@ -584,7 +583,7 @@ public class BoardTests {
 
         assertNull(bård.getRobotAt(0, 8));
         assertEquals(robot1, bård.getRobotAt(9, 3));
-        assertTrue(robot1.getRemainingLives() < Robot.INITIAL_LIVES);
+        assertTrue(robot1.getLives() < Robot.INITIAL_LIVES);
     }
 
     @Test
@@ -596,7 +595,7 @@ public class BoardTests {
         bård.endPhase();
 
         assertEquals(robot1, bård.getRobotAt(9, 9));
-        assertTrue(robot2.getRemainingLives() < Robot.INITIAL_LIVES);
+        assertTrue(robot2.getLives() < Robot.INITIAL_LIVES);
     }
 
     @Test

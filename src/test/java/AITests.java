@@ -2,7 +2,6 @@ import AIs.AI;
 import AIs.Randbot;
 import Cards.Deck;
 import Player.Robot;
-import com.badlogic.gdx.graphics.Color;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -21,11 +20,11 @@ public class AITests {
             availableCards.add(deck.drawCard());
         }
         bot.setAvailableCards(availableCards);
-        assertTrue(bot.getMaxFiveCards().size() == 0);
+        assertTrue(bot.getChosenCards().size() == 0);
 
         randbot.chooseCards(bot, null);
 
-        assertTrue(bot.getMaxFiveCards().size() > 0);
+        assertTrue(bot.getChosenCards().size() > 0);
     }
 
 

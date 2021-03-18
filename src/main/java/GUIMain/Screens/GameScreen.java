@@ -161,7 +161,7 @@ public class GameScreen extends Game implements Screen {
                 System.err.println("Please choose one of the available cards.");
                 i--;
             }
-            else bot.addChosenCard(availableCards.get(pick));
+            else bot.chooseCard(availableCards.get(pick));
         }
     }
     

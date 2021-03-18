@@ -50,9 +50,9 @@ public class GameBoard {
     public void phase(int phasenumber){
         bots.sort(new BotComparator(phasenumber));
         for(Robot bot : bots){
-            if (bot.hasRemainingLives() && bot.getMaxFiveCards().size() > phasenumber) {
+            if (bot.hasRemainingLives() && bot.getChosenCards().size() > phasenumber) {
 
-            	ICard card = bot.getMaxFiveCards().get(phasenumber);
+            	ICard card = bot.getChosenCards().get(phasenumber);
                 board.performMove(card, bot);
             }
         }

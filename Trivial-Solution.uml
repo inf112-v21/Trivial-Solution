@@ -19,13 +19,13 @@
     <node x="1053.0" y="427.0">Components.Hole</node>
     <node x="988.0" y="1916.0">Cards.Deck</node>
     <node x="1446.5" y="0.0">Components.IComponent</node>
-    <node x="1090.0" y="1112.0">Register.registerTest</node>
+    <node x="1090.0" y="1112.0">Robot.RobotTest</node>
     <node x="1472.0" y="450.5">Components.SpawnPoint</node>
     <node x="228.0" y="1916.0">Components.FlagTest</node>
     <node x="1952.0" y="1916.0">Components.ComponentFactory</node>
     <node x="872.0" y="1282.0">Cards.ProgramCard</node>
     <node x="1620.0" y="450.5">Components.CheckPoint</node>
-    <node x="1525.0" y="1112.0">Player.Register</node>
+    <node x="1525.0" y="1112.0">Player.Robot</node>
     <node x="1696.0" y="1916.0">GameBoard.GameBoard.RegisterComparator</node>
     <node x="872.0" y="1112.0">Cards.ICard</node>
     <node x="361.0" y="1112.0">Player.Robot</node>

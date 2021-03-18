@@ -63,6 +63,25 @@ public class GameScreen extends Game implements Screen {
         this.gui = gui;
         this.mapName = mapName;
         this.robots = robots;
+        TmxMapLoader tmx = new TmxMapLoader();
+        map = tmx.load(mapName);
+
+        backgroundLayer = (TiledMapTileLayer) map.getLayers().get("Background");
+        playerLayer = (TiledMapTileLayer) map.getLayers().get("Robot");
+
+        HEIGHT = backgroundLayer.getHeight();
+        WIDTH = backgroundLayer.getWidth();
+
+
+
+        camera = new OrthographicCamera();
+        camera.setToOrtho(false, WIDTH*CELL_SIZE, HEIGHT*315);
+
+        camera.position.x = CELL_SIZE * WIDTH / 2;
+        camera.update();
+
+        renderer = new OrthogonalTiledMapRenderer(map, 1);
+        renderer.setView(camera);
     }
 
     @Override
@@ -86,25 +105,6 @@ public class GameScreen extends Game implements Screen {
             }
         });
 
-        TmxMapLoader tmx = new TmxMapLoader();
-        map = tmx.load(mapName);
-
-        backgroundLayer = (TiledMapTileLayer) map.getLayers().get("Background");
-        playerLayer = (TiledMapTileLayer) map.getLayers().get("Robot");
-
-        HEIGHT = backgroundLayer.getHeight();
-        WIDTH = backgroundLayer.getWidth();
-
-        
-        
-        camera = new OrthographicCamera();
-        camera.setToOrtho(false, WIDTH*CELL_SIZE, HEIGHT*315);
-        
-        camera.position.x = CELL_SIZE * WIDTH / 2;
-        camera.update();
-
-        renderer = new OrthogonalTiledMapRenderer(map, 1);
-        renderer.setView(camera);
 
         batch = new SpriteBatch();
         font = new BitmapFont();

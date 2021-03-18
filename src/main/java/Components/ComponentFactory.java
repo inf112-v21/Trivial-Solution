@@ -29,7 +29,7 @@ public class ComponentFactory {
 
             //Misc.
             case 5:
-                return new Floor(5);
+                return null; //Gulv, har ingen innvirkning på gameplay
             case 6:
                 return new Hole(6);
             case 7:

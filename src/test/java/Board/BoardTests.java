@@ -239,6 +239,16 @@ public class BoardTests {
     }
 
     @Test
+    public void laserFiresInCorrectDirection(){
+        int startingHP = robot1.getHP();
+        bård.placeRobotAt(5, 5, robot1);
+
+        bård.endPhase();
+
+        assertNotEquals(startingHP, robot1.getHP());
+    }
+
+    @Test
     public void doubleLaserYieldsDoubleDamage(){
         int startingHP = robot1.getHP();
         bård.placeRobotAt(7, 6, robot1);

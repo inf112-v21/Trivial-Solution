@@ -57,7 +57,7 @@ public class RobotTest {
     @Test
     void registerCanClearAllCardsBeforeEachNewGameRound(){
         //clear register-list
-        r.clearAllCards();
+        r.resetCards();
 
         assertTrue(r.getAvailableCards().isEmpty());
     }

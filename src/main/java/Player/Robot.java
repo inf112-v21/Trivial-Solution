@@ -205,6 +205,6 @@ public class Robot{
 	 * Denne metoden endrer powerDown til true dersom knappen for powerDown blir trykket på i GameScreen-en for registeret.
 	 */
 	public void togglePowerDown(){
-		powerDown = true;
+		powerDown = !powerDown;
 	}
 }

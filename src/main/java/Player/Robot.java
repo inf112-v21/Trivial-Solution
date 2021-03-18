@@ -158,15 +158,15 @@ public class Robot{
         //Denne her kunne vært en statisk feltvariabel, men da kan vi ikke kjøre tester som bruker roboter uten at denne blir ærklert,
         // og om GUI-en ikke har startet opp ennå får vi da feil når vi laster inn bildene.
         final Robot[] defaultRobots = {
-                // TODO: 17.03.2021 Når Liv har tegnet flere enn 3 roboter må vi endre disse int-ene
+                // TODO: 18.03.2021 Finn på en måte å sørge for at vi får tilfeldige (men fortsatt unike) design for hver robot. Så vi ikke spiller mot de samme hver gang.
                 new Robot("Nebuchadnezzar", 0, true),
                 new Robot("Alexstrasza", 1, true),
                 new Robot("Gilgamesh", 2, true),
-                new Robot("Ashurbarnipal", 0, true),
-                new Robot("Andromeda", 1, true),
-                new Robot("Hephaistion", 2, true),
-                new Robot("Styxifus", 0, true),
-                new Robot("Promotheus", 1, true)
+                new Robot("Ashurbarnipal", 7, true),
+                new Robot("Andromeda", 4, true),
+                new Robot("Hephaistion", 5, true),
+                new Robot("Styxifus", 6, true),
+                new Robot("Promotheus", 3, true)
         };
         ArrayList<Robot> ret = new ArrayList<>();
         for (int i = 0; i < n; i++){

@@ -84,7 +84,7 @@ public class CreateGameScreen implements Screen {
                     return false;
                 }
                 ArrayList<Robot> robots = Robot.getDefaultRobots(numberOfRobots.getSelected()-1); // -1, siden spilleren inngår i disse robotene
-                robots.add(new Robot(textField.getText(), 2, false));
+                robots.add(new Robot(textField.getText(), 3, false));
                 String map = MAP_LOCATION + "/" + choosemapbox.getSelected() + ".tmx";
                 gui.setScreen(new GameLoadingScreen(robots, map, gui));
 

@@ -62,8 +62,6 @@ public class GameScreen extends Game implements Screen {
         HEIGHT = backgroundLayer.getHeight();
         WIDTH = backgroundLayer.getWidth();
 
-
-
         camera = new OrthographicCamera();
         camera.setToOrtho(false, WIDTH*CELL_SIZE, HEIGHT*315);
 
@@ -119,7 +117,7 @@ public class GameScreen extends Game implements Screen {
     @Override
     public void render(float v) {
         batch.begin();
-        Gdx.gl.glClearColor(1, 1, 1, 1);
+        Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL30.GL_COLOR_BUFFER_BIT);
         Gdx.gl.glViewport( Gdx.graphics.getWidth()-CELL_SIZE,0,Gdx.graphics.getWidth()/2,Gdx.graphics.getHeight() );
         Gdx.gl.glViewport( 0,0,Gdx.graphics.getWidth()-CELL_SIZE,Gdx.graphics.getHeight() );

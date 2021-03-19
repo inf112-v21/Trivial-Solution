@@ -1,1 +1,57 @@
-sa
+Møtetid: 10:15 - 12:00
+Alle var tilstede i møtet 
+
+- Vi diskuterte rundt om hvordan vi skulle sette opp multiplayer mellom forksjellige
+  host
+- Jobbet videre med GUI
+- Begynte på oblig-3
+-----------------------------------  
+Oblig-3 (incomplete):
+	Deloppgave 1
+	2 Hvordan fungerer rollene i teamet? Trenger dere å oppdatere hvem som er teamlead eller kundekontakt?
+		- Ganske fint
+	
+	3 Er det noen erfaringer enten team-messig eller mtp prosjektmetodikk som er verdt å nevne? Synes teamet at de valgene dere har tatt er gode? 
+  	  Hvis ikke, hva kan dere gjøre annerledes for å forbedre måten teamet fungerer på?
+   		- Det er verdt å nevne at vårt prosjektmetodikk følger en strukturet plan som finnes på issues-siden . Teamet synes prosjektmetodikk fungert veldig bra
+	
+	4 Gjør et kort retrospektiv hvor dere vurderer hva dere har klart til nå, og hva som kan forbedres. Dette skal handle om prosjektstruktur, ikke kode. 
+	  Dere kan selvsagt diskutere kode, men dette handler ikke om feilretting, men om hvordan man jobber og kommuniserer.   
+	  	-  
+	5 Bli enige om maks tre forbedringspunkter fra retrospektivet, som skal følges opp under neste sprint.
+		-  
+		- 
+		- 
+	6 Forklar kort hvordan dere har prioritert oppgavene fremover. Legg ved skjermdump av project board ved innlevering
+		- Prioritering av oppgaver følger fra brukerhistorien 
+		- 
+	7 Hvordan fungerer gruppedynamikken og kommunikasjonen?
+		- God samarbeid og kommunikasjon i teamet!
+	
+	Deloppgave 2
+	1 Oppdater hvilke krav dere har prioritert, hvor langt dere har kommet og hva dere har gjort siden forrige gang. Er dere kommet forbi MVP? Forklar hvordan dere prioriterer ny funksjonalitet.
+		- laser. Funnet at de fungerte som de skulle! 
+		- Vise spilleren sin kort på skjermen
+	2 Oppdater hvilke krav dere har prioritert, hvor langt dere har kommet og hva dere har gjort siden forrige gang. Er dere kommet forbi MVP? Forklar hvordan dere prioriterer ny funksjonalitet.
+		- 
+	3 Dersom dere har oppgaver som dere skal til å starte med, hvor dere har oversikt over både brukerhistorie, akseptansekriterier og arbeidsoppgaver, kan dere ta med disse i innleveringen også.
+		- 
+	4 Husk å skrive hvilke bugs som finnes i de kravene dere har utført (dersom det finnes bugs).
+		-  
+	5  Kravlista er lang, men det er ikke nødvendig å levere på alle kravene hvis det ikke er realistisk. Det er viktigere at de oppgavene som er utført holder høy kvalitet. Utførte oppgaver skal være ferdige.
+		- 
+	Deloppgave 3
+	1 Dokumentere hvordan prosjektet bygger, testes og kjøres
+		- 
+	2 Prosjektet skal kunne bygge, testes og kjøres på Linux, Windows og OSX
+		- 
+	3 Lever klassediagram
+		- 
+	4 Kodekvalitet og testdekning vektlegges. Merk at testene dere skriver skal brukes i produktet. Det kan være smart å skrive manuelle tester for å teste det som er grafisk.
+		- 
+	5 Lever beskrivelser ved manuelt tester av hvordan testen foregår, slik at gruppeleder kan utføre testen selv.
+		- 
+	6 Under vurdering vil det vektlegges at alle bidrar til kodebasen. Hvis det er stor forskjell i hvem som committer, må dere legge ved en kort forklaring for hvorfor det er sånn. Husk å committe alt. (Også designfiler)
+		- forksjelligen på antall commiter av hver person skyldes forskelige på faktorer ...
+	7 Prosjektpresentasjonen teller ved denne leveransen. Dere blir vurdert på demo av spillet, en beskrivelse av det viktigste dere har lært, hvilke overraskelser dere har hatt og presentasjon av prosjektmetodikk.
+		- 

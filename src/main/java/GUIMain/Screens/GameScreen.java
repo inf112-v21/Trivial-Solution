@@ -88,13 +88,15 @@ public class GameScreen extends Game implements Screen {
         gameboard = new GameBoard(robots, mapName);
         Stage stage = new Stage();
         Gdx.input.setInputProcessor(stage);
-        stage.addCaptureListener(new ClickListener(){
+        /*stage.addCaptureListener(new ClickListener(){
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 simulateRound();
                 return true;
             }
         });
+
+         */
 
 
         batch = new SpriteBatch();
@@ -134,15 +136,29 @@ public class GameScreen extends Game implements Screen {
                 , 5
         );
     }
-
+    private boolean hasStartedYet = false;
+    private float timeSinceLastUpdate = -1;
+    private static final float TIME_DELTA = 2;
     @Override
     public void render(float v) {
+        timeSinceLastUpdate += v;
         batch.begin();
         Gdx.gl.glClearColor(1, 1, 1, 1);
         Gdx.gl.glClear(GL30.GL_COLOR_BUFFER_BIT);
         Gdx.gl.glViewport( Gdx.graphics.getWidth()-CELL_SIZE,0,Gdx.graphics.getWidth()/2,Gdx.graphics.getHeight() );
         Gdx.gl.glViewport( 0,0,Gdx.graphics.getWidth()-CELL_SIZE,Gdx.graphics.getHeight() );
         renderer.render();
+        batch.end();
+
+        if(! hasStartedYet) {
+            hasStartedYet = true;
+            return;
+        }
+
+        if(timeSinceLastUpdate < TIME_DELTA) return;
+        timeSinceLastUpdate = 0;
+        simulate();
+
 
         for (int y = 0; y < gameboard.getHeight(); y++) {
             for (int x = 0; x < gameboard.getWidth(); x++) {
@@ -159,13 +175,31 @@ public class GameScreen extends Game implements Screen {
                 else playerLayer.setCell(x, y, new TiledMapTileLayer.Cell());
             }
         }
-        batch.end();
-        //delay();
-//        displayRobots(getPlayerImage1("alive"), getPlayerCell(getPlayerImage("alive")));
+    }
 
-
-
-        delay();
+    private int phase = 0;
+    private int move = 0;
+    private void simulate(){
+        if(phase + move == 0){
+            gameboard.startRound();
+            for (Robot bot : gameboard.getBots()) {
+                if (bot.isControlledByAI()) ai.chooseCards(bot, gameboard.getBoard());
+                else pickCardsFromTerminal(bot);
+            }
+        }
+        if (move == gameboard.getBots().size()){
+            move = 0;
+            phase++;
+            gameboard.endPhase();
+            return;
+        }
+        if(phase == 5){
+            phase = 0;
+            gameboard.endRound();
+            return;
+        }
+        gameboard.moveRobot(phase, move);
+        move++;
     }
 
     public static void pickCardsFromTerminal(Robot bot){

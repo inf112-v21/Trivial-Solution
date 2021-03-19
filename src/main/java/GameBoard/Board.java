@@ -6,7 +6,6 @@ import Player.Robot;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
-import com.badlogic.gdx.math.Vector2;
 
 import java.util.*;
 
@@ -90,6 +89,9 @@ public class Board {
      * @param bot Roboten som skal flyttes
      */
     public void performMove(ICard card, Robot bot){
+        if (bot == null) throw new NullPointerException("The bot is null.");
+        if (robotsWaitingToBeRespawned.contains(bot)) return; //Botten kan ikke flytte, den er død
+        if ( ! botPositions.containsKey(bot)) throw new IllegalArgumentException("The bot is not on the board.");
         if(card.getRotation() != 0){
             bot.rotate(card.getRotation());
             if (card.getDistance() != 0) throw new IllegalArgumentException("A card has to be either a moving card, or a rotation card. This one is both!");
@@ -424,4 +426,15 @@ public class Board {
     }
 
     public ArrayList<Flag> getWinningCombo() { return flagWinningFormation;}
+    
+    public Position getRobotPosition(Robot r) {
+    	if(this.botPositions.containsKey(r)) {
+    		return botPositions.get(r);
+    	}
+    	return null;
+    }
+
+    public int getNumberOfRobots(){
+        return botPositions.size();
+    }
 }

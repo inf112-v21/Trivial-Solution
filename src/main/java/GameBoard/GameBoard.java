@@ -59,6 +59,14 @@ public class GameBoard {
         board.endPhase();
     }
 
+    public void moveRobot(int phase, int botIndex){
+        if(botIndex == 0) bots.sort(new BotComparator(phase));
+        Robot botToMove = bots.get(botIndex);
+        if (botToMove.hasRemainingLives() && botToMove.getChosenCards().size() > phase){
+            board.performMove(botToMove.getChosenCards().get(phase), botToMove);
+        }
+    }
+
     public void endRound(){
         for (Robot bot : bots) bot.resetCards();
     }
@@ -79,6 +87,8 @@ public class GameBoard {
     }
 
     public Board getBoard(){ return board; }
+    public void endPhase(){ board.endPhase(); }
+
     public ArrayList<Robot> getBots(){ return bots; }
 
    

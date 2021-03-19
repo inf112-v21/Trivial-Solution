@@ -6,6 +6,7 @@ import Player.Robot;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
+import com.badlogic.gdx.math.Vector2;
 
 import java.util.*;
 
@@ -17,7 +18,6 @@ public class Board {
 
     //Grids. Disse må initialiseres i readFromTMX().
     private Robot[][]      botgrid;
-    private IComponent[][] backgrid;
     private IComponent[][] midgrid;
     private IComponent[][] forgrid;
 
@@ -57,14 +57,12 @@ public class Board {
         WIDTH  = background.getWidth();
 
         botgrid  = new Robot     [HEIGHT][WIDTH];
-        backgrid = new IComponent[HEIGHT][WIDTH];
         midgrid  = new IComponent[HEIGHT][WIDTH];
         forgrid  = new IComponent[HEIGHT][WIDTH];
 
         ArrayList<Object[]> newSpawnPositions = new ArrayList<>(8);
         for (int y = 0; y < background.getHeight(); y++) {
             for (int x = 0; x < background.getWidth(); x++) {
-                backgrid[HEIGHT-1-y][x] = ComponentFactory.spawnComponent(background.getCell(x, y));
                 midgrid[HEIGHT-1-y][x] = ComponentFactory.spawnComponent(middleground.getCell(x, y));
 
                 IComponent forcomp = ComponentFactory.spawnComponent(foreground.getCell(x, y));
@@ -338,13 +336,13 @@ public class Board {
             return;
         }
 
-        if(midgrid[y][x] instanceof Wall && !((Wall) midgrid[y][x]).canLeaveInDirection(dir)) return;
+        if(forgrid[y][x] instanceof Wall && !((Wall) forgrid[y][x]).canLeaveInDirection(dir)) return;
 
         int nextX = x + directionToX(dir);
         int nextY = y + directionToY(dir);
 
         if (outOfBounds(nextX, nextY)) return;
-        if (midgrid[nextY][nextX] instanceof Wall && !((Wall) midgrid[nextY][nextX]).canGoToInDirection(dir)) return;
+        if (forgrid[nextY][nextX] instanceof Wall && !((Wall) forgrid[nextY][nextX]).canGoToInDirection(dir)) return;
 
         fireOneLaser(nextX, nextY, dir, isDoubleLaser, false);
     }
@@ -355,7 +353,6 @@ public class Board {
         bot.takeLife();
         robotsWaitingToBeRespawned.addLast(bot);
         botgrid[botPositions.get(bot).getY()][botPositions.get(bot).getX()] = null;
-        //botPositions.remove(bot);
     }
 
     public Robot getRobotAt(int x, int y){ return botgrid[y][x]; }
@@ -427,11 +424,4 @@ public class Board {
     }
 
     public ArrayList<Flag> getWinningCombo() { return flagWinningFormation;}
-    
-    public Position getRobotPosition(Robot r) {
-    	if(this.botPositions.containsKey(r)) {
-    		return botPositions.get(r);
-    	}
-    	return null;
-    }
 }

@@ -8,7 +8,6 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -58,11 +57,11 @@ public class BoardTests {
     @BeforeEach
     public void resetState(){
         bård = new Board(defaultMapName);
-        robot1 = new Robot("Nebuchadnezzar", Color.BLUE, false);
-        robot2 = new Robot("Alexstrasza", Color.RED, false);
-        robot3 = new Robot("Gilgamesh", Color.YELLOW, false);
-        robot4 = new Robot("Ashurbarnipal", Color.GREEN, false);
-        robot5 = new Robot("Andromeda", Color.PINK, false);
+        robot1 = new Robot("Nebuchadnezzar", false);
+        robot2 = new Robot("Alexstrasza", false);
+        robot3 = new Robot("Gilgamesh", false);
+        robot4 = new Robot("Ashurbarnipal", false);
+        robot5 = new Robot("Andromeda", false);
 
         //Flaggene med de tilhørende posisjonene i griden. posY og PosX Kan ses i tmxfilen.
         Flag1 = bård.getFlagInForgridAt(3,3 );
@@ -239,6 +238,16 @@ public class BoardTests {
     }
 
     @Test
+    public void laserFiresInCorrectDirection(){
+        int startingHP = robot1.getHP();
+        bård.placeRobotAt(5, 5, robot1);
+
+        bård.endPhase();
+
+        assertNotEquals(startingHP, robot1.getHP());
+    }
+
+    @Test
     public void doubleLaserYieldsDoubleDamage(){
         int startingHP = robot1.getHP();
         bård.placeRobotAt(7, 6, robot1);
@@ -354,7 +363,7 @@ public class BoardTests {
         bård.performMove(new ProgramCard(1, 0, 90, new Texture(Gdx.files.internal("Cards/1 Red HULK X90/090 MOVE1 1Red 3.png"))), robot1);
         bård.endPhase();
 
-        assertTrue(robot1.getRemainingLives() < Robot.INITIAL_LIVES);
+        assertTrue(robot1.getLives() < Robot.INITIAL_LIVES);
         assertTrue(robot1.getHP() < Robot.INITIAL_HP);
     }
 
@@ -515,7 +524,7 @@ public class BoardTests {
 
         assertNull(bård.getRobotAt(8, 9));
         assertNull(bård.getRobotAt(7, 9));
-        assertTrue(robot1.getRemainingLives() < Robot.INITIAL_LIVES);
+        assertTrue(robot1.getLives() < Robot.INITIAL_LIVES);
     }
 
     @Test
@@ -574,7 +583,7 @@ public class BoardTests {
 
         assertNull(bård.getRobotAt(0, 8));
         assertEquals(robot1, bård.getRobotAt(9, 3));
-        assertTrue(robot1.getRemainingLives() < Robot.INITIAL_LIVES);
+        assertTrue(robot1.getLives() < Robot.INITIAL_LIVES);
     }
 
     @Test
@@ -586,7 +595,7 @@ public class BoardTests {
         bård.endPhase();
 
         assertEquals(robot1, bård.getRobotAt(9, 9));
-        assertTrue(robot2.getRemainingLives() < Robot.INITIAL_LIVES);
+        assertTrue(robot2.getLives() < Robot.INITIAL_LIVES);
     }
 
     @Test

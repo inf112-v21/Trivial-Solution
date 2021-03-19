@@ -1,0 +1,17 @@
+Møtereferat 17.03.21
+
+Møte handler om å gå igjennom retteskjema fra forrige oblig, diskutere multiplayer.
+
+Alle i gruppen er innkalt.
+Alle i gruppen er tilstede ved møte.
+møtet varer fra kl.12 til kl.14 via discord delgruppe kanal.
+
+Saker som skal diskuteres:
+Bruke cryonet til multiplayer.
+
+Hva vi har gjort:
+Refarktor av robot og register klasse til samme klasse (Robot)
+
+Hva vi skal jobbe videre med:
+GUI fremvisning av kort i spillet.
+Multiplayer

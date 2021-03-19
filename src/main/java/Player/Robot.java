@@ -3,7 +3,8 @@ package Player;
 import Cards.ICard;
 import GameBoard.Position;
 import Components.Flag;
-import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 import java.util.ArrayList;
 
@@ -13,10 +14,6 @@ import java.util.ArrayList;
  *
  */
 public class Robot{
-
-
-
-
     public static final int INITIAL_HP = 10;
     public static final int INITIAL_LIVES = 3;
 
@@ -24,46 +21,38 @@ public class Robot{
 	private int hp = INITIAL_HP;
 
 	private final String name;
-	private final Color color;
+	private TextureRegion image;
 	private int direction = 0;
 	private Position respawnPoint;
 	private final boolean isControlledByAI;
 	private boolean powerDown;
 
 	private final ArrayList<Flag> flagsVisited = new ArrayList<>();
-	private ArrayList<ICard> allRegisterCards = new ArrayList<ICard>(); //alle 9 kortene som spilleren får utdelt
-	private ArrayList<ICard> registerCards = new ArrayList<ICard>(5); //de 5 kortene som spilleren velger
-	// Det første kortet i listen er kort nr.1 i registeret, og det siste kortet er kort nr.5.
-
-	private static final Robot[] defaultRobots = {
-        new Robot("Nebuchadnezzar", Color.DARK_GRAY, true),
-        new Robot("Alexstrasza", Color.RED, true),
-        new Robot("Gilgamesh", Color.YELLOW, true),
-        new Robot("Ashurbarnipal", Color.GREEN, true),
-        new Robot("Andromeda", Color.PINK, true),
-        new Robot("Hephaistion", Color.CYAN, true),
-        new Robot("Styxifus", Color.BROWN, true),
-        new Robot("Promotheus", Color.GRAY, true)
-    };
+	private ArrayList<ICard> availableCards = new ArrayList<ICard>(); //alle kortene som ble utdelt
+	private ArrayList<ICard> chosenCards = new ArrayList<ICard>(5); //De valgte kortene, rekkefølgen er samme som den spilleren valgte dem
 	
-	
-	public Robot(String name, Color color, boolean isControlledByAI){
+	public Robot(String name, int design, boolean isControlledByAI){
 		this.name = name;
-		this.color = color;
 		this.isControlledByAI = isControlledByAI;
+		this.image = new TextureRegion(new Texture("Robotdesigns/robots.png")).split(300, 300)[0][design];
 		powerDown = false;
 	}
+
+	public Robot(String name, boolean isControlledByAI){
+        this.name = name;
+        this.isControlledByAI = isControlledByAI;
+        powerDown = false;
+    }
 	
 	public String getName() {
 		return name;
 	}
-	
-	
+
 	/**
 	 * 
 	 * @return the life's left for this robot
 	 */
-	public int getRemainingLives() {
+	public int getLives() {
 		return lives;
 	}
 	
@@ -75,14 +64,10 @@ public class Robot{
 		return hp;
 	}
 
-
-	
 	/**
 	 * apply damage to this robot
 	 */
-	public void applyDamage(int dmg) {
-		hp -= dmg;
-	}
+	public void applyDamage(int dmg) { hp -= dmg; }
 
 	public void takeLife(){ lives--; }
 	
@@ -139,21 +124,12 @@ public class Robot{
 	    direction = Math.floorMod(direction + degree, 4);
     }
 
-	public Color getColor() {
-		return color;
+	public TextureRegion getImage() {
+	    if (image == null) throw new IllegalStateException("This robot has no image. If it should have one, please use the other Robot constructor instead.");
+		return image;
 	}
 
 	public boolean isControlledByAI(){return isControlledByAI; }
-	
-	public String getPlayerState() {
-		if(lives <= 0) {
-			return "dead";
-		}
-		if(this.getVisitedFlags().size() >= 3) {
-			return "victory";
-		}
-		return "alive";
-	}
 
 	public void resetState(){
 	    hp = INITIAL_HP;
@@ -163,6 +139,19 @@ public class Robot{
 
 	public static ArrayList<Robot> getDefaultRobots(int n){
 	    if (n < 0 || n > 8) throw new IllegalArgumentException("Expecteded >0 and <9 robots, but was " + n);
+        //Denne her kunne vært en statisk feltvariabel, men da kan vi ikke kjøre tester som bruker roboter uten at denne blir ærklert,
+        // og om GUI-en ikke har startet opp ennå får vi da feil når vi laster inn bildene.
+        final Robot[] defaultRobots = {
+                // TODO: 18.03.2021 Finn på en måte å sørge for at vi får tilfeldige (men fortsatt unike) designs for hver robot. Så vi ikke spiller mot de samme hver gang.
+                new Robot("Nebuchadnezzar", 0, true),
+                new Robot("Alexstrasza", 1, true),
+                new Robot("Gilgamesh", 2, true),
+                new Robot("Ashurbarnipal", 7, true),
+                new Robot("Andromeda", 4, true),
+                new Robot("Hephaistion", 5, true),
+                new Robot("Styxifus", 6, true),
+                new Robot("Promotheus", 3, true)
+        };
         ArrayList<Robot> ret = new ArrayList<>();
         for (int i = 0; i < n; i++){
             defaultRobots[i].resetState();
@@ -174,55 +163,48 @@ public class Robot{
 	 * Denne metoden "setter" de 9 kortene som registerer får inn.
 	 */
 	public void setAvailableCards(ArrayList<ICard> cards){
-		allRegisterCards = cards;
+		availableCards = cards;
 	}
 
-	public void resetCards(){ allRegisterCards.clear(); registerCards.clear(); }
+	public void resetCards(){ availableCards.clear(); chosenCards.clear(); }
 
 	/**
 	 * Denne metoden returnerer de 9 kortene som registeret holder.
 	 * @return
 	 */
 	public ArrayList<ICard> getAvailableCards(){
-		return allRegisterCards;
+		return availableCards;
 	}
 
 	/**
 	 * Denne metoden legger til et og et kort i rekkefølge i registeret utifra hva spilleren velger.
 	 * @param chosenCard
 	 */
-	public void addChosenCard(ICard chosenCard){
-		registerCards.add(chosenCard);
+	public void chooseCard(ICard chosenCard){
+		chosenCards.add(chosenCard);
 	}
 
-	public void removeCardFromRegister(ICard unchosenCard){ registerCards.remove(unchosenCard); }
+	public void removeCardFromRegister(ICard unchosenCard){ chosenCards.remove(unchosenCard); }
 
 	/**
 	 * @return returnerer maks 5 kort fra registeret, kan returnere færre dersom roboten har mye damage.
 	 */
-	public ArrayList<ICard> getMaxFiveCards(){
-		return registerCards;
-	}
-
-	/**
-	 * Metode for å "cleare" alle kortene i registerne før en nye runde starter.
-	 */
-	public void clearAllCards(){
-		allRegisterCards.clear();
+	public ArrayList<ICard> getChosenCards(){
+		return chosenCards;
 	}
 
 	/**
 	 * Returnerer "true" hvis roboten har en "powerdown", og "false" hvis den ikke har det.
 	 * @return Tilstanden til roboten
 	 */
-	public Boolean isPowerDownAnnounced(){
+	public boolean isPowerDownAnnounced(){
 		return powerDown;
 	}
 
 	/**
 	 * Denne metoden endrer powerDown til true dersom knappen for powerDown blir trykket på i GameScreen-en for registeret.
 	 */
-	public void powerDownRobot(){
-		powerDown = true;
+	public void togglePowerDown(){
+		powerDown = !powerDown;
 	}
 }

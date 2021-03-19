@@ -3,7 +3,6 @@ package Robot;
 import Cards.Deck;
 import Cards.ICard;
 import Player.Robot;
-import com.badlogic.gdx.graphics.Color;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -31,14 +30,14 @@ public class RobotTest {
         }
         r.setAvailableCards(allCards);
 
-        numberOfLifeTokens = r.getRemainingLives();
+        numberOfLifeTokens = r.getLives();
         numberOfDamageTokens = r.getHP();
     }
     @BeforeAll
     public static void setUp(){
         allCards = new ArrayList<ICard>();
         registerCards = new ArrayList<ICard>();
-        r = new Robot("testRobot", Color.RED, false);
+        r = new Robot("testRobot", false);
     }
 
     @Test
@@ -49,16 +48,16 @@ public class RobotTest {
     @Test
     void playerCanStoreTheirFiveChosenCardsInOrderInTheRegister(){
         for(int i = 0; i < 5; i++){
-            r.addChosenCard(allCards.get(i));
+            r.chooseCard(allCards.get(i));
             registerCards.add(allCards.get(i));
         }
-        assertEquals(registerCards, r.getMaxFiveCards());
+        assertEquals(registerCards, r.getChosenCards());
     }
 
     @Test
     void registerCanClearAllCardsBeforeEachNewGameRound(){
         //clear register-list
-        r.clearAllCards();
+        r.resetCards();
 
         assertTrue(r.getAvailableCards().isEmpty());
     }
@@ -70,12 +69,12 @@ public class RobotTest {
 
     @Test
     void registerHoldsCorrectAmountOfLifeTokens(){
-        assertEquals(numberOfLifeTokens, r.getRemainingLives());
+        assertEquals(numberOfLifeTokens, r.getLives());
     }
 
     @Test
     void canRegisterPowerDownARobot(){
-        r.powerDownRobot();
+        r.togglePowerDown();
 
         assertTrue(r.isPowerDownAnnounced());
     }

@@ -96,6 +96,7 @@ public class Board {
         if(card.getRotation() != 0){
             bot.rotate(card.getRotation());
             if (card.getDistance() != 0) throw new IllegalArgumentException("A card has to be either a moving card, or a rotation card. This one is both!");
+            dirtyLocations.add(botPositions.get(bot));
             return;
         }
 

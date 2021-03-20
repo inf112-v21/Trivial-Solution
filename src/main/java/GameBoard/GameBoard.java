@@ -7,6 +7,7 @@ import Player.Robot;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.TreeSet;
 
 
 public class GameBoard {
@@ -88,6 +89,7 @@ public class GameBoard {
 
     public Board getBoard(){ return board; }
     public void endPhase(){ board.endPhase(); }
+    public TreeSet<Position> getDirtyLocations(){ return board.getDirtyLocations(); }
 
     public ArrayList<Robot> getBots(){ return bots; }
 

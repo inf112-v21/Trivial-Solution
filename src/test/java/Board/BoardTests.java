@@ -681,4 +681,14 @@ public class BoardTests {
         assertTrue(dirtyLocations.contains(new Position(8, 5)));
         assertTrue(dirtyLocations.contains(new Position(8, 6)));
     }
+
+    @Test
+    public void rotatingARobotMarksLocationAsDirty(){
+        bård.placeRobotAt(0, 0, robot1);
+        bård.getDirtyLocations();
+
+        bård.performMove(new ProgramCard(0, 1, 1, null), robot1);
+
+        assertTrue(bård.getDirtyLocations().contains(new Position(0, 0)));
+    }
 }

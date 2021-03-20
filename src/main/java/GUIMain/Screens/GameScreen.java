@@ -5,6 +5,7 @@ import AIs.Randbot;
 import Cards.ICard;
 import GUIMain.GUI;
 import GameBoard.GameBoard;
+import GameBoard.Position;
 import Player.Robot;
 
 import com.badlogic.gdx.Game;
@@ -21,10 +22,7 @@ import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.tiles.StaticTiledMapTile;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.utils.Timer;
 
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -43,7 +41,6 @@ public class GameScreen extends Game implements Screen {
 	private GameBoard gameboard;
 	private final ArrayList<Robot> robots;
 	private final AI ai = new Randbot();
-	private int currentPhase = 0;
 	private final GUI gui;
 
     /**
@@ -88,57 +85,17 @@ public class GameScreen extends Game implements Screen {
         gameboard = new GameBoard(robots, mapName);
         Stage stage = new Stage();
         Gdx.input.setInputProcessor(stage);
-        /*stage.addCaptureListener(new ClickListener(){
-            @Override
-            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                simulateRound();
-                return true;
-            }
-        });
-
-         */
-
+        updateRobotPositions();
 
         batch = new SpriteBatch();
         font = new BitmapFont();
 
     }
-    int i = 0;
-    public void round(){
-        if(i == 4){
-            gameboard.endRound();
-            i = 0;
-            return;
-        }
-        gameboard.phase(i);
-        renderer.render();
-        i++;
-    }
 
-    public void simulateRound(){
-        
-    	renderer.render();
-    	
-        gameboard.startRound();
-        for (Robot bot : gameboard.getBots()) {
-            if (bot.isControlledByAI()) ai.chooseCards(bot, gameboard.getBoard());
-            else pickCardsFromTerminal(bot);
-        }
-        Timer.schedule(new Timer.Task(){
-                           @Override
-                           public void run() {
-                               System.out.println("One round done");
-                               round();
-                           }
-                       }
-                , 1        //    (delay)
-                , 1       //    (seconds)
-                , 5
-        );
-    }
     private boolean hasStartedYet = false;
     private float timeSinceLastUpdate = -1;
-    private static final float TIME_DELTA = 2;
+    private static final float TIME_DELTA = 1;
+
     @Override
     public void render(float v) {
         timeSinceLastUpdate += v;
@@ -150,6 +107,8 @@ public class GameScreen extends Game implements Screen {
         renderer.render();
         batch.end();
 
+        //Denne sørger for at vi får tegnet opp GUI-en ferdig i starten av spillet
+        // før spilleren blir bedt om å velge kort.
         if(! hasStartedYet) {
             hasStartedYet = true;
             return;
@@ -158,25 +117,31 @@ public class GameScreen extends Game implements Screen {
         if(timeSinceLastUpdate < TIME_DELTA) return;
         timeSinceLastUpdate = 0;
         simulate();
+        updateRobotPositions();
+    }
 
+    private void updateRobotPositions(){
+        for (Position pos : gameboard.getDirtyLocations()){
+            Robot bot = gameboard.getRobotAt(pos.getX(), pos.getY());
+            if(bot != null){
+                Sprite sprt = new Sprite(bot.getImage());
+                TiledMapTileLayer.Cell cell = new TiledMapTileLayer.Cell();
+                cell.setTile(new StaticTiledMapTile(sprt));
 
-        for (int y = 0; y < gameboard.getHeight(); y++) {
-            for (int x = 0; x < gameboard.getWidth(); x++) {
-                Robot bot = gameboard.getRobotAt(x, gameboard.getHeight() - y - 1);
-                if(bot != null){
-                    Sprite sprt = new Sprite(bot.getImage());
-                    TiledMapTileLayer.Cell cell = new TiledMapTileLayer.Cell();
-                    cell.setTile(new StaticTiledMapTile(sprt));
-
-                    //Vi regner positiv rotasjon som med klokken, men libgdx sier det er mot klokken. Derfor tar vi 4-θ.
-                    cell.setRotation(4 - bot.getDirection());
-                    playerLayer.setCell(x, y, cell);
-                }
-                else playerLayer.setCell(x, y, new TiledMapTileLayer.Cell());
+                //Vi regner positiv rotasjon som med klokken, men libgdx sier det er mot klokken. Derfor tar vi 4-θ.
+                cell.setRotation(4 - bot.getDirection());
+                playerLayer.setCell(pos.getX(), gameboard.getHeight() - pos.getY() - 1, cell);
             }
+            else playerLayer.setCell(pos.getX(), gameboard.getHeight() - pos.getY() - 1, new TiledMapTileLayer.Cell());
         }
     }
 
+
+    /**
+     * Simulerer spillet. Hver gang denne blir kalt, blir ett trekk gjort.
+     * Denne husker på hvilket trekk fra hvilken fase som skal blir gjort,
+     *  slik at denne kan vite nøyaktig hvor i runden vi er.
+     */
     private int phase = 0;
     private int move = 0;
     private void simulate(){

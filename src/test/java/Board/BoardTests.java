@@ -3,6 +3,7 @@ package Board;
 import Cards.ProgramCard;
 import Components.Flag;
 import GameBoard.Board;
+import GameBoard.Position;
 import Player.Robot;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
@@ -12,6 +13,9 @@ import com.badlogic.gdx.graphics.Texture;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeAll;
+
+import java.util.Iterator;
+import java.util.TreeSet;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.fail;
@@ -608,5 +612,73 @@ public class BoardTests {
         assertEquals(robot1, bård.getRobotAt(0, 7));
         assertEquals(robot2, bård.getRobotAt(0, 6));
         assertNull(bård.getRobotAt(0, 5));
+    }
+
+    @Test
+    public void movingRobotOneStepAddsTheNewLocationAndTheOldOneToTheSetOfDirtyLocations(){
+        bård.placeRobotAt(0, 0, robot1);
+        robot1.setDirection(1);
+
+        bård.performMove(new ProgramCard(1, 0, 1, null), robot1);
+
+        TreeSet<Position> dirtyLocations = bård.getDirtyLocations();
+        assertTrue(dirtyLocations.contains(new Position(0, 0)));
+        assertTrue(dirtyLocations.contains(new Position(1, 0)));
+    }
+
+    @Test
+    public void drivingIntoHoleAndDyingMarksCorrectLocationsAsDirty(){
+        bård.spawnRobot(robot1);
+        robot1.setDirection(3);
+        bård.performMove(new ProgramCard(2, 0, 1, null), robot1);
+        bård.getDirtyLocations(); //Resetter settet
+
+        bård.performMove(new ProgramCard(1, 0, 1, null), robot1);
+
+        assertTrue(bård.getDirtyLocations().contains(new Position(7, 3)));
+
+        bård.endPhase();
+
+        assertTrue(bård.getDirtyLocations().contains(new Position(9, 3)));
+    }
+
+    @Test
+    public void setOfDirtyLocationsGetsResetEachTime(){
+        bård.placeRobotAt(0, 0, robot1);
+        robot1.setDirection(1);
+
+        bård.performMove(new ProgramCard(1, 0, 1, null), robot1);
+
+        assertFalse(bård.getDirtyLocations().isEmpty()); //Her bør settet resettes
+        assertTrue(bård.getDirtyLocations().isEmpty());
+    }
+
+    @Test
+    public void robotPushingAnotherRobotMarksCorrectLocationsAsDirty(){
+        bård.placeRobotAt(4, 4, robot1);
+        bård.placeRobotAt(4, 3, robot2);
+        bård.getDirtyLocations();
+
+        bård.performMove(new ProgramCard(3, 0, 1, null), robot1);
+        TreeSet<Position> dirtyLocations = bård.getDirtyLocations();
+
+        assertTrue(dirtyLocations.contains(new Position(4, 0)));
+        assertTrue(dirtyLocations.contains(new Position(4, 1)));
+        assertTrue(dirtyLocations.contains(new Position(4, 2)));
+        assertTrue(dirtyLocations.contains(new Position(4, 3)));
+        assertTrue(dirtyLocations.contains(new Position(4, 4)));
+        assertFalse(dirtyLocations.contains(new Position(4, 5))); //Denne er nedenfor og blir ikke påvirket
+    }
+
+    @Test
+    public void conveyorBeltPushingRobotAddsDirtyLocations(){
+        bård.placeRobotAt(8, 4, robot1);
+
+        bård.endPhase();
+        TreeSet<Position> dirtyLocations = bård.getDirtyLocations();
+
+        assertTrue(dirtyLocations.contains(new Position(8, 4)));
+        assertTrue(dirtyLocations.contains(new Position(8, 5)));
+        assertTrue(dirtyLocations.contains(new Position(8, 6)));
     }
 }

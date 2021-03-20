@@ -111,7 +111,12 @@ public class Robot{
 	 */
 	public ArrayList<Flag> getVisitedFlags(){ return flagsVisited;}
 
-	public Position getRespawnPoint(){ return respawnPoint; }
+	public Position getRespawnPoint(){
+	    if(respawnPoint == null) throw new NullPointerException("This robot has no spawnpoint, " +
+                "make sure you spawn it with board.spawnRobot() and not board.placeRobot() " +
+                "if you want it to have a spawnpoint.");
+	    return respawnPoint;
+	}
 	public void setRespawnPoint(Position pos){ respawnPoint = pos; }
 	
 	/**

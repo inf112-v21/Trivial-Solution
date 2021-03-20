@@ -1,10 +1,9 @@
 package GUIMain.Screens;
 
 import GUIMain.GUI;
-import Player.Robot;
+import GameBoard.Robot;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.ui.*;

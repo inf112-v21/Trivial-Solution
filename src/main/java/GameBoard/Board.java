@@ -1,13 +1,13 @@
 package GameBoard;
 
-import Cards.ICard;
-import Components.*;
-import Player.Robot;
+import GameBoard.Cards.ICard;
+import GameBoard.Components.*;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 
 import java.util.*;
+import java.util.function.ToIntFunction;
 
 public class Board {
 
@@ -20,8 +20,8 @@ public class Board {
     private IComponent[][] midgrid;
     private IComponent[][] forgrid;
 
-    private final TreeMap<Robot, Position> botPositions = new TreeMap<>((Object bot1, Object bot2) -> Integer.compare(bot1.hashCode(), bot2.hashCode()));
-    private final TreeMap<Laser, Position> laserPositions = new TreeMap<>((Object laser1, Object laser2) -> Integer.compare(laser1.hashCode(), laser2.hashCode()));
+    private final TreeMap<Robot, Position> botPositions = new TreeMap<>(Comparator.comparingInt((ToIntFunction<Object>) Object::hashCode));
+    private final TreeMap<Laser, Position> laserPositions = new TreeMap<>(Comparator.comparingInt((ToIntFunction<Object>) Object::hashCode));
     private final TreeSet<Position> dirtyLocations = new TreeSet<>();
     private final LinkedList<Position> availableSpawnPoints = new LinkedList<>();
     private final LinkedList<Robot> robotsWaitingToBeRespawned = new LinkedList<>();
@@ -158,9 +158,7 @@ public class Board {
         }
 
         //Hvis inget flagg er registrert så sjekker vi om roboten landet på det første flagget
-        if (foundFlag.equals(flagWinningFormation.get(0))) return true;
-
-        return false;
+        return foundFlag.equals(flagWinningFormation.get(0));
     }
 
     /**
@@ -275,8 +273,7 @@ public class Board {
      * @param fromX x-posisjon vi flytter fra
      * @param fromY y-posisjon vi flytter fra
      * @param dir Retningen, oppgitt i 0, 1, 2, 3
-     * @return true om den klarte å gå minst ett skritt
-     * @return false om den ble stoppet av en vegg eller noe
+     * @return om den klarte å gå minst ett skritt eller ikke
      */
     private boolean moveTowards(int N_Moves, int fromX, int fromY, int dir){
         if (N_Moves <= 0) return true;

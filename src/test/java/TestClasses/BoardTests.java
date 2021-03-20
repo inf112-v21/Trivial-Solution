@@ -1,10 +1,10 @@
-package Board;
+package TestClasses;
 
-import Cards.ProgramCard;
-import Components.Flag;
+import GameBoard.Cards.ProgramCard;
+import GameBoard.Components.Flag;
 import GameBoard.Board;
 import GameBoard.Position;
-import Player.Robot;
+import GameBoard.Robot;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
@@ -14,7 +14,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeAll;
 
-import java.util.Iterator;
 import java.util.TreeSet;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -71,12 +70,6 @@ public class BoardTests {
         Flag1 = bård.getFlagInForgridAt(3,3 );
         Flag2 = bård.getFlagInForgridAt( 6,5);
         Flag3 = bård.getFlagInForgridAt(2,6);
-    }
-
-    @Test
-    public void readFromFileReadsWidthAndHeight(){
-        assertNotNull(bård.getHeight());
-        assertNotNull(bård.getWidth());
     }
 
     @Test

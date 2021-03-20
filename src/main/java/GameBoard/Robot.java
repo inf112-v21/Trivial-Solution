@@ -1,8 +1,7 @@
-package Player;
+package GameBoard;
 
-import Cards.ICard;
-import GameBoard.Position;
-import Components.Flag;
+import GameBoard.Cards.ICard;
+import GameBoard.Components.Flag;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
@@ -28,8 +27,8 @@ public class Robot{
 	private boolean powerDown;
 
 	private final ArrayList<Flag> flagsVisited = new ArrayList<>();
-	private ArrayList<ICard> availableCards = new ArrayList<ICard>(); //alle kortene som ble utdelt
-	private ArrayList<ICard> chosenCards = new ArrayList<ICard>(5); //De valgte kortene, rekkefølgen er samme som den spilleren valgte dem
+	private ArrayList<ICard> availableCards = new ArrayList<>(); //alle kortene som ble utdelt
+	private ArrayList<ICard> chosenCards = new ArrayList<>(5); //De valgte kortene, rekkefølgen er samme som den spilleren valgte dem
 	
 	public Robot(String name, int design, boolean isControlledByAI){
 		this.name = name;
@@ -175,7 +174,7 @@ public class Robot{
 
 	/**
 	 * Denne metoden returnerer de 9 kortene som registeret holder.
-	 * @return
+	 * @return listen over tilgjengelige kort
 	 */
 	public ArrayList<ICard> getAvailableCards(){
 		return availableCards;
@@ -183,7 +182,7 @@ public class Robot{
 
 	/**
 	 * Denne metoden legger til et og et kort i rekkefølge i registeret utifra hva spilleren velger.
-	 * @param chosenCard
+	 * @param chosenCard kortet som ble valgt
 	 */
 	public void chooseCard(ICard chosenCard){
 		chosenCards.add(chosenCard);

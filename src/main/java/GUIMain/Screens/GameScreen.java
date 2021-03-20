@@ -2,11 +2,11 @@ package GUIMain.Screens;
 
 import AIs.AI;
 import AIs.Randbot;
-import Cards.ICard;
+import GameBoard.Cards.ICard;
 import GUIMain.GUI;
-import GameBoard.GameBoard;
+import GameBoard.BoardController;
 import GameBoard.Position;
-import Player.Robot;
+import GameBoard.Robot;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
@@ -38,7 +38,7 @@ public class GameScreen extends Game implements Screen {
     private final int CELL_SIZE = 300;
     private final int HEIGHT;
     private final int WIDTH;
-	private GameBoard gameboard;
+	private BoardController gameboard;
 	private final ArrayList<Robot> robots;
 	private final AI ai = new Randbot();
 	private final GUI gui;
@@ -78,11 +78,11 @@ public class GameScreen extends Game implements Screen {
         font.dispose();
     }
 
-    public GameBoard getGameBoard(){ return gameboard; }
+    public BoardController getGameBoard(){ return gameboard; }
 
     @Override
     public void show() {
-        gameboard = new GameBoard(robots, mapName);
+        gameboard = new BoardController(robots, mapName);
         Stage stage = new Stage();
         Gdx.input.setInputProcessor(stage);
         updateRobotPositions();
@@ -224,7 +224,7 @@ public class GameScreen extends Game implements Screen {
 	/**
 	 * Maybe an alternative for showPopUp()
 	 * prints message at the top of GUI
-	 * @param msg
+	 * @param msg meldingen som skal vises
 	 */
 	public void printMessage(String msg) {batch.begin();
 		batch.setProjectionMatrix(camera.combined);

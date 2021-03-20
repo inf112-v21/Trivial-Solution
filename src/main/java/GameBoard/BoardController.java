@@ -1,16 +1,15 @@
 package GameBoard;
 
-import Cards.Deck;
-import Cards.ICard;
-import Components.Flag;
-import Player.Robot;
+import GameBoard.Cards.Deck;
+import GameBoard.Cards.ICard;
+import GameBoard.Components.Flag;
 
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.TreeSet;
 
 
-public class GameBoard {
+public class BoardController {
 
     protected int numberOfPlayers;
 
@@ -21,7 +20,7 @@ public class GameBoard {
     private final Board board;
 
 
-    public GameBoard(ArrayList<Robot> robots, String mapName){
+    public BoardController(ArrayList<Robot> robots, String mapName){
         board = new Board(mapName);
         numberOfPlayers = robots.size();
         bots = robots;

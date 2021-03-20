@@ -1,4 +1,4 @@
-package Components;
+package GameBoard.Components;
 
 public class Hole extends SimpleComponent {
 

@@ -227,7 +227,13 @@ public class Board {
     }
 
     private void repairRobots(){
-        // TODO: 14.03.2021
+        for (Position pos : botPositions.values()) {
+            IComponent comp = midgrid[pos.getY()][pos.getX()];
+            if (comp instanceof Wrench) {
+                getRobotAt(pos.getX(), pos.getY()).giveHPToRobot(1);
+                dirtyLocations.add(pos);
+            }
+        }
     }
 
     private void updateRespawnPoints(){

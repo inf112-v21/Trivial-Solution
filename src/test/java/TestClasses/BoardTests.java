@@ -687,7 +687,7 @@ public class BoardTests {
 
     @Test
     public void gearRotatesTheRobotsTheCorrectDirection(){
-        bård.placeRobotAt(8,0,robot1);
+        bård.placeRobotAt(8,0, robot1);
 
         bård.endPhase();
 
@@ -696,8 +696,35 @@ public class BoardTests {
 
     @Test
     public void rotatingRobotWithGearMarksLocationDirty(){
+        bård.placeRobotAt(8,0,robot1);
+        bård.getDirtyLocations();
 
+        bård.endPhase();
+
+        assertTrue(bård.getDirtyLocations().contains(new Position(8, 0)));
     }
+
+    @Test
+    public void wrenchGivesRobotOneExtraHP(){
+        bård.placeRobotAt(2,0, robot1);
+
+        robot1.applyDamage(1);
+        bård.endPhase();
+
+        assertEquals(10, robot1.getHP());
+    }
+
+    @Test
+    public void whenARobotStepsOnAWrenchTheLocationIsMarkedDirty(){
+        bård.placeRobotAt(2,0,robot1);
+        bård.getDirtyLocations();
+
+        bård.endPhase();
+
+        assertTrue(bård.getDirtyLocations().contains(new Position(2, 0)));
+    }
+
+
 
 
 }

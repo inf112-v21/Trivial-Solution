@@ -1,7 +1,6 @@
-package Components;
+package GameBoard.Components;
 
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
-import org.w3c.dom.ls.LSException;
 
 public class ComponentFactory {
 
@@ -10,7 +9,7 @@ public class ComponentFactory {
      * Om celler er null returnerer vi bare null. Det er på en måte 'luft'.
      *
      * @param cell Cellen fra Libgdx, som skal konverteres til sitt tilsvarende objekt.
-     * @return
+     * @return komponenten som ble skapt
      */
 
     public static IComponent spawnComponent(TiledMapTileLayer.Cell cell){

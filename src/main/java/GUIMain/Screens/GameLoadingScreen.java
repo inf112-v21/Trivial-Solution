@@ -1,7 +1,7 @@
 package GUIMain.Screens;
 
 import GUIMain.GUI;
-import Player.Robot;
+import GameBoard.Robot;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;

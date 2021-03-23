@@ -1,6 +1,7 @@
-package Components;
+package TestClasses;
 
 
+import GameBoard.Components.Flag;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

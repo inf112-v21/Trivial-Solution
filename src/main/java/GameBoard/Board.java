@@ -11,7 +11,6 @@ import java.util.*;
 
 public class Board {
 
-
     private int HEIGHT;
     private int WIDTH;
 
@@ -216,7 +215,13 @@ public class Board {
     }
 
     private void turnGears(){
-        // TODO: 14.03.2021
+        for (Position pos : botPositions.values()) {
+            IComponent comp = midgrid[pos.getY()][pos.getX()];
+            if (comp instanceof Gear) {
+                int rotation = ((Gear) comp).getRotation();
+                getRobotAt(pos.getX(), pos.getY()).rotate(rotation);
+            }
+        }
     }
 
     private void repairRobots(){

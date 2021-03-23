@@ -1,4 +1,4 @@
-package Components;
+package GameBoard.Components;
 
 
 /**
@@ -22,16 +22,4 @@ public interface IComponent {
      * @return the id of a component. We use this to identify which component we have on the field.
      */
     int getID();
-
-
-    //We will probably need a guiRepresentation for each component
-    //Maybe unicode character? Will leave it empty for now
-    default void guiRepresentation(){};
-
-
-    /**
-     * Other thoughts about components
-     * -Maybe we should make an enum class for symbols?
-     */
-
 }

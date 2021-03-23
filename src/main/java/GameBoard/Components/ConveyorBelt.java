@@ -1,4 +1,4 @@
-package Components;
+package GameBoard.Components;
 
 /**
  * Samlebånd, som flytter roboter rundt om de avslutter turen oppå dem.

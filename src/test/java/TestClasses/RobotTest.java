@@ -1,17 +1,15 @@
-package Robot;
+package TestClasses;
 
-import Cards.Deck;
-import Cards.ICard;
-import Player.Robot;
-import com.badlogic.gdx.graphics.Color;
+import GameBoard.Cards.Deck;
+import GameBoard.Cards.ICard;
+import GameBoard.Robot;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class RobotTest {
 
@@ -20,7 +18,6 @@ public class RobotTest {
     private static Robot r;
     private static Integer numberOfLifeTokens;
     private static Integer numberOfDamageTokens;
-    private static Boolean initializePowerDown = false;
 
     @BeforeEach
     public void setCards(){
@@ -31,13 +28,13 @@ public class RobotTest {
         }
         r.setAvailableCards(allCards);
 
-        numberOfLifeTokens = r.getRemainingLives();
+        numberOfLifeTokens = r.getLives();
         numberOfDamageTokens = r.getHP();
     }
     @BeforeAll
     public static void setUp(){
-        allCards = new ArrayList<ICard>();
-        registerCards = new ArrayList<ICard>();
+        allCards = new ArrayList<>();
+        registerCards = new ArrayList<>();
         r = new Robot("testRobot", false);
     }
 
@@ -49,16 +46,16 @@ public class RobotTest {
     @Test
     void playerCanStoreTheirFiveChosenCardsInOrderInTheRegister(){
         for(int i = 0; i < 5; i++){
-            r.addChosenCard(allCards.get(i));
+            r.chooseCard(allCards.get(i));
             registerCards.add(allCards.get(i));
         }
-        assertEquals(registerCards, r.getMaxFiveCards());
+        assertEquals(registerCards, r.getChosenCards());
     }
 
     @Test
     void registerCanClearAllCardsBeforeEachNewGameRound(){
         //clear register-list
-        r.clearAllCards();
+        r.resetCards();
 
         assertTrue(r.getAvailableCards().isEmpty());
     }
@@ -70,12 +67,14 @@ public class RobotTest {
 
     @Test
     void registerHoldsCorrectAmountOfLifeTokens(){
-        assertEquals(numberOfLifeTokens, r.getRemainingLives());
+        assertEquals(numberOfLifeTokens, r.getLives());
     }
 
     @Test
     void canRegisterPowerDownARobot(){
-        r.powerDownRobot();
+        assertFalse(r.isPowerDownAnnounced());
+
+        r.togglePowerDown();
 
         assertTrue(r.isPowerDownAnnounced());
     }

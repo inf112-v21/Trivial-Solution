@@ -1,10 +1,9 @@
 package GUIMain.Screens;
 
 import GUIMain.GUI;
-import Player.Robot;
+import GameBoard.Robot;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
@@ -84,7 +83,7 @@ public class CreateGameScreen implements Screen {
                     return false;
                 }
                 ArrayList<Robot> robots = Robot.getDefaultRobots(numberOfRobots.getSelected()-1); // -1, siden spilleren inngår i disse robotene
-                robots.add(new Robot(textField.getText(), 2, false));
+                robots.add(new Robot(textField.getText(), 3, false));
                 String map = MAP_LOCATION + "/" + choosemapbox.getSelected() + ".tmx";
                 gui.setScreen(new GameLoadingScreen(robots, map, gui));
 
@@ -106,29 +105,15 @@ public class CreateGameScreen implements Screen {
     }
 
     @Override
-    public void resize(int i, int i1) {
-
-    }
-
+    public void resize(int i, int i1) { }
     @Override
-    public void pause() {
-
-    }
-
+    public void pause() { }
     @Override
-    public void resume() {
-
-    }
-
+    public void resume() { }
     @Override
-    public void hide() {
-
-    }
-
+    public void hide() { }
     @Override
-    public void dispose() {
-
-    }
+    public void dispose() { }
 
     private String[] getMapNames(){
         File f = new File(MAP_LOCATION);

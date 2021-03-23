@@ -1,10 +1,11 @@
-package Cards;
+package GameBoard.Cards;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 
 import java.util.ArrayList;
 import java.util.Collections;
+
 public class Deck {
     private final ArrayList<ICard> cards = new ArrayList<>();
     private int counter = 0;
@@ -38,7 +39,7 @@ public class Deck {
 
     /**
      * En konstruktør for testing, denne kan kjøres uten å starte opp hele libgdx.
-     * @param hasImages Om vi vil ha
+     * @param hasImages Om vi vil ha bilder eller ikke
      */
     public Deck(boolean hasImages){
         if (hasImages){

@@ -1,4 +1,4 @@
-package Components;
+package GameBoard.Components;
 
 public class Wall extends SimpleComponent{
 
@@ -18,8 +18,7 @@ public class Wall extends SimpleComponent{
 
     /**
      * @param dir Retningen man går i, på formen 0, 1, 2, 3
-     * @return true om man kan gå til denne ruten i den retningen
-     * @return false om man ikke kan det.
+     * @return om man kan gå til denne ruten i den retningen eller ikke
      */
     public boolean canGoToInDirection(int dir){
         switch (dir){
@@ -40,24 +39,4 @@ public class Wall extends SimpleComponent{
             default: throw new IllegalArgumentException();
         }
     }
-
-    //Kanskje vi kaller de noe annet etterpå. 
-    public boolean getNorth(){
-        return north;
-    }
-
-    public boolean getEast(){
-        return east;
-    }
-
-    public boolean getSouth(){
-        return south;
-    }
-
-    public boolean getWest(){
-        return west;
-    }
-
-    //public boolean en metode for å se hvordan ting virker? Kan en robot gå inn i denne ruten.
-
 }

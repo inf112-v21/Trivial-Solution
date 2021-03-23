@@ -1,18 +1,20 @@
-package Board;
+package TestClasses;
 
-import Cards.ProgramCard;
-import Components.Flag;
+import GameBoard.Cards.ProgramCard;
+import GameBoard.Components.Flag;
 import GameBoard.Board;
-import Player.Robot;
+import GameBoard.Position;
+import GameBoard.Robot;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeAll;
+
+import java.util.TreeSet;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.fail;
@@ -68,12 +70,6 @@ public class BoardTests {
         Flag1 = bård.getFlagInForgridAt(3,3 );
         Flag2 = bård.getFlagInForgridAt( 6,5);
         Flag3 = bård.getFlagInForgridAt(2,6);
-    }
-
-    @Test
-    public void readFromFileReadsWidthAndHeight(){
-        assertNotNull(bård.getHeight());
-        assertNotNull(bård.getWidth());
     }
 
     @Test
@@ -239,6 +235,16 @@ public class BoardTests {
     }
 
     @Test
+    public void laserFiresInCorrectDirection(){
+        int startingHP = robot1.getHP();
+        bård.placeRobotAt(5, 5, robot1);
+
+        bård.endPhase();
+
+        assertNotEquals(startingHP, robot1.getHP());
+    }
+
+    @Test
     public void doubleLaserYieldsDoubleDamage(){
         int startingHP = robot1.getHP();
         bård.placeRobotAt(7, 6, robot1);
@@ -354,7 +360,7 @@ public class BoardTests {
         bård.performMove(new ProgramCard(1, 0, 90, new Texture(Gdx.files.internal("Cards/1 Red HULK X90/090 MOVE1 1Red 3.png"))), robot1);
         bård.endPhase();
 
-        assertTrue(robot1.getRemainingLives() < Robot.INITIAL_LIVES);
+        assertTrue(robot1.getLives() < Robot.INITIAL_LIVES);
         assertTrue(robot1.getHP() < Robot.INITIAL_HP);
     }
 
@@ -515,7 +521,7 @@ public class BoardTests {
 
         assertNull(bård.getRobotAt(8, 9));
         assertNull(bård.getRobotAt(7, 9));
-        assertTrue(robot1.getRemainingLives() < Robot.INITIAL_LIVES);
+        assertTrue(robot1.getLives() < Robot.INITIAL_LIVES);
     }
 
     @Test
@@ -574,7 +580,7 @@ public class BoardTests {
 
         assertNull(bård.getRobotAt(0, 8));
         assertEquals(robot1, bård.getRobotAt(9, 3));
-        assertTrue(robot1.getRemainingLives() < Robot.INITIAL_LIVES);
+        assertTrue(robot1.getLives() < Robot.INITIAL_LIVES);
     }
 
     @Test
@@ -586,7 +592,7 @@ public class BoardTests {
         bård.endPhase();
 
         assertEquals(robot1, bård.getRobotAt(9, 9));
-        assertTrue(robot2.getRemainingLives() < Robot.INITIAL_LIVES);
+        assertTrue(robot2.getLives() < Robot.INITIAL_LIVES);
     }
 
     @Test
@@ -599,5 +605,83 @@ public class BoardTests {
         assertEquals(robot1, bård.getRobotAt(0, 7));
         assertEquals(robot2, bård.getRobotAt(0, 6));
         assertNull(bård.getRobotAt(0, 5));
+    }
+
+    @Test
+    public void movingRobotOneStepAddsTheNewLocationAndTheOldOneToTheSetOfDirtyLocations(){
+        bård.placeRobotAt(0, 0, robot1);
+        robot1.setDirection(1);
+
+        bård.performMove(new ProgramCard(1, 0, 1, null), robot1);
+
+        TreeSet<Position> dirtyLocations = bård.getDirtyLocations();
+        assertTrue(dirtyLocations.contains(new Position(0, 0)));
+        assertTrue(dirtyLocations.contains(new Position(1, 0)));
+    }
+
+    @Test
+    public void drivingIntoHoleAndDyingMarksCorrectLocationsAsDirty(){
+        bård.spawnRobot(robot1);
+        robot1.setDirection(3);
+        bård.performMove(new ProgramCard(2, 0, 1, null), robot1);
+        bård.getDirtyLocations(); //Resetter settet
+
+        bård.performMove(new ProgramCard(1, 0, 1, null), robot1);
+
+        assertTrue(bård.getDirtyLocations().contains(new Position(7, 3)));
+
+        bård.endPhase();
+
+        assertTrue(bård.getDirtyLocations().contains(new Position(9, 3)));
+    }
+
+    @Test
+    public void setOfDirtyLocationsGetsResetEachTime(){
+        bård.placeRobotAt(0, 0, robot1);
+        robot1.setDirection(1);
+
+        bård.performMove(new ProgramCard(1, 0, 1, null), robot1);
+
+        assertFalse(bård.getDirtyLocations().isEmpty()); //Her bør settet resettes
+        assertTrue(bård.getDirtyLocations().isEmpty());
+    }
+
+    @Test
+    public void robotPushingAnotherRobotMarksCorrectLocationsAsDirty(){
+        bård.placeRobotAt(4, 4, robot1);
+        bård.placeRobotAt(4, 3, robot2);
+        bård.getDirtyLocations();
+
+        bård.performMove(new ProgramCard(3, 0, 1, null), robot1);
+        TreeSet<Position> dirtyLocations = bård.getDirtyLocations();
+
+        assertTrue(dirtyLocations.contains(new Position(4, 0)));
+        assertTrue(dirtyLocations.contains(new Position(4, 1)));
+        assertTrue(dirtyLocations.contains(new Position(4, 2)));
+        assertTrue(dirtyLocations.contains(new Position(4, 3)));
+        assertTrue(dirtyLocations.contains(new Position(4, 4)));
+        assertFalse(dirtyLocations.contains(new Position(4, 5))); //Denne er nedenfor og blir ikke påvirket
+    }
+
+    @Test
+    public void conveyorBeltPushingRobotAddsDirtyLocations(){
+        bård.placeRobotAt(8, 4, robot1);
+
+        bård.endPhase();
+        TreeSet<Position> dirtyLocations = bård.getDirtyLocations();
+
+        assertTrue(dirtyLocations.contains(new Position(8, 4)));
+        assertTrue(dirtyLocations.contains(new Position(8, 5)));
+        assertTrue(dirtyLocations.contains(new Position(8, 6)));
+    }
+
+    @Test
+    public void rotatingARobotMarksLocationAsDirty(){
+        bård.placeRobotAt(0, 0, robot1);
+        bård.getDirtyLocations();
+
+        bård.performMove(new ProgramCard(0, 1, 1, null), robot1);
+
+        assertTrue(bård.getDirtyLocations().contains(new Position(0, 0)));
     }
 }

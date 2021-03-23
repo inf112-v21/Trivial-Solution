@@ -1,4 +1,4 @@
-package Components;
+package GameBoard.Components;
 
 public class Laser extends Wall{
     /**
@@ -6,13 +6,14 @@ public class Laser extends Wall{
      * Derfor trenger vi metoder for å sjekke om man kan gå igjennom dem, så det arver vi fra Wall.
      */
 
-    private int direction;
-    private boolean isDoubleLaser;
+    private final int direction;
+    private final boolean isDoubleLaser;
 
     public Laser(int id, int dir, boolean isDoubleLaser) {
         super(id, dir!=2, dir!=3, dir!=0, dir!=1); //Siden laseren er montert på en vegg.
         name = "Laser";
         this.isDoubleLaser = isDoubleLaser;
+        this.direction = dir;
     }
 
     public int getDirection(){ return direction; }

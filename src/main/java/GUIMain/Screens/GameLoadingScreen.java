@@ -1,7 +1,7 @@
 package GUIMain.Screens;
 
 import GUIMain.GUI;
-import Player.Robot;
+import GameBoard.Robot;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -46,27 +46,13 @@ public class GameLoadingScreen implements Screen {
     }
 
     @Override
-    public void resize(int i, int i1) {
-
-    }
-
+    public void resize(int i, int i1) { }
     @Override
-    public void pause() {
-
-    }
-
+    public void pause() { }
     @Override
-    public void resume() {
-
-    }
-
+    public void resume() { }
     @Override
-    public void hide() {
-
-    }
-
+    public void hide() { }
     @Override
-    public void dispose() {
-
-    }
+    public void dispose() { }
 }

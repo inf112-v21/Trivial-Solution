@@ -1,13 +1,13 @@
 package GameBoard;
 
-import Cards.ICard;
-import Components.*;
-import Player.Robot;
+import GameBoard.Cards.ICard;
+import GameBoard.Components.*;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 
 import java.util.*;
+import java.util.function.ToIntFunction;
 
 public class Board {
 
@@ -16,12 +16,12 @@ public class Board {
 
     //Grids. Disse må initialiseres i readFromTMX().
     private Robot[][]      botgrid;
-    private IComponent[][] backgrid;
     private IComponent[][] midgrid;
     private IComponent[][] forgrid;
 
-    private final TreeMap<Robot, Position> botPositions = new TreeMap<>((Object bot1, Object bot2) -> Integer.compare(bot1.hashCode(), bot2.hashCode()));
-    private final TreeMap<Laser, Position> laserPositions = new TreeMap<>((Object laser1, Object laser2) -> Integer.compare(laser1.hashCode(), laser2.hashCode()));
+    private final TreeMap<Robot, Position> botPositions = new TreeMap<>(Comparator.comparingInt((ToIntFunction<Object>) Object::hashCode));
+    private final TreeMap<Laser, Position> laserPositions = new TreeMap<>(Comparator.comparingInt((ToIntFunction<Object>) Object::hashCode));
+    private final TreeSet<Position> dirtyLocations = new TreeSet<>();
     private final LinkedList<Position> availableSpawnPoints = new LinkedList<>();
     private final LinkedList<Robot> robotsWaitingToBeRespawned = new LinkedList<>();
 
@@ -56,14 +56,12 @@ public class Board {
         WIDTH  = background.getWidth();
 
         botgrid  = new Robot     [HEIGHT][WIDTH];
-        backgrid = new IComponent[HEIGHT][WIDTH];
         midgrid  = new IComponent[HEIGHT][WIDTH];
         forgrid  = new IComponent[HEIGHT][WIDTH];
 
         ArrayList<Object[]> newSpawnPositions = new ArrayList<>(8);
         for (int y = 0; y < background.getHeight(); y++) {
             for (int x = 0; x < background.getWidth(); x++) {
-                backgrid[HEIGHT-1-y][x] = ComponentFactory.spawnComponent(background.getCell(x, y));
                 midgrid[HEIGHT-1-y][x] = ComponentFactory.spawnComponent(middleground.getCell(x, y));
 
                 IComponent forcomp = ComponentFactory.spawnComponent(foreground.getCell(x, y));
@@ -91,9 +89,13 @@ public class Board {
      * @param bot Roboten som skal flyttes
      */
     public void performMove(ICard card, Robot bot){
+        if (bot == null) throw new NullPointerException("The bot is null.");
+        if (robotsWaitingToBeRespawned.contains(bot)) return; //Botten kan ikke flytte, den er død
+        if ( ! botPositions.containsKey(bot)) throw new IllegalArgumentException("The bot is not on the board.");
         if(card.getRotation() != 0){
             bot.rotate(card.getRotation());
             if (card.getDistance() != 0) throw new IllegalArgumentException("A card has to be either a moving card, or a rotation card. This one is both!");
+            dirtyLocations.add(botPositions.get(bot));
             return;
         }
 
@@ -155,9 +157,7 @@ public class Board {
         }
 
         //Hvis inget flagg er registrert så sjekker vi om roboten landet på det første flagget
-        if (foundFlag.equals(flagWinningFormation.get(0))) return true;
-
-        return false;
+        return foundFlag.equals(flagWinningFormation.get(0));
     }
 
     /**
@@ -238,19 +238,20 @@ public class Board {
     }
 
     private void respawnRobots(){
-        ArrayList<Robot> successfullRespawns = new ArrayList<>();
+        ArrayList<Robot> successfulRespawns = new ArrayList<>();
         for(Robot bot : robotsWaitingToBeRespawned){
             Position spawnpoint = bot.getRespawnPoint();
-            if (spawnpoint == null) throw new IllegalStateException("This bot has no spawnpoint. Try spawning it with spawnRobot() instead of placeRobotAt() if you want to respawn it automatically.");
-
             if(botgrid[spawnpoint.getY()][spawnpoint.getX()] == null){
                 botgrid[spawnpoint.getY()][spawnpoint.getX()] = bot;
-                successfullRespawns.add(bot);
+                successfulRespawns.add(bot);
                 botPositions.put(bot, spawnpoint);
                 bot.respawn();
             }
         }
-        for (Robot bot : successfullRespawns) robotsWaitingToBeRespawned.remove(bot);
+        for (Robot bot : successfulRespawns){
+            robotsWaitingToBeRespawned.remove(bot);
+            dirtyLocations.add(botPositions.get(bot));
+        }
     }
 
     private void removeDestroyedRobots(){
@@ -261,7 +262,7 @@ public class Board {
                     robotsWaitingToBeRespawned.addLast(bot);
                 }
                 botgrid[botPositions.get(bot).getY()][botPositions.get(bot).getX()] = null;
-                //botPositions.remove(bot);
+                dirtyLocations.add(new Position(botPositions.get(bot).getX(), botPositions.get(bot).getY()));
             }
             // TODO: 26.02.2021 Skal vi kanskje gjøre noe spesiellt når noen har dødd for tredje og siste gang? Si ifra til brukeren?
         }
@@ -277,8 +278,7 @@ public class Board {
      * @param fromX x-posisjon vi flytter fra
      * @param fromY y-posisjon vi flytter fra
      * @param dir Retningen, oppgitt i 0, 1, 2, 3
-     * @return true om den klarte å gå minst ett skritt
-     * @return false om den ble stoppet av en vegg eller noe
+     * @return om den klarte å gå minst ett skritt eller ikke
      */
     private boolean moveTowards(int N_Moves, int fromX, int fromY, int dir){
         if (N_Moves <= 0) return true;
@@ -307,6 +307,8 @@ public class Board {
         botgrid[toY][toX] = bot;
         botgrid[fromY][fromX] = null;
         botPositions.put(bot, new Position(toX, toY));
+        dirtyLocations.add(new Position(fromX, fromY));
+        dirtyLocations.add(new Position(toX, toY));
         moveTowards(N_Moves-1, toX, toY, dir);
         return true;
     }
@@ -343,24 +345,32 @@ public class Board {
             return;
         }
 
-        if(midgrid[y][x] instanceof Wall && !((Wall) midgrid[y][x]).canLeaveInDirection(dir)) return;
+        if(forgrid[y][x] instanceof Wall && !((Wall) forgrid[y][x]).canLeaveInDirection(dir)) return;
 
         int nextX = x + directionToX(dir);
         int nextY = y + directionToY(dir);
 
         if (outOfBounds(nextX, nextY)) return;
-        if (midgrid[nextY][nextX] instanceof Wall && !((Wall) midgrid[nextY][nextX]).canGoToInDirection(dir)) return;
+        if (forgrid[nextY][nextX] instanceof Wall && !((Wall) forgrid[nextY][nextX]).canGoToInDirection(dir)) return;
 
         fireOneLaser(nextX, nextY, dir, isDoubleLaser, false);
     }
 
 
+    /**
+     * @return et sett med posisjoner som har blitt endret siden forrige gang metoden ble kalt.
+     */
+    public TreeSet<Position> getDirtyLocations(){
+        TreeSet<Position> ret = new TreeSet<>(dirtyLocations);
+        dirtyLocations.clear();
+        return ret;
+    }
 
     private void botFellOff(Robot bot){
         bot.takeLife();
         robotsWaitingToBeRespawned.addLast(bot);
         botgrid[botPositions.get(bot).getY()][botPositions.get(bot).getX()] = null;
-        //botPositions.remove(bot);
+        dirtyLocations.add(new Position(botPositions.get(bot).getX(), botPositions.get(bot).getY()));
     }
 
     public Robot getRobotAt(int x, int y){ return botgrid[y][x]; }
@@ -384,6 +394,7 @@ public class Board {
         if(outOfBounds(x, y)) throw new IllegalArgumentException("Coordinates (" + x + ", " + y + ") are out of bounds.");
         botPositions.put(bot, new Position(x, y));
         botgrid[y][x] = bot;
+        dirtyLocations.add(new Position(x, y));
     }
 
     public void spawnRobot(Robot bot){
@@ -438,5 +449,9 @@ public class Board {
     		return botPositions.get(r);
     	}
     	return null;
+    }
+
+    public int getNumberOfRobots(){
+        return botPositions.size();
     }
 }

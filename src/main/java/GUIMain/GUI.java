@@ -6,7 +6,7 @@ package GUIMain;
         import com.badlogic.gdx.graphics.GL30;
         import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
-        import javax.swing.*;
+        import javax.swing.JOptionPane;
 
 public class GUI extends Game {
 

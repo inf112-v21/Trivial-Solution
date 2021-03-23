@@ -684,4 +684,20 @@ public class BoardTests {
 
         assertTrue(bård.getDirtyLocations().contains(new Position(0, 0)));
     }
+
+    @Test
+    public void gearRotatesTheRobotsTheCorrectDirection(){
+        bård.placeRobotAt(8,0,robot1);
+
+        bård.endPhase();
+
+        assertEquals(1, bård.getRobotAt(8,0).getDirection() );
+    }
+
+    @Test
+    public void rotatingRobotWithGearMarksLocationDirty(){
+
+    }
+
+
 }

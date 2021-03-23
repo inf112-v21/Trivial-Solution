@@ -21,6 +21,7 @@ public class Board {
 
     private final TreeMap<Robot, Position> botPositions = new TreeMap<>(Comparator.comparingInt((ToIntFunction<Object>) Object::hashCode));
     private final TreeMap<Laser, Position> laserPositions = new TreeMap<>(Comparator.comparingInt((ToIntFunction<Object>) Object::hashCode));
+    private final TreeMap<Gear, Position> gearPositions = new TreeMap<>(Comparator.comparingInt((ToIntFunction<Object>) Object::hashCode));
     private final TreeSet<Position> dirtyLocations = new TreeSet<>();
     private final LinkedList<Position> availableSpawnPoints = new LinkedList<>();
     private final LinkedList<Robot> robotsWaitingToBeRespawned = new LinkedList<>();
@@ -220,6 +221,7 @@ public class Board {
             if (comp instanceof Gear) {
                 int rotation = ((Gear) comp).getRotation();
                 getRobotAt(pos.getX(), pos.getY()).rotate(rotation);
+                dirtyLocations.add(pos);
             }
         }
     }

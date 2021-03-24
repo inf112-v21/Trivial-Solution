@@ -43,6 +43,13 @@ public class GameScreen extends Game implements Screen {
 	private final AI ai = new Randbot();
 	private final GUI gui;
 
+    private boolean hasStartedYet = false;
+    private float timeSinceLastUpdate = -1;
+    private static final float TIME_DELTA = 1;
+
+    private int phase = 0;
+    private int move = 0;
+
     /**
      * @param robots robotene som skal være med å spille
      * @param mapName navnet på filen.
@@ -90,10 +97,6 @@ public class GameScreen extends Game implements Screen {
 
     }
 
-    private boolean hasStartedYet = false;
-    private float timeSinceLastUpdate = -1;
-    private static final float TIME_DELTA = 1;
-
     @Override
     public void render(float v) {
         timeSinceLastUpdate += v;
@@ -140,8 +143,6 @@ public class GameScreen extends Game implements Screen {
      * Denne husker på hvilket trekk fra hvilken fase som skal blir gjort,
      *  slik at denne kan vite nøyaktig hvor i runden vi er.
      */
-    private int phase = 0;
-    private int move = 0;
     private void simulate(){
         if(phase + move == 0){
             gameboard.startRound();

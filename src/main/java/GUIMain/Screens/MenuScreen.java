@@ -19,9 +19,9 @@ import static com.badlogic.gdx.graphics.Color.*;
 public class MenuScreen extends InputAdapter implements Screen {
 
     private Stage stage;
-    private Table table;
-    private SpriteBatch batch;
+    private Table tabell;
     private BitmapFont font;
+    private SpriteBatch batch;
     private Label title;
     private Label undertitle;
     protected TextButton singleplayer;
@@ -44,17 +44,17 @@ public class MenuScreen extends InputAdapter implements Screen {
 
         Gdx.input.setInputProcessor(stage);
 
-        table = new Table();
-        table.setFillParent(true);
+        tabell = new Table();
+        tabell.setFillParent(true);
         title = new Label("Robo-Rally", gui.getSkin());
         title.setAlignment(Align.top);
         title.setFontScale(3);
-        table.add(title);
-        table.row();
+        tabell.add(title);
+        tabell.row();
         undertitle = new Label("A Trivial Solution", gui.getSkin());
         undertitle.setFontScale(2);
-        table.add(undertitle);
-        table.row();
+        tabell.add(undertitle);
+        tabell.row();
 
         singleplayer = new TextButton("Singleplayer", gui.getSkin());
         multiplayer = new TextButton("Multiplayer", gui.getSkin());
@@ -90,20 +90,17 @@ public class MenuScreen extends InputAdapter implements Screen {
              }
          });
 
-        table.add(singleplayer).prefWidth(200.0f).prefHeight(100.0f);
-        table.row();
-        table.add(multiplayer).prefWidth(200.0f).prefHeight(100.0f);
-        table.row();
-        table.add(options).prefWidth(200.0f).prefHeight(100.0f);
-        table.row();
-        table.add(quit).prefWidth(200.0f).prefHeight(100.0f);
+        tabell.add(singleplayer).prefWidth(200.0f).prefHeight(100.0f);
+        tabell.row();
+        tabell.add(multiplayer).prefWidth(200.0f).prefHeight(100.0f);
+        tabell.row();
+        tabell.add(options).prefWidth(200.0f).prefHeight(100.0f);
+        tabell.row();
+        tabell.add(quit).prefWidth(200.0f).prefHeight(100.0f);
 
-        stage.addActor(table);
-
-
+        stage.addActor(tabell);
 
     }
-
 
     @Override
     public void render(float v) {

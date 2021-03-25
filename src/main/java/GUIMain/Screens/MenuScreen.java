@@ -65,10 +65,6 @@ public class MenuScreen extends InputAdapter implements Screen {
         options = new TextButton("Options", gui.getSkin());
         quit = new TextButton("Quit", gui.getSkin());
 
-        singleplayer.setLabel(getButtonLabel("Singleplayer"));
-        multiplayer.setLabel(getButtonLabel("Multiplayer"));
-        options.setLabel(getButtonLabel("Options"));
-        quit.setLabel(getButtonLabel("Quit"));
 
 
 

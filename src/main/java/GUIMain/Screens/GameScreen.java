@@ -50,6 +50,9 @@ public class GameScreen implements Screen {
 	private Table chosenTable;
 	private Table buttonTable;
 	protected Robot playerControlledRobot;
+    protected TextButton powerdown;
+    protected TextButton lockin;
+    protected TextButton undo;
 
 	private Viewport view;
 
@@ -127,40 +130,17 @@ public class GameScreen implements Screen {
         batch = new SpriteBatch();
         font = new BitmapFont();
 
-        Label label1;
-        label1 = new Label("HELP", gui.getSkin());
-        Label label2;
-        label2 = new Label("HELP", gui.getSkin());
-        Label label3;
-        label3 = new Label("HELP", gui.getSkin());
-        Label label4;
-        label4 = new Label("HELP", gui.getSkin());
-        Label label5;
-        label5 = new Label("HELP", gui.getSkin());
-        Label label6;
-        label6 = new Label("HELP", gui.getSkin());
-        Label label7;
-        label7 = new Label("HELP", gui.getSkin());
-        Label label8;
-        label8 = new Label("HELP", gui.getSkin());
+        powerdown = new TextButton("Powerdown", gui.getSkin());
+        lockin = new TextButton("Lock-in", gui.getSkin());
+        undo = new TextButton("Undo", gui.getSkin());
         stage.addActor(chosenTable);
         stage.addActor(availableTable);
         stage.addActor(buttonTable);
-        chosenTable.add(label1);
-        chosenTable.row();
-        chosenTable.add(label2);
-        chosenTable.row();
-        chosenTable.add(label3);
-        chosenTable.row();
-        chosenTable.add(label4);
-        chosenTable.row();
-        chosenTable.add(label5);
-        chosenTable.row();
-        buttonTable.add(label6);
+        buttonTable.add(powerdown);
         buttonTable.row();
-        buttonTable.add(label7);
+        buttonTable.add(lockin);
         buttonTable.row();
-        buttonTable.add(label8);
+        buttonTable.add(undo);
 
         gameboard.startRound();
         isDoneChoosing = false;

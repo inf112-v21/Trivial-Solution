@@ -11,7 +11,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Align;
+import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
 
 
 import static com.badlogic.gdx.graphics.Color.*;
@@ -29,6 +31,7 @@ public class MenuScreen extends InputAdapter implements Screen {
     protected TextButton options;
     protected TextButton quit;
     private GUI gui;
+    private Viewport view;
 
     public MenuScreen(GUI gui){
         super();
@@ -37,7 +40,8 @@ public class MenuScreen extends InputAdapter implements Screen {
 
     @Override
     public void show() {
-        stage = new Stage(new ScreenViewport());
+        view = new FitViewport(960,540);
+        stage = new Stage(view);
         batch = new SpriteBatch();
         font = new BitmapFont();
         font.setColor(RED);
@@ -61,10 +65,6 @@ public class MenuScreen extends InputAdapter implements Screen {
         options = new TextButton("Options", gui.getSkin());
         quit = new TextButton("Quit", gui.getSkin());
 
-        singleplayer.setLabel(getButtonLabel("Singleplayer"));
-        multiplayer.setLabel(getButtonLabel("Multiplayer"));
-        options.setLabel(getButtonLabel("Options"));
-        quit.setLabel(getButtonLabel("Quit"));
 
 
 
@@ -115,7 +115,9 @@ public class MenuScreen extends InputAdapter implements Screen {
     }
 
     @Override
-    public void resize(int i, int i1) { }
+    public void resize(int i, int i1) {
+        view.update(i,i1);
+    }
     @Override
     public void pause() { }
     @Override

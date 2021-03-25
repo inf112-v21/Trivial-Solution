@@ -31,6 +31,18 @@ public class ComponentFactory {
                 return null; //Gulv, har ingen innvirkning på gameplay
             case 6:
                 return new Hole(6);
+            case 91: // "moderne" hull med kanter
+                return new Hole(91);
+            case 92: // hull uten kanter
+                return new Hole(92);
+            case 109: // hull uten venstre-kant
+                return new Hole(109);
+            case 110: // hull uten øverste-kant
+                return new Hole(110);
+            case 117: // hull uten høyre-kant
+                return new Hole(117);
+            case 118: // hull uten nederste-kant
+                return new Hole(118);
             case 7:
                 return new CheckPoint(7);
             case 15:

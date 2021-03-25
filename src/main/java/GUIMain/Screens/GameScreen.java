@@ -8,11 +8,9 @@ import GameBoard.BoardController;
 import GameBoard.Position;
 import GameBoard.Robot;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.GL30;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -22,12 +20,17 @@ import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.tiles.StaticTiledMapTile;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
 
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public class GameScreen extends Game implements Screen {
+public class GameScreen implements Screen {
     private SpriteBatch batch;
     private BitmapFont font;
     private final TiledMapTileLayer playerLayer;
@@ -42,13 +45,16 @@ public class GameScreen extends Game implements Screen {
 	private final ArrayList<Robot> robots;
 	private final AI ai = new Randbot();
 	private final GUI gui;
+	private Stage stage;
+	private Table availableTable;
+	private Table chosenTable;
+	private Table buttonTable;
+	protected Robot playerControlledRobot;
+    protected TextButton powerdown;
+    protected TextButton ready;
+    protected TextButton clear;
 
-    private boolean hasStartedYet = false;
-    private float timeSinceLastUpdate = -1;
-    private static final float TIME_DELTA = 1;
-
-    private int phase = 0;
-    private int move = 0;
+	private Viewport view;
 
     /**
      * @param robots robotene som skal være med å spille
@@ -62,51 +68,118 @@ public class GameScreen extends Game implements Screen {
         TiledMap map = tmx.load(mapName);
 
         TiledMapTileLayer backgroundLayer = (TiledMapTileLayer) map.getLayers().get("Background");
+
+        HEIGHT = backgroundLayer.getHeight()*CELL_SIZE;
+        WIDTH = backgroundLayer.getWidth()*CELL_SIZE;
+
+        view = new FitViewport(WIDTH*2, HEIGHT);
+        view.setScreenPosition(0,0);
+        view.update(WIDTH,HEIGHT, true);
+
+        //playerLayer = new TiledMapTileLayer(WIDTH, HEIGHT, CELL_SIZE, CELL_SIZE);
         playerLayer = (TiledMapTileLayer) map.getLayers().get("Robot");
 
-        HEIGHT = backgroundLayer.getHeight();
-        WIDTH = backgroundLayer.getWidth();
-
-        camera = new OrthographicCamera();
-        camera.setToOrtho(false, WIDTH*CELL_SIZE, HEIGHT*315);
-
-        camera.position.x = CELL_SIZE * WIDTH / 2;
-        camera.update();
+        camera = (OrthographicCamera) view.getCamera();//new OrthographicCamera();
+        //camera.setToOrtho(false, WIDTH, HEIGHT);
+        //camera.position.x = WIDTH / 2;
+        //camera.update();
 
         renderer = new OrthogonalTiledMapRenderer(map, 1);
-        renderer.setView(camera);
+        //renderer.setView(camera);
+
+        for (Robot bot : robots){
+            if (!bot.isControlledByAI()){
+                playerControlledRobot = bot;
+                break; // TODO: 25.03.2021 Denne må erstattes når vi implementerer multiplayer, og dermed har mer enn én spillerstyrt robot
+            }
+        }
     }
 
     @Override
     public void dispose() {
         batch.dispose();
         font.dispose();
+        renderer.dispose();
+
     }
 
     public BoardController getGameBoard(){ return gameboard; }
 
     @Override
     public void show() {
-        gameboard = new BoardController(robots, mapName);
-        Stage stage = new Stage();
+        Gdx.gl.glClearColor(1, 1, 1, 1);
+        Gdx.gl.glViewport( 0,0,view.getScreenWidth(),view.getScreenHeight());
+
+        //Skin skinLibgdx = new Skin(Gdx.files.internal("assets/default/skin/uiskin.json"));
+        stage = new Stage();
         Gdx.input.setInputProcessor(stage);
+
+        chosenTable = new Table();
+        chosenTable.setBounds(Gdx.graphics.getWidth()/2,0,Gdx.graphics.getWidth()/6,Gdx.graphics.getHeight());
+        chosenTable.setFillParent(false);
+        availableTable = new Table();
+        availableTable.setBounds((2*Gdx.graphics.getWidth())/3,0,Gdx.graphics.getWidth()/3,Gdx.graphics.getHeight());
+        availableTable.setFillParent(false);
+        buttonTable = new Table();
+        buttonTable.setBounds(Gdx.graphics.getWidth()-(Gdx.graphics.getWidth()/6),0,Gdx.graphics.getWidth()/6,Gdx.graphics.getHeight()/5);
+        buttonTable.setFillParent(false);
+
+        gameboard = new BoardController(robots, mapName);
         updateRobotPositions();
 
         batch = new SpriteBatch();
         font = new BitmapFont();
 
+        powerdown = new TextButton("Powerdown", gui.getSkin());
+        powerdown.addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                playerControlledRobot.togglePowerDown();
+                playerControlledRobot.resetCards();
+                isDoneChoosing = true;
+                super.clicked(event, x, y);
+            }
+        });
+
+        ready = new TextButton("Ready", gui.getSkin());
+        ready.addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                isDoneChoosing = true;
+                super.clicked(event, x, y);
+            }
+        });
+
+        clear = new TextButton("Clear", gui.getSkin());
+        clear.addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                playerControlledRobot.getChosenCards().clear();
+                chosenTable.clear();
+                super.clicked(event, x, y);
+            }
+        });
+
+        stage.addActor(chosenTable);
+        stage.addActor(availableTable);
+        stage.addActor(buttonTable);
+        buttonTable.add(powerdown);
+        buttonTable.row();
+        buttonTable.add(ready);
+        buttonTable.row();
+        buttonTable.add(clear);
+
     }
+
+    private boolean hasStartedYet = false;
+    private float timeSinceLastUpdate = -1;
+    private static final float TIME_DELTA = 1;
 
     @Override
     public void render(float v) {
         timeSinceLastUpdate += v;
-        batch.begin();
-        Gdx.gl.glClearColor(0, 0, 0, 1);
-        Gdx.gl.glClear(GL30.GL_COLOR_BUFFER_BIT);
-        Gdx.gl.glViewport( Gdx.graphics.getWidth()-CELL_SIZE,0,Gdx.graphics.getWidth()/2,Gdx.graphics.getHeight() );
-        Gdx.gl.glViewport( 0,0,Gdx.graphics.getWidth()-CELL_SIZE,Gdx.graphics.getHeight() );
         renderer.render();
-        batch.end();
+        stage.draw();
 
         //Denne sørger for at vi får tegnet opp GUI-en ferdig i starten av spillet
         // før spilleren blir bedt om å velge kort.
@@ -119,6 +192,7 @@ public class GameScreen extends Game implements Screen {
         timeSinceLastUpdate = 0;
         simulate();
         updateRobotPositions();
+        renderCards();
     }
 
     private void updateRobotPositions(){
@@ -143,12 +217,16 @@ public class GameScreen extends Game implements Screen {
      * Denne husker på hvilket trekk fra hvilken fase som skal blir gjort,
      *  slik at denne kan vite nøyaktig hvor i runden vi er.
      */
+    private int phase = 0;
+    private int move = 0;
     private void simulate(){
+        if (! isDoneChoosing) return;
         if(phase + move == 0){
             gameboard.startRound();
+            isDoneChoosing = false;
             for (Robot bot : gameboard.getBots()) {
                 if (bot.isControlledByAI()) ai.chooseCards(bot, gameboard.getBoard());
-                else pickCardsFromTerminal(bot);
+                //else pickCardsFromTerminal(bot);
             }
         }
         if (move == gameboard.getBots().size()){
@@ -160,10 +238,35 @@ public class GameScreen extends Game implements Screen {
         if(phase == 5){
             phase = 0;
             gameboard.endRound();
+            chosenTable.clear();
             return;
         }
         gameboard.moveRobot(phase, move);
         move++;
+    }
+
+    protected boolean isDoneChoosing = true;
+    public void renderCards(){
+        availableTable.clear();
+        renderer.getBatch().begin();
+        boolean odd = false;
+        int yscale=0;
+        yscale = (playerControlledRobot.getAvailableCards().size()+1)/2;
+        availableTable.setBounds((2*Gdx.graphics.getWidth())/3,(Gdx.graphics.getHeight()/5*(5-yscale)),Gdx.graphics.getWidth()/3,Gdx.graphics.getHeight()-(Gdx.graphics.getHeight()/5*(5-yscale)));
+        for (int i = 0; i < playerControlledRobot.getAvailableCards().size(); i++) {
+            ICard card = playerControlledRobot.getAvailableCards().get(i);
+            Image img = new Image(card.getCardImage()); //må bare konvertere dette til å funke med knapper
+            img.setSize(Gdx.graphics.getWidth()/6,Gdx.graphics.getHeight()/5);
+            img.addListener(new CardListener(i));
+
+            availableTable.add(img);
+            if(odd){
+                availableTable.row();
+                odd = false;
+            }
+            else odd = true;
+        }
+        renderer.getBatch().end();
     }
 
     public static void pickCardsFromTerminal(Robot bot){
@@ -187,30 +290,19 @@ public class GameScreen extends Game implements Screen {
         }
     }
 
-
-    @Override
-    public void create() {
-        // TODO: 04.03.2021 Vetsje hva som skulle vært her? Kanskje bare show()?
-    }
-
     @Override
     public void resize(int width, int height) {
+        view.update(width,height);
+        camera.update();
+        renderer.setView(camera);
     }
 
     @Override
-    public void pause() {
-    }
-
+    public void pause() { }
     @Override
-    public void resume() {
-    	
-    }
-
+    public void resume() { }
     @Override
-    public void hide() {
-
-    }
-	
+    public void hide() { }
 	public void delay() {
 		try {
 			Thread.sleep(999);
@@ -232,6 +324,22 @@ public class GameScreen extends Game implements Screen {
 		font.getData().setScale(5, 5);
 		batch.end();
 	}
+
+	private class CardListener extends ClickListener{
+	    int index;
+	    public CardListener(int i){ super(); index = i; }
+
+        @Override
+        public void clicked(InputEvent event, float x, float y) {
+	        if (isDoneChoosing) return;
+            if (playerControlledRobot.getChosenCards().size() >= Math.min(5, playerControlledRobot.getHP())) return;
+            ICard card = playerControlledRobot.getAvailableCards().get(index);
+            if (!playerControlledRobot.chooseCard(card)) return;
+            chosenTable.add(new Image(card.getCardImage()));
+            chosenTable.row();
+
+        }
+    }
 }
 	
 

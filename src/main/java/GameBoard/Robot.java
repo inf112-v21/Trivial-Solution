@@ -189,11 +189,17 @@ public class Robot{
 	 * Denne metoden legger til et og et kort i rekkefølge i registeret utifra hva spilleren velger.
 	 * @param chosenCard kortet som ble valgt
 	 */
-	public void chooseCard(ICard chosenCard){
+	public boolean chooseCard(ICard chosenCard){
+	    if (chosenCards.contains(chosenCard)) return false;
+	    if (! availableCards.contains(chosenCard)) throw new IllegalArgumentException("This card isn't in the list of available cards for som reason");
+	    if (chosenCards.size() > Math.min(5, hp)) throw new IllegalStateException("I already have the maximum number of cards!");
 		chosenCards.add(chosenCard);
+		return true;
 	}
 
-	public void removeCardFromRegister(ICard unchosenCard){ chosenCards.remove(unchosenCard); }
+	public void removeCardFromRegister(ICard unchosenCard){
+	    if (! chosenCards.contains(unchosenCard)) throw new IllegalArgumentException("This card wasn't chosen, so I cannot unchoose it.");
+	    chosenCards.remove(unchosenCard); }
 
 	/**
 	 * @return returnerer maks 5 kort fra registeret, kan returnere færre dersom roboten har mye damage.

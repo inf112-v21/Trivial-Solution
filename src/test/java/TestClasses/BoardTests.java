@@ -611,6 +611,7 @@ public class BoardTests {
     public void movingRobotOneStepAddsTheNewLocationAndTheOldOneToTheSetOfDirtyLocations(){
         bård.placeRobotAt(0, 0, robot1);
         robot1.setDirection(1);
+        bård.getDirtyLocations();
 
         bård.performMove(new ProgramCard(1, 0, 1, null), robot1);
 

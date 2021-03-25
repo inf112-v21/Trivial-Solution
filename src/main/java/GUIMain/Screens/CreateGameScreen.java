@@ -8,7 +8,9 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.utils.Align;
+import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -24,6 +26,7 @@ public class CreateGameScreen implements Screen {
     private SelectBox<Integer> numberOfRobots;
     private SelectBox<String> choosemapbox;
     private TextField textField;
+    private Viewport view;
 
     public CreateGameScreen(GUI gui){
         super();
@@ -32,7 +35,8 @@ public class CreateGameScreen implements Screen {
 
     @Override
     public void show() {
-        stage = new Stage(new ScreenViewport());
+        view = new FitViewport(960, 540);
+        stage = new Stage(view);
         batch = new SpriteBatch();
         Gdx.input.setInputProcessor(stage);
         table = new Table();
@@ -42,9 +46,8 @@ public class CreateGameScreen implements Screen {
         Label title = new Label("Create Game", gui.getSkin());
         title.setFontScale(4);
         title.setAlignment(Align.top);
-        table.add(title);
+        table.add(title).spaceBottom(80);
         table.row();
-        table.padBottom(300);
 
         Label numberplayerlabel = new Label("Number of players: ", gui.getSkin());
         numberplayerlabel.setFontScale(2);
@@ -53,7 +56,7 @@ public class CreateGameScreen implements Screen {
         numberOfRobots = new SelectBox<>(gui.getSkin());
         numberOfRobots.setItems(2, 3, 4, 5, 6, 7, 8);
         numberOfRobots.scaleBy(3);
-        table.add(numberOfRobots);
+        table.add(numberOfRobots).spaceBottom(50);
         table.row();
 
         Label yourname = new Label("Your robot's name: ", gui.getSkin());
@@ -61,7 +64,7 @@ public class CreateGameScreen implements Screen {
         table.add(yourname);
 
         textField = new TextField("", gui.getSkin());
-        table.add(textField);
+        table.add(textField).spaceBottom(50);
         table.row();
 
         Label choosemaplabel = new Label("Choose map: ", gui.getSkin());
@@ -71,7 +74,7 @@ public class CreateGameScreen implements Screen {
         choosemapbox = new SelectBox<>(gui.getSkin());
         choosemapbox.setItems(getMapNames());
         //choosemapbox.scaleBy(3);
-        table.add(choosemapbox);
+        table.add(choosemapbox).spaceBottom(50);
         table.row();
 
         start = new TextButton("Start game", gui.getSkin());
@@ -105,7 +108,9 @@ public class CreateGameScreen implements Screen {
     }
 
     @Override
-    public void resize(int i, int i1) { }
+    public void resize(int width, int height) {
+        view.update(width, height);
+    }
     @Override
     public void pause() { }
     @Override

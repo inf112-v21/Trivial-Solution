@@ -36,7 +36,6 @@ public class BoardController {
             for (int amount=0; amount<bot.getHP()-1; amount++){
                 ICard card =deck.drawCard();
                 cardlist.add(card);
-                System.out.print(card);
             }
             bot.setAvailableCards(cardlist);
         }

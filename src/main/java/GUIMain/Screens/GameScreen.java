@@ -5,7 +5,6 @@ import AIs.Randbot;
 import GameBoard.Cards.ICard;
 import GUIMain.GUI;
 import GameBoard.BoardController;
-import GameBoard.Cards.ProgramCard;
 import GameBoard.Position;
 import GameBoard.Robot;
 
@@ -13,7 +12,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -22,12 +20,13 @@ import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.tiles.StaticTiledMapTile;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
-import javax.swing.plaf.synth.SynthRadioButtonMenuItemUI;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -48,7 +47,7 @@ public class GameScreen implements Screen {
 	private final GUI gui;
 	private Stage stage;
 	private Table cardTable;
-	private Robot playerControlledRobot;
+	protected Robot playerControlledRobot;
 
 	private Viewport view;
 
@@ -124,6 +123,9 @@ public class GameScreen implements Screen {
         font = new BitmapFont();
 
         stage.addActor(cardTable);
+
+        gameboard.startRound();
+        isDoneChoosing = false;
     }
 
     private boolean hasStartedYet = false;
@@ -193,20 +195,23 @@ public class GameScreen implements Screen {
         if(phase == 5){
             phase = 0;
             gameboard.endRound();
+            isDoneChoosing = false;
             return;
         }
         gameboard.moveRobot(phase, move);
         move++;
     }
 
-    private boolean isDoneChoosing = true;
+    protected boolean isDoneChoosing = true;
     public void renderCards(){
         cardTable.clear();
-        isDoneChoosing = false;
         renderer.getBatch().begin();
         boolean odd = false;
-        for (ICard card : playerControlledRobot.getAvailableCards()){
+        for (int i = 0; i < playerControlledRobot.getAvailableCards().size(); i++) {
+            ICard card = playerControlledRobot.getAvailableCards().get(i);
             Image img = new Image(card.getCardImage()); //må bare konvertere dette til å funke med knapper
+            img.addListener(new CardListener(i));
+
             cardTable.add(img);
             if(odd){
                 cardTable.row();
@@ -280,6 +285,23 @@ public class GameScreen implements Screen {
 		font.getData().setScale(5, 5);
 		batch.end();
 	}
+
+	private class CardListener extends ClickListener{
+	    int index;
+	    public CardListener(int i){ super(); index = i; }
+
+        @Override
+        public void clicked(InputEvent event, float x, float y) {
+	        if (isDoneChoosing) return;
+            System.out.println("Kort nr. " + index + " valgt");
+            ICard card = playerControlledRobot.getAvailableCards().get(index);
+            //chosenTable.add(new Image(card.getCardImage()));
+            playerControlledRobot.chooseCard(card);
+            if (playerControlledRobot.getChosenCards().size() >= Math.min(5, playerControlledRobot.getHP())){
+                isDoneChoosing = true;
+            }
+        }
+    }
 }
 	
 

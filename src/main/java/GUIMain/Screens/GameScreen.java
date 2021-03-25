@@ -225,9 +225,13 @@ public class GameScreen implements Screen {
         availableTable.clear();
         renderer.getBatch().begin();
         boolean odd = false;
+        int yscale=0;
+        yscale = (playerControlledRobot.getAvailableCards().size()+1)/2;
+        availableTable.setBounds((2*Gdx.graphics.getWidth())/3,(Gdx.graphics.getHeight()/5*(5-yscale)),Gdx.graphics.getWidth()/3,Gdx.graphics.getHeight()-(Gdx.graphics.getHeight()/5*(5-yscale)));
         for (int i = 0; i < playerControlledRobot.getAvailableCards().size(); i++) {
             ICard card = playerControlledRobot.getAvailableCards().get(i);
             Image img = new Image(card.getCardImage()); //må bare konvertere dette til å funke med knapper
+            img.setSize(Gdx.graphics.getWidth()/6,Gdx.graphics.getHeight()/5);
             img.addListener(new CardListener(i));
 
             availableTable.add(img);

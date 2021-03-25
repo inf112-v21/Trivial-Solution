@@ -5,6 +5,7 @@ import AIs.Randbot;
 import GameBoard.Cards.ICard;
 import GUIMain.GUI;
 import GameBoard.BoardController;
+import GameBoard.Cards.ProgramCard;
 import GameBoard.Position;
 import GameBoard.Robot;
 
@@ -26,6 +27,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
+import javax.swing.plaf.synth.SynthRadioButtonMenuItemUI;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -44,7 +46,7 @@ public class GameScreen implements Screen {
 	private final ArrayList<Robot> robots;
 	private final AI ai = new Randbot();
 	private final GUI gui;
-	private final Stage stage;
+	private Stage stage;
 	private Table cardTable;
 	private Robot playerControlledRobot;
 
@@ -83,9 +85,6 @@ public class GameScreen implements Screen {
         renderer = new OrthogonalTiledMapRenderer(map, 1);
         //renderer.setView(camera);
 
-        stage = new Stage();
-        Gdx.input.setInputProcessor(stage);
-
         for (Robot bot : robots){
             if (!bot.isControlledByAI()){
                 playerControlledRobot = bot;
@@ -107,13 +106,23 @@ public class GameScreen implements Screen {
     @Override
     public void show() {
         Gdx.gl.glClearColor(1, 1, 1, 1);
-        Gdx.gl.glViewport( 0,0,Gdx.graphics.getWidth(),Gdx.graphics.getHeight());
+        Gdx.gl.glViewport( 0,0,view.getScreenWidth(),view.getScreenHeight());
+
+        //Skin skinLibgdx = new Skin(Gdx.files.internal("assets/default/skin/uiskin.json"));
+        stage = new Stage();
+        Gdx.input.setInputProcessor(stage);
+
+        cardTable = new Table();
+        cardTable.setBounds(500, 0, 100, 500);
+        cardTable.setFillParent(true);
+
         gameboard = new BoardController(robots, mapName);
         updateRobotPositions();
 
         batch = new SpriteBatch();
         font = new BitmapFont();
 
+        stage.addActor(cardTable);
     }
 
     private boolean hasStartedYet = false;
@@ -124,6 +133,7 @@ public class GameScreen implements Screen {
     public void render(float v) {
         timeSinceLastUpdate += v;
         renderer.render();
+        stage.draw();
 
         //Denne sørger for at vi får tegnet opp GUI-en ferdig i starten av spillet
         // før spilleren blir bedt om å velge kort.
@@ -132,12 +142,12 @@ public class GameScreen implements Screen {
             return;
         }
 
-        renderCards();
 
         if(timeSinceLastUpdate < TIME_DELTA) return;
         timeSinceLastUpdate = 0;
         simulate();
         updateRobotPositions();
+        renderCards();
     }
 
     private void updateRobotPositions(){
@@ -171,7 +181,6 @@ public class GameScreen implements Screen {
             for (Robot bot : gameboard.getBots()) {
                 if (bot.isControlledByAI()) ai.chooseCards(bot, gameboard.getBoard());
                 //else pickCardsFromTerminal(bot);
-                //else pickCardsTEMP(bot);
             }
         }
         if (move == gameboard.getBots().size()){
@@ -191,12 +200,20 @@ public class GameScreen implements Screen {
 
     private boolean isDoneChoosing = true;
     public void renderCards(){
+        cardTable.clear();
         isDoneChoosing = false;
         renderer.getBatch().begin();
-        Sprite sprite = new Sprite(new Texture(Gdx.files.internal("Cards/1 Red HULK X90/090 MOVE1 1Red 3.png")));
-        sprite.setSize(300, 400);
-        sprite.setPosition(2850, 1);
-        sprite.draw(renderer.getBatch());
+        boolean odd = false;
+        for (ICard card : playerControlledRobot.getAvailableCards()){
+            Image img = new Image(card.getCardImage());
+            img.setSize(300, 400);
+            cardTable.add(img);
+            if(odd){
+                cardTable.row();
+                odd = false;
+            }
+            else odd = true;
+        }
         renderer.getBatch().end();
     }
 

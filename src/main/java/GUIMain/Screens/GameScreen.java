@@ -65,21 +65,21 @@ public class GameScreen implements Screen {
 
         TiledMapTileLayer backgroundLayer = (TiledMapTileLayer) map.getLayers().get("Background");
 
-        HEIGHT = backgroundLayer.getHeight();
-        WIDTH = backgroundLayer.getWidth();
+        HEIGHT = backgroundLayer.getHeight()*CELL_SIZE;
+        WIDTH = backgroundLayer.getWidth()*CELL_SIZE;
 
-        view = new FitViewport(WIDTH*CELL_SIZE*2, HEIGHT*CELL_SIZE);
+        view = new FitViewport(WIDTH*2, HEIGHT);
         view.setScreenPosition(0,0);
-        view.update(WIDTH*CELL_SIZE,HEIGHT*CELL_SIZE, true);
+        view.update(WIDTH,HEIGHT, true);
 
         //playerLayer = new TiledMapTileLayer(WIDTH, HEIGHT, CELL_SIZE, CELL_SIZE);
         playerLayer = (TiledMapTileLayer) map.getLayers().get("Robot");
 
         camera = (OrthographicCamera) view.getCamera();//new OrthographicCamera();
-        //camera.setToOrtho(false, WIDTH*CELL_SIZE, HEIGHT*CELL_SIZE);
+        //camera.setToOrtho(false, WIDTH, HEIGHT);
 
 
-        //camera.position.x = CELL_SIZE * WIDTH / 2;
+        //camera.position.x = WIDTH / 2;
         //camera.update();
 
         renderer = new OrthogonalTiledMapRenderer(map, 1);
@@ -113,8 +113,9 @@ public class GameScreen implements Screen {
         Gdx.input.setInputProcessor(stage);
 
         cardTable = new Table();
-        cardTable.setBounds(500, 0, 100, 500);
-        cardTable.setFillParent(true);
+        cardTable.setPosition(Gdx.graphics.getWidth()/2,0);
+        cardTable.setSize(Gdx.graphics.getWidth()/2,Gdx.graphics.getHeight());
+        cardTable.setFillParent(false);
 
         gameboard = new BoardController(robots, mapName);
         updateRobotPositions();
@@ -205,8 +206,7 @@ public class GameScreen implements Screen {
         renderer.getBatch().begin();
         boolean odd = false;
         for (ICard card : playerControlledRobot.getAvailableCards()){
-            Image img = new Image(card.getCardImage());
-            img.setSize(300, 400);
+            Image img = new Image(card.getCardImage()); //må bare konvertere dette til å funke med knapper
             cardTable.add(img);
             if(odd){
                 cardTable.row();

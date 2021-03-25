@@ -1,4 +1,4 @@
-package Components;
+package GameBoard.Components;
 
 import java.util.Comparator;
 

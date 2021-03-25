@@ -1,9 +1,10 @@
-package GameBoard;
+package TestClasses;
 
-import Components.Flag;
+import GameBoard.BoardController;
+import GameBoard.Components.Flag;
 import GUIMain.Screens.GameScreen;
-import Player.Robot;
 import GUIMain.GUI;
+import GameBoard.Robot;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
@@ -14,15 +15,13 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.ArrayList;
 
-import static com.badlogic.gdx.graphics.Color.*;
-
-class GameBoardTest {
+class BoardControllerTest {
 
     private static GameScreen gameScreen;
 
     private static GUI gui;
     private final static String defaultMapName = "maps/TestMap.tmx";
-    private static GameBoard robotRally;
+    private static BoardController robotRally;
 
     /**
      * GDX-initialiserings koden må være kjørt før "Gdx.files.internal" i game-konstruktøren skal klare lese
@@ -40,11 +39,11 @@ class GameBoardTest {
             }
         }, cfg);
 
-        ArrayList<Robot> robots = new ArrayList<Robot>();
+        ArrayList<Robot> robots = new ArrayList<>();
         robots.add(new Robot("Nebuchadnezzar", false));
         robots.add(new Robot("Andromeda", false));
         robots.add(new Robot("Ashurbarnipal",false));
-        robotRally = new GameBoard(robots, defaultMapName);
+        robotRally = new BoardController(robots, defaultMapName);
     }
 
     @Test

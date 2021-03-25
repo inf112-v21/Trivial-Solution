@@ -1,16 +1,15 @@
-package Robot;
+package TestClasses;
 
-import Cards.Deck;
-import Cards.ICard;
-import Player.Robot;
+import GameBoard.Cards.Deck;
+import GameBoard.Cards.ICard;
+import GameBoard.Robot;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class RobotTest {
 
@@ -19,7 +18,6 @@ public class RobotTest {
     private static Robot r;
     private static Integer numberOfLifeTokens;
     private static Integer numberOfDamageTokens;
-    private static Boolean initializePowerDown = false;
 
     @BeforeEach
     public void setCards(){
@@ -35,8 +33,8 @@ public class RobotTest {
     }
     @BeforeAll
     public static void setUp(){
-        allCards = new ArrayList<ICard>();
-        registerCards = new ArrayList<ICard>();
+        allCards = new ArrayList<>();
+        registerCards = new ArrayList<>();
         r = new Robot("testRobot", false);
     }
 
@@ -74,6 +72,8 @@ public class RobotTest {
 
     @Test
     void canRegisterPowerDownARobot(){
+        assertFalse(r.isPowerDownAnnounced());
+
         r.togglePowerDown();
 
         assertTrue(r.isPowerDownAnnounced());

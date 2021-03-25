@@ -1,8 +1,8 @@
 package AIs;
 
 import GameBoard.Board;
-import Cards.ICard;
-import Player.Robot;
+import GameBoard.Cards.ICard;
+import GameBoard.Robot;
 
 import java.util.ArrayList;
 import java.util.Random;

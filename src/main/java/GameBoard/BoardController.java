@@ -1,15 +1,15 @@
 package GameBoard;
 
-import Cards.Deck;
-import Cards.ICard;
-import Components.Flag;
-import Player.Robot;
+import GameBoard.Cards.Deck;
+import GameBoard.Cards.ICard;
+import GameBoard.Components.Flag;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.TreeSet;
 
 
-public class GameBoard {
+public class BoardController {
 
     protected int numberOfPlayers;
 
@@ -20,7 +20,7 @@ public class GameBoard {
     private final Board board;
 
 
-    public GameBoard(ArrayList<Robot> robots, String mapName){
+    public BoardController(ArrayList<Robot> robots, String mapName){
         board = new Board(mapName);
         numberOfPlayers = robots.size();
         bots = robots;
@@ -59,6 +59,14 @@ public class GameBoard {
         board.endPhase();
     }
 
+    public void moveRobot(int phase, int botIndex){
+        if(botIndex == 0) bots.sort(new BotComparator(phase));
+        Robot botToMove = bots.get(botIndex);
+        if (botToMove.hasRemainingLives() && botToMove.getChosenCards().size() > phase){
+            board.performMove(botToMove.getChosenCards().get(phase), botToMove);
+        }
+    }
+
     public void endRound(){
         for (Robot bot : bots) bot.resetCards();
     }
@@ -79,6 +87,9 @@ public class GameBoard {
     }
 
     public Board getBoard(){ return board; }
+    public void endPhase(){ board.endPhase(); }
+    public TreeSet<Position> getDirtyLocations(){ return board.getDirtyLocations(); }
+
     public ArrayList<Robot> getBots(){ return bots; }
 
    

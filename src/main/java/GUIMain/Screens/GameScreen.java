@@ -68,7 +68,7 @@ public class GameScreen extends Game implements Screen {
         WIDTH = backgroundLayer.getWidth();
 
         camera = new OrthographicCamera();
-        camera.setToOrtho(false, WIDTH*CELL_SIZE, HEIGHT*315);
+        camera.setToOrtho(false, WIDTH*CELL_SIZE, HEIGHT*CELL_SIZE);
 
         camera.position.x = CELL_SIZE * WIDTH / 2;
         camera.update();

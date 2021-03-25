@@ -53,6 +53,7 @@ public class GameScreen implements Screen {
     protected TextButton powerdown;
     protected TextButton ready;
     protected TextButton clear;
+    private int counter = 0;
 
 	private Viewport view;
 
@@ -156,6 +157,7 @@ public class GameScreen implements Screen {
             public void clicked(InputEvent event, float x, float y) {
                 playerControlledRobot.getChosenCards().clear();
                 chosenTable.clear();
+                counter = 0;
                 super.clicked(event, x, y);
             }
         });
@@ -239,6 +241,7 @@ public class GameScreen implements Screen {
             phase = 0;
             gameboard.endRound();
             chosenTable.clear();
+            counter = 0;
             return;
         }
         gameboard.moveRobot(phase, move);
@@ -335,6 +338,8 @@ public class GameScreen implements Screen {
             if (playerControlledRobot.getChosenCards().size() >= Math.min(5, playerControlledRobot.getHP())) return;
             ICard card = playerControlledRobot.getAvailableCards().get(index);
             if (!playerControlledRobot.chooseCard(card)) return;
+            counter +=1;
+            chosenTable.setBounds((Gdx.graphics.getWidth())/2,(Gdx.graphics.getHeight()/5*(5-counter)),Gdx.graphics.getWidth()/6,Gdx.graphics.getHeight()-(Gdx.graphics.getHeight()/5*(5-counter)));
             chosenTable.add(new Image(card.getCardImage()));
             chosenTable.row();
 

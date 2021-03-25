@@ -46,7 +46,9 @@ public class GameScreen implements Screen {
 	private final AI ai = new Randbot();
 	private final GUI gui;
 	private Stage stage;
-	private Table cardTable;
+	private Table availableTable;
+	private Table chosenTable;
+	private Table buttonTable;
 	protected Robot playerControlledRobot;
 
 	private Viewport view;
@@ -109,10 +111,15 @@ public class GameScreen implements Screen {
         stage = new Stage();
         Gdx.input.setInputProcessor(stage);
 
-        cardTable = new Table();
-        cardTable.setPosition(Gdx.graphics.getWidth()/2,0);
-        cardTable.setSize(Gdx.graphics.getWidth()/2,Gdx.graphics.getHeight());
-        cardTable.setFillParent(false);
+        chosenTable = new Table();
+        chosenTable.setBounds(Gdx.graphics.getWidth()/2,0,Gdx.graphics.getWidth()/6,Gdx.graphics.getHeight());
+        chosenTable.setFillParent(false);
+        availableTable = new Table();
+        availableTable.setBounds((2*Gdx.graphics.getWidth())/3,0,Gdx.graphics.getWidth()/3,Gdx.graphics.getHeight());
+        availableTable.setFillParent(false);
+        buttonTable = new Table();
+        buttonTable.setBounds(Gdx.graphics.getWidth()-(Gdx.graphics.getWidth()/6),0,Gdx.graphics.getWidth()/6,Gdx.graphics.getHeight()/5);
+        buttonTable.setFillParent(false);
 
         gameboard = new BoardController(robots, mapName);
         updateRobotPositions();
@@ -120,7 +127,40 @@ public class GameScreen implements Screen {
         batch = new SpriteBatch();
         font = new BitmapFont();
 
-        stage.addActor(cardTable);
+        Label label1;
+        label1 = new Label("HELP", gui.getSkin());
+        Label label2;
+        label2 = new Label("HELP", gui.getSkin());
+        Label label3;
+        label3 = new Label("HELP", gui.getSkin());
+        Label label4;
+        label4 = new Label("HELP", gui.getSkin());
+        Label label5;
+        label5 = new Label("HELP", gui.getSkin());
+        Label label6;
+        label6 = new Label("HELP", gui.getSkin());
+        Label label7;
+        label7 = new Label("HELP", gui.getSkin());
+        Label label8;
+        label8 = new Label("HELP", gui.getSkin());
+        stage.addActor(chosenTable);
+        stage.addActor(availableTable);
+        stage.addActor(buttonTable);
+        chosenTable.add(label1);
+        chosenTable.row();
+        chosenTable.add(label2);
+        chosenTable.row();
+        chosenTable.add(label3);
+        chosenTable.row();
+        chosenTable.add(label4);
+        chosenTable.row();
+        chosenTable.add(label5);
+        chosenTable.row();
+        buttonTable.add(label6);
+        buttonTable.row();
+        buttonTable.add(label7);
+        buttonTable.row();
+        buttonTable.add(label8);
 
         gameboard.startRound();
         isDoneChoosing = false;
@@ -202,7 +242,7 @@ public class GameScreen implements Screen {
 
     protected boolean isDoneChoosing = true;
     public void renderCards(){
-        cardTable.clear();
+        availableTable.clear();
         renderer.getBatch().begin();
         boolean odd = false;
         for (int i = 0; i < playerControlledRobot.getAvailableCards().size(); i++) {
@@ -210,9 +250,9 @@ public class GameScreen implements Screen {
             Image img = new Image(card.getCardImage()); //må bare konvertere dette til å funke med knapper
             img.addListener(new CardListener(i));
 
-            cardTable.add(img);
+            availableTable.add(img);
             if(odd){
-                cardTable.row();
+                availableTable.row();
                 odd = false;
             }
             else odd = true;

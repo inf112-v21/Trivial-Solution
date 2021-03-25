@@ -51,8 +51,8 @@ public class GameScreen implements Screen {
 	private Table buttonTable;
 	protected Robot playerControlledRobot;
     protected TextButton powerdown;
-    protected TextButton lockin;
-    protected TextButton undo;
+    protected TextButton ready;
+    protected TextButton clear;
 
 	private Viewport view;
 
@@ -131,19 +131,44 @@ public class GameScreen implements Screen {
         font = new BitmapFont();
 
         powerdown = new TextButton("Powerdown", gui.getSkin());
-        lockin = new TextButton("Lock-in", gui.getSkin());
-        undo = new TextButton("Undo", gui.getSkin());
+        powerdown.addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                playerControlledRobot.togglePowerDown();
+                playerControlledRobot.resetCards();
+                isDoneChoosing = true;
+                super.clicked(event, x, y);
+            }
+        });
+
+        ready = new TextButton("Ready", gui.getSkin());
+        ready.addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                isDoneChoosing = true;
+                super.clicked(event, x, y);
+            }
+        });
+
+        clear = new TextButton("Clear", gui.getSkin());
+        clear.addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                playerControlledRobot.getChosenCards().clear();
+                chosenTable.clear();
+                super.clicked(event, x, y);
+            }
+        });
+
         stage.addActor(chosenTable);
         stage.addActor(availableTable);
         stage.addActor(buttonTable);
         buttonTable.add(powerdown);
         buttonTable.row();
-        buttonTable.add(lockin);
+        buttonTable.add(ready);
         buttonTable.row();
-        buttonTable.add(undo);
+        buttonTable.add(clear);
 
-        gameboard.startRound();
-        isDoneChoosing = false;
     }
 
     private boolean hasStartedYet = false;
@@ -162,7 +187,6 @@ public class GameScreen implements Screen {
             hasStartedYet = true;
             return;
         }
-
 
         if(timeSinceLastUpdate < TIME_DELTA) return;
         timeSinceLastUpdate = 0;
@@ -199,6 +223,7 @@ public class GameScreen implements Screen {
         if (! isDoneChoosing) return;
         if(phase + move == 0){
             gameboard.startRound();
+            isDoneChoosing = false;
             for (Robot bot : gameboard.getBots()) {
                 if (bot.isControlledByAI()) ai.chooseCards(bot, gameboard.getBoard());
                 //else pickCardsFromTerminal(bot);
@@ -213,7 +238,7 @@ public class GameScreen implements Screen {
         if(phase == 5){
             phase = 0;
             gameboard.endRound();
-            isDoneChoosing = false;
+            chosenTable.clear();
             return;
         }
         gameboard.moveRobot(phase, move);
@@ -269,19 +294,11 @@ public class GameScreen implements Screen {
     }
 
     @Override
-    public void pause() {
-    }
-
+    public void pause() { }
     @Override
-    public void resume() {
-    	
-    }
-
+    public void resume() { }
     @Override
-    public void hide() {
-
-    }
-	
+    public void hide() { }
 	public void delay() {
 		try {
 			Thread.sleep(999);
@@ -311,13 +328,12 @@ public class GameScreen implements Screen {
         @Override
         public void clicked(InputEvent event, float x, float y) {
 	        if (isDoneChoosing) return;
-            System.out.println("Kort nr. " + index + " valgt");
+            if (playerControlledRobot.getChosenCards().size() >= Math.min(5, playerControlledRobot.getHP())) return;
             ICard card = playerControlledRobot.getAvailableCards().get(index);
-            //chosenTable.add(new Image(card.getCardImage()));
-            playerControlledRobot.chooseCard(card);
-            if (playerControlledRobot.getChosenCards().size() >= Math.min(5, playerControlledRobot.getHP())){
-                isDoneChoosing = true;
-            }
+            if (!playerControlledRobot.chooseCard(card)) return;
+            chosenTable.add(new Image(card.getCardImage()));
+            chosenTable.row();
+
         }
     }
 }

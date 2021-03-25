@@ -189,11 +189,12 @@ public class Robot{
 	 * Denne metoden legger til et og et kort i rekkefølge i registeret utifra hva spilleren velger.
 	 * @param chosenCard kortet som ble valgt
 	 */
-	public void chooseCard(ICard chosenCard){
-	    if (chosenCards.contains(chosenCard)) return;
+	public boolean chooseCard(ICard chosenCard){
+	    if (chosenCards.contains(chosenCard)) return false;
 	    if (! availableCards.contains(chosenCard)) throw new IllegalArgumentException("This card isn't in the list of available cards for som reason");
+	    if (chosenCards.size() > Math.min(5, hp)) throw new IllegalStateException("I already have the maximum number of cards!");
 		chosenCards.add(chosenCard);
-
+		return true;
 	}
 
 	public void removeCardFromRegister(ICard unchosenCard){

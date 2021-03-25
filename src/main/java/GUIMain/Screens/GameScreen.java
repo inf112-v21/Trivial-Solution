@@ -8,11 +8,9 @@ import GameBoard.BoardController;
 import GameBoard.Position;
 import GameBoard.Robot;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.GL30;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -25,11 +23,13 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.tiles.StaticTiledMapTile;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
 
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public class GameScreen extends Game implements Screen {
+public class GameScreen implements Screen {
     private SpriteBatch batch;
     private BitmapFont font;
     private final TiledMapTileLayer playerLayer;
@@ -48,6 +48,8 @@ public class GameScreen extends Game implements Screen {
 	private Table cardTable;
 	private Robot playerControlledRobot;
 
+	private Viewport view;
+
     /**
      * @param robots robotene som skal være med å spille
      * @param mapName navnet på filen.
@@ -64,10 +66,12 @@ public class GameScreen extends Game implements Screen {
         HEIGHT = backgroundLayer.getHeight();
         WIDTH = backgroundLayer.getWidth();
 
+        view = new FitViewport(WIDTH*CELL_SIZE, HEIGHT*CELL_SIZE);
+
         //playerLayer = new TiledMapTileLayer(WIDTH, HEIGHT, CELL_SIZE, CELL_SIZE);
         playerLayer = (TiledMapTileLayer) map.getLayers().get("Robot");
 
-        camera = new OrthographicCamera();
+        camera = (OrthographicCamera) view.getCamera();//new OrthographicCamera();
         camera.setToOrtho(false, WIDTH*CELL_SIZE, HEIGHT*CELL_SIZE);
 
         camera.position.x = CELL_SIZE * WIDTH / 2;
@@ -91,6 +95,8 @@ public class GameScreen extends Game implements Screen {
     public void dispose() {
         batch.dispose();
         font.dispose();
+        renderer.dispose();
+
     }
 
     public BoardController getGameBoard(){ return gameboard; }
@@ -98,7 +104,7 @@ public class GameScreen extends Game implements Screen {
     @Override
     public void show() {
         Gdx.gl.glClearColor(1, 1, 1, 1);
-        Gdx.gl.glViewport( 0,0,Gdx.graphics.getWidth()-CELL_SIZE,Gdx.graphics.getHeight());
+        Gdx.gl.glViewport( 0,0,Gdx.graphics.getWidth(),Gdx.graphics.getHeight());
         gameboard = new BoardController(robots, mapName);
         updateRobotPositions();
 
@@ -185,8 +191,8 @@ public class GameScreen extends Game implements Screen {
         isDoneChoosing = false;
         renderer.getBatch().begin();
         Sprite sprite = new Sprite(new Texture(Gdx.files.internal("Cards/1 Red HULK X90/090 MOVE1 1Red 3.png")));
-        sprite.setSize(450, 650);
-        sprite.setPosition(1, 1);
+        sprite.setSize(300, 400);
+        sprite.setPosition(2850, 1);
         sprite.draw(renderer.getBatch());
         renderer.getBatch().end();
     }
@@ -212,14 +218,11 @@ public class GameScreen extends Game implements Screen {
         }
     }
 
-
-    @Override
-    public void create() {
-        // TODO: 04.03.2021 Vetsje hva som skulle vært her? Kanskje bare show()?
-    }
-
     @Override
     public void resize(int width, int height) {
+        view.update(width,height);
+        camera.update();
+        renderer.setView(camera);
     }
 
     @Override

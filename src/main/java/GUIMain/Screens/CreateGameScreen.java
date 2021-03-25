@@ -8,7 +8,9 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.utils.Align;
+import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -24,6 +26,7 @@ public class CreateGameScreen implements Screen {
     private SelectBox<Integer> numberOfRobots;
     private SelectBox<String> choosemapbox;
     private TextField textField;
+    private Viewport view;
 
     public CreateGameScreen(GUI gui){
         super();
@@ -32,7 +35,8 @@ public class CreateGameScreen implements Screen {
 
     @Override
     public void show() {
-        stage = new Stage(new ScreenViewport());
+        view = new FitViewport(960, 540);
+        stage = new Stage(view);
         batch = new SpriteBatch();
         Gdx.input.setInputProcessor(stage);
         table = new Table();
@@ -105,7 +109,9 @@ public class CreateGameScreen implements Screen {
     }
 
     @Override
-    public void resize(int i, int i1) { }
+    public void resize(int width, int height) {
+        view.update(width, height);
+    }
     @Override
     public void pause() { }
     @Override

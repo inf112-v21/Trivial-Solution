@@ -76,8 +76,6 @@ public class GameScreen implements Screen {
 
         camera = (OrthographicCamera) view.getCamera();//new OrthographicCamera();
         //camera.setToOrtho(false, WIDTH, HEIGHT);
-
-
         //camera.position.x = WIDTH / 2;
         //camera.update();
 

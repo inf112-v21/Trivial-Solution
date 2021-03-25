@@ -64,6 +64,11 @@ public class Robot{
 	}
 
 	/**
+	 * repair the robot
+	 */
+	public void giveHPToRobot(int healthPoints){hp += healthPoints; }
+
+	/**
 	 * apply damage to this robot
 	 */
 	public void applyDamage(int dmg) { hp -= dmg; }

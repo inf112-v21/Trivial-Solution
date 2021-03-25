@@ -266,10 +266,10 @@ public class BoardTests {
 
     @Test
     public void robotsFireLasersAtEachOther(){
-        bård.placeRobotAt(0, 0, robot1);
-        bård.placeRobotAt(2, 0, robot2);
-        robot1.setDirection(1);
-        robot2.setDirection(3);
+        bård.placeRobotAt(5, 0, robot1);
+        bård.placeRobotAt(3, 0, robot2);
+        robot1.setDirection(3);
+        robot2.setDirection(1);
         int hp1 = robot1.getHP();
         int hp2 = robot1.getHP();
 
@@ -685,4 +685,47 @@ public class BoardTests {
 
         assertTrue(bård.getDirtyLocations().contains(new Position(0, 0)));
     }
+
+    @Test
+    public void gearRotatesTheRobotsTheCorrectDirection(){
+        bård.placeRobotAt(8,0, robot1);
+
+        bård.endPhase();
+
+        assertEquals(1, bård.getRobotAt(8,0).getDirection() );
+    }
+
+    @Test
+    public void rotatingRobotWithGearMarksLocationDirty(){
+        bård.placeRobotAt(8,0,robot1);
+        bård.getDirtyLocations();
+
+        bård.endPhase();
+
+        assertTrue(bård.getDirtyLocations().contains(new Position(8, 0)));
+    }
+
+    @Test
+    public void wrenchGivesRobotOneExtraHP(){
+        bård.placeRobotAt(2,0, robot1);
+
+        robot1.applyDamage(1);
+        bård.endPhase();
+
+        assertEquals(10, robot1.getHP());
+    }
+
+    @Test
+    public void whenARobotStepsOnAWrenchTheLocationIsMarkedDirty(){
+        bård.placeRobotAt(2,0,robot1);
+        bård.getDirtyLocations();
+
+        bård.endPhase();
+
+        assertTrue(bård.getDirtyLocations().contains(new Position(2, 0)));
+    }
+
+
+
+
 }

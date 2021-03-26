@@ -15,8 +15,6 @@ public class Board {
     private int WIDTH;
 
     //Grids. Disse må initialiseres i readFromTMX().
-    //Merk at vi ikke har noe grid for bakgrunnen,
-    // siden tilesene der er kun visuelle og ikke har noen innvirkning på gameplay.
     private Robot[][]      botgrid;
     private IComponent[][] midgrid;
     private IComponent[][] forgrid;
@@ -33,6 +31,12 @@ public class Board {
     public Board(String filename){
         readFromTMX(filename);
     }
+
+    //Kun for testing.
+    public Board(){
+        this("assets/maps/TestMap.tmx");
+    }
+
 
     /**
      * Når Board startes opp må denne kalles. Denne finner ut av hvordan Boardet skal settes opp, hvor roboter står, etc.
@@ -100,7 +104,7 @@ public class Board {
         if (pos == null) throw new IllegalArgumentException("Could not find the bot");
 
         int dist = card.getDistance();
-        if (dist < 0 ) moveTowards(Math.abs(dist), pos.getX(), pos.getY(), Math.floorMod(bot.getDirection() + 2, Robot.TAU));
+        if (dist < 0 ) moveTowards(Math.abs(dist), pos.getX(), pos.getY(), Math.floorMod(bot.getDirection() + 2, 4));
         else moveTowards(dist, pos.getX(), pos.getY(), bot.getDirection());
 
     }
@@ -386,9 +390,9 @@ public class Board {
      * @param posX x posisjonene til flagget i tmx-filen
      * @return Flagget fra den posisjonen
      */
-    public Flag getFlagInForgridAt(int posY, int posX) {
+    public Flag getFlagInGridAt(int posY, int posX) {
         if (!(forgrid[posY][posX] instanceof Flag)){
-            throw new IllegalStateException("Position contains no flags.");
+            throw new IllegalStateException("Du har angitt en posisjon som ikke inneholder et flagg.");
         }
         return (Flag) forgrid[posY][posX];
     }

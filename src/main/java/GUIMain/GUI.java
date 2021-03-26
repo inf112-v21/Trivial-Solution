@@ -21,14 +21,6 @@ public class GUI extends Game {
         currentScreen = new MenuScreen(this);
     }
 
-    /**
-     * GUI kun for testing. Hopper umiddelbart til initialScreen etter konstruktøren er ferdig.
-     */
-    public GUI(Screen initialScreen){
-        super();
-        currentScreen = initialScreen;
-    }
-
     @Override
     public void create() {
         skin = new Skin(Gdx.files.internal(SKIN_NAME));

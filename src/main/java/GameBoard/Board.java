@@ -32,11 +32,6 @@ public class Board {
         readFromTMX(filename);
     }
 
-    //Kun for testing.
-    public Board(){
-        this("assets/maps/TestMap.tmx");
-    }
-
 
     /**
      * Når Board startes opp må denne kalles. Denne finner ut av hvordan Boardet skal settes opp, hvor roboter står, etc.

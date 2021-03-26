@@ -28,7 +28,7 @@ public class Robot{
 
 	private final ArrayList<Flag> flagsVisited = new ArrayList<>();
 	private ArrayList<ICard> availableCards = new ArrayList<>(); //alle kortene som ble utdelt
-	private ArrayList<ICard> chosenCards = new ArrayList<>(5); //De valgte kortene, rekkefølgen er samme som den spilleren valgte dem
+	private final ArrayList<ICard> chosenCards = new ArrayList<>(5); //De valgte kortene, rekkefølgen er samme som den spilleren valgte dem
 	
 	public Robot(String name, int design, boolean isControlledByAI){
 		this.name = name;

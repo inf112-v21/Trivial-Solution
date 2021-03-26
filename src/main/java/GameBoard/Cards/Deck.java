@@ -9,7 +9,6 @@ import java.util.Collections;
 public class Deck {
     private final ArrayList<ICard> cards = new ArrayList<>();
     private int counter = 0;
-    private final int DECKSIZE = 84;
 
     /**
      * Spawner et dekk på 84 unike kort.
@@ -75,6 +74,7 @@ public class Deck {
      * Om 84 kort har blitt utdelt.
      */
     public boolean isEmpty(){
+        int DECKSIZE = 84;
         return counter >= DECKSIZE;
     }
 

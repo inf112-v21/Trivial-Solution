@@ -51,13 +51,7 @@ public class GUI extends Game {
         super.render();
     }
 
-    /**
-     * Metode som viser et popup-vindu med en valgt beskjed.
-     * @param message meldingen som skal vises på skjermen
-     */
-    public void showPopUp(String message, String windowTitle){
-        JOptionPane.showMessageDialog(null, message, windowTitle, JOptionPane.INFORMATION_MESSAGE);
-    }
-
     public Skin getSkin(){ return skin; }
+
+    public String getSkinString(){return SKIN_NAME;}
 }

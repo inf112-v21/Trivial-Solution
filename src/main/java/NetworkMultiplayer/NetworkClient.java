@@ -6,6 +6,7 @@ import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Client;
 
 import javax.swing.*;
+import java.io.IOException;
 
 public class NetworkClient {
     public Client client;
@@ -24,19 +25,25 @@ public class NetworkClient {
     /**
      * Vi må konnektere oss til serveren etterhvert. TCP fikser dette med en handshake runde først.
      * Den etablerer konneksjonen før den faktiskt sender packer frem og tilbake
-     * @param ip
+     * @param ipAdress
      * @return
      */
-    public boolean connect(String ip) {
+    public boolean connect(String ipAdress) {
+        boolean connectionEstablished = true;
         try {
-            //Vi trenger nokk en update metode til etterpå
-            client.connect(1500, ip, tcpPort, udpPort);
-            System.out.println("IP Address: "+ ip);
-            return true;
-        } catch (Exception e) {
-            //Send en errormelding?
-            return false;
+            //Vi trenger nokk en update metode etterpå også
+            //connecter til hosten
+            client.connect(4500, ipAdress, tcpPort, udpPort);
+
+        } catch (IllegalStateException e) {
+            System.out.println(e.toString() + "Connect ble kalt fra konneksjonens update thread");
+            connectionEstablished = false;
         }
+        catch (IOException e) {
+            System.out.println(e.toString() + "Klienten kunne ikke opprette en konneksjon eller så gikk tiden ut");
+            connectionEstablished = false;
+        }
+        return connectionEstablished;
     }
 
     /**

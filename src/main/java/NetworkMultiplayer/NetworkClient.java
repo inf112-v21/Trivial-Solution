@@ -36,11 +36,11 @@ public class NetworkClient {
             client.connect(4500, ipAdress, tcpPort, udpPort);
 
         } catch (IllegalStateException e) {
-            System.out.println(e.toString() + "Connect ble kalt fra konneksjonens update thread");
+            System.out.println(e.toString() + ": Connect ble kalt fra konneksjonens update thread");
             connectionEstablished = false;
         }
         catch (IOException e) {
-            System.out.println(e.toString() + "Klienten kunne ikke opprette en konneksjon eller så gikk tiden ut");
+            System.out.println(e.toString() + ": klienten kunne ikke opprette en konneksjon eller så gikk tiden ut");
             connectionEstablished = false;
         }
         return connectionEstablished;
@@ -48,7 +48,7 @@ public class NetworkClient {
 
     /**
      * Sjekk om en client er connected til en server
-     * @return
+     * @return true hvis clienten er connected, false ellers
      */
     public boolean isConnected() {
         return client.isConnected();

@@ -273,7 +273,6 @@ public class GameScreen implements Screen {
         }
     }
 
-
     /**
      * Simulerer spillet. Hver gang denne blir kalt, blir ett trekk gjort.
      * Denne husker på hvilket trekk fra hvilken fase som skal blir gjort,

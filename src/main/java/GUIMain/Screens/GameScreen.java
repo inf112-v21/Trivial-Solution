@@ -58,7 +58,6 @@ public class GameScreen implements Screen {
     protected TextButton quit;
     private int counter = 0;
     private boolean optionscheck = true;
-
 	private final Viewport view;
 
     /**

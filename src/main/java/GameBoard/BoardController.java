@@ -11,8 +11,6 @@ import java.util.TreeSet;
 
 public class BoardController {
 
-    protected final int numberOfPlayers;
-
     private final ArrayList<Flag> flagWinningFormation = new ArrayList<>();
 
     private final ArrayList<Robot> bots;
@@ -22,7 +20,6 @@ public class BoardController {
 
     public BoardController(ArrayList<Robot> robots, String mapName){
         board = new Board(mapName);
-        numberOfPlayers = robots.size();
         bots = robots;
         flagWinningFormation.addAll(board.getWinningCombo());
         for(Robot bot : robots){
@@ -39,23 +36,6 @@ public class BoardController {
             }
             bot.setAvailableCards(cardlist);
         }
-    }
-
-
-    /**
-     *
-     * @param phasenumber Hvilken fase vi er i. OBS! Starter på 0!
-     */
-    public void phase(int phasenumber){
-        bots.sort(new BotComparator(phasenumber));
-        for(Robot bot : bots){
-            if (bot.hasRemainingLives() && bot.getChosenCards().size() > phasenumber) {
-
-            	ICard card = bot.getChosenCards().get(phasenumber);
-                board.performMove(card, bot);
-            }
-        }
-        board.endPhase();
     }
 
     public void moveRobot(int phase, int botIndex){
@@ -106,7 +86,6 @@ public class BoardController {
         }
     }
 
-    public int getHeight(){ return board.getHeight(); }
-    public int getWidth(){ return board.getWidth(); }
+    public int getHeight(){ return board.getHeight(); } //bruket til konvertering av origo mellom, Board og GUI
     public Robot getRobotAt(int x, int y){ return board.getRobotAt(x, y);}
 }

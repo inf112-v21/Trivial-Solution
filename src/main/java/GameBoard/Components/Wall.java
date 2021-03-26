@@ -13,7 +13,6 @@ public class Wall extends SimpleComponent{
         this.east = right;
         this.west = left;
         this.south = down;
-        name = "Wall";
     }
 
     /**

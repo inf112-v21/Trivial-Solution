@@ -7,7 +7,6 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.FitViewport;
@@ -97,12 +96,6 @@ public class MenuScreen extends InputAdapter implements Screen {
     public void render(float v) {
         stage.act(Gdx.graphics.getDeltaTime());
         stage.draw();
-    }
-
-    public Label getButtonLabel(String text){
-        Label l = new Label(text, gui.getSkin());
-        l.setAlignment(Align.center);
-        return l;
     }
 
     @Override

@@ -7,7 +7,6 @@ public class Gear extends SimpleComponent {
     public Gear(int id, int rotation) {
         super(id);
         this.rotation = rotation;
-        name = "Gear";
     }
 
     public int getRotation(){ return rotation; }

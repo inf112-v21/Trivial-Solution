@@ -22,7 +22,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class FlagTest {
 
     private final static ArrayList<Flag> winCondition = new ArrayList<>();
-    private ArrayList<Flag> ourFlagArray = new ArrayList<>();
+    private final ArrayList<Flag> ourFlagArray = new ArrayList<>();
 
     //Disse simulerer flaggene i spillet.
     private final static Flag f1 = new Flag(55);

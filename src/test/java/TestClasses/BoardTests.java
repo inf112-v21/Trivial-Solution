@@ -17,7 +17,6 @@ import org.junit.jupiter.api.BeforeAll;
 import java.util.TreeSet;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.fail;
 
 public class BoardTests {
 

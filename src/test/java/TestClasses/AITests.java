@@ -26,7 +26,7 @@ public class AITests {
         bot.setAvailableCards(availableCards);
         assertEquals(0, bot.getChosenCards().size());
 
-        randbot.chooseCards(bot, null);
+        randbot.chooseCards(bot);
 
         assertTrue(bot.getChosenCards().size() > 0);
     }

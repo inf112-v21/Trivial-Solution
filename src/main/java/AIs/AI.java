@@ -1,6 +1,5 @@
 package AIs;
 
-import GameBoard.Board;
 import GameBoard.Robot;
 
 public interface AI {
@@ -12,7 +11,6 @@ public interface AI {
      * En smart bot bruker muligens metoder fra Board til å velge smarte kort, men det er ikke et krav.
      *
      * @param bot botten som skal velge kort
-     * @param board brettet som spilles på
      */
-    void chooseCards(Robot bot, Board board);
+    void chooseCards(Robot bot);
 }

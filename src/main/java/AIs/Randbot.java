@@ -1,6 +1,5 @@
 package AIs;
 
-import GameBoard.Board;
 import GameBoard.Cards.ICard;
 import GameBoard.Robot;
 
@@ -17,7 +16,7 @@ public class Randbot implements AI{
 
 
     @Override
-    public void chooseCards(Robot bot, Board board) {
+    public void chooseCards(Robot bot) {
         ArrayList<ICard> cards = bot.getAvailableCards();
         for (int i = 0; i < Math.min(bot.getHP(), 5); i++) {
             bot.chooseCard(cards.get(r.nextInt(cards.size())));

@@ -40,7 +40,12 @@ public class NetworkServer {
      * Serveren har også en slik metode. Vi må kanskje customize denne
      */
     private void addListeners() {
-        //Lage denne eller bruke kryonet sine listeners? Må researche litt til på det.
+        gameHost.addListener(new Listener() {
+            public void received (Connection connection, Object object) {
+                //skriv hvordan meldingene skal håndteres her
+            }
+        });
+
     }
 
 

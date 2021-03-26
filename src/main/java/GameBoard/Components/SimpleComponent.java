@@ -10,7 +10,7 @@ public abstract class SimpleComponent implements IComponent {
      */
 
     protected String name;
-    protected int id;
+    protected final int id;
 
     public SimpleComponent(int id){
         this.id = id;

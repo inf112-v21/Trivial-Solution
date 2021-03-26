@@ -11,7 +11,7 @@ import java.util.TreeSet;
 
 public class BoardController {
 
-    protected int numberOfPlayers;
+    protected final int numberOfPlayers;
 
     private final ArrayList<Flag> flagWinningFormation = new ArrayList<>();
 
@@ -93,7 +93,7 @@ public class BoardController {
 
    
     private static class BotComparator implements Comparator<Robot> {
-        int phase;
+        final int phase;
         public BotComparator(int phase){ this.phase = phase; }
 
         /** Obs obs! Sorterer slik at høyeste prioritet kommer først. */

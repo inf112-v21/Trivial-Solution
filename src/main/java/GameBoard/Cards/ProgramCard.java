@@ -3,10 +3,10 @@ package GameBoard.Cards;
 import com.badlogic.gdx.graphics.Texture;
 
 public class ProgramCard implements ICard{
-    int distance;
-    int rotation;
-    int priority;
-    Texture cardImage;
+    final int distance;
+    final int rotation;
+    final int priority;
+    final Texture cardImage;
 
     /**
      * @param dist The distance the card tells the robot to move.

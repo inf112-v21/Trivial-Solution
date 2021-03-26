@@ -333,7 +333,7 @@ public class GameScreen implements Screen {
 	}
 
 	private class CardListener extends ClickListener{
-	    int index;
+	    final int index;
 	    public CardListener(int i){ super(); index = i; }
 
         @Override

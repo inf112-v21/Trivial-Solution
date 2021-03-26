@@ -2,7 +2,7 @@ package GameBoard.Components;
 
 public class Gear extends SimpleComponent {
 
-    private int rotation;
+    private final int rotation;
 
     public Gear(int id, int rotation) {
         super(id);

@@ -5,9 +5,9 @@ package GUIMain;
         import com.badlogic.gdx.Gdx;
         import com.badlogic.gdx.Screen;
         import com.badlogic.gdx.graphics.GL30;
+        import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
         import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
-        import javax.swing.JOptionPane;
 
 public class GUI extends Game {
 
@@ -51,13 +51,8 @@ public class GUI extends Game {
         super.render();
     }
 
-    /**
-     * Metode som viser et popup-vindu med en valgt beskjed.
-     * @param message meldingen som skal vises på skjermen
-     */
-    public void showPopUp(String message, String windowTitle){
-        JOptionPane.showMessageDialog(null, message, windowTitle, JOptionPane.INFORMATION_MESSAGE);
-    }
-
     public Skin getSkin(){ return skin; }
+
+    public String getSkinString(){return SKIN_NAME;}
+
 }

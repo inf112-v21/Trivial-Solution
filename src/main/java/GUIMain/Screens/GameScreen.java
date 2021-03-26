@@ -104,8 +104,6 @@ public class GameScreen implements Screen {
 
     }
 
-    public BoardController getGameBoard(){ return gameboard; }
-
     @Override
     public void show() {
         Gdx.gl.glClearColor(1, 1, 1, 1);

@@ -15,7 +15,6 @@ public class ConveyorBelt extends SimpleComponent{
         super(id);
         this.dir = dir;
         this.speed = speed;
-        this.name = "ConveyorBelt";
     }
 
 

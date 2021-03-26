@@ -46,10 +46,6 @@ public class Robot{
         this.isControlledByAI = isControlledByAI;
         powerDown = false;
     }
-	
-	public String getName() {
-		return name;
-	}
 
 	/**
 	 * 

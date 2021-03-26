@@ -98,12 +98,6 @@ public class MenuScreen extends InputAdapter implements Screen {
         stage.draw();
     }
 
-    public Label getButtonLabel(String text){
-        Label l = new Label(text, gui.getSkin());
-        l.setAlignment(Align.center);
-        return l;
-    }
-
     /**
      * Metode som viser et dialog-vindu med en valgt beskjed.
      * @param message meldingen som skal vises på skjermen

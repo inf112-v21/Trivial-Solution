@@ -67,9 +67,9 @@ public class BoardTests {
         robot5 = new Robot("Andromeda", false);
 
         //Flaggene med de tilhørende posisjonene i griden. posY og PosX Kan ses i tmxfilen.
-        Flag1 = bård.getFlagInForgridAt(3,3 );
-        Flag2 = bård.getFlagInForgridAt( 6,5);
-        Flag3 = bård.getFlagInForgridAt(2,6);
+        Flag1 = bård.getFlagInGridAt(3,3 );
+        Flag2 = bård.getFlagInGridAt( 6,5);
+        Flag3 = bård.getFlagInGridAt(2,6);
     }
 
     @Test

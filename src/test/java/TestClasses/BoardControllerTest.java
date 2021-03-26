@@ -50,9 +50,9 @@ class BoardControllerTest {
     public void hasWon() {
         //Posisjonene til de ulike flaggene i griden. Kan ses i tmxfilen.
         //PosY er først og PosX er nummer2
-        Flag flag1 = robotRally.getBoard().getFlagInForgridAt(3,3);
-        Flag flag2 = robotRally.getBoard().getFlagInForgridAt(6,5);
-        Flag flag3 = robotRally.getBoard().getFlagInForgridAt(2,6);
+        Flag flag1 = robotRally.getBoard().getFlagInGridAt(3,3);
+        Flag flag2 = robotRally.getBoard().getFlagInGridAt(6,5);
+        Flag flag3 = robotRally.getBoard().getFlagInGridAt(2,6);
 
         //Vi henter ut et par tilfeldige Boter (Posisjonene under er start posisjonene i til robotene i tmx-filen)
         Robot bot1 = robotRally.getRobotAt(9,3);

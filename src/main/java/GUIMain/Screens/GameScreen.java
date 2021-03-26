@@ -10,7 +10,6 @@ import GameBoard.Robot;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -40,8 +39,6 @@ public class GameScreen implements Screen {
     private final OrthographicCamera camera;
     private final String mapName;
     public static final int CELL_SIZE = 300;
-    private final int HEIGHT;
-    private final int WIDTH;
 	private BoardController gameboard;
 	private final ArrayList<Robot> robots;
 	private final AI ai = new Randbot();
@@ -74,8 +71,8 @@ public class GameScreen implements Screen {
 
         TiledMapTileLayer backgroundLayer = (TiledMapTileLayer) map.getLayers().get("Background");
 
-        HEIGHT = backgroundLayer.getHeight()*CELL_SIZE;
-        WIDTH = backgroundLayer.getWidth()*CELL_SIZE;
+        int HEIGHT = backgroundLayer.getHeight()*CELL_SIZE;
+        int WIDTH = backgroundLayer.getWidth()*CELL_SIZE;
 
         view = new FitViewport(WIDTH*2, HEIGHT);
         view.setScreenPosition(0,0);
@@ -103,8 +100,6 @@ public class GameScreen implements Screen {
         renderer.dispose();
 
     }
-
-    public BoardController getGameBoard(){ return gameboard; }
 
     @Override
     public void show() {
@@ -260,7 +255,7 @@ public class GameScreen implements Screen {
             gameboard.startRound();
             isDoneChoosing = false;
             for (Robot bot : gameboard.getBots()) {
-                if (bot.isControlledByAI()) ai.chooseCards(bot, gameboard.getBoard());
+                if (bot.isControlledByAI()) ai.chooseCards(bot);
                 //else pickCardsFromTerminal(bot);
             }
         }
@@ -322,18 +317,10 @@ public class GameScreen implements Screen {
 	/**
 	 * Maybe an alternative for showPopUp()
 	 * prints message at the top of GUI
-	 * @param msg meldingen som skal vises
 	 */
-	public void printMessage(String msg) {batch.begin();
-		batch.setProjectionMatrix(camera.combined);
-		font.setColor(Color.RED);
-		font.draw(batch, msg, WIDTH,  HEIGHT*310);
-		font.getData().setScale(5, 5);
-		batch.end();
-	}
 
 	private class CardListener extends ClickListener{
-	    int index;
+	    final int index;
 	    public CardListener(int i){ super(); index = i; }
 
         @Override

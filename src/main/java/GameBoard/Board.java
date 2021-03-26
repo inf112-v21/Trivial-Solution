@@ -34,12 +34,6 @@ public class Board {
         readFromTMX(filename);
     }
 
-    //Kun for testing.
-    public Board(){
-        this("assets/maps/TestMap.tmx");
-    }
-
-
     /**
      * Når Board startes opp må denne kalles. Denne finner ut av hvordan Boardet skal settes opp, hvor roboter står, etc.
      * Den setter all informasjonen inn i 4 grids, for 4 lag.
@@ -415,9 +409,6 @@ public class Board {
 
     public int getHeight(){
         return HEIGHT;
-    }
-    public int getWidth(){
-        return WIDTH;
     }
 
 

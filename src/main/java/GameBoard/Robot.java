@@ -46,10 +46,6 @@ public class Robot{
         this.isControlledByAI = isControlledByAI;
         powerDown = false;
     }
-	
-	public String getName() {
-		return name;
-	}
 
 	/**
 	 * 
@@ -201,10 +197,6 @@ public class Robot{
 		chosenCards.add(chosenCard);
 		return true;
 	}
-
-	public void removeCardFromRegister(ICard unchosenCard){
-	    if (! chosenCards.contains(unchosenCard)) throw new IllegalArgumentException("This card wasn't chosen, so I cannot unchoose it.");
-	    chosenCards.remove(unchosenCard); }
 
 	/**
 	 * @return returnerer maks 5 kort fra registeret, kan returnere færre dersom roboten har mye damage.

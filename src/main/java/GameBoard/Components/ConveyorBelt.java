@@ -7,15 +7,14 @@ package GameBoard.Components;
  */
 public class ConveyorBelt extends SimpleComponent{
 
-    private int speed;
-    private int dir;
+    private final int speed;
+    private final int dir;
 
 
     public ConveyorBelt(int id, int dir, int speed){
         super(id);
         this.dir = dir;
         this.speed = speed;
-        this.name = "ConveyorBelt";
     }
 
 

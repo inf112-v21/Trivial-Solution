@@ -2,10 +2,10 @@ package GameBoard.Components;
 
 public class Wall extends SimpleComponent{
 
-    private boolean north;
-    private boolean east;
-    private boolean south;
-    private boolean west;
+    private final boolean north;
+    private final boolean east;
+    private final boolean south;
+    private final boolean west;
 
     public Wall(int id, boolean up, boolean right, boolean down, boolean left) {
         super(id);
@@ -13,7 +13,6 @@ public class Wall extends SimpleComponent{
         this.east = right;
         this.west = left;
         this.south = down;
-        name = "Wall";
     }
 
     /**

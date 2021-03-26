@@ -30,7 +30,6 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
 import java.util.ArrayList;
-import java.util.Scanner;
 
 public class GameScreen implements Screen {
     private SpriteBatch batch;
@@ -117,7 +116,6 @@ public class GameScreen implements Screen {
         //Skin skinLibgdx = new Skin(Gdx.files.internal("assets/default/skin/uiskin.json"));
         stage = new Stage();
         Gdx.input.setInputProcessor(stage);
-
         chosenTable = new Table();
         availableTable = new Table();
         Table buttonTable = new Table();
@@ -215,7 +213,6 @@ public class GameScreen implements Screen {
                 System.exit(0);
             }
         });
-
 
         stage.addActor(chosenTable);
         stage.addActor(availableTable);

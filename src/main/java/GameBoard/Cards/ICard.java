@@ -2,12 +2,6 @@ package GameBoard.Cards;
 
 import com.badlogic.gdx.graphics.Texture;
 
-/**
- *
- * @author Samueljacoo
- *
- */
-
 public interface ICard {
 
     /**

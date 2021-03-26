@@ -47,6 +47,10 @@ Noe av det vi har gjort:
 - Researchet og laget en plan for implementering av multiplayer.
 - Fikset at prosjektet ikke “buildet” i Travis CI.
 - Generelt refaktorert en stor del av prosjektet, nå skal det være enklere å navigere i koden.
+- Hvis du ser i Nettverk starten i pull-request i prosjketet sp kan du se hvor langt vi har komt med multiplayer
+  (Dusan kommer jobbe videre med det i de neste dagene).
+  
+
 
 Noe av det som gjenstår:
 - Vise spillerens kort på skjermen, og la spilleren velge kort uten å måtte bruke terminalen

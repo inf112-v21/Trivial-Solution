@@ -13,6 +13,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class CreateGameScreen implements Screen {
 
@@ -118,7 +119,7 @@ public class CreateGameScreen implements Screen {
 
     private String[] getMapNames(){
         File f = new File(MAP_LOCATION);
-        String[] maplist = f.list();
+        String[] maplist = Arrays.stream(f.list()).filter(n -> !n.equals("TestMap.tmx")).toArray(String[]::new);
         for (int i = 0; i < maplist.length; i++) {
             maplist[i] = maplist[i].substring(0, maplist[i].length()-4);
         }

@@ -1,23 +1,24 @@
 [![Build Status](https://travis-ci.com/inf112-v21/Trivial-Solution.svg?branch=master)](https://travis-ci.com/inf112-v21/Trivial-Solution) [![Codacy Badge](https://app.codacy.com/project/badge/Grade/59c74c9604594cb0a07585f2dd1d4f45)](https://www.codacy.com/gh/inf112-v21/Trivial-Solution/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=inf112-v21/Trivial-Solution&amp;utm_campaign=Badge_Grade)
 
 ## Beskrivelse av prosjektet
-Roborally er et spill som går ut på at hver spiller skal kontrollere en robot ved hjelp av game-cards. Disse kortene forteller hvordan roboten skal bevege seg, slik at den kan prøve å manøvrere gjennom en hektisk fabrikk. Målet med spillet er å danne en strategi som gjør at roboten din kommer først til hvert checkpoint i nummerert rekkefølge. Inne i fabrikken venter også flere hinder, blant annet lasere, hull og bevegende samlebånd som er med på å gjøre det hele en god del vanskeligere.
+Roborally er et spill som går ut på at hver spiller skal kontrollere en robot ved hjelp av game-cards. Disse kortene forteller hvordan roboten skal bevege seg, slik at den kan prøve å manøvrere gjennom en hektisk fabrikk. Målet med spillet er å danne en strategi som gjør at roboten din kommer først til hvert checkpoint i nummerert rekkefølge. Inne i fabrikken venter også flere hindre, blant annet lasere, hull og bevegende samlebånd som er med på å gjøre det hele en god del vanskeligere.
 
 ## Teknisk produktoppsett
-Åpne din favoritt-IDE, f.eks. IntelliJ. For å kjøre programmet må man ha innstallert Maven og java versjon må være JDK 15.
-Prosjektet vil da bygges, kompileres og kjøres i din valgte IDE. For å få programmet til å kjøre, navigerer du til main-metoden som ligger i  "src/main/java/GUIMain/main", og kjører denne metoden inne i editoren din. Da vil det poppe opp et nytt vindu med spillet. Dette vinduet skal havne øverst, men om du allikevel ikke får opp et nytt vindu, kan det være greit å sjekke om vinduet kan ha havnet bak de andre vinduene du eventuelt har åpne.
+Åpne din favoritt-IDE, f.eks. IntelliJ. For å kjøre programmet må man ha innstallert Maven og java-versjonen må være JDK 15.
+Prosjektet vil da bygges, kompileres og kjøres i din valgte IDE. For å få programmet til å kjøre, navigerer du til main-funksjonen som ligger i  "src/main/java/GUIMain/Main", og kjører den inne i editoren. Da vil det poppe opp et nytt vindu med spillet. Dette vinduet skal havne øverst, men om du allikevel ikke får opp et nytt vindu, kan det være greit å sjekke om vinduet kan ha havnet bak de andre vinduene du eventuelt har åpne.
 
 ## Hvordan spille spillet
-Start opp spillet. Klikk singleplayer. Du vil nå bli bedt om å gi et navn til roboten din i terminalen, skriv navnet der og trykk enter. 
-Spillet er nå startet, din robot er den helt til høyre, og den ser mot nord, alle robotene er identiske så det må du bare huske. 
+1) Start opp spillet i IntelliJ. Klikk singleplayer. Velg navn på roboten din, antall spillere, og hvilket kart du vil spille på. 
+2) Når spillet er i gang styrer du den grå roboten som står på to bein, de andre er styrt av maskinen. 
+3) Du vil få utdelt kort du kan velge mellom til høyre på skjermen, klikk på disse for å velge.
+4) Valgte kort dukker opp i en egen kolonne mellom brettet og de tilgjengelige kortene.
+5) Når du er ferdig med å velge kan du klikke på "Ready", og se spillet simulere runden. Gå tilbake til punkt 3.
 
-For å spille en runde:
-1) Trykk på vinduet med musen
-2) Du vil bli bedt om å velge kort i terminalen, velg med å skrive inn heltall der
-3) Alle 5 fasene vil nå bli simullert umiddelbart, gå tilbake til steg 1 for å fortsette til neste runde
+Noen kritiske bugs/mangler:
+- Det er ikke mulig å se hvor mange liv roboten har, annet enn å telle antall kort du får utdelt hver runde.
+- Hitboksene til knappene in-game er litt wacky, f. eks om du sikter på "Ready" vil du treffe og klikke "Power Down" istedet. Om du alltid sikter én knapp lavere enn det du egentlig vil, vil du treffe. (Beklager dette.)
 
-Noen helt åpenbare ting du som spiller kanskje ser etter, men ikke kommer til å finne:
-- Antall liv robotene har.
-- Retningen robotene peker.
-- En måte å se forskjell på robotene.
-- Noe som stopper deg fra å velge det samme kortet flere ganger.
+
+
+
+Lykke til!

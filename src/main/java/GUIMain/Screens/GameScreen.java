@@ -87,7 +87,6 @@ public class GameScreen implements Screen {
         camera = (OrthographicCamera) view.getCamera();//new OrthographicCamera();
 
         renderer = new OrthogonalTiledMapRenderer(map, 1);
-        //renderer.setView(camera);
 
         for (Robot bot : robots){
             if (!bot.isControlledByAI()){
@@ -140,14 +139,6 @@ public class GameScreen implements Screen {
                     isDoneChoosing = true;
                 }
             }
-
-            /**@Override
-            public void clicked(InputEvent event, float x, float y) {
-                playerControlledRobot.togglePowerDown();
-                playerControlledRobot.resetCards();
-                isDoneChoosing = true;
-                super.clicked(event, x, y);
-            }**/
         });
 
         ready = new TextButton("  Ready  ", gui.getSkin());
@@ -159,12 +150,6 @@ public class GameScreen implements Screen {
                     isDoneChoosing = true;
                 }
             }
-
-            /**@Override
-            public void clicked(InputEvent event, float x, float y) {
-                isDoneChoosing = true;
-                super.clicked(event, x, y);
-            }**/
         });
 
         clear = new TextButton("  Clear  ", gui.getSkin());
@@ -178,14 +163,6 @@ public class GameScreen implements Screen {
                     counter = 0;
                 }
             }
-
-            /**@Override
-            public void clicked(InputEvent event, float x, float y) {
-                playerControlledRobot.getChosenCards().clear();
-                chosenTable.clear();
-                counter = 0;
-                //super.clicked(event, x, y);
-            }**/
         });
 
         options = new TextButton("  options  ", gui.getSkin());
@@ -219,6 +196,7 @@ public class GameScreen implements Screen {
         stage.addActor(buttonTable);
         stage.addActor(optionsTable);
         optionsTable.add(resume);
+        optionsTable.row();
         optionsTable.add(quit);
         buttonTable.add(powerdown).prefWidth((Gdx.graphics.getWidth())/6f).prefHeight(Gdx.graphics.getHeight()/20f);
         buttonTable.row();

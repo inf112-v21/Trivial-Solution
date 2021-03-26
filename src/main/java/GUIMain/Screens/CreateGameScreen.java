@@ -9,7 +9,6 @@ import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.FitViewport;
-import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
 import java.io.File;
@@ -19,10 +18,8 @@ public class CreateGameScreen implements Screen {
 
     private static final String MAP_LOCATION = "assets/maps";
     private Stage stage;
-    private Table table;
     private SpriteBatch batch;
-    private GUI gui;
-    private TextButton start;
+    private final GUI gui;
     private SelectBox<Integer> numberOfRobots;
     private SelectBox<String> choosemapbox;
     private TextField textField;
@@ -39,7 +36,7 @@ public class CreateGameScreen implements Screen {
         stage = new Stage(view);
         batch = new SpriteBatch();
         Gdx.input.setInputProcessor(stage);
-        table = new Table();
+        Table table = new Table();
         table.setFillParent(true);
 
 
@@ -76,8 +73,7 @@ public class CreateGameScreen implements Screen {
         //choosemapbox.scaleBy(3);
         table.add(choosemapbox).spaceBottom(50);
         table.row();
-
-        start = new TextButton("Start game", gui.getSkin());
+        TextButton start = new TextButton("Start game", gui.getSkin());
         start.addListener(new InputListener(){
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {

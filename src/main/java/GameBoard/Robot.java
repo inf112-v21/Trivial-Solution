@@ -1,5 +1,6 @@
 package GameBoard;
 
+import GUIMain.Screens.GameScreen;
 import GameBoard.Cards.ICard;
 import GameBoard.Components.Flag;
 import com.badlogic.gdx.graphics.Texture;
@@ -15,6 +16,9 @@ import java.util.ArrayList;
 public class Robot{
     public static final int INITIAL_HP = 10;
     public static final int INITIAL_LIVES = 3;
+    public static final int MAX_CHOSEN_CARDS = 5;
+    public static final int RESPAWN_HANDICAP = 2;
+    public static final int TAU = 4;
 
     private int lives = INITIAL_LIVES;
 	private int hp = INITIAL_HP;
@@ -28,12 +32,12 @@ public class Robot{
 
 	private final ArrayList<Flag> flagsVisited = new ArrayList<>();
 	private ArrayList<ICard> availableCards = new ArrayList<>(); //alle kortene som ble utdelt
-	private ArrayList<ICard> chosenCards = new ArrayList<>(5); //De valgte kortene, rekkefølgen er samme som den spilleren valgte dem
+	private ArrayList<ICard> chosenCards = new ArrayList<>(MAX_CHOSEN_CARDS); //De valgte kortene, rekkefølgen er samme som den spilleren valgte dem
 	
 	public Robot(String name, int design, boolean isControlledByAI){
 		this.name = name;
 		this.isControlledByAI = isControlledByAI;
-		this.image = new TextureRegion(new Texture("Robotdesigns/robots.png")).split(300, 300)[0][design];
+		this.image = new TextureRegion(new Texture("Robotdesigns/robots.png")).split(GameScreen.CELL_SIZE, GameScreen.CELL_SIZE)[0][design];
 		powerDown = false;
 	}
 
@@ -92,15 +96,15 @@ public class Robot{
     }
 
     public void respawn(){
-	    hp = INITIAL_HP - 2;
+    hp = INITIAL_HP - RESPAWN_HANDICAP;
     }
 
 	public int getDirection(){ return direction; }
 
 	public void setDirection(int dir){
-	    if (dir < 0 || dir > 3) throw new IllegalArgumentException();
-	    direction = dir;
-	}
+        if ( dir < TAU && dir >= 0) direction = dir;
+        else throw new IllegalArgumentException("Direction has to be 0 <= dir < " + TAU + ", but was " + dir);
+    }
 
 	@Override 
 	public String toString() {
@@ -130,7 +134,7 @@ public class Robot{
 
 
     public void rotate(int degree) {
-	    direction = Math.floorMod(direction + degree, 4);
+	    direction = Math.floorMod(direction + degree, TAU);
     }
 
 	public TextureRegion getImage() {
@@ -141,6 +145,7 @@ public class Robot{
 	public boolean isControlledByAI(){return isControlledByAI; }
 
 	public void resetState(){
+	    resetCards();
 	    hp = INITIAL_HP;
 	    lives = INITIAL_LIVES;
 	    direction = 0;
@@ -192,7 +197,7 @@ public class Robot{
 	public boolean chooseCard(ICard chosenCard){
 	    if (chosenCards.contains(chosenCard)) return false;
 	    if (! availableCards.contains(chosenCard)) throw new IllegalArgumentException("This card isn't in the list of available cards for som reason");
-	    if (chosenCards.size() > Math.min(5, hp)) throw new IllegalStateException("I already have the maximum number of cards!");
+	    if (chosenCards.size() > Math.min(MAX_CHOSEN_CARDS, hp)) throw new IllegalStateException("I already have the maximum number of cards!");
 		chosenCards.add(chosenCard);
 		return true;
 	}

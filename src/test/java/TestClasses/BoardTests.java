@@ -361,7 +361,7 @@ public class BoardTests {
         bård.endPhase();
 
         assertTrue(robot1.getLives() < Robot.INITIAL_LIVES);
-        assertTrue(robot1.getHP() < Robot.INITIAL_HP);
+        assertEquals(Robot.INITIAL_HP - Robot.RESPAWN_HANDICAP, robot1.getHP());
     }
 
     @Test
@@ -712,7 +712,7 @@ public class BoardTests {
         robot1.applyDamage(1);
         bård.endPhase();
 
-        assertEquals(10, robot1.getHP());
+        assertEquals(Robot.INITIAL_HP, robot1.getHP());
     }
 
     @Test

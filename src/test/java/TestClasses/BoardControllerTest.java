@@ -47,19 +47,6 @@ class BoardControllerTest {
     }
 
     @Test
-    void startRound() {
-    }
-
-    @Test
-    void phase() {}
-
-    @Test
-    void endRound() {}
-
-    @Test
-    void destroyedBot() {}
-
-    @Test
     public void hasWon() {
         //Posisjonene til de ulike flaggene i griden. Kan ses i tmxfilen.
         //PosY er først og PosX er nummer2

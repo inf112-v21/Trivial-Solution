@@ -15,6 +15,8 @@ public class Board {
     private int WIDTH;
 
     //Grids. Disse må initialiseres i readFromTMX().
+    //Merk at vi ikke har noe grid for bakgrunnen,
+    // siden tilesene der er kun visuelle og ikke har noen innvirkning på gameplay.
     private Robot[][]      botgrid;
     private IComponent[][] midgrid;
     private IComponent[][] forgrid;
@@ -104,7 +106,7 @@ public class Board {
         if (pos == null) throw new IllegalArgumentException("Could not find the bot");
 
         int dist = card.getDistance();
-        if (dist < 0 ) moveTowards(Math.abs(dist), pos.getX(), pos.getY(), Math.floorMod(bot.getDirection() + 2, 4));
+        if (dist < 0 ) moveTowards(Math.abs(dist), pos.getX(), pos.getY(), Math.floorMod(bot.getDirection() + 2, Robot.TAU));
         else moveTowards(dist, pos.getX(), pos.getY(), bot.getDirection());
 
     }
@@ -392,7 +394,7 @@ public class Board {
      */
     public Flag getFlagInForgridAt(int posY, int posX) {
         if (!(forgrid[posY][posX] instanceof Flag)){
-            throw new IllegalStateException("Du har angitt en posisjon som ikke inneholder et flagg.");
+            throw new IllegalStateException("Position contains no flags.");
         }
         return (Flag) forgrid[posY][posX];
     }
@@ -450,15 +452,4 @@ public class Board {
     }
 
     public ArrayList<Flag> getWinningCombo() { return flagWinningFormation;}
-    
-    public Position getRobotPosition(Robot r) {
-    	if(this.botPositions.containsKey(r)) {
-    		return botPositions.get(r);
-    	}
-    	return null;
-    }
-
-    public int getNumberOfRobots(){
-        return botPositions.size();
-    }
 }

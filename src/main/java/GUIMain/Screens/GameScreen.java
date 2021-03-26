@@ -38,7 +38,7 @@ public class GameScreen implements Screen {
     private final OrthogonalTiledMapRenderer renderer;
     private final OrthographicCamera camera;
     private final String mapName;
-    private final int CELL_SIZE = 300;
+    public static final int CELL_SIZE = 300;
     private final int HEIGHT;
     private final int WIDTH;
 	private BoardController gameboard;
@@ -173,7 +173,7 @@ public class GameScreen implements Screen {
 
     private boolean hasStartedYet = false;
     private float timeSinceLastUpdate = -1;
-    private static final float TIME_DELTA = 1;
+    private static final float TIME_DELTA = 0.7f;
 
     @Override
     public void render(float v) {
@@ -203,8 +203,8 @@ public class GameScreen implements Screen {
                 TiledMapTileLayer.Cell cell = new TiledMapTileLayer.Cell();
                 cell.setTile(new StaticTiledMapTile(sprt));
 
-                //Vi regner positiv rotasjon som med klokken, men libgdx sier det er mot klokken. Derfor tar vi 4-θ.
-                cell.setRotation(4 - bot.getDirection());
+                //Vi regner positiv rotasjon som med klokken, men libgdx sier det er mot klokken. Derfor tar vi τ-θ.
+                cell.setRotation(Robot.TAU - bot.getDirection());
                 playerLayer.setCell(pos.getX(), gameboard.getHeight() - pos.getY() - 1, cell);
             }
             else playerLayer.setCell(pos.getX(), gameboard.getHeight() - pos.getY() - 1, new TiledMapTileLayer.Cell());
@@ -269,27 +269,6 @@ public class GameScreen implements Screen {
         renderer.getBatch().end();
     }
 
-    public static void pickCardsFromTerminal(Robot bot){
-        System.out.println("\n" + bot);
-        ArrayList<ICard> availableCards = bot.getAvailableCards();
-        if (availableCards.size() == 0) throw new IllegalStateException("This register has no available cards");
-        System.out.println("Please type a line of ints to choose cards.");
-        System.out.println("If you want card number 1, 4, 7, 5, 2 in that order, type '1 4 7 5 2'.\n");
-        for (int i = 0; i < availableCards.size(); i++) {
-            System.out.println(i+1 + ": " + availableCards.get(i));
-        }
-        System.out.println();
-        Scanner in = new Scanner(System.in);
-        for (int i = 0; i < Math.min(bot.getHP(), 5); i++) {
-            int pick = in.nextInt() - 1;
-            if (pick < 0 || pick >= availableCards.size()) {
-                System.err.println("Please choose one of the available cards.");
-                i--;
-            }
-            else bot.chooseCard(availableCards.get(pick));
-        }
-    }
-
     @Override
     public void resize(int width, int height) {
         view.update(width,height);
@@ -332,7 +311,7 @@ public class GameScreen implements Screen {
         @Override
         public void clicked(InputEvent event, float x, float y) {
 	        if (isDoneChoosing) return;
-            if (playerControlledRobot.getChosenCards().size() >= Math.min(5, playerControlledRobot.getHP())) return;
+            if (playerControlledRobot.getChosenCards().size() >= Math.min(Robot.MAX_CHOSEN_CARDS, playerControlledRobot.getHP())) return;
             ICard card = playerControlledRobot.getAvailableCards().get(index);
             if (!playerControlledRobot.chooseCard(card)) return;
             chosenTable.add(new Image(card.getCardImage()));

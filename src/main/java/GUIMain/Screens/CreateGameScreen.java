@@ -13,6 +13,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class CreateGameScreen implements Screen {
 
@@ -78,7 +79,7 @@ public class CreateGameScreen implements Screen {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 if (textField.getText().equals("")){
-                    gui.showPopUp("Please enter a name for your robot.", "");
+                    showPopUp("Please enter a name for your robot.");
                     return false;
                 }
                 ArrayList<Robot> robots = Robot.getDefaultRobots(numberOfRobots.getSelected()-1); // -1, siden spilleren inngår i disse robotene
@@ -118,10 +119,26 @@ public class CreateGameScreen implements Screen {
 
     private String[] getMapNames(){
         File f = new File(MAP_LOCATION);
-        String[] maplist = f.list();
+        String[] maplist = Arrays.stream(f.list()).filter(n -> !n.equals("TestMap.tmx")).toArray(String[]::new);
         for (int i = 0; i < maplist.length; i++) {
             maplist[i] = maplist[i].substring(0, maplist[i].length()-4);
         }
         return maplist;
+    }
+
+    /**
+     * Metode som viser et dialog-vindu med en valgt beskjed.
+     * @param message meldingen som skal vises på skjermen
+     */
+    public void showPopUp(String message){
+        Skin uiSkin = new Skin(Gdx.files.internal(gui.getSkinString()));
+        Dialog dialog = new Dialog("", uiSkin) {
+            public void result(Object obj) {
+                System.out.println("result "+obj);
+            }
+        };
+        dialog.text(message);
+        dialog.button("OK", true); //sends "true" as the result
+        dialog.show(stage);
     }
 }

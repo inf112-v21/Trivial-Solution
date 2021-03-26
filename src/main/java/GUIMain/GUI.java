@@ -1,6 +1,5 @@
 package GUIMain;
 
-        import GUIMain.Screens.GameScreen;
         import GUIMain.Screens.MenuScreen;
         import com.badlogic.gdx.Game;
         import com.badlogic.gdx.Gdx;

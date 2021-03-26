@@ -5,14 +5,12 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.FitViewport;
-import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
 
@@ -21,16 +19,11 @@ import static com.badlogic.gdx.graphics.Color.*;
 public class MenuScreen extends InputAdapter implements Screen {
 
     private Stage stage;
-    private Table tabell;
-    private BitmapFont font;
-    private SpriteBatch batch;
-    private Label title;
-    private Label undertitle;
     protected TextButton singleplayer;
     protected TextButton multiplayer;
     protected TextButton options;
     protected TextButton quit;
-    private GUI gui;
+    private final GUI gui;
     private Viewport view;
 
     public MenuScreen(GUI gui){
@@ -42,20 +35,18 @@ public class MenuScreen extends InputAdapter implements Screen {
     public void show() {
         view = new FitViewport(960,540);
         stage = new Stage(view);
-        batch = new SpriteBatch();
-        font = new BitmapFont();
+        BitmapFont font = new BitmapFont();
         font.setColor(RED);
 
         Gdx.input.setInputProcessor(stage);
-
-        tabell = new Table();
+        Table tabell = new Table();
         tabell.setFillParent(true);
-        title = new Label("Robo-Rally", gui.getSkin());
+        Label title = new Label("Robo-Rally", gui.getSkin());
         title.setAlignment(Align.top);
         title.setFontScale(3);
         tabell.add(title);
         tabell.row();
-        undertitle = new Label("A Trivial Solution", gui.getSkin());
+        Label undertitle = new Label("A Trivial Solution", gui.getSkin());
         undertitle.setFontScale(2);
         tabell.add(undertitle);
         tabell.row();

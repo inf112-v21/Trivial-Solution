@@ -12,10 +12,10 @@ import java.util.ArrayList;
 
 public class GameLoadingScreen implements Screen {
 
-    private GUI gui;
+    private final GUI gui;
     private Stage stage;
-    private ArrayList<Robot> robots;
-    private String mapname;
+    private final ArrayList<Robot> robots;
+    private final String mapname;
     private boolean hasbeensetup = false;
 
     public GameLoadingScreen(ArrayList<Robot> robots, String mapname, GUI gui){

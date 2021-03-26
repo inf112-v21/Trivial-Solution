@@ -12,9 +12,9 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 public class GameOverScreen implements Screen {
 
-    private GUI gui;
+    private final GUI gui;
     private Stage stage;
-    private String message;
+    private final String message;
 
     public GameOverScreen(String message, GUI gui){
         this.message = message;

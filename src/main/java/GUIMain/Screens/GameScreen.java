@@ -77,13 +77,17 @@ public class GameScreen implements Screen {
         HEIGHT = backgroundLayer.getHeight()*CELL_SIZE;
         WIDTH = backgroundLayer.getWidth()*CELL_SIZE;
 
-        view = new FitViewport(WIDTH*2, HEIGHT);
+        view = new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         view.setScreenPosition(0,0);
-        view.update(WIDTH,HEIGHT, true);
+        view.update(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(),true);
 
         playerLayer = (TiledMapTileLayer) map.getLayers().get("Robot");
 
         camera = (OrthographicCamera) view.getCamera();//new OrthographicCamera();
+        camera.position.x=WIDTH;
+        camera.position.y =HEIGHT/2f;
+        camera.zoom = 5f;
+        camera.update();
 
         renderer = new OrthogonalTiledMapRenderer(map, 1);
 

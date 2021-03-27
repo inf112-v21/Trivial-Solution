@@ -17,6 +17,7 @@ public class Robot{
     public static final int INITIAL_HP = 10;
     public static final int INITIAL_LIVES = 3;
     public static final int MAX_CHOSEN_CARDS = 5;
+    public static final int MAX_AVAILABLE_CARDS = 9;
     public static final int RESPAWN_HANDICAP = 2;
     public static final int TAU = 4;
 
@@ -66,7 +67,7 @@ public class Robot{
 	/**
 	 * repair the robot
 	 */
-	public void giveHPToRobot(int healthPoints){hp += healthPoints; }
+	public void repairRobot(int repairPoints){hp = Math.min(INITIAL_HP, hp + repairPoints); }
 
 	/**
 	 * apply damage to this robot

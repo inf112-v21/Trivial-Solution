@@ -225,7 +225,7 @@ public class Board {
         for (Position pos : botPositions.values()) {
             IComponent comp = midgrid[pos.getY()][pos.getX()];
             if (comp instanceof Wrench) {
-                getRobotAt(pos.getX(), pos.getY()).giveHPToRobot(1);
+                getRobotAt(pos.getX(), pos.getY()).repairRobot(1);
                 dirtyLocations.add(pos);
             }
         }

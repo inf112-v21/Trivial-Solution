@@ -212,8 +212,6 @@ public class GameScreen implements Screen {
         buttonTable.add(options);
 
     }
-
-    private boolean hasStartedYet = false;
     private float timeSinceLastUpdate = -1;
     private static final float TIME_DELTA = 0.7f;
     private boolean hasDrawnCardsYet = false;
@@ -223,13 +221,6 @@ public class GameScreen implements Screen {
         timeSinceLastUpdate += v;
         renderer.render();
         stage.draw();
-
-        //Denne sørger for at vi får tegnet opp GUI-en ferdig i starten av spillet
-        // før spilleren blir bedt om å velge kort.
-        if(! hasStartedYet) {
-            hasStartedYet = true;
-            return;
-        }
 
         if(timeSinceLastUpdate < TIME_DELTA) return;
         timeSinceLastUpdate = 0;

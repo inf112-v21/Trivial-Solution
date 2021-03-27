@@ -59,7 +59,8 @@ public class GameScreen implements Screen {
     protected TextButton quit;
     private int counter = 0;
     private boolean optionscheck = true;
-	private final Viewport view;
+	private final Viewport smallView;
+    private final Viewport largeView;
 
     /**
      * @param robots robotene som skal være med å spille
@@ -77,16 +78,12 @@ public class GameScreen implements Screen {
         HEIGHT = backgroundLayer.getHeight()*CELL_SIZE;
         WIDTH = backgroundLayer.getWidth()*CELL_SIZE;
 
-        view = new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        view.setScreenPosition(0,0);
-        view.update(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(),true);
+        smallView = new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        largeView = new FitViewport(WIDTH*2, HEIGHT);
+        largeView.update(WIDTH*2, HEIGHT,true);
 
         playerLayer = (TiledMapTileLayer) map.getLayers().get("Robot");
-
-        camera = (OrthographicCamera) view.getCamera();//new OrthographicCamera();
-        camera.position.x=WIDTH;
-        camera.position.y =HEIGHT/2f;
-        camera.zoom = 5f;
+        camera = (OrthographicCamera) largeView.getCamera();//new OrthographicCamera();
         camera.update();
 
         renderer = new OrthogonalTiledMapRenderer(map, 1);
@@ -111,7 +108,7 @@ public class GameScreen implements Screen {
     @Override
     public void show() {
         Gdx.gl.glClearColor(1, 1, 1, 1);
-        Gdx.gl.glViewport( 0,0,view.getScreenWidth(),view.getScreenHeight());
+        //Gdx.gl.glViewport( 0,0,view.getScreenWidth(),view.getScreenHeight());
 
         //Skin skinLibgdx = new Skin(Gdx.files.internal("assets/default/skin/uiskin.json"));
         stage = new Stage();
@@ -309,7 +306,7 @@ public class GameScreen implements Screen {
 
     @Override
     public void resize(int width, int height) {
-        view.update(width,height);
+        smallView.update(width,height);
         camera.update();
         renderer.setView(camera);
     }

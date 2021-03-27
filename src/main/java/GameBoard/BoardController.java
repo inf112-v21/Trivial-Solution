@@ -1,5 +1,7 @@
 package GameBoard;
 
+import AIs.AI;
+import AIs.Randbot;
 import GameBoard.Cards.Deck;
 import GameBoard.Cards.ICard;
 import GameBoard.Components.Flag;
@@ -11,12 +13,15 @@ import java.util.TreeSet;
 
 public class BoardController {
 
+    public static final int PHASES_PER_ROUND = 5;
     private final ArrayList<Flag> flagWinningFormation = new ArrayList<>();
-
     private final ArrayList<Robot> bots;
     private final Deck deck = new Deck();
     private final Board board;
-
+    private final AI ai = new Randbot();
+    private int currentPhase = 0;
+    private int currentMove  = 0;
+    private boolean waitingForPlayersToPickCards = true;
 
     public BoardController(ArrayList<Robot> robots, String mapName){
         board = new Board(mapName);
@@ -25,28 +30,61 @@ public class BoardController {
         for(Robot bot : robots){
             board.spawnRobot(bot);
         }
+        startRound();
     }
-    public void startRound(){
+
+    /**
+     * Simulerer spillet. Hver gang denne blir kalt, blir ett trekk gjort.
+     * Denne husker på hvilket trekk fra hvilken fase som skal blir gjort,
+     *  slik at denne kan vite nøyaktig hvor i runden vi er.
+     */
+    public void simulate(){
+        if (waitingForPlayersToPickCards) return;
+
+        if (currentMove == 0) bots.sort(new BotComparator(currentPhase));
+        moveNextRobot();
+        currentMove++;
+
+        if(currentMove == bots.size()){
+            currentMove = 0;
+            currentPhase++;
+            board.endPhase();
+        }
+
+        if (currentPhase == PHASES_PER_ROUND){
+            endRound();
+            currentPhase = 0;
+            startRound();
+            waitingForPlayersToPickCards = true;
+        }
+    }
+
+    private void moveNextRobot(){
+        Robot botToMove = bots.get(currentMove);
+        if (botToMove.hasRemainingLives() && botToMove.getChosenCards().size() > currentPhase){
+            board.performMove(botToMove.getChosenCards().get(currentPhase), botToMove);
+        }
+    }
+
+    public boolean isWaitingForPlayersToPickCards(){ return waitingForPlayersToPickCards; }
+    public void playersAreReady(){ waitingForPlayersToPickCards = false; }
+
+    private void startRound(){
         deck.shuffleDeck();
         for (Robot bot : bots){
             ArrayList<ICard> cardlist = new ArrayList<>();
             for (int amount=0; amount<bot.getHP()-1; amount++){
-                ICard card =deck.drawCard();
+                ICard card = deck.drawCard();
                 cardlist.add(card);
             }
             bot.setAvailableCards(cardlist);
+            if (bot.isControlledByAI()){
+                ai.chooseCards(bot, board);
+            }
         }
     }
 
-    public void moveRobot(int phase, int botIndex){
-        if(botIndex == 0) bots.sort(new BotComparator(phase));
-        Robot botToMove = bots.get(botIndex);
-        if (botToMove.hasRemainingLives() && botToMove.getChosenCards().size() > phase){
-            board.performMove(botToMove.getChosenCards().get(phase), botToMove);
-        }
-    }
-
-    public void endRound(){
+    private void endRound(){
         for (Robot bot : bots) bot.resetCards();
     }
 
@@ -66,10 +104,7 @@ public class BoardController {
     }
 
     public Board getBoard(){ return board; }
-    public void endPhase(){ board.endPhase(); }
     public TreeSet<Position> getDirtyLocations(){ return board.getDirtyLocations(); }
-
-    public ArrayList<Robot> getBots(){ return bots; }
 
    
     private static class BotComparator implements Comparator<Robot> {

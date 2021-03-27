@@ -57,7 +57,6 @@ public class GameScreen implements Screen {
     protected TextButton options;
     protected TextButton resume;
     protected TextButton quit;
-    private int counter = 0;
     private boolean optionscheck = true;
 	private final Viewport smallView;
     private final Viewport largeView;
@@ -141,7 +140,7 @@ public class GameScreen implements Screen {
                 if (optionscheck){
                     playerControlledRobot.togglePowerDown();
                     playerControlledRobot.resetCards();
-                    isDoneChoosing = true;
+                    gameboard.playersAreReady();
                 }
             }
         });
@@ -152,7 +151,7 @@ public class GameScreen implements Screen {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 if(optionscheck){
-                    isDoneChoosing = true;
+                    gameboard.playersAreReady();
                 }
             }
         });
@@ -165,7 +164,6 @@ public class GameScreen implements Screen {
                 if(optionscheck){
                     playerControlledRobot.getChosenCards().clear();
                     chosenTable.clear();
-                    counter = 0;
                 }
             }
         });
@@ -218,6 +216,7 @@ public class GameScreen implements Screen {
     private boolean hasStartedYet = false;
     private float timeSinceLastUpdate = -1;
     private static final float TIME_DELTA = 0.7f;
+    private boolean hasDrawnCardsYet = false;
 
     @Override
     public void render(float v) {
@@ -234,18 +233,23 @@ public class GameScreen implements Screen {
 
         if(timeSinceLastUpdate < TIME_DELTA) return;
         timeSinceLastUpdate = 0;
-        simulate();
+        gameboard.simulate();
         updateRobotPositions();
-        renderCards();
+        updateLivesAndHP();
+        if(gameboard.isWaitingForPlayersToPickCards()){
+            if (hasDrawnCardsYet) return;
+            renderCards();
+            hasDrawnCardsYet = true;
+        }
+        else hasDrawnCardsYet = false;
     }
 
     private void updateRobotPositions(){
         for (Position pos : gameboard.getDirtyLocations()){
             Robot bot = gameboard.getRobotAt(pos.getX(), pos.getY());
             if(bot != null){
-                Sprite sprt = new Sprite(bot.getImage());
                 TiledMapTileLayer.Cell cell = new TiledMapTileLayer.Cell();
-                cell.setTile(new StaticTiledMapTile(sprt));
+                cell.setTile(new StaticTiledMapTile(new Sprite(bot.getImage())));
 
                 //Vi regner positiv rotasjon som med klokken, men libgdx sier det er mot klokken. Derfor tar vi τ-θ.
                 cell.setRotation(Robot.TAU - bot.getDirection());
@@ -254,58 +258,9 @@ public class GameScreen implements Screen {
             else playerLayer.setCell(pos.getX(), gameboard.getHeight() - pos.getY() - 1, new TiledMapTileLayer.Cell());
         }
     }
-
-    /**
-     * Simulerer spillet. Hver gang denne blir kalt, blir ett trekk gjort.
-     * Denne husker på hvilket trekk fra hvilken fase som skal blir gjort,
-     *  slik at denne kan vite nøyaktig hvor i runden vi er.
-     */
-    private int phase = 0;
-    private int move = 0;
-    private void simulate(){
-        if (! isDoneChoosing) return;
-        if(phase + move == 0){
-            gameboard.startRound();
-            isDoneChoosing = false;
-            for (Robot bot : gameboard.getBots()) {
-                if (bot.isControlledByAI()) ai.chooseCards(bot, gameboard.getBoard());
-                //else pickCardsFromTerminal(bot);
-            }
-        }
-        if (move == gameboard.getBots().size()){
-            move = 0;
-            phase++;
-            gameboard.endPhase();
-            return;
-        }
-        if(phase == 5){
-            phase = 0;
-            gameboard.endRound();
-            chosenTable.clear();
-            buttonTable.clear();
-            playerHealthAndLives = "HP: "+playerControlledRobot.getHP()+" Lives: "+playerControlledRobot.getLives();
-            label = new Label(playerHealthAndLives, gui.getSkin());
-            label.setFontScale(2f);
-            buttonTable.add(label);
-            buttonTable.row();
-            buttonTable.add(powerdown);
-            buttonTable.row();
-            buttonTable.add(ready);
-            buttonTable.row();
-            buttonTable.add(clear);
-            buttonTable.row();
-            buttonTable.add(options);
-
-            counter = 0;
-            return;
-        }
-        gameboard.moveRobot(phase, move);
-        move++;
-    }
-
-    protected boolean isDoneChoosing = true;
-    public void renderCards(){
+    private void renderCards(){
         availableTable.clear();
+        chosenTable.clear();
         renderer.getBatch().begin();
         boolean odd = false;
         int yscale;
@@ -325,6 +280,10 @@ public class GameScreen implements Screen {
             else odd = true;
         }
         renderer.getBatch().end();
+    }
+
+    private void updateLivesAndHP(){
+        label.setText("HP: "+playerControlledRobot.getHP()+" Lives: "+playerControlledRobot.getLives());
     }
 
     @Override
@@ -355,18 +314,19 @@ public class GameScreen implements Screen {
 	}
 
 	private class CardListener extends ClickListener{
-	    final int index;
+	    private final int index;
 	    public CardListener(int i){ super(); index = i; }
 
         @Override
         public void clicked(InputEvent event, float x, float y) {
 	        if(optionscheck){
-                if (isDoneChoosing) return;
                 if (playerControlledRobot.getChosenCards().size() >= Math.min(Robot.MAX_CHOSEN_CARDS, playerControlledRobot.getHP())) return;
                 ICard card = playerControlledRobot.getAvailableCards().get(index);
                 if (!playerControlledRobot.chooseCard(card)) return;
-                counter +=1;
-                chosenTable.setBounds((Gdx.graphics.getWidth())/2f,(Gdx.graphics.getHeight()/5f*(5-counter)),Gdx.graphics.getWidth()/6f,Gdx.graphics.getHeight()-(Gdx.graphics.getHeight()/5f*(5-counter)));
+                chosenTable.setBounds((Gdx.graphics.getWidth())/2f,
+                        (Gdx.graphics.getHeight()/5f*(5-playerControlledRobot.getChosenCards().size())),
+                        Gdx.graphics.getWidth()/6f,
+                        Gdx.graphics.getHeight()-(Gdx.graphics.getHeight()/5f*(5-playerControlledRobot.getChosenCards().size())));
                 chosenTable.add(new Image(card.getCardImage()));
                 chosenTable.row();
             }

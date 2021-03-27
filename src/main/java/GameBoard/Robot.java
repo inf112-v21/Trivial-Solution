@@ -173,7 +173,7 @@ public class Robot{
 	 * Denne metoden "setter" de 9 kortene som registerer får inn.
 	 */
 	public void setAvailableCards(ArrayList<ICard> cards){
-		availableCards = cards;
+		availableCards = new ArrayList<>(cards);
 	}
 
 	public void resetCards(){ availableCards.clear(); chosenCards.clear(); }
@@ -193,7 +193,7 @@ public class Robot{
 	public boolean chooseCard(ICard chosenCard){
 	    if (chosenCards.contains(chosenCard)) return false;
 	    if (! availableCards.contains(chosenCard)) throw new IllegalArgumentException("This card isn't in the list of available cards for som reason");
-	    if (chosenCards.size() > Math.min(MAX_CHOSEN_CARDS, hp)) throw new IllegalStateException("I already have the maximum number of cards!");
+	    if (chosenCards.size() == Math.min(BoardController.PHASES_PER_ROUND, hp)) throw new IllegalStateException("I already have the maximum number of cards!");
 		chosenCards.add(chosenCard);
 		return true;
 	}

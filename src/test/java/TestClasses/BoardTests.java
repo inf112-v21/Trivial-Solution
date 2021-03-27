@@ -687,6 +687,21 @@ public class BoardTests {
     }
 
     @Test
+    public void robotTakingMortalDamageMarksLocationAsDirty(){
+        bård.spawnRobot(robot1);
+        robot1.setDirection(0);
+        bård.performMove(new ProgramCard(2, 0, 1, null), robot1);
+        bård.getDirtyLocations(); //Resetter settet
+
+        robot1.applyDamage(9001);
+        bård.endPhase();
+
+        TreeSet<Position> dirtyLocations = bård.getDirtyLocations();
+        assertTrue(dirtyLocations.contains(new Position(9, 3)));
+        assertTrue(dirtyLocations.contains(new Position(9, 1)));
+    }
+
+    @Test
     public void gearRotatesTheRobotsTheCorrectDirection(){
         bård.placeRobotAt(8,0, robot1);
 

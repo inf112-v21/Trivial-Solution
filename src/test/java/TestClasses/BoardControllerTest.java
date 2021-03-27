@@ -17,9 +17,6 @@ import java.util.ArrayList;
 
 class BoardControllerTest {
 
-    private static GameScreen gameScreen;
-
-    private static GUI gui;
     private final static String defaultMapName = "maps/TestMap.tmx";
     private static BoardController robotRally;
 

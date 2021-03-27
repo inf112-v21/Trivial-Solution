@@ -61,6 +61,9 @@ public class GameScreen implements Screen {
     private boolean optionscheck = true;
 	private final Viewport smallView;
     private final Viewport largeView;
+    private Table buttonTable = new Table();
+    private Label label;
+    private String playerHealthAndLives;
 
     /**
      * @param robots robotene som skal være med å spille
@@ -80,7 +83,7 @@ public class GameScreen implements Screen {
 
         smallView = new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         largeView = new FitViewport(WIDTH*2, HEIGHT);
-        largeView.update(WIDTH*2, HEIGHT,true);
+        largeView.update(WIDTH, HEIGHT,true);
 
         playerLayer = (TiledMapTileLayer) map.getLayers().get("Robot");
         camera = (OrthographicCamera) largeView.getCamera();//new OrthographicCamera();
@@ -115,7 +118,7 @@ public class GameScreen implements Screen {
         Gdx.input.setInputProcessor(stage);
         chosenTable = new Table();
         availableTable = new Table();
-        Table buttonTable = new Table();
+        buttonTable = new Table();
         buttonTable.setBounds(Gdx.graphics.getWidth()-(Gdx.graphics.getWidth()/6f),0,Gdx.graphics.getWidth()/6f,Gdx.graphics.getHeight()/5f);
         optionsTable = new Table();
         optionsTable.setBounds(Gdx.graphics.getWidth()*3,Gdx.graphics.getHeight()*3,100,100);
@@ -125,6 +128,10 @@ public class GameScreen implements Screen {
 
         batch = new SpriteBatch();
         font = new BitmapFont();
+        playerHealthAndLives ="HP: "+playerControlledRobot.getHP()+" Lives: "+playerControlledRobot.getLives();
+
+        label = new Label(playerHealthAndLives, gui.getSkin());
+        label.setFontScale(2f);
 
         powerdown = new TextButton("Powerdown", gui.getSkin());
         powerdown.setSize(Gdx.graphics.getWidth()/6f,Gdx.graphics.getHeight()/15f );
@@ -196,13 +203,15 @@ public class GameScreen implements Screen {
         optionsTable.add(resume);
         optionsTable.row();
         optionsTable.add(quit);
-        buttonTable.add(powerdown).prefWidth((Gdx.graphics.getWidth())/6f).prefHeight(Gdx.graphics.getHeight()/20f);
+        buttonTable.add(label);
         buttonTable.row();
-        buttonTable.add(ready).prefWidth((Gdx.graphics.getWidth())/6f).prefHeight(Gdx.graphics.getHeight()/20f);
+        buttonTable.add(powerdown);
         buttonTable.row();
-        buttonTable.add(clear).prefWidth((Gdx.graphics.getWidth())/6f).prefHeight(Gdx.graphics.getHeight()/20f);
+        buttonTable.add(ready);
         buttonTable.row();
-        buttonTable.add(options).prefWidth((Gdx.graphics.getWidth())/6f).prefHeight(Gdx.graphics.getHeight()/20f);
+        buttonTable.add(clear);
+        buttonTable.row();
+        buttonTable.add(options);
 
     }
 
@@ -273,6 +282,20 @@ public class GameScreen implements Screen {
             phase = 0;
             gameboard.endRound();
             chosenTable.clear();
+            buttonTable.clear();
+            playerHealthAndLives = "HP: "+playerControlledRobot.getHP()+" Lives: "+playerControlledRobot.getLives();
+            label = new Label(playerHealthAndLives, gui.getSkin());
+            label.setFontScale(2f);
+            buttonTable.add(label);
+            buttonTable.row();
+            buttonTable.add(powerdown);
+            buttonTable.row();
+            buttonTable.add(ready);
+            buttonTable.row();
+            buttonTable.add(clear);
+            buttonTable.row();
+            buttonTable.add(options);
+
             counter = 0;
             return;
         }

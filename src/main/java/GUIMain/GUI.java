@@ -60,4 +60,6 @@ public class GUI extends Game {
     }
 
     public Skin getSkin(){ return skin; }
+
+    public String getSkinString(){return SKIN_NAME;}
 }

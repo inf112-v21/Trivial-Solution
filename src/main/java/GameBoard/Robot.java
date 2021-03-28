@@ -224,4 +224,8 @@ public class Robot{
 	public void togglePowerDown(){
 		powerDown = !powerDown;
 	}
+
+    public String getName() {
+	    return name;
+    }
 }

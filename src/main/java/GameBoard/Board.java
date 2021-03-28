@@ -176,10 +176,12 @@ public class Board {
     private void moveConveyorBelts(boolean moveAll){
         ArrayList<Robot> hasBeenPushed = new ArrayList<>();
         for (Position pos : botPositions.values()) {
+            Robot bot = botgrid[pos.getY()][pos.getX()];
+            if (bot == null) continue;  // Siden vi ikke fjerner roboter fra botPositions når de dør, og likevel ikke vil flytte døde roboter
             IComponent comp = midgrid[pos.getY()][pos.getX()];
             if (comp instanceof ConveyorBelt) {
                 ConveyorBelt belt = (ConveyorBelt) comp;
-                if ((belt.getSpeed() > 1 || moveAll) && !hasBeenPushed.contains(botgrid[pos.getY()][pos.getX()])) {
+                if ((belt.getSpeed() > 1 || moveAll) && !hasBeenPushed.contains(bot)) {
                     pushRobotWithConveyorBelt(pos.getX(), pos.getY(), hasBeenPushed, moveAll);
                 }
             }
@@ -267,7 +269,6 @@ public class Board {
                 botgrid[botPositions.get(bot).getY()][botPositions.get(bot).getX()] = null;
                 dirtyLocations.add(new Position(botPositions.get(bot).getX(), botPositions.get(bot).getY()));
             }
-            // TODO: 26.02.2021 Skal vi kanskje gjøre noe spesiellt når noen har dødd for tredje og siste gang? Si ifra til brukeren?
         }
     }
 
@@ -371,7 +372,7 @@ public class Board {
 
     private void botFellOff(Robot bot){
         bot.takeLife();
-        robotsWaitingToBeRespawned.addLast(bot);
+        if(bot.hasRemainingLives()) robotsWaitingToBeRespawned.addLast(bot);
         botgrid[botPositions.get(bot).getY()][botPositions.get(bot).getX()] = null;
         dirtyLocations.add(new Position(botPositions.get(bot).getX(), botPositions.get(bot).getY()));
     }

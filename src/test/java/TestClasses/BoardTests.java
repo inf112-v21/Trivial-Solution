@@ -361,7 +361,7 @@ public class BoardTests {
         bård.endPhase();
 
         assertTrue(robot1.getLives() < Robot.INITIAL_LIVES);
-        assertEquals(Robot.INITIAL_HP - Robot.RESPAWN_HANDICAP, robot1.getHP());
+        assertTrue(!robot1.hasRemainingLives() || Robot.INITIAL_HP - Robot.RESPAWN_HANDICAP == robot1.getHP());
     }
 
     @Test
@@ -375,8 +375,8 @@ public class BoardTests {
         assertNull(bård.getRobotAt(6, 3));
         assertNull(bård.getRobotAt(7, 3));
         assertNull(bård.getRobotAt(8, 3));
-        assertEquals(robot1, bård.getRobotAt(9, 3));
-        assertTrue(robot1.getHP() < Robot.INITIAL_HP);
+        assertTrue( !robot1.hasRemainingLives() || robot1 == bård.getRobotAt(9, 3));
+        assertTrue( !robot1.hasRemainingLives() || robot1.getHP() < Robot.INITIAL_HP);
     }
 
     @Test
@@ -393,7 +393,7 @@ public class BoardTests {
         bård.endPhase();
 
         assertNull(bård.getRobotAt(9, 4));
-        assertEquals(robot1, bård.getRobotAt(9, 3));
+        assertTrue( !robot1.hasRemainingLives() || robot1.equals(bård.getRobotAt(9, 3)));
     }
 
     @Test
@@ -414,7 +414,7 @@ public class BoardTests {
         bård.endPhase();
 
         assertNull(bård.getRobotAt(9, 3));
-        assertEquals(robot1, bård.getRobotAt(7, 5));
+        assertTrue( !robot1.hasRemainingLives() || robot1.equals(bård.getRobotAt(7, 5)));
     }
 
     @Test
@@ -434,7 +434,7 @@ public class BoardTests {
         bård.endPhase();
 
         //Nå er checkpointet ledig igjen
-        assertEquals(robot1, bård.getRobotAt(9, 3));
+        assertTrue( !robot1.hasRemainingLives() || robot1.equals(bård.getRobotAt(9, 3)));
     }
 
     @Test
@@ -608,6 +608,21 @@ public class BoardTests {
     }
 
     @Test
+    public void conveyorBeltPushingDeadRobotDoesNotCrashTheGame(){
+        bård.spawnRobot(robot1);
+        bård.placeRobotAt(4, 8, robot1);
+
+        for (int i = 0; i < Robot.INITIAL_LIVES; i++) {
+            robot1.takeLife();
+        }
+        robot1.applyDamage(robot1.getHP());
+        bård.endPhase(); //Her blir roboten dyttet, og deretter fjernet av brettet (som burde gå fint)
+        bård.endPhase(); //Her prøver samlebåndet og dyttet roboten, selv om den er død og fjernet, som gir kræsj
+
+        //Yay it worked
+    }
+
+    @Test
     public void movingRobotOneStepAddsTheNewLocationAndTheOldOneToTheSetOfDirtyLocations(){
         bård.placeRobotAt(0, 0, robot1);
         robot1.setDirection(1);
@@ -633,7 +648,7 @@ public class BoardTests {
 
         bård.endPhase();
 
-        assertTrue(bård.getDirtyLocations().contains(new Position(9, 3)));
+        assertTrue( !robot1.hasRemainingLives() || bård.getDirtyLocations().contains(new Position(9, 3)));
     }
 
     @Test
@@ -697,7 +712,7 @@ public class BoardTests {
         bård.endPhase();
 
         TreeSet<Position> dirtyLocations = bård.getDirtyLocations();
-        assertTrue(dirtyLocations.contains(new Position(9, 3)));
+        assertTrue(!robot1.hasRemainingLives() || dirtyLocations.contains(new Position(9, 3)));
         assertTrue(dirtyLocations.contains(new Position(9, 1)));
     }
 

@@ -213,7 +213,7 @@ public class GameScreen implements Screen {
 
     }
     private float timeSinceLastUpdate = -1;
-    private static final float TIME_DELTA = 0.7f;
+    private static final float TIME_DELTA = 0.6f;
     private boolean hasDrawnCardsYet = false;
 
     @Override
@@ -227,6 +227,9 @@ public class GameScreen implements Screen {
         gameboard.simulate();
         updateRobotPositions();
         updateLivesAndHP();
+        for (Robot bot : gameboard.getRecentlyDeceasedRobots()){
+            // TODO: 28.03.2021 Når gui.showPopUp() er implementert skal vi si ifra til brukeren her hver gang en robot dør for tredje og siste gang.
+        }
         if(gameboard.isWaitingForPlayersToPickCards()){
             if (hasDrawnCardsYet) return;
             renderCards();

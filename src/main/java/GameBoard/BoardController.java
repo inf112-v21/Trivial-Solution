@@ -15,7 +15,8 @@ public class BoardController {
 
     public static final int PHASES_PER_ROUND = 5;
     private final ArrayList<Flag> flagWinningFormation = new ArrayList<>();
-    private final ArrayList<Robot> bots;
+    private final ArrayList<Robot> aliveRobots;
+    private final ArrayList<Robot> recentlyDeceasedRobots = new ArrayList<>();
     private final Deck deck = new Deck();
     private final Board board;
     private final AI ai = new Randbot();
@@ -25,7 +26,7 @@ public class BoardController {
 
     public BoardController(ArrayList<Robot> robots, String mapName){
         board = new Board(mapName);
-        bots = robots;
+        aliveRobots = robots;
         flagWinningFormation.addAll(board.getWinningCombo());
         for(Robot bot : robots){
             board.spawnRobot(bot);
@@ -41,11 +42,11 @@ public class BoardController {
     public void simulate(){
         if (waitingForPlayersToPickCards) return;
 
-        if (currentMove == 0) bots.sort(new BotComparator(currentPhase));
+        if (currentMove == 0) aliveRobots.sort(new BotComparator(currentPhase));
         moveNextRobot();
         currentMove++;
 
-        if(currentMove == bots.size()){
+        if(currentMove == aliveRobots.size()){
             currentMove = 0;
             currentPhase++;
             board.endPhase();
@@ -60,7 +61,7 @@ public class BoardController {
     }
 
     private void moveNextRobot(){
-        Robot botToMove = bots.get(currentMove);
+        Robot botToMove = aliveRobots.get(currentMove);
         if (botToMove.hasRemainingLives() && botToMove.getChosenCards().size() > currentPhase){
             board.performMove(botToMove.getChosenCards().get(currentPhase), botToMove);
         }
@@ -71,9 +72,9 @@ public class BoardController {
 
     private void startRound(){
         deck.shuffleDeck();
-        for (Robot bot : bots){
+        for (Robot bot : aliveRobots){
             ArrayList<ICard> cardlist = new ArrayList<>();
-            for (int amount=0; amount<Robot.MAX_AVAILABLE_CARDS; amount++){
+            for (int amount=0; amount<Math.min(bot.getHP(), Robot.MAX_AVAILABLE_CARDS); amount++){
                 ICard card = deck.drawCard();
                 cardlist.add(card);
             }
@@ -85,7 +86,25 @@ public class BoardController {
     }
 
     private void endRound(){
-        for (Robot bot : bots) bot.resetCards();
+        for (Robot bot : aliveRobots) bot.resetCards();
+        removeDeceasedRobots();
+    }
+
+    private void removeDeceasedRobots(){
+        for (Robot bot : aliveRobots){
+            if ( ! bot.hasRemainingLives()){
+                recentlyDeceasedRobots.add(bot);
+            }
+        }
+        for (Robot bot : recentlyDeceasedRobots){
+            aliveRobots.remove(bot);
+        }
+    }
+
+    public ArrayList<Robot> getRecentlyDeceasedRobots(){
+        ArrayList<Robot> ret = new ArrayList<>(recentlyDeceasedRobots);
+        recentlyDeceasedRobots.clear();
+        return ret;
     }
 
     /**
@@ -95,7 +114,7 @@ public class BoardController {
      * @return - Roboten som vant, hvis roboten vant, null ellers
      */
     public Robot hasWon() {
-        for (Robot bot : bots) {
+        for (Robot bot : aliveRobots) {
             if (bot.getVisitedFlags().equals(flagWinningFormation)) {
                 return bot;
             }
@@ -121,6 +140,7 @@ public class BoardController {
         }
     }
 
+    public int getNumberOfAliveRobots(){ return aliveRobots.size(); }
     public int getHeight(){ return board.getHeight(); } //bruket til konvertering av origo mellom, Board og GUI
     public Robot getRobotAt(int x, int y){ return board.getRobotAt(x, y);}
 }

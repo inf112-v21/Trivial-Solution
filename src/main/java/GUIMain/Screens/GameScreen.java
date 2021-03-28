@@ -139,7 +139,7 @@ public class GameScreen implements Screen {
             public void changed(ChangeEvent event, Actor actor) {
                 if (optionscheck){
                     playerControlledRobot.togglePowerDown();
-                    playerControlledRobot.resetCards();
+                    playerControlledRobot.resetAllCards();
                     gameboard.playersAreReady();
                 }
             }
@@ -162,7 +162,7 @@ public class GameScreen implements Screen {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 if(optionscheck){
-                    playerControlledRobot.getChosenCards().clear();
+                    playerControlledRobot.resetChosenCards();
                     chosenTable.clear();
                 }
             }
@@ -314,13 +314,13 @@ public class GameScreen implements Screen {
         @Override
         public void clicked(InputEvent event, float x, float y) {
 	        if(optionscheck){
-                if (playerControlledRobot.getChosenCards().size() >= Math.min(BoardController.PHASES_PER_ROUND, playerControlledRobot.getHP())) return;
+                if (playerControlledRobot.getNumberOfChosenCards() >= Math.min(BoardController.PHASES_PER_ROUND, playerControlledRobot.getHP())) return;
                 ICard card = playerControlledRobot.getAvailableCards().get(index);
                 if (!playerControlledRobot.chooseCard(card)) return;
                 chosenTable.setBounds((Gdx.graphics.getWidth())/2f,
-                        (Gdx.graphics.getHeight()/5f*(5-playerControlledRobot.getChosenCards().size())),
+                        (Gdx.graphics.getHeight()/5f*(5-playerControlledRobot.getNumberOfChosenCards())),
                         Gdx.graphics.getWidth()/6f,
-                        Gdx.graphics.getHeight()-(Gdx.graphics.getHeight()/5f*(5-playerControlledRobot.getChosenCards().size())));
+                        Gdx.graphics.getHeight()-(Gdx.graphics.getHeight()/5f*(5-playerControlledRobot.getNumberOfChosenCards())));
                 chosenTable.add(new Image(card.getCardImage()));
                 chosenTable.row();
             }

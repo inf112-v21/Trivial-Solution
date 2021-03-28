@@ -1,7 +1,9 @@
 package TestClasses;
 
+import AIs.Randbot;
 import GameBoard.Cards.Deck;
 import GameBoard.Cards.ICard;
+import GameBoard.Cards.ProgramCard;
 import GameBoard.Robot;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -13,70 +15,72 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class RobotTest {
 
-    private static ArrayList<ICard> allCards;
-    private static ArrayList<ICard> registerCards;
-    private static Robot r;
-    private static Integer numberOfLifeTokens;
-    private static Integer numberOfDamageTokens;
+    private Robot bot;
+    private Deck deck;
 
     @BeforeEach
-    public void setCards(){
-        Deck d = new Deck(false);
-        for(int i = 0; i < r.getHP(); i++){
-            ICard card = d.drawCard();
-            allCards.add(card);
+    public void reset(){
+        bot = new Robot("Nebuchadnezzar", false);
+        deck = new Deck(false);
+    }
+
+    @Test
+    public void robotCrashesWhenGivenMoreCardsThanItCanHold(){
+        ArrayList<ICard> cards = new ArrayList<>();
+        for (int i = 0; i < Robot.MAX_AVAILABLE_CARDS + 1; i++) {
+            cards.add(deck.drawCard());
         }
-        r.setAvailableCards(allCards);
-
-        numberOfLifeTokens = r.getLives();
-        numberOfDamageTokens = r.getHP();
-    }
-    @BeforeAll
-    public static void setUp(){
-        allCards = new ArrayList<>();
-        registerCards = new ArrayList<>();
-        r = new Robot("testRobot", false);
-    }
-
-    @Test
-    void registerCanSetNineCards(){
-        assertEquals(allCards, r.getAvailableCards());
-    }
-
-    @Test
-    void playerCanStoreTheirFiveChosenCardsInOrderInTheRegister(){
-        for(int i = 0; i < 5; i++){
-            r.chooseCard(allCards.get(i));
-            registerCards.add(allCards.get(i));
+        try{
+            bot.setAvailableCards(cards);
+            fail();
+        }catch (IllegalArgumentException e){
+            //Yay it worked
         }
-        assertEquals(registerCards, r.getChosenCards());
     }
 
     @Test
-    void registerCanClearAllCardsBeforeEachNewGameRound(){
-        //clear register-list
-        r.resetCards();
+    public void robotCrashesWhenChoosingMoreCardsThanPossible(){
+        setAvailableCards();
+        for (int i = 0; i < bot.getChosenCardSlots(); i++) bot.chooseCard(bot.getAvailableCards().get(i));
 
-        assertTrue(r.getAvailableCards().isEmpty());
+        try{
+            bot.chooseCard(bot.getAvailableCards().get(bot.getChosenCardSlots() + 1));
+            fail();
+        }catch (IllegalStateException e){
+            //Yay
+        }
     }
 
     @Test
-    void registerHoldsCorrectAmountOfDamageTokens(){
-        assertEquals(numberOfDamageTokens, r.getHP());
+    public void canOnlyChooseAvailableCards(){
+        try{
+            bot.chooseCard(new ProgramCard(69, 0, 420, null)); //Dette kortet er antagelig ikke i listen
+        }catch (IllegalArgumentException e){
+            //Yay
+        }
     }
 
     @Test
-    void registerHoldsCorrectAmountOfLifeTokens(){
-        assertEquals(numberOfLifeTokens, r.getLives());
+    public void respawningResetsHPWithHandiCap(){
+        bot.applyDamage(1);
+        bot.respawn();
+
+        assertEquals(Robot.INITIAL_HP - Robot.RESPAWN_HANDICAP, bot.getHP());
+    }
+
+    private void setAvailableCards(){
+        ArrayList<ICard> cards = new ArrayList<>();
+        for (int i = 0; i < Robot.MAX_AVAILABLE_CARDS; i++) cards.add(deck.drawCard());
+        bot.setAvailableCards(cards);
     }
 
     @Test
-    void canRegisterPowerDownARobot(){
-        assertFalse(r.isPowerDownAnnounced());
+    public void cannotHealRobotMoreThanMaxHP(){
+        bot.applyDamage(2);
 
-        r.togglePowerDown();
+        bot.repairRobot(9001);
 
-        assertTrue(r.isPowerDownAnnounced());
+        assertEquals(Robot.INITIAL_HP, bot.getHP());
     }
 
 }

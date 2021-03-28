@@ -62,8 +62,9 @@ public class BoardController {
 
     private void moveNextRobot(){
         Robot botToMove = aliveRobots.get(currentMove);
-        if (botToMove.hasRemainingLives() && botToMove.getChosenCards().size() > currentPhase){
-            board.performMove(botToMove.getChosenCards().get(currentPhase), botToMove);
+        ICard card = botToMove.getNthChosenCard(currentPhase);
+        if (botToMove.hasRemainingLives() && card != null){
+            board.performMove(card, botToMove);
         }
     }
 
@@ -86,7 +87,7 @@ public class BoardController {
     }
 
     private void endRound(){
-        for (Robot bot : aliveRobots) bot.resetCards();
+        for (Robot bot : aliveRobots) bot.resetAllCards();
         removeDeceasedRobots();
     }
 

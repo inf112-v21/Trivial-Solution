@@ -69,7 +69,6 @@ class BoardControllerTest {
 
         bot2.addToFlagsVisited(flag1);
 
-        bot3.addToFlagsVisited(flag1);
 
         //Ingen har vunnet enda
         assertNull(boardController.hasWon());

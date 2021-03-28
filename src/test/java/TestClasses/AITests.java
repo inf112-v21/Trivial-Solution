@@ -17,12 +17,12 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class AITests {
 
     private Deck deck;
-    private Robot robot1;
+    private Robot bot;
 
     @BeforeEach
     public void setUp(){
         deck = new Deck(false);
-        robot1 = new Robot("Nebuchadnezzar", true);
+        bot = new Robot("Nebuchadnezzar", true);
     }
 
 
@@ -32,7 +32,7 @@ public class AITests {
      */
     private void testAIProperties(AI ai){
         resetState();
-        AIAddCorrectAmountOfCards(ai);
+        AIAddsCorrectAmountOfCards(ai);
         resetState();
         AIAddsCardsToRegisterOrTogglesPowerdDown(ai);
         resetState();
@@ -46,52 +46,48 @@ public class AITests {
 
 
     private void AIAddsCardsToRegisterOrTogglesPowerdDown(AI ai){
-        Robot bot = new Robot("Nebuchadnezzar", true);
+        drawRandomCards();
+        assertEquals(0, bot.getNumberOfChosenCards());
+
+        ai.chooseCards(bot, null);
+
+        assertTrue(bot.isPowerDownAnnounced() || bot.getNumberOfChosenCards() > 0);
+    }
+
+    private void AIDoesNotRemoveCards(AI ai) {
+        drawRandomCards();
+        int numberOfCards = bot.getAvailableCards().size();
+
+        ai.chooseCards(bot, null);
+
+        assertEquals(numberOfCards, bot.getAvailableCards().size());
+    }
+
+    private void AIAddsCorrectAmountOfCards(AI ai){
+        drawRandomCards();
+
+        assertEquals(0, bot.getNumberOfChosenCards());
+        ai.chooseCards(bot, null);
+        assertTrue(bot.getNumberOfChosenCards() <= BoardController.PHASES_PER_ROUND);
+
+        bot.resetAllCards();
+        drawRandomCards();
+        bot.applyDamage(Robot.INITIAL_HP - 1); //Roboten har nå 1 liv igjen, burde bare få maks ett kort.
+
+        ai.chooseCards(bot, null);
+        assertTrue(bot.getNumberOfChosenCards() <= 1);
+    }
+
+    private void resetState(){
+        bot = new Robot("Nebuchadnezzar", true);
+        deck = new Deck(false);
+    }
+
+    private void drawRandomCards(){
         ArrayList<ICard> availableCards = new ArrayList<>();
         for (int i = 0; i < bot.getAvailableCardSlots(); i++) {
             availableCards.add(deck.drawCard());
         }
         bot.setAvailableCards(availableCards);
-        assertEquals(0, bot.getChosenCards().size());
-
-        ai.chooseCards(bot, null);
-
-        assertTrue(bot.isPowerDownAnnounced() || bot.getChosenCards().size() > 0);
-    }
-
-    private void AIDoesNotRemoveCards(AI ai) {
-        ArrayList<ICard> availableCards = new ArrayList<>();
-        for (int i = 0; i < robot1.getAvailableCardSlots(); i++) {
-            availableCards.add(deck.drawCard());
-        }
-        robot1.setAvailableCards(availableCards);
-
-        ai.chooseCards(robot1, null);
-
-        assertEquals(availableCards.size(), 9, robot1.getAvailableCards().size());
-    }
-
-    private void AIAddCorrectAmountOfCards(AI ai){
-        ArrayList<ICard> availableCards = new ArrayList<>();
-        for (int i = 0; i < robot1.getAvailableCardSlots(); i++) {
-            availableCards.add(deck.drawCard());
-        }
-        robot1.setAvailableCards(availableCards);
-
-        assertEquals(0, robot1.getChosenCards().size());
-        ai.chooseCards(robot1, null);
-        assertEquals(BoardController.PHASES_PER_ROUND, robot1.getChosenCards().size());
-
-        robot1.resetCards();
-        robot1.setAvailableCards(availableCards);
-        robot1.applyDamage(Robot.INITIAL_HP - 1); //Roboten har nå 1 liv igjen, burde bare få ett kort.
-
-        ai.chooseCards(robot1, null);
-        assertEquals(1, robot1.getChosenCards().size());
-    }
-
-    private void resetState(){
-        robot1 = new Robot("Nebuchadnezzar", true);
-        deck = new Deck(false);
     }
 }

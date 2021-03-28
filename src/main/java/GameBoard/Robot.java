@@ -8,11 +8,6 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 import java.util.ArrayList;
 
-/**
- * 
- * @author ilyasali
- *
- */
 public class Robot{
     public static final int INITIAL_HP = 10;
     public static final int INITIAL_LIVES = 3;
@@ -47,56 +42,25 @@ public class Robot{
         powerDown = false;
     }
 
-	/**
-	 * 
-	 * @return the life's left for this robot
-	 */
 	public int getLives() {
 		return lives;
 	}
-	
-	/**
-	 * 
-	 * @return the hp of this robot
-	 */
 	public int getHP() {
 		return hp;
 	}
 
-	/**
-	 * repair the robot
-	 */
 	public void repairRobot(int repairPoints){hp = Math.min(INITIAL_HP, hp + repairPoints); }
-
-	/**
-	 * apply damage to this robot
-	 */
 	public void applyDamage(int dmg) { hp -= dmg; }
-
 	public void takeLife(){ lives--; }
-	
-	/**
-	 * 
-	 * @return true if the robot is destroyed, ie. has no hp, false otherwise
-	 */
+
 	public boolean isDestroyed() {
 		return hp < 1;
 	}
+	public boolean hasRemainingLives(){ return lives > 0; }
 
-    /**
-     *
-     * @return true if it has no remaining lives, false otherwise
-     */
-	public boolean hasRemainingLives(){
-	    return lives > 0;
-    }
-
-    public void respawn(){
-    hp = INITIAL_HP - RESPAWN_HANDICAP;
-    }
+    public void respawn(){ hp = INITIAL_HP - RESPAWN_HANDICAP; }
 
 	public int getDirection(){ return direction; }
-
 	public void setDirection(int dir){
         if ( dir < TAU && dir >= 0) direction = dir;
         else throw new IllegalArgumentException("Direction has to be 0 <= dir < " + TAU + ", but was " + dir);
@@ -110,9 +74,7 @@ public class Robot{
             +  "\nDirection: " + direction;
 	}
 
-	/**
-	 * @return Gir oss flaggene som roboten har besøkt.
-	 */
+	/** Listen over flaggene som roboten har besøkt. */
 	public ArrayList<Flag> getVisitedFlags(){ return flagsVisited;}
 
 	public Position getRespawnPoint(){
@@ -123,15 +85,11 @@ public class Robot{
 	}
 	public void setRespawnPoint(Position pos){ respawnPoint = pos; }
 	
-	/**
-	 * Denne funksjonen leggr til et flag som en roboten henter
-	 */
+	/** Legger flagget til i listen over flagg roboten har passert. */
 	public void addToFlagsVisited(Flag flag) { flagsVisited.add(flag);}
 
-
-    public void rotate(int degree) {
-	    direction = Math.floorMod(direction + degree, TAU);
-    }
+    /** Roterer roboten. degree=1 betyr 90 grader mot høyre, degree=2 betyr 180 grader, etc. */
+    public void rotate(int degree) { direction = Math.floorMod(direction + degree, TAU); }
 
 	public TextureRegion getImage() {
 	    if (image == null) throw new IllegalStateException("This robot has no image. If it should have one, please use the other Robot constructor instead.");
@@ -141,14 +99,59 @@ public class Robot{
 	public boolean isControlledByAI(){return isControlledByAI; }
 
 	public void resetState(){
-	    resetCards();
+	    resetAllCards();
 	    hp = INITIAL_HP;
 	    lives = INITIAL_LIVES;
 	    direction = 0;
     }
 
-	public static ArrayList<Robot> getDefaultRobots(int n){
-	    if (n < 0 || n > 8) throw new IllegalArgumentException("Expecteded >0 and <9 robots, but was " + n);
+    /** Setter listen over kort roboten kan velge mellom. */
+	public void setAvailableCards(ArrayList<ICard> cards){
+	    if (cards.size() > getAvailableCardSlots()) throw new IllegalArgumentException("Cannot hold more than " + getAvailableCardSlots() + " atm, but was given " + cards.size());
+	    availableCards = new ArrayList<>(cards);
+	}
+
+    /** Valgt kort nummer n. */
+    public ICard getNthChosenCard(int n){
+        if (n >= chosenCards.size()) return null;
+        return chosenCards.get(n);
+    }
+
+	public void resetAllCards(){ availableCards.clear(); chosenCards.clear(); }
+	public void resetChosenCards(){ chosenCards.clear(); }
+
+    /** En kopi av listen over tilgjengelige kort. */
+	public ArrayList<ICard> getAvailableCards(){ return new ArrayList<>(availableCards); }
+
+	/**
+	 * Denne metoden legger til et og et kort i rekkefølge i registeret utifra hva spilleren velger.
+	 * @param chosenCard kortet som ble valgt
+     * @return true om kortet ble satt, false ellers
+	 */
+	public boolean chooseCard(ICard chosenCard){
+	    if (chosenCards.contains(chosenCard)) return false;
+	    if (! availableCards.contains(chosenCard)) throw new IllegalArgumentException("This card isn't in the list of available cards for som reason");
+	    if (chosenCards.size() == getChosenCardSlots()) throw new IllegalStateException("I already have the maximum number of cards!");
+		chosenCards.add(chosenCard);
+		return true;
+	}
+
+	public void unchooseCard(ICard unchosenCard){
+	    if (! chosenCards.contains(unchosenCard)) throw new IllegalArgumentException("This card wasn't chosen, so I cannot unchoose it.");
+	    chosenCards.remove(unchosenCard); }
+
+	public int getNumberOfChosenCards(){ return chosenCards.size(); }
+
+	public boolean isPowerDownAnnounced(){ return powerDown; }
+	public void togglePowerDown(){ powerDown = !powerDown; }
+
+    public String getName() { return name; }
+
+    public int getAvailableCardSlots(){ return Math.min(hp, MAX_AVAILABLE_CARDS); }
+    public int getChosenCardSlots(){ return Math.min(hp, BoardController.PHASES_PER_ROUND); }
+
+    public static ArrayList<Robot> getDefaultRobots(int n){
+        if (n < 0 || n > 8) throw new IllegalArgumentException("Expecteded >0 and <9 robots, but was " + n);
         //Denne her kunne vært en statisk feltvariabel, men da kan vi ikke kjøre tester som bruker roboter uten at denne blir ærklert,
         // og om GUI-en ikke har startet opp ennå får vi da feil når vi laster inn bildene.
         final Robot[] defaultRobots = {
@@ -169,65 +172,4 @@ public class Robot{
         }
         return ret;
     }
-	/**
-	 * Denne metoden "setter" de 9 kortene som registerer får inn.
-	 */
-	public void setAvailableCards(ArrayList<ICard> cards){
-		availableCards = new ArrayList<>(cards);
-	}
-
-	public void resetCards(){ availableCards.clear(); chosenCards.clear(); }
-
-	/**
-	 * Denne metoden returnerer de 9 kortene som registeret holder.
-	 * @return listen over tilgjengelige kort
-	 */
-	public ArrayList<ICard> getAvailableCards(){
-		return availableCards;
-	}
-
-	/**
-	 * Denne metoden legger til et og et kort i rekkefølge i registeret utifra hva spilleren velger.
-	 * @param chosenCard kortet som ble valgt
-	 */
-	public boolean chooseCard(ICard chosenCard){
-	    if (chosenCards.contains(chosenCard)) return false;
-	    if (! availableCards.contains(chosenCard)) throw new IllegalArgumentException("This card isn't in the list of available cards for som reason");
-	    //if (chosenCards.size() == getChosenCardSlots()) throw new IllegalStateException("I already have the maximum number of cards!");
-		chosenCards.add(chosenCard);
-		return true;
-	}
-
-	public void removeCardFromRegister(ICard unchosenCard){
-	    if (! chosenCards.contains(unchosenCard)) throw new IllegalArgumentException("This card wasn't chosen, so I cannot unchoose it.");
-	    chosenCards.remove(unchosenCard); }
-
-	/**
-	 * @return returnerer maks 5 kort fra registeret, kan returnere færre dersom roboten har mye damage.
-	 */
-	public ArrayList<ICard> getChosenCards(){
-		return chosenCards;
-	}
-
-	/**
-	 * Returnerer "true" hvis roboten har en "powerdown", og "false" hvis den ikke har det.
-	 * @return Tilstanden til roboten
-	 */
-	public boolean isPowerDownAnnounced(){
-		return powerDown;
-	}
-
-	/**
-	 * Denne metoden endrer powerDown til true dersom knappen for powerDown blir trykket på i GameScreen-en for registeret.
-	 */
-	public void togglePowerDown(){
-		powerDown = !powerDown;
-	}
-
-    public String getName() {
-	    return name;
-    }
-
-    public int getAvailableCardSlots(){ return Math.min(hp, MAX_AVAILABLE_CARDS); }
-    public int getChosenCardSlots(){ return Math.min(hp, BoardController.PHASES_PER_ROUND); }
 }

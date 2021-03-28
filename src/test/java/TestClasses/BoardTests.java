@@ -754,8 +754,4 @@ public class BoardTests {
 
         assertTrue(bård.getDirtyLocations().contains(new Position(2, 0)));
     }
-
-
-
-
 }

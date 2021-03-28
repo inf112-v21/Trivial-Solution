@@ -74,7 +74,7 @@ public class BoardController {
         deck.shuffleDeck();
         for (Robot bot : aliveRobots){
             ArrayList<ICard> cardlist = new ArrayList<>();
-            for (int amount=0; amount<Math.min(bot.getHP(), Robot.MAX_AVAILABLE_CARDS); amount++){
+            for (int amount=0; amount<bot.getAvailableCardSlots(); amount++){
                 ICard card = deck.drawCard();
                 cardlist.add(card);
             }

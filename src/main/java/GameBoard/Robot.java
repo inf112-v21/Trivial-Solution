@@ -16,7 +16,6 @@ import java.util.ArrayList;
 public class Robot{
     public static final int INITIAL_HP = 10;
     public static final int INITIAL_LIVES = 3;
-    public static final int MAX_CHOSEN_CARDS = 5;
     public static final int MAX_AVAILABLE_CARDS = 9;
     public static final int RESPAWN_HANDICAP = 2;
     public static final int TAU = 4;
@@ -33,7 +32,7 @@ public class Robot{
 
 	private final ArrayList<Flag> flagsVisited = new ArrayList<>();
 	private ArrayList<ICard> availableCards = new ArrayList<>(); //alle kortene som ble utdelt
-	private final ArrayList<ICard> chosenCards = new ArrayList<>(MAX_CHOSEN_CARDS); //De valgte kortene, rekkefølgen er samme som den spilleren valgte dem
+	private final ArrayList<ICard> chosenCards = new ArrayList<>(BoardController.PHASES_PER_ROUND); //De valgte kortene, rekkefølgen er samme som den spilleren valgte dem
 
 	public Robot(String name, int design, boolean isControlledByAI){
 		this.name = name;
@@ -194,7 +193,7 @@ public class Robot{
 	public boolean chooseCard(ICard chosenCard){
 	    if (chosenCards.contains(chosenCard)) return false;
 	    if (! availableCards.contains(chosenCard)) throw new IllegalArgumentException("This card isn't in the list of available cards for som reason");
-	    if (chosenCards.size() == Math.min(BoardController.PHASES_PER_ROUND, hp)) throw new IllegalStateException("I already have the maximum number of cards!");
+	    //if (chosenCards.size() == getChosenCardSlots()) throw new IllegalStateException("I already have the maximum number of cards!");
 		chosenCards.add(chosenCard);
 		return true;
 	}
@@ -228,4 +227,7 @@ public class Robot{
     public String getName() {
 	    return name;
     }
+
+    public int getAvailableCardSlots(){ return Math.min(hp, MAX_AVAILABLE_CARDS); }
+    public int getChosenCardSlots(){ return Math.min(hp, BoardController.PHASES_PER_ROUND); }
 }

@@ -20,7 +20,7 @@ public class Randbot implements AI{
     @Override
     public void chooseCards(Robot bot, Board board) {
         ArrayList<ICard> cards = new ArrayList<>(bot.getAvailableCards()); //lager en kopi av listen
-        for (int i = 0; i < Math.min(bot.getHP(), BoardController.PHASES_PER_ROUND); i++) {
+        for (int i = 0; i < bot.getChosenCardSlots(); i++) {
             bot.chooseCard(cards.remove(r.nextInt(cards.size())));
         }
     }

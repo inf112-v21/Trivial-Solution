@@ -314,7 +314,7 @@ public class GameScreen implements Screen {
         @Override
         public void clicked(InputEvent event, float x, float y) {
 	        if(optionscheck){
-                if (playerControlledRobot.getChosenCards().size() >= Math.min(Robot.MAX_CHOSEN_CARDS, playerControlledRobot.getHP())) return;
+                if (playerControlledRobot.getChosenCards().size() >= Math.min(BoardController.PHASES_PER_ROUND, playerControlledRobot.getHP())) return;
                 ICard card = playerControlledRobot.getAvailableCards().get(index);
                 if (!playerControlledRobot.chooseCard(card)) return;
                 chosenTable.setBounds((Gdx.graphics.getWidth())/2f,

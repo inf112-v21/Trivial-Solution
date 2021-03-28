@@ -45,20 +45,22 @@ public class Deck {
         if (hasImages){
            throw new IllegalArgumentException("I cannot figure out how to add a constructor here, please use the other version of Deck() if you want images.");
         }else {
-            cards.add(new ProgramCard(0,2,10, null));
-            cards.add(new ProgramCard(0,-1,20, null));
-            cards.add(new ProgramCard(0,1,30, null));
-            cards.add(new ProgramCard(0,-1,40, null));
-            cards.add(new ProgramCard(0,1,50, null));
-            cards.add(new ProgramCard(0,-1,60, null));
-            cards.add(new ProgramCard(0,1,70, null));
-            cards.add(new ProgramCard(-1,0,80, null));
-            cards.add(new ProgramCard(1,0,90, null));
-            cards.add(new ProgramCard(1,0,100, null));
-            cards.add(new ProgramCard(1,0,110, null));
-            cards.add(new ProgramCard(2,0,140, null));
-            cards.add(new ProgramCard(2,0,150, null));
-            cards.add(new ProgramCard(3,0,170, null));
+            for (int i = 0; i < 6; i++) {
+                cards.add(new ProgramCard(0,2,10, null));
+                cards.add(new ProgramCard(0,-1,20, null));
+                cards.add(new ProgramCard(0,1,30, null));
+                cards.add(new ProgramCard(0,-1,40, null));
+                cards.add(new ProgramCard(0,1,50, null));
+                cards.add(new ProgramCard(0,-1,60, null));
+                cards.add(new ProgramCard(0,1,70, null));
+                cards.add(new ProgramCard(-1,0,80, null));
+                cards.add(new ProgramCard(1,0,90, null));
+                cards.add(new ProgramCard(1,0,100, null));
+                cards.add(new ProgramCard(1,0,110, null));
+                cards.add(new ProgramCard(2,0,140, null));
+                cards.add(new ProgramCard(2,0,150, null));
+                cards.add(new ProgramCard(3,0,170, null));
+            }
         }
         shuffleDeck();
     }

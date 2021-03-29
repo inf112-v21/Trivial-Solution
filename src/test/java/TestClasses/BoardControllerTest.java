@@ -52,30 +52,22 @@ class BoardControllerTest {
     @Test
     public void hasWon() {
         //Posisjonene til de ulike flaggene i griden. Kan ses i tmxfilen.
-        //PosY er først og PosX er nummer2
-        Flag flag1 = boardController.getBoard().getFlagInForgridAt(3,3);
-        Flag flag2 = boardController.getBoard().getFlagInForgridAt(6,5);
-        Flag flag3 = boardController.getBoard().getFlagInForgridAt(2,6);
-
-        //Vi henter ut et par tilfeldige Boter (Posisjonene under er start posisjonene i til robotene i tmx-filen)
-        Robot bot1 = boardController.getRobotAt(9,3);
-        Robot bot2 = boardController.getRobotAt(4,9);
-        Robot bot3 = boardController.getRobotAt(0,4);
-
+        Flag flag1 = (Flag) boardController.getForgridAt(3,3);
+        Flag flag2 = (Flag) boardController.getForgridAt(5,6);
+        Flag flag3 = (Flag) boardController.getForgridAt(6,2);
 
         //Vi later som om robotene hentet et par flagg
-        bot1.addToFlagsVisited(flag1);
-        bot1.addToFlagsVisited(flag2);
+        robot1.addToFlagsVisited(flag1);
+        robot1.addToFlagsVisited(flag2);
 
-        bot2.addToFlagsVisited(flag1);
-
+        robot2.addToFlagsVisited(flag1);
 
         //Ingen har vunnet enda
         assertNull(boardController.hasWon());
 
         //bot1 besøker det siste flagget og skal dermed ha vunnet
-        bot1.addToFlagsVisited(flag3);
-        assertEquals(bot1, boardController.hasWon());
+        robot1.addToFlagsVisited(flag3);
+        assertEquals(robot1, boardController.hasWon());
     }
 
     @Test

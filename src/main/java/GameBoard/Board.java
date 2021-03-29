@@ -378,21 +378,8 @@ public class Board {
     }
 
     public Robot getRobotAt(int x, int y){ return botgrid[y][x]; }
-
-    /**
-     * Henter flaggene fra forgriden slik at vi kan bruke Flaggene for
-     * å teste at robotene henter riktige flagg i BoardTest.
-     *
-     * @param posY y posisjonen til flagget i tmx-filen
-     * @param posX x posisjonene til flagget i tmx-filen
-     * @return Flagget fra den posisjonen
-     */
-    public Flag getFlagInForgridAt(int posY, int posX) {
-        if (!(forgrid[posY][posX] instanceof Flag)){
-            throw new IllegalStateException("Position contains no flags.");
-        }
-        return (Flag) forgrid[posY][posX];
-    }
+    public IComponent getForgridAt(int x, int y){ return forgrid[y][x]; }
+    public IComponent getMidgridAt(int x, int y){ return midgrid[y][x]; }
 
     public void placeRobotAt(int x, int y, Robot bot){
         if(outOfBounds(x, y)) throw new IllegalArgumentException("Coordinates (" + x + ", " + y + ") are out of bounds.");

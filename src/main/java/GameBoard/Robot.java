@@ -7,6 +7,9 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 public class Robot{
     public static final int INITIAL_HP = 10;
@@ -155,7 +158,8 @@ public class Robot{
         //Denne her kunne vært en statisk feltvariabel, men da kan vi ikke kjøre tester som bruker roboter uten at denne blir ærklert,
         // og om GUI-en ikke har startet opp ennå får vi da feil når vi laster inn bildene.
         final Robot[] defaultRobots = {
-                // TODO: 18.03.2021 Finn på en måte å sørge for at vi får tilfeldige (men fortsatt unike) designs for hver robot. Så vi ikke spiller mot de samme hver gang.
+                // TODO: 29.03.2021 Nå er det hardkodet at spilleren alltid får design 3, og at ingen robot får design 3.
+                // TODO: 29.03.2021 Finn heller en måte slik at spilleren kan velge selv, og at robotene likevel får nye unike designs hver gang.
                 new Robot("Nebuchadnezzar", 0, true),
                 new Robot("Alexstrasza", 1, true),
                 new Robot("Gilgamesh", 2, true),
@@ -163,13 +167,12 @@ public class Robot{
                 new Robot("Andromeda", 4, true),
                 new Robot("Hephaistion", 5, true),
                 new Robot("Styxifus", 6, true),
-                new Robot("Promotheus", 3, true)
+                //new Robot("Prometheus", 3, true)
         };
-        ArrayList<Robot> ret = new ArrayList<>();
-        for (int i = 0; i < n; i++){
-            defaultRobots[i].resetState();
-            ret.add(defaultRobots[i]);
-        }
-        return ret;
+        List<Robot> ret = Arrays.asList(defaultRobots);
+        Collections.shuffle(ret);
+        for (int i = 0; i < n; i++) defaultRobots[i].resetState();
+
+        return new ArrayList<>(ret.subList(0, n));
     }
 }

@@ -1,7 +1,6 @@
 package AIs;
 
 import GameBoard.Board;
-import GameBoard.BoardController;
 import GameBoard.Cards.ICard;
 import GameBoard.Robot;
 

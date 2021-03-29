@@ -17,13 +17,14 @@ public class Robot{
     public static final int MAX_AVAILABLE_CARDS = 9;
     public static final int RESPAWN_HANDICAP = 2;
     public static final int TAU = 4;
+    public static final int INITIAL_DIRECTION = 0;
 
     private int lives = INITIAL_LIVES;
 	private int hp = INITIAL_HP;
 
 	private final String name;
 	private TextureRegion image;
-	private int direction = 0;
+	private int direction = INITIAL_DIRECTION;
 	private Position respawnPoint;
 	private final boolean isControlledByAI;
 	private boolean powerDown;

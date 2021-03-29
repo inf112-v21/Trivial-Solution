@@ -23,15 +23,13 @@ public class BoardController {
     private final AI ai = new Randbot();
     private int currentPhase = 0;
     private int currentMove  = 0;
-    private boolean waitingForPlayersToPickCards = true;
+    private boolean waitingForPlayersToPickCards;
 
     public BoardController(ArrayList<Robot> robots, String mapName){
         board = new Board(mapName);
         aliveRobots = robots;
         flagWinningFormation.addAll(board.getWinningCombo());
-        for(Robot bot : robots){
-            board.spawnRobot(bot);
-        }
+        for(Robot bot : robots) board.spawnRobot(bot);
         startRound();
     }
 
@@ -57,7 +55,6 @@ public class BoardController {
             endRound();
             currentPhase = 0;
             startRound();
-            waitingForPlayersToPickCards = true;
         }
     }
 
@@ -85,6 +82,7 @@ public class BoardController {
                 ai.chooseCards(bot, board);
             }
         }
+        waitingForPlayersToPickCards = true;
     }
 
     private void endRound(){

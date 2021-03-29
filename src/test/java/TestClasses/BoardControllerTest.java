@@ -1,6 +1,8 @@
 package TestClasses;
 
 import GameBoard.BoardController;
+import GameBoard.Cards.ICard;
+import GameBoard.Cards.ProgramCard;
 import GameBoard.Components.Flag;
 import GameBoard.Robot;
 import com.badlogic.gdx.Game;
@@ -97,6 +99,65 @@ class BoardControllerTest {
         }
         simulateRound();
         simulateRound(); //Denne vil kræsje om roboten ikke blir fjernet
+    }
+
+    @Test
+    public void robotsAreSortedInCorrectOrderEveryPhase(){
+        ArrayList<ICard> nebbie_cards = new ArrayList<>();
+        nebbie_cards.add(new ProgramCard(1, 0, 100, null));
+        nebbie_cards.add(new ProgramCard(1, 0, 1, null));
+        nebbie_cards.add(new ProgramCard(1, 0, 1, null));
+        robot1.setAvailableCards(nebbie_cards);
+        for (ICard card : robot1.getAvailableCards()) robot1.chooseCard(card);
+
+        ArrayList<ICard> andromeda_cards = new ArrayList<>();
+        andromeda_cards.add(new ProgramCard(0, 1, 50, null));
+        andromeda_cards.add(new ProgramCard(0, 1, 35, null));
+        robot2.setAvailableCards(andromeda_cards);
+        for (ICard card : robot2.getAvailableCards()) robot2.chooseCard(card);
+
+        boardController.playersAreReady();
+
+
+        boardController.simulate();
+        assertEquals(robot1, boardController.getRobotAt(9, 2));
+        assertEquals(Robot.INITIAL_DIRECTION, robot2.getDirection());
+
+        boardController.simulate();
+        assertEquals(Math.floorMod(Robot.INITIAL_DIRECTION + 1, Robot.TAU), robot2.getDirection());
+
+        boardController.simulate();
+        assertEquals(Math.floorMod(Robot.INITIAL_DIRECTION + 2, Robot.TAU), robot2.getDirection());
+
+        boardController.simulate();
+        assertEquals(robot1, boardController.getRobotAt(9, 1));
+
+        boardController.simulate();
+        boardController.simulate();
+        assertEquals(robot1, boardController.getRobotAt(9, 0));
+    }
+
+    @Test
+    public void boardWaitsForEveryoneToBeReadyBeforeStarting(){
+        ArrayList<ICard> nebbie_cards = new ArrayList<>();
+        nebbie_cards.add(new ProgramCard(1, 0, 1, null));
+        robot1.setAvailableCards(nebbie_cards);
+        robot1.chooseCard(robot1.getAvailableCards().get(0));
+
+        for (int i = 0; i < 9001; i++) {
+            boardController.simulate(); //Kan ikke simulere før alle er ferdige med å velge kort
+        }
+
+        assertNull(boardController.getRobotAt(9, 2));
+        assertEquals(robot1, boardController.getRobotAt(9, 3));
+        assertEquals(robot2, boardController.getRobotAt(4, 9));
+
+        boardController.playersAreReady(); //Nå kan vi begynne
+        simulateRound();
+
+        assertEquals(robot1, boardController.getRobotAt(9, 2));
+        assertNull(boardController.getRobotAt(9, 3));
+        assertEquals(robot2, boardController.getRobotAt(4, 9));
     }
 
     private void simulateRound(){

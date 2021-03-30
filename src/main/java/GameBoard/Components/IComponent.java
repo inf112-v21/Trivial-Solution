@@ -1,4 +1,4 @@
-package Components;
+package GameBoard.Components;
 
 
 /**
@@ -12,11 +12,6 @@ package Components;
  */
 
 public interface IComponent {
-
-    /**
-     *@return the name
-     */
-    String getName();
 
     /**
      * @return the id of a component. We use this to identify which component we have on the field.

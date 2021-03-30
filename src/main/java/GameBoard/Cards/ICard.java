@@ -1,14 +1,6 @@
-package Cards;
+package GameBoard.Cards;
 
 import com.badlogic.gdx.graphics.Texture;
-
-import java.awt.*;
-
-/**
- *
- * @author Samueljacoo
- *
- */
 
 public interface ICard {
 

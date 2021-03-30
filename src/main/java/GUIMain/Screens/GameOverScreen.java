@@ -2,8 +2,6 @@ package GUIMain.Screens;
 
 import GUIMain.GUI;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.scenes.scene2d.Event;
-import com.badlogic.gdx.scenes.scene2d.EventListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -12,9 +10,9 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 public class GameOverScreen implements Screen {
 
-    private GUI gui;
+    private final GUI gui;
     private Stage stage;
-    private String message;
+    private final String message;
 
     public GameOverScreen(String message, GUI gui){
         this.message = message;
@@ -34,32 +32,42 @@ public class GameOverScreen implements Screen {
         table.row();
 
         TextButton butt = new TextButton("Main menu", gui.getSkin());
-        butt.addListener(new EventListener() {
-            @Override
-            public boolean handle(Event event) {
-                gui.setScreen(new MenuScreen(gui));
-                return true;
-            }
+        butt.addListener(event -> {
+            gui.setScreen(new MenuScreen(gui))
+            ;
+            table.add(butt);
+            stage.addActor(table);
+            return false;
         });
-        table.add(butt);
-
-        stage.addActor(table);
     }
 
     @Override
     public void render(float v) {
-        stage.act();
-        stage.draw();
+
     }
 
     @Override
-    public void resize(int i, int i1) { }
+    public void resize(int i, int i1) {
+
+    }
+
     @Override
-    public void pause() { }
+    public void pause() {
+
+    }
+
     @Override
-    public void resume() { }
+    public void resume() {
+
+    }
+
     @Override
-    public void hide() { }
+    public void hide() {
+
+    }
+
     @Override
-    public void dispose() { }
+    public void dispose() {
+
+    }
 }

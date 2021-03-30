@@ -1,4 +1,4 @@
-package Components;
+package GameBoard.Components;
 
 public abstract class SimpleComponent implements IComponent {
 
@@ -9,17 +9,12 @@ public abstract class SimpleComponent implements IComponent {
      * bakgrunnstiles (siden de ikke har noen innvirkning på gameplay), og luft/tomme ruter. De er bare null.
      */
 
-    protected String name;
-    protected int id;
+    protected final int id;
 
     public SimpleComponent(int id){
         this.id = id;
     }
 
-    @Override
-    public String getName() {
-        return name;
-    }
 
     @Override
     public int getID() { return id; }

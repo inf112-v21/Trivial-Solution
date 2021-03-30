@@ -5,13 +5,12 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Align;
-import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
 
 
 import static com.badlogic.gdx.graphics.Color.*;
@@ -19,16 +18,12 @@ import static com.badlogic.gdx.graphics.Color.*;
 public class MenuScreen extends InputAdapter implements Screen {
 
     private Stage stage;
-    private Table table;
-    private SpriteBatch batch;
-    private BitmapFont font;
-    private Label title;
-    private Label undertitle;
     protected TextButton singleplayer;
     protected TextButton multiplayer;
     protected TextButton options;
     protected TextButton quit;
-    private GUI gui;
+    private final GUI gui;
+    private Viewport view;
 
     public MenuScreen(GUI gui){
         super();
@@ -37,34 +32,29 @@ public class MenuScreen extends InputAdapter implements Screen {
 
     @Override
     public void show() {
-        stage = new Stage(new ScreenViewport());
-        batch = new SpriteBatch();
-        font = new BitmapFont();
+        view = new FitViewport(960,540);
+        stage = new Stage(view);
+        BitmapFont font = new BitmapFont();
         font.setColor(RED);
 
         Gdx.input.setInputProcessor(stage);
-
-        table = new Table();
-        table.setFillParent(true);
-        title = new Label("Robo-Rally", gui.getSkin());
+        Table tabell = new Table();
+        tabell.setFillParent(true);
+        Label title = new Label("Robo-Rally", gui.getSkin());
         title.setAlignment(Align.top);
         title.setFontScale(3);
-        table.add(title);
-        table.row();
-        undertitle = new Label("A Trivial Solution", gui.getSkin());
+        tabell.add(title);
+        tabell.row();
+        Label undertitle = new Label("A Trivial Solution", gui.getSkin());
         undertitle.setFontScale(2);
-        table.add(undertitle);
-        table.row();
+        tabell.add(undertitle);
+        tabell.row();
 
         singleplayer = new TextButton("Singleplayer", gui.getSkin());
         multiplayer = new TextButton("Multiplayer", gui.getSkin());
         options = new TextButton("Options", gui.getSkin());
         quit = new TextButton("Quit", gui.getSkin());
 
-        singleplayer.setLabel(getButtonLabel("Singleplayer"));
-        multiplayer.setLabel(getButtonLabel("Multiplayer"));
-        options.setLabel(getButtonLabel("Options"));
-        quit.setLabel(getButtonLabel("Quit"));
 
 
 
@@ -78,7 +68,7 @@ public class MenuScreen extends InputAdapter implements Screen {
         multiplayer.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent changeEvent, Actor actor) {
-                gui.showPopUp("You don't have any friends lmao", "");
+                showPopUp("Multiplayer is not available yet :(");
             }
         });
         //options.addListener(new ChangeListener())
@@ -90,35 +80,44 @@ public class MenuScreen extends InputAdapter implements Screen {
              }
          });
 
-        table.add(singleplayer).prefWidth(200.0f).prefHeight(100.0f);
-        table.row();
-        table.add(multiplayer).prefWidth(200.0f).prefHeight(100.0f);
-        table.row();
-        table.add(options).prefWidth(200.0f).prefHeight(100.0f);
-        table.row();
-        table.add(quit).prefWidth(200.0f).prefHeight(100.0f);
+        tabell.add(singleplayer).prefWidth(200.0f).prefHeight(100.0f);
+        tabell.row();
+        tabell.add(multiplayer).prefWidth(200.0f).prefHeight(100.0f);
+        tabell.row();
+        tabell.add(options).prefWidth(200.0f).prefHeight(100.0f);
+        tabell.row();
+        tabell.add(quit).prefWidth(200.0f).prefHeight(100.0f);
 
-        stage.addActor(table);
-
-
+        stage.addActor(tabell);
 
     }
 
-
+    /**
+     * Metode som viser et dialog-vindu med en valgt beskjed.
+     * @param message meldingen som skal vises på skjermen
+     */
+    public void showPopUp(String message){
+        Skin uiSkin = new Skin(Gdx.files.internal(gui.getSkinString()));
+        Dialog dialog = new Dialog("", uiSkin) {
+            public void result(Object obj) {
+                System.out.println("result "+obj);
+            }
+        };
+        dialog.text(message);
+        dialog.button("OK", true); //sends "true" as the result
+        dialog.show(stage);
+    }
+    
     @Override
     public void render(float v) {
         stage.act(Gdx.graphics.getDeltaTime());
         stage.draw();
     }
 
-    public Label getButtonLabel(String text){
-        Label l = new Label(text, gui.getSkin());
-        l.setAlignment(Align.center);
-        return l;
-    }
-
     @Override
-    public void resize(int i, int i1) { }
+    public void resize(int i, int i1) {
+        view.update(i,i1);
+    }
     @Override
     public void pause() { }
     @Override

@@ -1,11 +1,11 @@
-package Components;
+package GameBoard.Components;
 
 public class Wall extends SimpleComponent{
 
-    private boolean north;
-    private boolean east;
-    private boolean south;
-    private boolean west;
+    private final boolean north;
+    private final boolean east;
+    private final boolean south;
+    private final boolean west;
 
     public Wall(int id, boolean up, boolean right, boolean down, boolean left) {
         super(id);
@@ -13,13 +13,11 @@ public class Wall extends SimpleComponent{
         this.east = right;
         this.west = left;
         this.south = down;
-        name = "Wall";
     }
 
     /**
      * @param dir Retningen man går i, på formen 0, 1, 2, 3
-     * @return true om man kan gå til denne ruten i den retningen
-     * @return false om man ikke kan det.
+     * @return om man kan gå til denne ruten i den retningen eller ikke
      */
     public boolean canGoToInDirection(int dir){
         switch (dir){

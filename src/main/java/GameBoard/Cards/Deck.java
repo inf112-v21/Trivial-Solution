@@ -1,4 +1,4 @@
-package Cards;
+package GameBoard.Cards;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
@@ -9,7 +9,7 @@ import java.util.Collections;
 public class Deck {
     private final ArrayList<ICard> cards = new ArrayList<>();
     private int counter = 0;
-    private final int DECKSIZE = 84;
+    public static final int DECK_SIZE = 84;
 
     /**
      * Spawner et dekk på 84 unike kort.
@@ -45,20 +45,22 @@ public class Deck {
         if (hasImages){
            throw new IllegalArgumentException("I cannot figure out how to add a constructor here, please use the other version of Deck() if you want images.");
         }else {
-            cards.add(new ProgramCard(0,2,10, null));
-            cards.add(new ProgramCard(0,-1,20, null));
-            cards.add(new ProgramCard(0,1,30, null));
-            cards.add(new ProgramCard(0,-1,40, null));
-            cards.add(new ProgramCard(0,1,50, null));
-            cards.add(new ProgramCard(0,-1,60, null));
-            cards.add(new ProgramCard(0,1,70, null));
-            cards.add(new ProgramCard(-1,0,80, null));
-            cards.add(new ProgramCard(1,0,90, null));
-            cards.add(new ProgramCard(1,0,100, null));
-            cards.add(new ProgramCard(1,0,110, null));
-            cards.add(new ProgramCard(2,0,140, null));
-            cards.add(new ProgramCard(2,0,150, null));
-            cards.add(new ProgramCard(3,0,170, null));
+            for (int i = 0; i < 6; i++) {
+                cards.add(new ProgramCard(0,2,10, null));
+                cards.add(new ProgramCard(0,-1,20, null));
+                cards.add(new ProgramCard(0,1,30, null));
+                cards.add(new ProgramCard(0,-1,40, null));
+                cards.add(new ProgramCard(0,1,50, null));
+                cards.add(new ProgramCard(0,-1,60, null));
+                cards.add(new ProgramCard(0,1,70, null));
+                cards.add(new ProgramCard(-1,0,80, null));
+                cards.add(new ProgramCard(1,0,90, null));
+                cards.add(new ProgramCard(1,0,100, null));
+                cards.add(new ProgramCard(1,0,110, null));
+                cards.add(new ProgramCard(2,0,140, null));
+                cards.add(new ProgramCard(2,0,150, null));
+                cards.add(new ProgramCard(3,0,170, null));
+            }
         }
         shuffleDeck();
     }
@@ -75,7 +77,7 @@ public class Deck {
      * Om 84 kort har blitt utdelt.
      */
     public boolean isEmpty(){
-        return counter >= DECKSIZE;
+        return counter >= DECK_SIZE;
     }
 
     /**

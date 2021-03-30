@@ -1,6 +1,6 @@
 package GameBoard;
 
-public class Position {
+public class Position implements Comparable<Position>{
     /**
      * En veldig enkel klasse for å representere en posisjon på brettet.
      */
@@ -17,5 +17,20 @@ public class Position {
     @Override
     public String toString() {
         return "(" + x + ", " + y + ")";
+    }
+
+    @Override
+    public boolean equals(Object other){
+        if(other instanceof Position){
+            Position o = (Position) other;
+            return this.getX() == o.getX() && this.getY() == o.getY();
+        }
+        return false;
+    }
+
+    @Override
+    public int compareTo(Position o) {
+        if(this.getX() == o.getX()) return this.getY() - o.getY();
+        return this.getX() - o.getX();
     }
 }

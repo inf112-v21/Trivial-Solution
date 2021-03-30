@@ -1,4 +1,4 @@
-package Components;
+package GameBoard.Components;
 
 /**
  * Samlebånd, som flytter roboter rundt om de avslutter turen oppå dem.
@@ -7,15 +7,14 @@ package Components;
  */
 public class ConveyorBelt extends SimpleComponent{
 
-    private int speed;
-    private int dir;
+    private final int speed;
+    private final int dir;
 
 
     public ConveyorBelt(int id, int dir, int speed){
         super(id);
         this.dir = dir;
         this.speed = speed;
-        this.name = "ConveyorBelt";
     }
 
 

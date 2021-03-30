@@ -160,7 +160,6 @@ public class GameScreen implements Screen {
         Table buttonTable = new Table();
         buttonTable.setBounds(Gdx.graphics.getWidth()-(Gdx.graphics.getWidth()/6f),0,Gdx.graphics.getWidth()/6f,Gdx.graphics.getHeight()/5f);
         powerDown = new TextButton("Powerdown", gui.getSkin());
-        powerDown.setSize(Gdx.graphics.getWidth()/6f,Gdx.graphics.getHeight()/15f );
         powerDown.addListener(new ChangeListener(){
             @Override
             public void changed(ChangeEvent event, Actor actor) {
@@ -174,7 +173,6 @@ public class GameScreen implements Screen {
 
 
         ready = new TextButton("  Ready  ", gui.getSkin());
-        ready.setSize(Gdx.graphics.getWidth()/6f,Gdx.graphics.getHeight()/15f );
         ready.addListener(new ChangeListener(){
             @Override
             public void changed(ChangeEvent event, Actor actor) {
@@ -185,7 +183,6 @@ public class GameScreen implements Screen {
         });
 
         clear = new TextButton("  Clear  ", gui.getSkin());
-        clear.setSize(Gdx.graphics.getWidth()/6f,Gdx.graphics.getHeight()/15f );
         clear.addListener(new ChangeListener(){
             @Override
             public void changed(ChangeEvent event, Actor actor) {

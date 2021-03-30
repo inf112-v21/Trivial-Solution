@@ -9,6 +9,7 @@ import GameBoard.Components.IComponent;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.List;
 import java.util.TreeSet;
 
 
@@ -16,7 +17,7 @@ public class BoardController {
 
     public static final int PHASES_PER_ROUND = 5;
     private final ArrayList<Flag> flagWinningFormation = new ArrayList<>();
-    private final ArrayList<Robot> aliveRobots;
+    private final List<Robot> aliveRobots;
     private final ArrayList<Robot> recentlyDeceasedRobots = new ArrayList<>();
     private final Deck deck = new Deck();
     private final Board board;
@@ -25,7 +26,7 @@ public class BoardController {
     private int currentMove  = 0;
     private boolean waitingForPlayersToPickCards;
 
-    public BoardController(ArrayList<Robot> robots, String mapName){
+    public BoardController(List<Robot> robots, String mapName){
         board = new Board(mapName);
         aliveRobots = robots;
         flagWinningFormation.addAll(board.getWinningCombo());

@@ -6,6 +6,8 @@ import GameBoard.BoardController;
 import GameBoard.Position;
 import GameBoard.Robot;
 
+import java.util.List;
+
 import NetworkMultiplayer.Messages.GameInfo;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
@@ -28,8 +30,6 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
-import java.util.ArrayList;
-
 public class GameScreen implements Screen {
 
     private final float TIME_DELTA = OptionScreen.delta;
@@ -44,7 +44,7 @@ public class GameScreen implements Screen {
     private final int HEIGHT;
     private final int WIDTH;
 	private BoardController gameBoard;
-	private final ArrayList<Robot> robots;
+	private final List<Robot> robots;
 	private final GUI gui;
 	private Stage stage;
 	private Table availableTable;
@@ -87,7 +87,6 @@ public class GameScreen implements Screen {
         camera.update();
 
         renderer = new OrthogonalTiledMapRenderer(map, 1);
-
         playerControlledRobot = robots.get(gameInfo.getThisPlayersBotIndex());
     }
 

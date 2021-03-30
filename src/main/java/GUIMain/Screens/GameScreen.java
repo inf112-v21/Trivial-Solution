@@ -32,19 +32,20 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import java.util.ArrayList;
 
 public class GameScreen implements Screen {
+
+    private static final float TIME_DELTA = 0.6f;
+    public static final int CELL_SIZE = 300;
+
     private SpriteBatch batch;
     private BitmapFont font;
     private final TiledMapTileLayer playerLayer;
-    
     private final OrthogonalTiledMapRenderer renderer;
     private final OrthographicCamera camera;
     private final String mapName;
-    public static final int CELL_SIZE = 300;
     private final int HEIGHT;
     private final int WIDTH;
 	private BoardController gameboard;
 	private final ArrayList<Robot> robots;
-	private final AI ai = new Randbot();
 	private final GUI gui;
 	private Stage stage;
 	private Table availableTable;
@@ -59,14 +60,15 @@ public class GameScreen implements Screen {
     protected TextButton quit;
     private boolean optionscheck = true;
 	private final Viewport smallView;
-    private final Viewport largeView;
-    private Table buttonTable = new Table();
     private Label label;
-    private String playerHealthAndLives;
+
+    private float timeSinceLastUpdate = -1; //Denne holder styr på hvor lenge det er siden forrige gang brettet ble tegnet.
+    private boolean hasDrawnCardsYet = false;
 
     /**
      * @param robots robotene som skal være med å spille
      * @param mapName navnet på filen.
+     * @param gui gui-en vår. Slik at om spillet skal bytte til en annen Screen kan den gi kommandoen til gui-er med denne variablen.
      */
     public GameScreen(ArrayList<Robot> robots, String mapName, GUI gui){
         this.gui = gui;
@@ -81,7 +83,7 @@ public class GameScreen implements Screen {
         WIDTH = backgroundLayer.getWidth()*CELL_SIZE;
 
         smallView = new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        largeView = new FitViewport(WIDTH*2, HEIGHT);
+        Viewport largeView = new FitViewport(WIDTH * 2, HEIGHT);
         largeView.update(WIDTH, HEIGHT,true);
 
         playerLayer = (TiledMapTileLayer) map.getLayers().get("Robot");
@@ -104,34 +106,61 @@ public class GameScreen implements Screen {
         font.dispose();
         stage.dispose();
         renderer.dispose();
-
     }
 
     @Override
     public void show() {
         Gdx.gl.glClearColor(1, 1, 1, 1);
-        //Gdx.gl.glViewport( 0,0,view.getScreenWidth(),view.getScreenHeight());
-
-        //Skin skinLibgdx = new Skin(Gdx.files.internal("assets/default/skin/uiskin.json"));
         stage = new Stage();
         Gdx.input.setInputProcessor(stage);
         chosenTable = new Table();
         availableTable = new Table();
-        buttonTable = new Table();
-        buttonTable.setBounds(Gdx.graphics.getWidth()-(Gdx.graphics.getWidth()/6f),0,Gdx.graphics.getWidth()/6f,Gdx.graphics.getHeight()/5f);
-        optionsTable = new Table();
-        optionsTable.setBounds(Gdx.graphics.getWidth()*3,Gdx.graphics.getHeight()*3,100,100);
 
         gameboard = new BoardController(robots, mapName);
         updateRobotPositions();
 
         batch = new SpriteBatch();
         font = new BitmapFont();
-        playerHealthAndLives ="HP: "+playerControlledRobot.getHP()+" Lives: "+playerControlledRobot.getLives();
+        String playerHealthAndLives = "HP: " + playerControlledRobot.getHP() + " Lives: " + playerControlledRobot.getLives();
 
         label = new Label(playerHealthAndLives, gui.getSkin());
         label.setFontScale(2f);
 
+        createOptions();
+        stage.addActor(chosenTable);
+        stage.addActor(availableTable);
+        stage.addActor(createButtons());
+        stage.addActor(optionsTable);
+    }
+
+    private void createOptions(){
+        optionsTable = new Table();
+        optionsTable.setBounds(Gdx.graphics.getWidth()*3,Gdx.graphics.getHeight()*3,100,100);
+
+        resume = new TextButton("  Resume  ", gui.getSkin());
+        resume.addListener(new ChangeListener(){
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                optionscheck = true;
+                optionsTable.setBounds(Gdx.graphics.getWidth()*3,Gdx.graphics.getHeight()*3,100,100);
+            }
+        });
+        quit = new TextButton("  Quit  ", gui.getSkin());
+        quit.addListener(new ChangeListener(){
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                System.exit(0);
+            }
+        });
+
+        optionsTable.add(resume);
+        optionsTable.row();
+        optionsTable.add(quit);
+    }
+
+    private Table createButtons(){
+        Table buttonTable = new Table();
+        buttonTable.setBounds(Gdx.graphics.getWidth()-(Gdx.graphics.getWidth()/6f),0,Gdx.graphics.getWidth()/6f,Gdx.graphics.getHeight()/5f);
         powerdown = new TextButton("Powerdown", gui.getSkin());
         powerdown.setSize(Gdx.graphics.getWidth()/6f,Gdx.graphics.getHeight()/15f );
         powerdown.addListener(new ChangeListener(){
@@ -144,6 +173,7 @@ public class GameScreen implements Screen {
                 }
             }
         });
+
 
         ready = new TextButton("  Ready  ", gui.getSkin());
         ready.setSize(Gdx.graphics.getWidth()/6f,Gdx.graphics.getHeight()/15f );
@@ -168,39 +198,18 @@ public class GameScreen implements Screen {
             }
         });
 
-        options = new TextButton("  options  ", gui.getSkin());
+        options = new TextButton("  Options  ", gui.getSkin());
         options.addListener(new ChangeListener(){
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 if(optionscheck){
                     optionscheck = false;
                     optionsTable.setBounds(Gdx.graphics.getWidth()/2f-(Gdx.graphics.getWidth()/20f),(Gdx.graphics.getHeight()/2f)-(Gdx.graphics.getHeight()/10f),Gdx.graphics.getWidth()/10f,Gdx.graphics.getHeight()/5f);
+                    // TODO: 30.03.2021
                 }
             }
         });
-        resume = new TextButton("  Resume  ", gui.getSkin());
-        resume.addListener(new ChangeListener(){
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                optionscheck = true;
-                optionsTable.setBounds(Gdx.graphics.getWidth()*3,Gdx.graphics.getHeight()*3,100,100);
-            }
-        });
-        quit = new TextButton("  Quit  ", gui.getSkin());
-        quit.addListener(new ChangeListener(){
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                System.exit(0);
-            }
-        });
 
-        stage.addActor(chosenTable);
-        stage.addActor(availableTable);
-        stage.addActor(buttonTable);
-        stage.addActor(optionsTable);
-        optionsTable.add(resume);
-        optionsTable.row();
-        optionsTable.add(quit);
         buttonTable.add(label);
         buttonTable.row();
         buttonTable.add(powerdown);
@@ -211,10 +220,8 @@ public class GameScreen implements Screen {
         buttonTable.row();
         buttonTable.add(options);
 
+        return buttonTable;
     }
-    private float timeSinceLastUpdate = -1;
-    private static final float TIME_DELTA = 0.6f;
-    private boolean hasDrawnCardsYet = false;
 
     @Override
     public void render(float v) {
@@ -228,8 +235,11 @@ public class GameScreen implements Screen {
         updateRobotPositions();
         updateLivesAndHP();
         for (Robot bot : gameboard.getRecentlyDeceasedRobots()){
-            // TODO: 28.03.2021 Når gui.showPopUp() er implementert skal vi si ifra til brukeren her hver gang en robot dør for tredje og siste gang.
+            // TODO: 30.03.2021 Når gui.showPopUp() er implementert kan vi si ifra når folk dør her. 
+            //gui.showPopUp(bot.getName() + " fucking died, lmao", "Ooops!");
         }
+
+        //Dette sørger for at kortene kun blir tegnet én gang per runde. Bedre kjøretid, yay
         if(gameboard.isWaitingForPlayersToPickCards()){
             if (hasDrawnCardsYet) return;
             renderCards();

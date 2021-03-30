@@ -12,5 +12,5 @@ package NetworkMultiplayer.Messages;
  */
 
 
-public class ChoosenCards implements Message {
+public class ChoosenCards extends Message {
 }

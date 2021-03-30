@@ -1,11 +1,11 @@
 package NetworkMultiplayer;
 
 
+import NetworkMultiplayer.Messages.Message;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Client;
 
-import javax.swing.*;
 import java.io.IOException;
 
 public class NetworkClient {
@@ -24,10 +24,6 @@ public class NetworkClient {
         client.start();
 
     }
-
-
-
-
 
 
     /**
@@ -54,12 +50,22 @@ public class NetworkClient {
         return connectionEstablished;
     }
 
+
     /**
      * Sjekk om en client er connected til en server
      * @return true hvis clienten er connected, false ellers
      */
     public boolean isConnected() {
         return client.isConnected();
+    }
+
+
+    /**
+     * Sender meldinger fra klienten til serveren
+     * @param m meldingen vi sender
+     */
+    public void sendToServer(Message m){
+        client.sendTCP(m);
     }
 
 }

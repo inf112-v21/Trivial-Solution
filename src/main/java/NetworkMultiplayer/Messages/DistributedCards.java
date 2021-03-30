@@ -10,7 +10,7 @@ import Cards.*;
  * og sender de til klienetene.
  *
  */
-public class DistributedCards implements Message {
+public class DistributedCards extends Message {
 
 
 

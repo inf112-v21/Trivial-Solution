@@ -17,7 +17,7 @@ import java.io.IOException;
 public class NetworkServer {
 
     //Selve serveren
-    private Server gameHost;
+    private Server server;
 
     //Portene som data sendes imellom. Disse er beskrevet som standard på kryonet nettsiden
     //Kanskje vi skal sette de som custom et annet sted i koden.
@@ -30,10 +30,12 @@ public class NetworkServer {
      * Starter game-hosten vår aka. serveren i nettverket. Bør kalles når spillet starter
      */
     NetworkServer(){
-        gameHost = new Server();
+        server = new Server();
 
         //Starter nettverk tråden som gjør det mulig å få informasjon fra et nettverk, også sende
-        gameHost.start();
+        server.start();
+
+        LanNetwork.register(server);
 
         bind();
 
@@ -50,7 +52,7 @@ public class NetworkServer {
      */
     private void bind() {
         try{
-            gameHost.bind(tcpPort);
+            server.bind(tcpPort);
         } catch (IOException e) {
             System.err.println("Noe gikk galt med binden. Prøv annen Port?");
         }
@@ -61,7 +63,7 @@ public class NetworkServer {
      * Serveren har også en slik metode. Vi må kanskje customize denne
      */
     private void addListeners() {
-        gameHost.addListener(new Listener() {
+        server.addListener(new Listener() {
             public void received (Connection connection, Object object) {
                 //Legg til de ulike type meldigner som kommer inn fra klientene
             }
@@ -75,20 +77,20 @@ public class NetworkServer {
      * Sender data til alle klientene via TCP
      */
     public void sendMessageToAllClients(Message m){
-        gameHost.sendToAllTCP(m);
+        server.sendToAllTCP(m);
     }
 
 
     /**
      *  stenger nettverk konneksjonen og stopper nettverk tråden
      */
-    public void stopServer(){ gameHost.stop();}
+    public void stopServer(){ server.stop();}
 
 
     /**
      *For avsluttning
      */
-    public void deleteServer() throws IOException { gameHost.dispose();}
+    public void deleteServer() throws IOException { server.dispose();}
 
 
     /**
@@ -98,7 +100,7 @@ public class NetworkServer {
      * @throws IOException
      */
     public void setPort(int tcp, int udp) throws IOException {
-        gameHost.bind(tcp, udp);
+        server.bind(tcp, udp);
     }
 
 

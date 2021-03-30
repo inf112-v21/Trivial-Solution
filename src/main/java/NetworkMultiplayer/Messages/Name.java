@@ -11,7 +11,7 @@ package NetworkMultiplayer.Messages;
 
 
 
-public class Name implements Message {
+public class Name extends Message {
 
     String name;
 

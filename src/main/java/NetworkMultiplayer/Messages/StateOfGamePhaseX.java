@@ -11,5 +11,5 @@ package NetworkMultiplayer.Messages;
  */
 
 
-public class StateOfGamePhaseX implements Message {
+public class StateOfGamePhaseX extends Message {
 }

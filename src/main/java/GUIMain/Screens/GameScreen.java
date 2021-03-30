@@ -1,7 +1,5 @@
 package GUIMain.Screens;
 
-import AIs.AI;
-import AIs.Randbot;
 import GameBoard.Cards.ICard;
 import GUIMain.GUI;
 import GameBoard.BoardController;
@@ -33,7 +31,7 @@ import java.util.ArrayList;
 
 public class GameScreen implements Screen {
 
-    private static final float TIME_DELTA = 0.6f;
+    private final float TIME_DELTA = OptionScreen.delta;
     public static final int CELL_SIZE = 300;
 
     private SpriteBatch batch;
@@ -44,7 +42,7 @@ public class GameScreen implements Screen {
     private final String mapName;
     private final int HEIGHT;
     private final int WIDTH;
-	private BoardController gameboard;
+	private BoardController gameBoard;
 	private final ArrayList<Robot> robots;
 	private final GUI gui;
 	private Stage stage;
@@ -52,13 +50,13 @@ public class GameScreen implements Screen {
 	private Table chosenTable;
     private Table optionsTable;
 	protected Robot playerControlledRobot;
-    protected TextButton powerdown;
+    protected TextButton powerDown;
     protected TextButton ready;
     protected TextButton clear;
     protected TextButton options;
     protected TextButton resume;
     protected TextButton quit;
-    private boolean optionscheck = true;
+    private boolean optionsCheck = true;
 	private final Viewport smallView;
     private Label label;
 
@@ -116,7 +114,7 @@ public class GameScreen implements Screen {
         chosenTable = new Table();
         availableTable = new Table();
 
-        gameboard = new BoardController(robots, mapName);
+        gameBoard = new BoardController(robots, mapName);
         updateRobotPositions();
 
         batch = new SpriteBatch();
@@ -141,7 +139,7 @@ public class GameScreen implements Screen {
         resume.addListener(new ChangeListener(){
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                optionscheck = true;
+                optionsCheck = true;
                 optionsTable.setBounds(Gdx.graphics.getWidth()*3,Gdx.graphics.getHeight()*3,100,100);
             }
         });
@@ -161,15 +159,15 @@ public class GameScreen implements Screen {
     private Table createButtons(){
         Table buttonTable = new Table();
         buttonTable.setBounds(Gdx.graphics.getWidth()-(Gdx.graphics.getWidth()/6f),0,Gdx.graphics.getWidth()/6f,Gdx.graphics.getHeight()/5f);
-        powerdown = new TextButton("Powerdown", gui.getSkin());
-        powerdown.setSize(Gdx.graphics.getWidth()/6f,Gdx.graphics.getHeight()/15f );
-        powerdown.addListener(new ChangeListener(){
+        powerDown = new TextButton("Powerdown", gui.getSkin());
+        powerDown.setSize(Gdx.graphics.getWidth()/6f,Gdx.graphics.getHeight()/15f );
+        powerDown.addListener(new ChangeListener(){
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                if (optionscheck){
+                if (optionsCheck){
                     playerControlledRobot.togglePowerDown();
                     playerControlledRobot.resetAllCards();
-                    gameboard.playersAreReady();
+                    gameBoard.playersAreReady();
                 }
             }
         });
@@ -180,8 +178,8 @@ public class GameScreen implements Screen {
         ready.addListener(new ChangeListener(){
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                if(optionscheck){
-                    gameboard.playersAreReady();
+                if(optionsCheck){
+                    gameBoard.playersAreReady();
                 }
             }
         });
@@ -191,7 +189,7 @@ public class GameScreen implements Screen {
         clear.addListener(new ChangeListener(){
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                if(optionscheck){
+                if(optionsCheck){
                     playerControlledRobot.resetChosenCards();
                     chosenTable.clear();
                 }
@@ -202,8 +200,8 @@ public class GameScreen implements Screen {
         options.addListener(new ChangeListener(){
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                if(optionscheck){
-                    optionscheck = false;
+                if(optionsCheck){
+                    optionsCheck = false;
                     optionsTable.setBounds(Gdx.graphics.getWidth()/2f-(Gdx.graphics.getWidth()/20f),(Gdx.graphics.getHeight()/2f)-(Gdx.graphics.getHeight()/10f),Gdx.graphics.getWidth()/10f,Gdx.graphics.getHeight()/5f);
                     // TODO: 30.03.2021
                 }
@@ -212,7 +210,7 @@ public class GameScreen implements Screen {
 
         buttonTable.add(label);
         buttonTable.row();
-        buttonTable.add(powerdown);
+        buttonTable.add(powerDown);
         buttonTable.row();
         buttonTable.add(ready);
         buttonTable.row();
@@ -231,16 +229,16 @@ public class GameScreen implements Screen {
 
         if(timeSinceLastUpdate < TIME_DELTA) return;
         timeSinceLastUpdate = 0;
-        gameboard.simulate();
+        gameBoard.simulate();
         updateRobotPositions();
         updateLivesAndHP();
-        for (Robot bot : gameboard.getRecentlyDeceasedRobots()){
+        for (Robot bot : gameBoard.getRecentlyDeceasedRobots()){
             // TODO: 30.03.2021 Når gui.showPopUp() er implementert kan vi si ifra når folk dør her. 
             //gui.showPopUp(bot.getName() + " fucking died, lmao", "Ooops!");
         }
 
         //Dette sørger for at kortene kun blir tegnet én gang per runde. Bedre kjøretid, yay
-        if(gameboard.isWaitingForPlayersToPickCards()){
+        if(gameBoard.isWaitingForPlayersToPickCards()){
             if (hasDrawnCardsYet) return;
             renderCards();
             hasDrawnCardsYet = true;
@@ -249,17 +247,17 @@ public class GameScreen implements Screen {
     }
 
     private void updateRobotPositions(){
-        for (Position pos : gameboard.getDirtyLocations()){
-            Robot bot = gameboard.getRobotAt(pos.getX(), pos.getY());
+        for (Position pos : gameBoard.getDirtyLocations()){
+            Robot bot = gameBoard.getRobotAt(pos.getX(), pos.getY());
             if(bot != null){
                 TiledMapTileLayer.Cell cell = new TiledMapTileLayer.Cell();
                 cell.setTile(new StaticTiledMapTile(new Sprite(bot.getImage())));
 
                 //Vi regner positiv rotasjon som med klokken, men libgdx sier det er mot klokken. Derfor tar vi τ-θ.
                 cell.setRotation(Robot.TAU - bot.getDirection());
-                playerLayer.setCell(pos.getX(), gameboard.getHeight() - pos.getY() - 1, cell);
+                playerLayer.setCell(pos.getX(), gameBoard.getHeight() - pos.getY() - 1, cell);
             }
-            else playerLayer.setCell(pos.getX(), gameboard.getHeight() - pos.getY() - 1, new TiledMapTileLayer.Cell());
+            else playerLayer.setCell(pos.getX(), gameBoard.getHeight() - pos.getY() - 1, new TiledMapTileLayer.Cell());
         }
     }
     private void renderCards(){
@@ -323,7 +321,7 @@ public class GameScreen implements Screen {
 
         @Override
         public void clicked(InputEvent event, float x, float y) {
-	        if(optionscheck){
+	        if(optionsCheck){
                 if (playerControlledRobot.getNumberOfChosenCards() >= Math.min(BoardController.PHASES_PER_ROUND, playerControlledRobot.getHP())) return;
                 ICard card = playerControlledRobot.getAvailableCards().get(index);
                 if (!playerControlledRobot.chooseCard(card)) return;

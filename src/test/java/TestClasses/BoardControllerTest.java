@@ -160,6 +160,18 @@ class BoardControllerTest {
         assertEquals(robot2, boardController.getRobotAt(4, 9));
     }
 
+    @Test
+    public void togglingPowerDownHealsRobotAtTheEndOfTheRound(){
+        robot1.applyDamage(robot1.getHP() - 1);
+        robot2.applyDamage(robot2.getHP() - 1);
+        robot1.togglePowerDown(); //Kun robot1 er i powerdown
+
+        simulateRound();
+
+        assertEquals(Robot.INITIAL_HP, robot1.getHP());
+        assertEquals(1, robot2.getHP());
+    }
+
     private void simulateRound(){
         boardController.playersAreReady();
         for (int i = 0; i < BoardController.PHASES_PER_ROUND * boardController.getNumberOfAliveRobots(); i++) {

@@ -89,6 +89,10 @@ public class BoardController {
     private void endRound(){
         for (Robot bot : aliveRobots) bot.resetAllCards();
         removeDeceasedRobots();
+        for (Robot bot : aliveRobots) if (bot.isPowerDownAnnounced()) {
+            bot.repairRobot(Robot.INITIAL_HP); //Healer roboten fullt.
+            bot.togglePowerDown();
+        }
     }
 
     private void removeDeceasedRobots(){

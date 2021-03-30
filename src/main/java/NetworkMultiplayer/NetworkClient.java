@@ -20,7 +20,15 @@ public class NetworkClient {
 
         //Registrer clientene
         LanNetwork.register(client);
+
+        client.start();
+
     }
+
+
+
+
+
 
     /**
      * Vi må konnektere oss til serveren etterhvert. TCP fikser dette med en handshake runde først.

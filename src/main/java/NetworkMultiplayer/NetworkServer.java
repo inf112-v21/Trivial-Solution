@@ -1,6 +1,7 @@
 package NetworkMultiplayer;
 
 
+import NetworkMultiplayer.Messages.Message;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Server;
@@ -33,6 +34,26 @@ public class NetworkServer {
 
         //Starter nettverk tråden som gjør det mulig å få informasjon fra et nettverk, også sende
         gameHost.start();
+
+        bind();
+
+        addListeners();
+
+    }
+
+    /**
+     * Binder serveren til en port slik at vi veit hvilken
+     * applikasjon TCP skal sende daten vår til.
+     *
+     * (En socket er interfacet mellom nettverket og apllikasjonen).
+     *
+     */
+    private void bind() {
+        try{
+            gameHost.bind(tcpPort);
+        } catch (IOException e) {
+            System.err.println("Noe gikk galt med binden. Prøv annen Port?");
+        }
     }
 
     /**
@@ -42,18 +63,20 @@ public class NetworkServer {
     private void addListeners() {
         gameHost.addListener(new Listener() {
             public void received (Connection connection, Object object) {
-                //skriv hvordan meldingene skal håndteres her
+                //Legg til de ulike type meldigner som kommer inn fra klientene
             }
         });
 
     }
 
 
-    /**
-     * starter konneksjonen
-     */
-    private void connection(){}
 
+    /**
+     * Sender data til alle klientene via TCP
+     */
+    public void sendMessageToAllClients(Message m){
+        gameHost.sendToAllTCP(m);
+    }
 
 
     /**

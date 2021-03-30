@@ -1,11 +1,9 @@
 package NetworkMultiplayer;
 
-import Cards.Deck;
+import GameBoard.Cards.Deck;
 import NetworkMultiplayer.Messages.Message;
 import com.esotericsoftware.kryo.Kryo;
-import com.esotericsoftware.kryonet.Client;
 import com.esotericsoftware.kryonet.EndPoint;
-import com.esotericsoftware.kryonet.Server;
 
 public class LanNetwork {
 

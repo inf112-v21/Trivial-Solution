@@ -1,18 +1,19 @@
 package NetworkMultiplayer.Messages;
 
-/**
- * #Viktig:
- * Meldingen sendes fra klientene til Serveren.
- *
- * Returnerer navnet som klienten velger
- *
- * Her er det bare en melding som sendes
- */
-
-
-
 public class Name extends Message {
+    /**
+     * Navnet og nummeret på design som bruker har valgt.
+     * Serveren er nødt til å sjekke at begge disse er unike.
+     */
 
-    String name;
+    private final String botName;
+    private final int botDesignNr;
 
+    public Name(String botName, int botDesignNr){
+        this.botName = botName;
+        this.botDesignNr = botDesignNr;
+    }
+
+    public String getBotName() { return botName; }
+    public int getBotDesignNr() { return botDesignNr; }
 }

@@ -2,9 +2,6 @@ package NetworkMultiplayer;
 
 
 import NetworkMultiplayer.Messages.Message;
-import Player.Robot;
-import com.esotericsoftware.kryonet.Connection;
-import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Client;
 
 import java.io.IOException;

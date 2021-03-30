@@ -1,17 +1,18 @@
 package NetworkMultiplayer.Messages;
-import Cards.*;
+import GameBoard.Cards.ICard;
+
+import java.util.ArrayList;
 
 
 /**
- * #Viktig:
- * Meldingen sendes fra Serveren til alle klienten.
- *
- * Hver klient og server må få kortene. Serveren trekker kortene
- * og sender de til klienetene.
- *
+ * Listen over kort som spilleren har valgt.
+ * Denne klassen er nærmest identisk til ChosenCards,
+ * Vi har det som to klasser for å unngå feil og misforståelser.
  */
 public class DistributedCards extends Message {
-
-
-
+    private final ArrayList<ICard> cards;
+    public DistributedCards(ArrayList<ICard> cards){
+        this.cards = cards;
+    }
+    public ArrayList<ICard> getChosenCards(){ return cards; }
 }

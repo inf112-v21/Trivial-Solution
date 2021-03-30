@@ -34,7 +34,7 @@ public class CreateGameScreen implements Screen {
 
     @Override
     public void show() {
-        view = new FitViewport(960, 540);
+        view = new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         stage = new Stage(view);
         batch = new SpriteBatch();
         Gdx.input.setInputProcessor(stage);

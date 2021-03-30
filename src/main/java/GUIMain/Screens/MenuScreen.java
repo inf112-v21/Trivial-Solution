@@ -32,7 +32,7 @@ public class MenuScreen extends InputAdapter implements Screen {
 
     @Override
     public void show() {
-        view = new FitViewport(960,540);
+        view = new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         stage = new Stage(view);
         BitmapFont font = new BitmapFont();
         font.setColor(RED);
@@ -71,7 +71,13 @@ public class MenuScreen extends InputAdapter implements Screen {
                 showPopUp("Multiplayer is not available yet :(");
             }
         });
-        //options.addListener(new ChangeListener())
+        options.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent changeEvent, Actor actor) {
+                //createRobot2();
+                gui.setScreen(new OptionScreen(gui));
+            }
+        });
 
         quit.addListener(new ChangeListener() {
              @Override

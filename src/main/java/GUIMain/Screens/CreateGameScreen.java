@@ -2,6 +2,7 @@ package GUIMain.Screens;
 
 import GUIMain.GUI;
 import GameBoard.Robot;
+import NetworkMultiplayer.Messages.GameInfo;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -58,7 +59,6 @@ public class CreateGameScreen implements Screen {
         table.row();
 
         Label yourname = new Label("Your robot's name: ", gui.getSkin());
-        //yourname.setFontScale(2);
         table.add(yourname);
 
         textField = new TextField("", gui.getSkin());
@@ -71,7 +71,6 @@ public class CreateGameScreen implements Screen {
 
         choosemapbox = new SelectBox<>(gui.getSkin());
         choosemapbox.setItems(getMapNames());
-        //choosemapbox.scaleBy(3);
         table.add(choosemapbox).spaceBottom(50);
         table.row();
         TextButton start = new TextButton("Start game", gui.getSkin());
@@ -85,7 +84,7 @@ public class CreateGameScreen implements Screen {
                 ArrayList<Robot> robots = Robot.getDefaultRobots(numberOfRobots.getSelected()-1); // -1, siden spilleren inngår i disse robotene
                 robots.add(new Robot(textField.getText(), 3, false));
                 String map = MAP_LOCATION + "/" + choosemapbox.getSelected() + ".tmx";
-                gui.setScreen(new GameLoadingScreen(robots, map, gui));
+                gui.setScreen(new GameLoadingScreen(new GameInfo(robots, map, numberOfRobots.getSelected()-1), false, gui));
 
                 return true;
             }

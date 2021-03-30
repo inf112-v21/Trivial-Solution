@@ -16,6 +16,8 @@ public class LanNetwork {
 
 
 
+
+
     /**
      * Vi trenger en metode som registrer klienter over nettverket
      * @param device- Kan være server eller klient

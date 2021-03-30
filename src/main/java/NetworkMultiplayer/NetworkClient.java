@@ -2,6 +2,7 @@ package NetworkMultiplayer;
 
 
 import NetworkMultiplayer.Messages.Message;
+import Player.Robot;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Client;
@@ -13,6 +14,10 @@ public class NetworkClient {
 
     final static int udpPort = 54777;
     final static int tcpPort = 54555;
+
+
+    //Roboter startes inne i networkclient og networkserver.
+    //private Robot = new Robot();
 
 
     public NetworkClient() {

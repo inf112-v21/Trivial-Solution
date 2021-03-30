@@ -13,4 +13,5 @@ package NetworkMultiplayer.Messages;
 
 
 public class ChoosenCards extends Message {
+
 }

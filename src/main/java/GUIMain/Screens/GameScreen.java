@@ -33,7 +33,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 
 public class GameScreen implements Screen {
 
-    private final float TIME_DELTA = OptionScreen.delta;
+    public static float TIME_DELTA = 0.6f;
     public static final int CELL_SIZE = 300;
 
     private SpriteBatch batch;

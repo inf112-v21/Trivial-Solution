@@ -25,6 +25,7 @@ public class HostOrJoinScreen implements Screen {
     public void show() {
         view = new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         stage = new Stage();
+        Gdx.input.setInputProcessor(stage);
         Table table = new Table();
         Label multiplayer = new Label("Multiplayer", gui.getSkin());
         table.add(multiplayer).spaceBottom(50);
@@ -32,14 +33,32 @@ public class HostOrJoinScreen implements Screen {
         table.row();
 
         TextButton join = new TextButton("Join Game", gui.getSkin());
-        table.add(join).spaceBottom(40);
+        join.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent changeEvent, Actor actor) {
+                // TODO: 31.03.2021 Legg til hva som skal skje om brukeren skal joine en annen server
+            }
+        });
+        table.add(join).spaceBottom(20);
         table.row();
         TextButton host = new TextButton("Host Game", gui.getSkin());
-        table.add(host).spaceBottom(20);
+        host.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent changeEvent, Actor actor) {
+                gui.setScreen(new LobbyScreen(gui, true));
+            }
+        });
+        table.add(host).spaceBottom(40);
         table.row();
-        TextButton goback = new TextButton("Go Back", gui.getSkin());
+        TextButton back = new TextButton("Return", gui.getSkin());
+        back.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent changeEvent, Actor actor) {
+                gui.setScreen(new MenuScreen(gui));
+            }
+        });
 
-        table.add(goback);
+        table.add(back);
 
         table.setBounds(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight() );
 

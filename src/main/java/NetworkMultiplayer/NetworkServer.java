@@ -37,13 +37,13 @@ public class NetworkServer {
         //Starter en ny tråd som gjør det mulig å sende og motta informasjon fra et nettverk
         server.start();
 
-        //Registrer serveren i nettverket
-        LanNetwork.register(server);
-
-        //
+        //Bind serveren til port
         bind();
 
         addListeners();
+
+        //Registrer serveren i nettverket
+        LanNetwork.register(server);
 
     }
 
@@ -85,6 +85,14 @@ public class NetworkServer {
             }
         });
 
+    }
+
+    /**
+     * @return alle konneksjonene, altså alle klientene serveren
+     * har en konneksjon til.
+     */
+    public Connection[] getConnections(){
+        return server.getConnections();
     }
 
 

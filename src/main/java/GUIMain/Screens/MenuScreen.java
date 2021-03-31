@@ -73,8 +73,6 @@ public class MenuScreen extends InputAdapter implements Screen {
             @Override
             public void changed(ChangeEvent changeEvent, Actor actor) {
                 gui.setScreen(new OptionScreen(gui));
-                stage.dispose();
-                stage.clear();
             }
         });
 

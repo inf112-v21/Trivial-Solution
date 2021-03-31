@@ -9,6 +9,7 @@ import GameBoard.Components.IComponent;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.List;
 import java.util.TreeSet;
 
 
@@ -25,9 +26,9 @@ public class BoardController {
     private int currentMove  = 0;
     private boolean waitingForPlayersToPickCards;
 
-    public BoardController(ArrayList<Robot> robots, String mapName){
+    public BoardController(List<Robot> robots, String mapName){
         board = new Board(mapName);
-        aliveRobots = robots;
+        aliveRobots = new ArrayList<>(robots);
         flagWinningFormation.addAll(board.getWinningCombo());
         for(Robot bot : robots) board.spawnRobot(bot);
         startRound();
@@ -88,6 +89,10 @@ public class BoardController {
     private void endRound(){
         for (Robot bot : aliveRobots) bot.resetAllCards();
         removeDeceasedRobots();
+        for (Robot bot : aliveRobots) if (bot.isPowerDownAnnounced()) {
+            bot.repairRobot(Robot.INITIAL_HP); //Healer roboten fullt.
+            bot.togglePowerDown();
+        }
     }
 
     private void removeDeceasedRobots(){

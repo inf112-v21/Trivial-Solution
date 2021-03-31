@@ -66,13 +66,15 @@ public class MenuScreen extends InputAdapter implements Screen {
         multiplayer.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent changeEvent, Actor actor) {
-                showPopUp("Multiplayer is not available yet :(");
+                gui.setScreen(new HostOrJoinScreen(gui));
             }
         });
         options.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent changeEvent, Actor actor) {
                 gui.setScreen(new OptionScreen(gui));
+                stage.dispose();
+                stage.clear();
             }
         });
 

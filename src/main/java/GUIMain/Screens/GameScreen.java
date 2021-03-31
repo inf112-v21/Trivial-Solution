@@ -6,6 +6,10 @@ import GameBoard.BoardController;
 import GameBoard.Position;
 import GameBoard.Robot;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import NetworkMultiplayer.Messages.PreGameMessages.GameInfo;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
@@ -27,8 +31,6 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
-import java.util.ArrayList;
-
 public class GameScreen implements Screen {
 
     private final float TIME_DELTA = OptionScreen.delta;
@@ -43,7 +45,7 @@ public class GameScreen implements Screen {
     private final int HEIGHT;
     private final int WIDTH;
 	private BoardController gameBoard;
-	private final ArrayList<Robot> robots;
+	private final List<Robot> robots;
 	private final GUI gui;
 	private Stage stage;
 	private Table availableTable;
@@ -58,21 +60,18 @@ public class GameScreen implements Screen {
     private boolean optionsCheck = true;
 	private final Viewport smallView;
     private Label label;
+    private final boolean isThisMultiPlayer;
 
     private float timeSinceLastUpdate = -1; //Denne holder styr på hvor lenge det er siden forrige gang brettet ble tegnet.
     private boolean hasDrawnCardsYet = false;
 
-    /**
-     * @param robots robotene som skal være med å spille
-     * @param mapName navnet på filen.
-     * @param gui gui-en vår. Slik at om spillet skal bytte til en annen Screen kan den gi kommandoen til gui-er med denne variablen.
-     */
-    public GameScreen(ArrayList<Robot> robots, String mapName, GUI gui){
+
+    public GameScreen(GameInfo gameInfo, boolean isThisMultiPlayer, GUI gui){
         this.gui = gui;
-        this.mapName = mapName;
-        this.robots = robots;
-        TmxMapLoader tmx = new TmxMapLoader();
-        TiledMap map = tmx.load(mapName);
+        this.mapName = gameInfo.getMapName();
+        this.robots = gameInfo.getRobots();
+        this.isThisMultiPlayer = isThisMultiPlayer;
+        TiledMap map = new TmxMapLoader().load(mapName);
 
         TiledMapTileLayer backgroundLayer = (TiledMapTileLayer) map.getLayers().get("Background");
 
@@ -84,17 +83,11 @@ public class GameScreen implements Screen {
         largeView.update(WIDTH*2, HEIGHT,true);
 
         playerLayer = (TiledMapTileLayer) map.getLayers().get("Robot");
-        camera = (OrthographicCamera) largeView.getCamera();//new OrthographicCamera();
+        camera = (OrthographicCamera) largeView.getCamera();
         camera.update();
 
         renderer = new OrthogonalTiledMapRenderer(map, 1);
-
-        for (Robot bot : robots){
-            if (!bot.isControlledByAI()){
-                playerControlledRobot = bot;
-                break; // TODO: 25.03.2021 Denne må erstattes når vi implementerer multiplayer, og dermed har mer enn én spillerstyrt robot
-            }
-        }
+        playerControlledRobot = robots.get(gameInfo.getThisPlayersBotIndex());
     }
 
     @Override
@@ -224,6 +217,20 @@ public class GameScreen implements Screen {
         buttonTable.add(clear).size(Gdx.graphics.getWidth()/6f,Gdx.graphics.getHeight()/25f);
         buttonTable.row();
         buttonTable.add(options).size(Gdx.graphics.getWidth()/6f,Gdx.graphics.getHeight()/25f);
+    }
+
+    public void setAvailableCards(ArrayList<ICard> cards){
+        if (! isThisMultiPlayer) throw new UnsupportedOperationException("There is no reason to use this method in singleplayer, the boardcontroller automatically set all robot's cards.");
+        playerControlledRobot.setAvailableCards(cards);
+    }
+
+    public ArrayList<ICard> getChosenCards(){
+        if (! isThisMultiPlayer) throw new UnsupportedOperationException("There is no reason to use this method in singleplayer, the boardcontroller automatically set all robot's cards.");
+        ArrayList<ICard> ret = new ArrayList<>();
+        for (int i = 0; i < BoardController.PHASES_PER_ROUND; i++) {
+            ret.add(playerControlledRobot.getNthChosenCard(i));
+        }
+        return ret;
     }
 
     @Override

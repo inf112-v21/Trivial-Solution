@@ -1,27 +1,25 @@
 package GUIMain.Screens;
 
 import GUIMain.GUI;
-import GameBoard.Robot;
+import NetworkMultiplayer.Messages.PreGameMessages.GameInfo;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
-import java.util.ArrayList;
-
 public class GameLoadingScreen implements Screen {
 
+    private GameInfo gameInfo;
+    private boolean isThisMultiPlayer;
     private final GUI gui;
     private Stage stage;
-    private final ArrayList<Robot> robots;
-    private final String mapname;
     private boolean hasbeensetup = false;
 
-    public GameLoadingScreen(ArrayList<Robot> robots, String mapname, GUI gui){
+    public GameLoadingScreen(GameInfo gameInfo, boolean isThisMultiPlayer, GUI gui){
+        this.gameInfo = gameInfo;
+        this.isThisMultiPlayer = isThisMultiPlayer;
         this.gui = gui;
-        this.robots = robots;
-        this.mapname = mapname;
     }
 
     @Override
@@ -41,7 +39,7 @@ public class GameLoadingScreen implements Screen {
     public void render(float v) {
         stage.act();
         stage.draw();
-        if(hasbeensetup) gui.setScreen(new GameScreen(robots, mapname, gui));
+        if(hasbeensetup) gui.setScreen(new GameScreen(gameInfo, isThisMultiPlayer, gui));
         else hasbeensetup = true;
     }
 

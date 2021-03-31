@@ -77,6 +77,7 @@ public class LobbyScreen implements Screen {
             undertitle.setFontScale(2);
             this.table.add(undertitle);
             this.table.row();
+            table.setBounds(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         } else {
             stage = new Stage(new ScreenViewport());
             Table table = new Table();
@@ -86,6 +87,7 @@ public class LobbyScreen implements Screen {
             table.setFillParent(true);
             table.padBottom(350);
             stage.addActor(table);
+            table.setBounds(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         }
     }
 

@@ -40,7 +40,7 @@ public class ConnectingScreen implements Screen {
     public void render(float v) {
         stage.act();
         stage.draw();
-        if(hasbeensetup) gui.setScreen(new GameScreen(gameInfo, isThisMultiPlayer, gui));
+        if(hasbeensetup) gui.setScreen(new GameScreen(gameInfo, isThisMultiPlayer, false, gui));
         else hasbeensetup = true;
     }
 

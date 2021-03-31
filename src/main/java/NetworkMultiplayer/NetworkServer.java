@@ -31,7 +31,7 @@ public class NetworkServer {
     /**
      * Starter game-hosten vår aka. serveren i nettverket. Bør kalles når spillet starter
      */
-    NetworkServer(){
+    public NetworkServer(){
         server = new Server();
 
         //Starter en ny tråd som gjør det mulig å sende og motta informasjon fra et nettverk

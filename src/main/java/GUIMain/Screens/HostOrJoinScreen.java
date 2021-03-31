@@ -37,6 +37,7 @@ public class HostOrJoinScreen implements Screen {
             @Override
             public void changed(ChangeEvent changeEvent, Actor actor) {
                 // TODO: 31.03.2021 Legg til hva som skal skje om brukeren skal joine en annen server
+
             }
         });
         table.add(join).spaceBottom(20);
@@ -45,7 +46,7 @@ public class HostOrJoinScreen implements Screen {
         host.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent changeEvent, Actor actor) {
-                gui.setScreen(new LobbyScreen(gui, true));
+                gui.setScreen(new LobbyScreen(gui,true));
             }
         });
         table.add(host).spaceBottom(40);

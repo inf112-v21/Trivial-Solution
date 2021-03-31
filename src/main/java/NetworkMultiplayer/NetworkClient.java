@@ -1,10 +1,11 @@
 package NetworkMultiplayer;
 
 
-import NetworkMultiplayer.Messages.Message;
+import NetworkMultiplayer.Messages.IMessage;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Client;
+import org.lwjgl.system.CallbackI;
 
 import java.io.IOException;
 import java.net.InetAddress;
@@ -24,12 +25,24 @@ public class NetworkClient {
     public NetworkClient() {
         client = new Client();
 
-        //start klienten
+        //start klienten --> åpner opp en tråd for at den skal kunne sende og motta meldinger over nettverket.
         client.start();
 
         //Registrer klienten i nettverket
         LanNetwork.register(client);
+    }
 
+    /**
+     * Metode som skaper listeners
+     * Disse håndterer mottate packer/Messages som kommer fra
+     * serveren til klienten vår
+     */
+    private void addListeners() {
+        client.addListener(new Listener() {
+            public void received (Connection connection, Object object) {
+                //Legg til de ulike type meldigner som kommer inn fra klientene
+            }
+        });
 
     }
 
@@ -44,7 +57,7 @@ public class NetworkClient {
         boolean connectionEstablished = true;
         try {
             //connecter til hosten
-            client.connect(4500, ipAdress, DEFAULT_TCP_PORT, DEFAULT_UDP_PORT);
+            client.connect(6000, ipAdress, DEFAULT_TCP_PORT, DEFAULT_UDP_PORT);
 
         } catch (IllegalStateException e) {
             System.out.println(e.toString() + ": Connect ble kalt fra konneksjonens update thread");
@@ -75,7 +88,7 @@ public class NetworkClient {
      *
      */
     public InetAddress findServer(){
-        return client.discoverHost(DEFAULT_UDP_PORT,5000);
+        return client.discoverHost(DEFAULT_UDP_PORT,6000);
     }
 
 
@@ -83,7 +96,7 @@ public class NetworkClient {
      * Sender meldinger fra klienten til serveren
      * @param m meldingen vi sender
      */
-    public void sendToServer(Message m){
+    public void sendToServer(IMessage m){
         client.sendTCP(m);
     }
 

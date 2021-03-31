@@ -1,7 +1,7 @@
 package NetworkMultiplayer;
 
 
-import NetworkMultiplayer.Messages.Message;
+import NetworkMultiplayer.Messages.IMessage;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Server;
@@ -81,7 +81,7 @@ public class NetworkServer {
     /**
      * Sender data til alle klientene via TCP
      */
-    public void sendMessageToAllClients(Message m){
+    public void sendMessageToAllClients(IMessage m){
         server.sendToAllTCP(m);
     }
 

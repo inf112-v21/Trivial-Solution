@@ -15,6 +15,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 
 public class CreateGameScreen implements Screen {
 
@@ -84,7 +85,7 @@ public class CreateGameScreen implements Screen {
                 ArrayList<Robot> robots = Robot.getDefaultRobots(numberOfRobots.getSelected()-1); // -1, siden spilleren inngår i disse robotene
                 robots.add(new Robot(textField.getText(), 3, false));
                 String map = MAP_LOCATION + "/" + choosemapbox.getSelected() + ".tmx";
-                gui.setScreen(new GameLoadingScreen(new GameInfo(robots, map, numberOfRobots.getSelected()-1), false, gui));
+                gui.setScreen(new GameLoadingScreen(new GameInfo(Collections.unmodifiableList(robots), map, numberOfRobots.getSelected()-1), false, gui));
 
                 return true;
             }

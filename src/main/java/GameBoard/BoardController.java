@@ -17,7 +17,7 @@ public class BoardController {
 
     public static final int PHASES_PER_ROUND = 5;
     private final ArrayList<Flag> flagWinningFormation = new ArrayList<>();
-    private final List<Robot> aliveRobots;
+    private final ArrayList<Robot> aliveRobots;
     private final ArrayList<Robot> recentlyDeceasedRobots = new ArrayList<>();
     private final Deck deck = new Deck();
     private final Board board;
@@ -28,7 +28,7 @@ public class BoardController {
 
     public BoardController(List<Robot> robots, String mapName){
         board = new Board(mapName);
-        aliveRobots = robots;
+        aliveRobots = new ArrayList<>(robots);
         flagWinningFormation.addAll(board.getWinningCombo());
         for(Robot bot : robots) board.spawnRobot(bot);
         startRound();
@@ -89,6 +89,10 @@ public class BoardController {
     private void endRound(){
         for (Robot bot : aliveRobots) bot.resetAllCards();
         removeDeceasedRobots();
+        for (Robot bot : aliveRobots) if (bot.isPowerDownAnnounced()) {
+            bot.repairRobot(Robot.INITIAL_HP); //Healer roboten fullt.
+            bot.togglePowerDown();
+        }
     }
 
     private void removeDeceasedRobots(){

@@ -58,7 +58,7 @@ public class CreateGameScreen implements Screen {
         numberplayerlabel.setFontScale(2);
         leftTable.add(numberplayerlabel).spaceBottom(50);
         leftTable.row();
-        
+
         numberOfRobots = new SelectBox<>(gui.getSkin());
         numberOfRobots.setItems(2, 3, 4, 5, 6, 7, 8);
         numberOfRobots.scaleBy(3);
@@ -69,7 +69,6 @@ public class CreateGameScreen implements Screen {
         //yourname.setFontScale(2);
         leftTable.add(yourname).spaceBottom(50);
         leftTable.row();
-        table.add(yourname);
 
         textField = new TextField("", gui.getSkin());
         rightTable.add(textField).spaceBottom(20);
@@ -81,10 +80,7 @@ public class CreateGameScreen implements Screen {
 
         choosemapbox = new SelectBox<>(gui.getSkin());
         choosemapbox.setItems(getMapNames());
-        //choosemapbox.scaleBy(3);
         rightTable.add(choosemapbox).spaceBottom(50);
-        table.add(choosemapbox).spaceBottom(50);
-        table.row();
         TextButton start = new TextButton("Start game", gui.getSkin());
         start.addListener(new InputListener(){
             @Override

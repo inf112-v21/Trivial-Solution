@@ -8,6 +8,7 @@ public class Main {
     public static void main(String[] args) {
         Lwjgl3ApplicationConfiguration cfg = new Lwjgl3ApplicationConfiguration();
         cfg.setTitle("Robo-Rally");
+        cfg.setResizable(false);
 
         new Lwjgl3Application(new GUI(), cfg);
     }

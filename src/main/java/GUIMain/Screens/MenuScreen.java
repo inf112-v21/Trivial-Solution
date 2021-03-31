@@ -10,7 +10,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.FitViewport;
-import com.badlogic.gdx.utils.viewport.Viewport;
 
 
 import static com.badlogic.gdx.graphics.Color.*;
@@ -23,7 +22,7 @@ public class MenuScreen extends InputAdapter implements Screen {
     protected TextButton options;
     protected TextButton quit;
     private final GUI gui;
-    private Viewport view;
+    private FitViewport view;
 
     public MenuScreen(GUI gui){
         super();
@@ -39,7 +38,7 @@ public class MenuScreen extends InputAdapter implements Screen {
 
         Gdx.input.setInputProcessor(stage);
         Table tabell = new Table();
-        tabell.setFillParent(true);
+        tabell.setBounds(0,0,Gdx.graphics.getWidth(),Gdx.graphics.getHeight());
         Label title = new Label("Robo-Rally", gui.getSkin());
         title.setAlignment(Align.top);
         title.setFontScale(3);
@@ -61,7 +60,6 @@ public class MenuScreen extends InputAdapter implements Screen {
         singleplayer.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent changeEvent, Actor actor) {
-                //createRobot2();
                 gui.setScreen(new CreateGameScreen(gui));
             }
         });
@@ -74,7 +72,6 @@ public class MenuScreen extends InputAdapter implements Screen {
         options.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent changeEvent, Actor actor) {
-                //createRobot2();
                 gui.setScreen(new OptionScreen(gui));
             }
         });

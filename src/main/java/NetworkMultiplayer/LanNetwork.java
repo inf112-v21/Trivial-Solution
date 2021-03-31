@@ -26,8 +26,7 @@ public class LanNetwork {
         kryo.register(GameInfo.class);
         kryo.register(IMessage.class);
         kryo.register(Name.class);
-        kryo.register(OtherRobotChoices.class);
+        kryo.register(AllChosenCards.class);
         kryo.register(ServerError.class);
-
     }
 }

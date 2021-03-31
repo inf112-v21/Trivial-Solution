@@ -6,6 +6,7 @@ import GameBoard.BoardController;
 import GameBoard.Position;
 import GameBoard.Robot;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import NetworkMultiplayer.Messages.GameInfo;
@@ -208,6 +209,20 @@ public class GameScreen implements Screen {
         buttonTable.add(options);
 
         return buttonTable;
+    }
+
+    public void setAvailableCards(ArrayList<ICard> cards){
+        if (! isThisMultiPlayer) throw new UnsupportedOperationException("There is no reason to use this method in singleplayer, the boardcontroller automatically set all robot's cards.");
+        playerControlledRobot.setAvailableCards(cards);
+    }
+
+    public ArrayList<ICard> getChosenCards(){
+        if (! isThisMultiPlayer) throw new UnsupportedOperationException("There is no reason to use this method in singleplayer, the boardcontroller automatically set all robot's cards.");
+        ArrayList<ICard> ret = new ArrayList<>();
+        for (int i = 0; i < BoardController.PHASES_PER_ROUND; i++) {
+            ret.add(playerControlledRobot.getNthChosenCard(i));
+        }
+        return ret;
     }
 
     @Override

@@ -42,6 +42,7 @@ public class MenuScreen extends InputAdapter implements Screen {
         Label title = new Label("Robo-Rally", gui.getSkin());
         title.setAlignment(Align.top);
         title.setFontScale(3);
+        tabell.add(title);
         tabell.row();
         Label undertitle = new Label("A Trivial Solution", gui.getSkin());
         undertitle.setFontScale(2);

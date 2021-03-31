@@ -2,8 +2,10 @@ package GUIMain.Screens;
 
 import GUIMain.GUI;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Graphics;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Graphics;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
@@ -18,6 +20,7 @@ public class OptionScreen extends InputAdapter implements Screen {
     private Stage stage;
     private final GUI gui;
     private Viewport view;
+    private boolean window;
 
     public OptionScreen(GUI gui){
         super();
@@ -53,6 +56,7 @@ public class OptionScreen extends InputAdapter implements Screen {
         speed.add(fast).right();
         screenMode.add(fullscreen);
         screenMode.add(windowed);
+        window = false;
         tabell.add(speed);
         tabell.row();
         tabell.add(deltaInfo);
@@ -61,18 +65,22 @@ public class OptionScreen extends InputAdapter implements Screen {
         tabell.row();
         tabell.add(returnButton);
 
-
         stage.addActor(tabell);
         fullscreen.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent changeEvent, Actor actor) {
+                window = false;
                 Gdx.graphics.setFullscreenMode(Gdx.graphics.getDisplayMode());
             }
         });
         windowed.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent changeEvent, Actor actor) {
-                Gdx.graphics.setWindowedMode(Gdx.graphics.getWidth()-(Gdx.graphics.getWidth()/3),Gdx.graphics.getHeight()-(Gdx.graphics.getHeight()/3));
+                if(!window){
+                    Gdx.graphics.setWindowedMode(Gdx.graphics.getWidth()-(Gdx.graphics.getWidth()/3),Gdx.graphics.getHeight()-(Gdx.graphics.getHeight()/3));
+                    ((Lwjgl3Graphics)Gdx.graphics).getWindow().setPosition((Gdx.graphics.getWidth()/4),(Gdx.graphics.getHeight()/4));
+                    window = true;
+                }
             }
         });
         slow.addListener(new ChangeListener() {

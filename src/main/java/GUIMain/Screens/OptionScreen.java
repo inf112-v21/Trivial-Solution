@@ -18,7 +18,6 @@ public class OptionScreen extends InputAdapter implements Screen {
     private Stage stage;
     private final GUI gui;
     private Viewport view;
-    public static float delta = 0.6f;
 
     public OptionScreen(GUI gui){
         super();
@@ -79,19 +78,19 @@ public class OptionScreen extends InputAdapter implements Screen {
         slow.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent changeEvent, Actor actor) {
-                delta = 0.9f;
+                GameScreen.TIME_DELTA = 0.9f;
             }
         });
         medium.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent changeEvent, Actor actor) {
-                delta = 0.6f;
+                GameScreen.TIME_DELTA = 0.6f;
             }
         });
         fast.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent changeEvent, Actor actor) {
-                delta = 0.3f;
+                GameScreen.TIME_DELTA = 0.3f;
             }
         });
         returnButton.addListener(new ChangeListener() {

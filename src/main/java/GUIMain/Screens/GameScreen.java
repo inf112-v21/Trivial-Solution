@@ -9,7 +9,7 @@ import GameBoard.Robot;
 import java.util.ArrayList;
 import java.util.List;
 
-import NetworkMultiplayer.Messages.GameInfo;
+import NetworkMultiplayer.Messages.PreGameMessages.GameInfo;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;

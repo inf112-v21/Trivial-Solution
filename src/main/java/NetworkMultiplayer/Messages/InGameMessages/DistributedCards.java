@@ -1,5 +1,6 @@
-package NetworkMultiplayer.Messages;
+package NetworkMultiplayer.Messages.InGameMessages;
 import GameBoard.Cards.ICard;
+import NetworkMultiplayer.Messages.IMessage;
 
 import java.util.ArrayList;
 

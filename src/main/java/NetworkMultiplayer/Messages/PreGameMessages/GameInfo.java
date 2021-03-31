@@ -1,6 +1,7 @@
-package NetworkMultiplayer.Messages;
+package NetworkMultiplayer.Messages.PreGameMessages;
 
 import GameBoard.Robot;
+import NetworkMultiplayer.Messages.IMessage;
 
 import java.util.List;
 

@@ -2,6 +2,8 @@ package NetworkMultiplayer;
 
 
 import NetworkMultiplayer.Messages.*;
+import NetworkMultiplayer.Messages.PreGameMessages.GameInfo;
+import NetworkMultiplayer.Messages.PreGameMessages.Name;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryonet.EndPoint;
 
@@ -26,7 +28,7 @@ public class LanNetwork {
         kryo.register(GameInfo.class);
         kryo.register(IMessage.class);
         kryo.register(Name.class);
-        kryo.register(AllChosenCards.class);
-        kryo.register(ServerError.class);
+
+
     }
 }

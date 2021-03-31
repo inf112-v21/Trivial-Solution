@@ -1,10 +1,11 @@
-package NetworkMultiplayer.Messages;
+package NetworkMultiplayer.Messages.InGameMessages;
 
 import GameBoard.Cards.ICard;
+import NetworkMultiplayer.Messages.IMessage;
 
 import java.util.ArrayList;
 
-public class AllChosenCards implements IMessage{
+public class AllChosenCards implements IMessage {
     /**
      * Listen over lister av hva alle spillerne har valgt av kort.
      * Den første listen er til den første roboten, den andre til den andre, etc.

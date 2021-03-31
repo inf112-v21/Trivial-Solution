@@ -45,7 +45,7 @@ public class HostOrJoinScreen implements Screen {
         host.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent changeEvent, Actor actor) {
-                gui.setScreen(new LobbyScreen(gui));
+                gui.setScreen(new LobbyScreen(gui, true));
             }
         });
         table.add(host).spaceBottom(40);

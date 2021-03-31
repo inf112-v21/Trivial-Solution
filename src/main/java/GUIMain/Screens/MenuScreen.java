@@ -61,21 +61,21 @@ public class MenuScreen extends InputAdapter implements Screen {
         singleplayer.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent changeEvent, Actor actor) {
-                //createRobot2();
                 gui.setScreen(new CreateGameScreen(gui));
             }
         });
         multiplayer.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent changeEvent, Actor actor) {
-                gui.setScreen(new ChooseHostOrClientScreen(gui));
+                gui.setScreen(new HostOrJoinScreen(gui));
             }
         });
         options.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent changeEvent, Actor actor) {
-                //createRobot2();
                 gui.setScreen(new OptionScreen(gui));
+                stage.dispose();
+                stage.clear();
             }
         });
 

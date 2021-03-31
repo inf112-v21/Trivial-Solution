@@ -1,16 +1,21 @@
 package NetworkMultiplayer;
 
 
-import NetworkMultiplayer.Messages.Message;
+import NetworkMultiplayer.Messages.IMessage;
+import com.esotericsoftware.kryonet.Connection;
+import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Client;
+import org.lwjgl.system.CallbackI;
 
 import java.io.IOException;
+import java.net.InetAddress;
 
 public class NetworkClient {
+
     public Client client;
 
-    final static int udpPort = 54777;
-    final static int tcpPort = 54555;
+    final static int DEFAULT_UDP_PORT = 54777;
+    final static int DEFAULT_TCP_PORT = 54555;
 
 
     //Roboter startes inne i networkclient og networkserver.
@@ -20,10 +25,24 @@ public class NetworkClient {
     public NetworkClient() {
         client = new Client();
 
-        //Registrer clientene
-        LanNetwork.register(client);
-
+        //start klienten --> åpner opp en tråd for at den skal kunne sende og motta meldinger over nettverket.
         client.start();
+
+        //Registrer klienten i nettverket
+        LanNetwork.register(client);
+    }
+
+    /**
+     * Metode som skaper listeners
+     * Disse håndterer mottate packer/Messages som kommer fra
+     * serveren til klienten vår
+     */
+    private void addListeners() {
+        client.addListener(new Listener() {
+            public void received (Connection connection, Object object) {
+                //Legg til de ulike type meldigner som kommer inn fra klientene
+            }
+        });
 
     }
 
@@ -37,9 +56,8 @@ public class NetworkClient {
     public boolean connect(String ipAdress) {
         boolean connectionEstablished = true;
         try {
-            //Vi trenger nokk en update metode etterpå også
             //connecter til hosten
-            client.connect(4500, ipAdress, tcpPort, udpPort);
+            client.connect(6000, ipAdress, DEFAULT_TCP_PORT, DEFAULT_UDP_PORT);
 
         } catch (IllegalStateException e) {
             System.out.println(e.toString() + ": Connect ble kalt fra konneksjonens update thread");
@@ -63,10 +81,22 @@ public class NetworkClient {
 
 
     /**
+     * Sender en UDP melding over LAN'et for å finne alle kjørende servere.
+     * Den innebygde metoden i kryonet bruker UDP porten til serveren for å finne den
+     *
+     * @return ip-adressen til serveren, hvis tiden har gått ut returnerer den null.
+     *
+     */
+    public InetAddress findServer(){
+        return client.discoverHost(DEFAULT_UDP_PORT,6000);
+    }
+
+
+    /**
      * Sender meldinger fra klienten til serveren
      * @param m meldingen vi sender
      */
-    public void sendToServer(Message m){
+    public void sendToServer(IMessage m){
         client.sendTCP(m);
     }
 

@@ -1,6 +1,6 @@
 package NetworkMultiplayer.Messages;
 
-public class Name extends Message {
+public class Name implements IMessage{
     /**
      * Navnet og nummeret på design som bruker har valgt.
      * Serveren er nødt til å sjekke at begge disse er unike.

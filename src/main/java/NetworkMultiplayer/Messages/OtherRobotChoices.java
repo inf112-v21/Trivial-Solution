@@ -4,7 +4,7 @@ import GameBoard.Cards.ICard;
 
 import java.util.ArrayList;
 
-public class OtherRobotChoices extends Message{
+public class OtherRobotChoices implements IMessage{
     /**
      * Listen over lister av hva alle spillerne har valgt av kort.
      * Den første listen er til den første roboten, den andre til den andre, etc.

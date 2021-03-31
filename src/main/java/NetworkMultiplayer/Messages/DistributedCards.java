@@ -9,7 +9,7 @@ import java.util.ArrayList;
  * Denne klassen er nærmest identisk til ChosenCards,
  * Vi har det som to klasser for å unngå feil og misforståelser.
  */
-public class DistributedCards extends Message {
+public class DistributedCards implements IMessage {
     private final ArrayList<ICard> cards;
     public DistributedCards(ArrayList<ICard> cards){
         this.cards = cards;

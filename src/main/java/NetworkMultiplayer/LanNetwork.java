@@ -1,28 +1,30 @@
 package NetworkMultiplayer;
 
-import GameBoard.Cards.Deck;
-import NetworkMultiplayer.Messages.Message;
+
+import NetworkMultiplayer.Messages.*;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryonet.EndPoint;
 
 public class LanNetwork {
 
-    //Serveren og klienten som utgjør denne konneksjonen. Vi må ha en
-    //konneksjon per klient.
-    NetworkServer server;
-    NetworkClient client;
-
-
-
-
 
     /**
-     * Vi trenger en metode som registrer klienter over nettverket
-     * @param device- Kan være server eller klient
+     * Gjør serveren og klienten beviste på hva de skal motta
+     * og sende via nettverket.
+     *
+     * Klassene/Packene/Meldingene som skal sendes over nettverket finner du her.'
+     *
+     * @param device- (Server eller klient)
      */
     public static void register(EndPoint device) {
         Kryo kryo = device.getKryo();
-        kryo.register(Deck.class);
+        kryo.register(ChosenCards.class);
+        kryo.register(DistributedCards.class);
+        kryo.register(GameInfo.class);
         kryo.register(Message.class);
+        kryo.register(Name.class);
+        kryo.register(OtherRobotChoices.class);
+        kryo.register(ServerError.class);
+
     }
 }

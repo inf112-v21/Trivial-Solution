@@ -4,7 +4,7 @@ import GameBoard.Robot;
 
 import java.util.List;
 
-public class GameInfo {
+public class GameInfo implements IMessage {
     /**
      * Dette objektet tilsvarer all informasjon en klient
      * trenger for å kunne starte en lokal simulasjon av spillet.

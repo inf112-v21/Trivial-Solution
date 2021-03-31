@@ -1,7 +1,9 @@
 package NetworkMultiplayer;
 
 
+import NetworkMultiplayer.Messages.ChosenCards;
 import NetworkMultiplayer.Messages.IMessage;
+import NetworkMultiplayer.Messages.Name;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Server;
@@ -70,7 +72,16 @@ public class NetworkServer {
     private void addListeners() {
         server.addListener(new Listener() {
             public void received (Connection connection, Object object) {
-                //Legg til de ulike type meldigner som kommer inn fra klientene
+
+                if (object instanceof ChosenCards){
+                    //simuler runde
+                }
+
+                else if (object instanceof Name){
+                    //Sjekk om navnet og designen er god
+                }
+
+
             }
         });
 

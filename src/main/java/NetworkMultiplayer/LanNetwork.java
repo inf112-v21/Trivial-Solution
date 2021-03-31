@@ -12,7 +12,10 @@ public class LanNetwork {
      * Gjør serveren og klienten beviste på hva de skal motta
      * og sende via nettverket.
      *
-     * Klassene/Packene/Meldingene som skal sendes over nettverket finner du her.'
+     * Klassene/Packene/Meldingene som skal sendes over nettverket finner du her.
+     * Kort forklart så serializes og desirializes klassene/meldingene
+     * takk vare kryo.register() metoden. Dette er det som gjør det
+     * mulig for oss å sende de via nettverket.
      *
      * @param device- (Server eller klient)
      */

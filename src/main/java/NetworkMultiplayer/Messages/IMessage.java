@@ -9,6 +9,6 @@ public interface IMessage {
      * Dette gjør vi får at alle objektene skal ha den
      * samme standard når de blir sendt over nettverket.
      *
-     * Kan kanskje erstattes med subklasser etterpå?
+     *
      */
 }

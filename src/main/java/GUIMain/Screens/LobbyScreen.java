@@ -16,6 +16,9 @@ public class LobbyScreen implements Screen {
     private Table names;
     private final boolean isHost;
 
+
+
+
     public LobbyScreen(GUI gui, boolean isHost) {
         this.gui = gui;
         this.isHost = isHost;

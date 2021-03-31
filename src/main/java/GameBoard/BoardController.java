@@ -22,16 +22,19 @@ public class BoardController {
     private final Deck deck = new Deck();
     private final Board board;
     private final AI ai = new Randbot();
+    private final boolean amITheHost;
     private int currentPhase = 0;
     private int currentMove  = 0;
-    private boolean waitingForPlayersToPickCards;
+    private boolean waitingForPlayers;
 
-    public BoardController(List<Robot> robots, String mapName){
+    public BoardController(List<Robot> robots, String mapName, boolean amITheHost){
+        this.amITheHost = amITheHost;
         board = new Board(mapName);
         aliveRobots = new ArrayList<>(robots);
         flagWinningFormation.addAll(board.getWinningCombo());
         for(Robot bot : robots) board.spawnRobot(bot);
-        startRound();
+        if(amITheHost) startRound();
+        waitingForPlayers = true;
     }
 
     /**
@@ -40,7 +43,7 @@ public class BoardController {
      *  slik at denne kan vite nøyaktig hvor i runden vi er.
      */
     public void simulate(){
-        if (waitingForPlayersToPickCards) return;
+        if (waitingForPlayers) return;
 
         if (currentMove == 0) aliveRobots.sort(new BotComparator(currentPhase));
         moveNextRobot();
@@ -55,7 +58,8 @@ public class BoardController {
         if (currentPhase == PHASES_PER_ROUND){
             endRound();
             currentPhase = 0;
-            startRound();
+            waitingForPlayers = true;
+            if (amITheHost) startRound(); //Deler ut kort, om vi er host eller i singleplayer.
         }
     }
 
@@ -67,8 +71,8 @@ public class BoardController {
         }
     }
 
-    public boolean isWaitingForPlayersToPickCards(){ return waitingForPlayersToPickCards; }
-    public void playersAreReady(){ waitingForPlayersToPickCards = false; }
+    public boolean isWaitingForPlayers(){ return waitingForPlayers; }
+    public void playersAreReady(){ waitingForPlayers = false; }
 
     private void startRound(){
         deck.shuffleDeck();
@@ -83,7 +87,6 @@ public class BoardController {
                 ai.chooseCards(bot, board);
             }
         }
-        waitingForPlayersToPickCards = true;
     }
 
     private void endRound(){

@@ -9,6 +9,7 @@ import GameBoard.Robot;
 import java.util.ArrayList;
 import java.util.List;
 
+import NetworkMultiplayer.Messages.InGameMessages.AllChosenCards;
 import NetworkMultiplayer.Messages.PreGameMessages.GameInfo;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
@@ -28,6 +29,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
@@ -61,16 +63,18 @@ public class GameScreen implements Screen {
 	private final Viewport smallView;
     private Label label;
     private final boolean isThisMultiPlayer;
+    private final boolean amITheHost;
 
     private float timeSinceLastUpdate = -1; //Denne holder styr på hvor lenge det er siden forrige gang brettet ble tegnet.
     private boolean hasDrawnCardsYet = false;
 
 
-    public GameScreen(GameInfo gameInfo, boolean isThisMultiPlayer, GUI gui){
+    public GameScreen(GameInfo gameInfo, boolean isThisMultiPlayer, boolean amITheHost, GUI gui){
         this.gui = gui;
         this.mapName = gameInfo.getMapName();
         this.robots = gameInfo.getRobots();
         this.isThisMultiPlayer = isThisMultiPlayer;
+        this.amITheHost = amITheHost;
         TiledMap map = new TmxMapLoader().load(mapName);
 
         TiledMapTileLayer backgroundLayer = (TiledMapTileLayer) map.getLayers().get("Background");
@@ -107,7 +111,7 @@ public class GameScreen implements Screen {
         availableTable = new Table();
         buttonTable = new Table();
 
-        gameBoard = new BoardController(robots, mapName);
+        gameBoard = new BoardController(robots, mapName, amITheHost);
         updateRobotPositions();
 
         batch = new SpriteBatch();
@@ -169,7 +173,16 @@ public class GameScreen implements Screen {
                 if (optionsCheck){
                     playerControlledRobot.togglePowerDown();
                     playerControlledRobot.resetAllCards();
-                    gameBoard.playersAreReady();
+
+                    if ( ! isThisMultiPlayer) {
+                        gameBoard.playersAreReady(); //Om det er singleplayer kan vi bare starte.
+                    }
+                    else if( ! amITheHost){
+                        // TODO: 31.03.2021 Her skal klienten sende en ChosenCards til serveren
+                    }
+                    else{
+                        // TODO: 31.03.2021 Hva skal skje når hosten selv er ferdig med å velge kort? Ingenting? Idk, man
+                    }
                 }
             }
         });
@@ -180,7 +193,17 @@ public class GameScreen implements Screen {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 if(optionsCheck){
-                    gameBoard.playersAreReady();
+                    if( ! isThisMultiPlayer) {
+                        gameBoard.playersAreReady();
+                    }
+
+                    else if ( ! amITheHost){
+                        // TODO: 31.03.2021 Her skal klienten sende en ChooseCArds til serveren
+                    }
+
+                    else{
+                        // TODO: 31.03.2021 Hva skal skje når hosten selv er ferdig med å velge kort?
+                    }
                 }
             }
         });
@@ -233,6 +256,18 @@ public class GameScreen implements Screen {
         return ret;
     }
 
+    public void setAllChosenCards(AllChosenCards acc){
+        if (! isThisMultiPlayer) throw new UnsupportedOperationException("There is no reason to use this method in singleplayer, the boardcontroller automatically set all robot's cards.");
+        ArrayList<ArrayList<ICard>> cards = acc.getOtherChoices();
+        for (int i = 0; i < cards.size(); i++) {
+            if (robots.get(i) == playerControlledRobot
+                    && ! playerControlledRobot.getNthChosenCard(0).equals(cards.get(i).get(0)))
+                    throw new IllegalArgumentException("Are you sure these are the correct cards in the correct order?" +
+                            " if I send cards to the server, and get cards back, the cards for my robot should all be the same. But they are not.");
+            robots.get(i).setChosenCards(cards.get(i));
+        }
+    }
+
     @Override
     public void render(float v) {
         timeSinceLastUpdate += v;
@@ -250,7 +285,7 @@ public class GameScreen implements Screen {
         }
 
         //Dette sørger for at kortene kun blir tegnet én gang per runde. Bedre kjøretid, yay
-        if(gameBoard.isWaitingForPlayersToPickCards()){
+        if(gameBoard.isWaitingForPlayers()){
             if (hasDrawnCardsYet) return;
             renderCards();
             hasDrawnCardsYet = true;

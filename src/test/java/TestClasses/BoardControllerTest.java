@@ -48,7 +48,7 @@ class BoardControllerTest {
         robots.add(robot1);
         robots.add(robot2);
 
-        boardController = new BoardController(robots, defaultMapName);
+        boardController = new BoardController(robots, defaultMapName, false);
     }
 
     @Test
@@ -92,7 +92,7 @@ class BoardControllerTest {
         ArrayList<Robot> robots = new ArrayList<>();
         robots.add(robot1);
         robots.add(robot2);
-        boardController = new BoardController(robots, defaultMapName);
+        boardController = new BoardController(robots, defaultMapName, true);
 
         for (int i = 0; i < Robot.INITIAL_LIVES; i++) {
             robot1.takeLife();

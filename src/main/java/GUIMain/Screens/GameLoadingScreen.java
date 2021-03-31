@@ -10,15 +10,17 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 public class GameLoadingScreen implements Screen {
 
-    private GameInfo gameInfo;
-    private boolean isThisMultiPlayer;
+    private final GameInfo gameInfo;
+    private final boolean isThisMultiPlayer;
+    private final boolean amITheHost;
     private final GUI gui;
     private Stage stage;
     private boolean hasbeensetup = false;
 
-    public GameLoadingScreen(GameInfo gameInfo, boolean isThisMultiPlayer, GUI gui){
+    public GameLoadingScreen(GameInfo gameInfo, boolean isThisMultiPlayer, boolean amITheHost, GUI gui){
         this.gameInfo = gameInfo;
         this.isThisMultiPlayer = isThisMultiPlayer;
+        this.amITheHost = amITheHost;
         this.gui = gui;
     }
 
@@ -39,7 +41,7 @@ public class GameLoadingScreen implements Screen {
     public void render(float v) {
         stage.act();
         stage.draw();
-        if(hasbeensetup) gui.setScreen(new GameScreen(gameInfo, isThisMultiPlayer, gui));
+        if(hasbeensetup) gui.setScreen(new GameScreen(gameInfo, isThisMultiPlayer, amITheHost, gui));
         else hasbeensetup = true;
     }
 

@@ -34,8 +34,8 @@ public class GUI extends Game {
     @Override
     public void create() {
         skin = new Skin(Gdx.files.internal(SKIN_NAME));
-        setScreen(currentScreen);
         Gdx.graphics.setFullscreenMode(Gdx.graphics.getDisplayMode());
+        setScreen(currentScreen);
     }
 
     @Override

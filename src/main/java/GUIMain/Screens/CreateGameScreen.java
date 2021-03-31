@@ -2,7 +2,7 @@ package GUIMain.Screens;
 
 import GUIMain.GUI;
 import GameBoard.Robot;
-import NetworkMultiplayer.Messages.GameInfo;
+import NetworkMultiplayer.Messages.PreGameMessages.GameInfo;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;

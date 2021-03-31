@@ -1,9 +1,9 @@
 package NetworkMultiplayer;
 
 
-import NetworkMultiplayer.Messages.ChosenCards;
+import NetworkMultiplayer.Messages.InGameMessages.ChosenCards;
 import NetworkMultiplayer.Messages.IMessage;
-import NetworkMultiplayer.Messages.Name;
+import NetworkMultiplayer.Messages.PreGameMessages.Name;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Server;

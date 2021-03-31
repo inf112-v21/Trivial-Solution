@@ -2,13 +2,12 @@ package NetworkMultiplayer;
 
 
 import GameBoard.Cards.ICard;
-import NetworkMultiplayer.Messages.DistributedCards;
-import NetworkMultiplayer.Messages.GameInfo;
+import NetworkMultiplayer.Messages.InGameMessages.DistributedCards;
+import NetworkMultiplayer.Messages.PreGameMessages.GameInfo;
 import NetworkMultiplayer.Messages.IMessage;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Client;
-import org.lwjgl.system.CallbackI;
 
 import java.io.IOException;
 import java.net.InetAddress;

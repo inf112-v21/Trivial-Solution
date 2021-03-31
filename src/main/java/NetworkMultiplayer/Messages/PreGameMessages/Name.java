@@ -1,6 +1,8 @@
-package NetworkMultiplayer.Messages;
+package NetworkMultiplayer.Messages.PreGameMessages;
 
-public class Name implements IMessage{
+import NetworkMultiplayer.Messages.IMessage;
+
+public class Name implements IMessage {
     /**
      * Navnet og nummeret på design som bruker har valgt.
      * Serveren er nødt til å sjekke at begge disse er unike.

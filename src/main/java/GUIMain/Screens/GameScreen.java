@@ -88,7 +88,6 @@ public class GameScreen implements Screen {
         camera.update();
 
         renderer = new OrthogonalTiledMapRenderer(map, 1);
-        //renderer.setView(camera);
 
         for (Robot bot : robots){
             if (!bot.isControlledByAI()){

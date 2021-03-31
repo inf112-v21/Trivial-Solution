@@ -1,6 +1,9 @@
 package NetworkMultiplayer;
 
 
+import GameBoard.Cards.ICard;
+import NetworkMultiplayer.Messages.DistributedCards;
+import NetworkMultiplayer.Messages.GameInfo;
 import NetworkMultiplayer.Messages.IMessage;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
@@ -9,6 +12,7 @@ import org.lwjgl.system.CallbackI;
 
 import java.io.IOException;
 import java.net.InetAddress;
+import java.util.ArrayList;
 
 public class NetworkClient {
 
@@ -40,7 +44,15 @@ public class NetworkClient {
     private void addListeners() {
         client.addListener(new Listener() {
             public void received (Connection connection, Object object) {
-                //Legg til de ulike type meldigner som kommer inn fra klientene
+
+                if(object instanceof DistributedCards){
+                    ArrayList<ICard> cardsRecieved =((DistributedCards) object).getChosenCards();
+                    //vi velger kort. Kall metode i game som gjør det mulig for klienten å velge kort
+                }
+
+                else if (object instanceof GameInfo){
+                    //Her får vi oppdattert informasjon så herfra må vi simulere ting i
+                }
             }
         });
 

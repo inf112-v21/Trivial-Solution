@@ -51,13 +51,12 @@ public class GameScreen implements Screen {
 	private Table availableTable;
 	private Table chosenTable;
     private Table optionsTable;
+    private Table buttonTable;
 	protected Robot playerControlledRobot;
     protected TextButton powerDown;
     protected TextButton ready;
     protected TextButton clear;
     protected TextButton options;
-    protected TextButton resume;
-    protected TextButton quit;
     private boolean optionsCheck = true;
 	private final Viewport smallView;
     private Label label;
@@ -81,7 +80,7 @@ public class GameScreen implements Screen {
 
         smallView = new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         Viewport largeView = new FitViewport(WIDTH * 2, HEIGHT);
-        largeView.update(WIDTH, HEIGHT,true);
+        largeView.update(WIDTH*2, HEIGHT,true);
 
         playerLayer = (TiledMapTileLayer) map.getLayers().get("Robot");
         camera = (OrthographicCamera) largeView.getCamera();
@@ -106,6 +105,7 @@ public class GameScreen implements Screen {
         Gdx.input.setInputProcessor(stage);
         chosenTable = new Table();
         availableTable = new Table();
+        buttonTable = new Table();
 
         gameBoard = new BoardController(robots, mapName);
         updateRobotPositions();
@@ -120,23 +120,32 @@ public class GameScreen implements Screen {
         createOptions();
         stage.addActor(chosenTable);
         stage.addActor(availableTable);
-        stage.addActor(createButtons());
+        createButtons();
+        stage.addActor(buttonTable);
         stage.addActor(optionsTable);
     }
 
     private void createOptions(){
         optionsTable = new Table();
-        optionsTable.setBounds(Gdx.graphics.getWidth()*3,Gdx.graphics.getHeight()*3,100,100);
+        optionsTable.setVisible(false);
 
-        resume = new TextButton("  Resume  ", gui.getSkin());
+        TextButton resume = new TextButton("Resume", gui.getSkin());
         resume.addListener(new ChangeListener(){
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 optionsCheck = true;
-                optionsTable.setBounds(Gdx.graphics.getWidth()*3,Gdx.graphics.getHeight()*3,100,100);
+                optionsTable.setVisible(false);
             }
         });
-        quit = new TextButton("  Quit  ", gui.getSkin());
+        TextButton menu = new TextButton("Menu", gui.getSkin());
+        menu.addListener(new ChangeListener(){
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                optionsCheck = false;
+                gui.setScreen(new MenuScreen(gui));
+            }
+        });
+        TextButton quit = new TextButton("Quit", gui.getSkin());
         quit.addListener(new ChangeListener(){
             @Override
             public void changed(ChangeEvent event, Actor actor) {
@@ -146,11 +155,12 @@ public class GameScreen implements Screen {
 
         optionsTable.add(resume);
         optionsTable.row();
+        optionsTable.add(menu);
+        optionsTable.row();
         optionsTable.add(quit);
     }
 
-    private Table createButtons(){
-        Table buttonTable = new Table();
+    private void createButtons(){
         buttonTable.setBounds(Gdx.graphics.getWidth()-(Gdx.graphics.getWidth()/6f),0,Gdx.graphics.getWidth()/6f,Gdx.graphics.getHeight()/5f);
         powerDown = new TextButton("Powerdown", gui.getSkin());
         powerDown.addListener(new ChangeListener(){
@@ -165,7 +175,7 @@ public class GameScreen implements Screen {
         });
 
 
-        ready = new TextButton("  Ready  ", gui.getSkin());
+        ready = new TextButton("Ready", gui.getSkin());
         ready.addListener(new ChangeListener(){
             @Override
             public void changed(ChangeEvent event, Actor actor) {
@@ -175,7 +185,7 @@ public class GameScreen implements Screen {
             }
         });
 
-        clear = new TextButton("  Clear  ", gui.getSkin());
+        clear = new TextButton("Clear", gui.getSkin());
         clear.addListener(new ChangeListener(){
             @Override
             public void changed(ChangeEvent event, Actor actor) {
@@ -186,29 +196,27 @@ public class GameScreen implements Screen {
             }
         });
 
-        options = new TextButton("  Options  ", gui.getSkin());
+        options = new TextButton("Options", gui.getSkin());
         options.addListener(new ChangeListener(){
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 if(optionsCheck){
                     optionsCheck = false;
                     optionsTable.setBounds(Gdx.graphics.getWidth()/2f-(Gdx.graphics.getWidth()/20f),(Gdx.graphics.getHeight()/2f)-(Gdx.graphics.getHeight()/10f),Gdx.graphics.getWidth()/10f,Gdx.graphics.getHeight()/5f);
+                    optionsTable.setVisible(true);
                     // TODO: 30.03.2021
                 }
             }
         });
-
         buttonTable.add(label);
         buttonTable.row();
-        buttonTable.add(powerDown);
+        buttonTable.add(powerDown).size(Gdx.graphics.getWidth()/6f,Gdx.graphics.getHeight()/25f);
         buttonTable.row();
-        buttonTable.add(ready);
+        buttonTable.add(ready).size(Gdx.graphics.getWidth()/6f,Gdx.graphics.getHeight()/25f);
         buttonTable.row();
-        buttonTable.add(clear);
+        buttonTable.add(clear).size(Gdx.graphics.getWidth()/6f,Gdx.graphics.getHeight()/25f);
         buttonTable.row();
-        buttonTable.add(options);
-
-        return buttonTable;
+        buttonTable.add(options).size(Gdx.graphics.getWidth()/6f,Gdx.graphics.getHeight()/25f);
     }
 
     public void setAvailableCards(ArrayList<ICard> cards){
@@ -269,16 +277,14 @@ public class GameScreen implements Screen {
         chosenTable.clear();
         renderer.getBatch().begin();
         boolean odd = false;
-        int yscale;
-        yscale = (playerControlledRobot.getAvailableCards().size()+1)/2;
-        availableTable.setBounds((2*Gdx.graphics.getWidth())/3f,(Gdx.graphics.getHeight()/5f*(5-yscale)),Gdx.graphics.getWidth()/3f,Gdx.graphics.getHeight()-(Gdx.graphics.getHeight()/5f*(5-yscale)));
+        int yScale = (playerControlledRobot.getAvailableCards().size()+1)/2;
+        availableTable.setBounds((2*Gdx.graphics.getWidth())/3f,(Gdx.graphics.getHeight()/5f*(5-yScale)),Gdx.graphics.getWidth()/3f,Gdx.graphics.getHeight()-(Gdx.graphics.getHeight()/5f*(5-yScale)));
         for (int i = 0; i < playerControlledRobot.getAvailableCards().size(); i++) {
             ICard card = playerControlledRobot.getAvailableCards().get(i);
-            Image img = new Image(card.getCardImage()); //må bare konvertere dette til å funke med knapper
-            img.setSize(Gdx.graphics.getWidth()/6f,Gdx.graphics.getHeight()/5f);
+            Image img = new Image(card.getCardImage());
             img.addListener(new CardListener(i));
 
-            availableTable.add(img);
+            availableTable.add(img).size(Gdx.graphics.getWidth()/6f,Gdx.graphics.getHeight()/5f);
             if(odd){
                 availableTable.row();
                 odd = false;
@@ -294,7 +300,7 @@ public class GameScreen implements Screen {
 
     @Override
     public void resize(int width, int height) {
-        smallView.update(width,height);
+        smallView.update(width, height);
         camera.update();
         renderer.setView(camera);
     }
@@ -329,10 +335,7 @@ public class GameScreen implements Screen {
                 if (playerControlledRobot.getNumberOfChosenCards() >= Math.min(BoardController.PHASES_PER_ROUND, playerControlledRobot.getHP())) return;
                 ICard card = playerControlledRobot.getAvailableCards().get(index);
                 if (!playerControlledRobot.chooseCard(card)) return;
-                chosenTable.setBounds((Gdx.graphics.getWidth())/2f,
-                        (Gdx.graphics.getHeight()/5f*(5-playerControlledRobot.getNumberOfChosenCards())),
-                        Gdx.graphics.getWidth()/6f,
-                        Gdx.graphics.getHeight()-(Gdx.graphics.getHeight()/5f*(5-playerControlledRobot.getNumberOfChosenCards())));
+                chosenTable.setBounds((Gdx.graphics.getWidth())/2f, (Gdx.graphics.getHeight()/5f*(5-playerControlledRobot.getNumberOfChosenCards())), Gdx.graphics.getWidth()/6f, Gdx.graphics.getHeight()-(Gdx.graphics.getHeight()/5f*(5-playerControlledRobot.getNumberOfChosenCards())));
                 chosenTable.add(new Image(card.getCardImage()));
                 chosenTable.row();
             }

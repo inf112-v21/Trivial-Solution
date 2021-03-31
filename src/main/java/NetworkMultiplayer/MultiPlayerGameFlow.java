@@ -7,6 +7,7 @@ import java.net.InetAddress;
 
 public class MultiPlayerGameFlow {
 
+
      public void  serverStart(){
 
          NetworkServer server = new NetworkServer();

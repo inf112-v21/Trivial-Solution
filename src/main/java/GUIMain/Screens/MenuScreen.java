@@ -102,22 +102,6 @@ public class MenuScreen extends InputAdapter implements Screen {
         stage.addActor(tabell);
 
     }
-
-    /**
-     * Metode som viser et dialog-vindu med en valgt beskjed.
-     * @param message meldingen som skal vises på skjermen
-     */
-    /**public void showPopUp(String message){
-        Skin uiSkin = new Skin(Gdx.files.internal(gui.getSkinString()));
-        Dialog dialog = new Dialog("", uiSkin) {
-            public void result(Object obj) {
-                System.out.println("result "+obj);
-            }
-        };
-        dialog.text(message);
-        dialog.button("OK", true); //sends "true" as the result
-        dialog.show(stage);
-    }**/
     
     @Override
     public void render(float v) {

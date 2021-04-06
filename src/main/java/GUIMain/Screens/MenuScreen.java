@@ -54,9 +54,6 @@ public class MenuScreen extends InputAdapter implements Screen {
         options = new TextButton("Options", gui.getSkin());
         quit = new TextButton("Quit", gui.getSkin());
 
-
-
-
         singleplayer.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent changeEvent, Actor actor) {
@@ -66,7 +63,7 @@ public class MenuScreen extends InputAdapter implements Screen {
         multiplayer.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent changeEvent, Actor actor) {
-                showPopUp("Multiplayer is not available yet :(");
+                gui.showPopUp("Multiplayer is not available yet :(", stage);
             }
         });
         options.addListener(new ChangeListener() {
@@ -95,22 +92,6 @@ public class MenuScreen extends InputAdapter implements Screen {
 
     }
 
-    /**
-     * Metode som viser et dialog-vindu med en valgt beskjed.
-     * @param message meldingen som skal vises på skjermen
-     */
-    public void showPopUp(String message){
-        Skin uiSkin = new Skin(Gdx.files.internal(gui.getSkinString()));
-        Dialog dialog = new Dialog("", uiSkin) {
-            public void result(Object obj) {
-                System.out.println("result "+obj);
-            }
-        };
-        dialog.text(message);
-        dialog.button("OK", true); //sends "true" as the result
-        dialog.show(stage);
-    }
-    
     @Override
     public void render(float v) {
         stage.act(Gdx.graphics.getDeltaTime());

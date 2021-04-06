@@ -107,7 +107,7 @@ public class MenuScreen extends InputAdapter implements Screen {
      * Metode som viser et dialog-vindu med en valgt beskjed.
      * @param message meldingen som skal vises på skjermen
      */
-    public void showPopUp(String message){
+    /**public void showPopUp(String message){
         Skin uiSkin = new Skin(Gdx.files.internal(gui.getSkinString()));
         Dialog dialog = new Dialog("", uiSkin) {
             public void result(Object obj) {
@@ -117,7 +117,7 @@ public class MenuScreen extends InputAdapter implements Screen {
         dialog.text(message);
         dialog.button("OK", true); //sends "true" as the result
         dialog.show(stage);
-    }
+    }**/
     
     @Override
     public void render(float v) {

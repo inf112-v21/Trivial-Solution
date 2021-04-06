@@ -1,7 +1,11 @@
 package GUIMain.Screens;
 
 import GUIMain.GUI;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -13,6 +17,9 @@ public class GameOverScreen implements Screen {
     private final GUI gui;
     private Stage stage;
     private final String message;
+    private static Sprite backgroundSprite;
+    private static Texture backgroundTexture;
+    private SpriteBatch spriteBatch;
 
     public GameOverScreen(String message, GUI gui){
         this.message = message;
@@ -22,6 +29,10 @@ public class GameOverScreen implements Screen {
 
     @Override
     public void show() {
+        spriteBatch = new SpriteBatch();
+        backgroundTexture = new Texture(Gdx.files.internal("Aesthetic files/roborally1.jpg"));
+        backgroundSprite = new Sprite(backgroundTexture);
+        backgroundSprite.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         stage = new Stage(new ScreenViewport());
         Table table = new Table();
         Label title = new Label(message, gui.getSkin());
@@ -43,7 +54,9 @@ public class GameOverScreen implements Screen {
 
     @Override
     public void render(float v) {
-
+        spriteBatch.begin();
+        backgroundSprite.draw(spriteBatch);
+        spriteBatch.end();
     }
 
     @Override

@@ -3,6 +3,9 @@ package GUIMain.Screens;
 import GUIMain.GUI;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -16,6 +19,9 @@ public class HostOrJoinScreen implements Screen {
     private final GUI gui;
     private Stage stage;
     private FitViewport view;
+    private static Sprite backgroundSprite;
+    private static Texture backgroundTexture;
+    private SpriteBatch spriteBatch;
 
     public HostOrJoinScreen(GUI gui){
         this.gui = gui;
@@ -23,6 +29,10 @@ public class HostOrJoinScreen implements Screen {
 
     @Override
     public void show() {
+        spriteBatch = new SpriteBatch();
+        backgroundTexture = new Texture(Gdx.files.internal("Aesthetic files/roborally1.jpg"));
+        backgroundSprite = new Sprite(backgroundTexture);
+        backgroundSprite.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         view = new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         stage = new Stage();
         Gdx.input.setInputProcessor(stage);
@@ -68,6 +78,9 @@ public class HostOrJoinScreen implements Screen {
 
     @Override
     public void render(float v) {
+        spriteBatch.begin();
+        backgroundSprite.draw(spriteBatch);
+        spriteBatch.end();
         stage.draw();
     }
     @Override

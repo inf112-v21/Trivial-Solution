@@ -15,6 +15,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -68,6 +69,10 @@ public class GameScreen implements Screen {
     private float timeSinceLastUpdate = -1; //Denne holder styr på hvor lenge det er siden forrige gang brettet ble tegnet.
     private boolean hasDrawnCardsYet = false;
 
+    private static Sprite backgroundSprite;
+    private static Texture backgroundTexture;
+    private SpriteBatch spriteBatch;
+
 
     public GameScreen(GameInfo gameInfo, boolean isThisMultiPlayer, boolean amITheHost, GUI gui){
         this.gui = gui;
@@ -104,7 +109,10 @@ public class GameScreen implements Screen {
 
     @Override
     public void show() {
-        Gdx.gl.glClearColor(1, 1, 1, 1);
+        spriteBatch = new SpriteBatch();
+        backgroundTexture = new Texture(Gdx.files.internal("Aesthetic files/roborally.png"));
+        backgroundSprite = new Sprite(backgroundTexture);
+        backgroundSprite.setBounds(0,0,Gdx.graphics.getWidth(),Gdx.graphics.getHeight());
         stage = new Stage();
         Gdx.input.setInputProcessor(stage);
         chosenTable = new Table();
@@ -270,6 +278,9 @@ public class GameScreen implements Screen {
 
     @Override
     public void render(float v) {
+        spriteBatch.begin();
+        backgroundSprite.draw(spriteBatch);
+        spriteBatch.end();
         timeSinceLastUpdate += v;
         renderer.render();
         stage.draw();
@@ -369,7 +380,10 @@ public class GameScreen implements Screen {
                 if (playerControlledRobot.getNumberOfChosenCards() >= Math.min(BoardController.PHASES_PER_ROUND, playerControlledRobot.getHP())) return;
                 ICard card = playerControlledRobot.getAvailableCards().get(index);
                 if (!playerControlledRobot.chooseCard(card)) return;
-                chosenTable.setBounds((Gdx.graphics.getWidth())/2f, (Gdx.graphics.getHeight()/5f*(5-playerControlledRobot.getNumberOfChosenCards())), Gdx.graphics.getWidth()/6f, Gdx.graphics.getHeight()-(Gdx.graphics.getHeight()/5f*(5-playerControlledRobot.getNumberOfChosenCards())));
+                chosenTable.setBounds((Gdx.graphics.getWidth())/2f,
+                        (Gdx.graphics.getHeight()/5f*(5-playerControlledRobot.getNumberOfChosenCards())),
+                        Gdx.graphics.getWidth()/6f,
+                        Gdx.graphics.getHeight()-(Gdx.graphics.getHeight()/5f*(5-playerControlledRobot.getNumberOfChosenCards())));
                 chosenTable.add(new Image(card.getCardImage()));
                 chosenTable.row();
             }

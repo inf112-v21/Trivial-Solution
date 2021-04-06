@@ -5,6 +5,8 @@ import GameBoard.Robot;
 import NetworkMultiplayer.Messages.PreGameMessages.GameInfo;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
@@ -22,12 +24,14 @@ public class CreateGameScreen implements Screen {
 
     private static final String MAP_LOCATION = "assets/maps";
     private Stage stage;
-    private SpriteBatch batch;
     private final GUI gui;
     private SelectBox<Integer> numberOfRobots;
     private SelectBox<String> choosemapbox;
     private TextField textField;
     private Viewport view;
+    private static Sprite backgroundSprite;
+    private static Texture backgroundTexture;
+    private SpriteBatch spriteBatch;
 
     public CreateGameScreen(GUI gui){
         super();
@@ -36,9 +40,12 @@ public class CreateGameScreen implements Screen {
 
     @Override
     public void show() {
+        spriteBatch = new SpriteBatch();
+        backgroundTexture = new Texture(Gdx.files.internal("Aesthetic files/roborally1.jpg"));
+        backgroundSprite = new Sprite(backgroundTexture);
+        backgroundSprite.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         view = new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         stage = new Stage(view);
-        batch = new SpriteBatch();
         Gdx.input.setInputProcessor(stage);
         Table table = new Table();
         table.setFillParent(true);
@@ -60,22 +67,21 @@ public class CreateGameScreen implements Screen {
 
         numberOfRobots = new SelectBox<>(gui.getSkin());
         numberOfRobots.setItems(2, 3, 4, 5, 6, 7, 8);
-        numberOfRobots.scaleBy(3);
-        rightTable.add(numberOfRobots).spaceBottom(30);
+        rightTable.add(numberOfRobots).spaceBottom(37f);
         rightTable.row();
 
-        Label yourname = new Label("Your robot's name: ", gui.getSkin());
-        //yourname.setFontScale(2);
-        leftTable.add(yourname).spaceBottom(50);
+        Label yourName = new Label("Your robot's name: ", gui.getSkin());
+        yourName.setFontScale(2);
+        leftTable.add(yourName).spaceBottom(50);
         leftTable.row();
 
         textField = new TextField("", gui.getSkin());
-        rightTable.add(textField).spaceBottom(20);
+        rightTable.add(textField).spaceBottom(23f);
         rightTable.row();
 
-        Label choosemaplabel = new Label("Choose map: ", gui.getSkin());
-        choosemaplabel.setFontScale(2);
-        leftTable.add(choosemaplabel).spaceBottom(50);
+        Label chooseMapLabel = new Label("Choose map: ", gui.getSkin());
+        chooseMapLabel.setFontScale(2);
+        leftTable.add(chooseMapLabel).spaceBottom(50);
 
         choosemapbox = new SelectBox<>(gui.getSkin());
         choosemapbox.setItems(getMapNames());
@@ -120,9 +126,9 @@ public class CreateGameScreen implements Screen {
 
     @Override
     public void render(float v) {
-        stage.act();
-        batch.begin();
-        batch.end();
+        spriteBatch.begin();
+        backgroundSprite.draw(spriteBatch);
+        spriteBatch.end();
         stage.draw();
     }
 

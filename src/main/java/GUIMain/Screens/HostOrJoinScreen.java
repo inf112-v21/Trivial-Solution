@@ -36,7 +36,7 @@ public class HostOrJoinScreen implements Screen {
         join.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent changeEvent, Actor actor) {
-                // TODO: 31.03.2021 Legg til hva som skal skje om brukeren skal joine en annen server
+                gui.setScreen(new LobbyScreen(gui, false));
 
             }
         });

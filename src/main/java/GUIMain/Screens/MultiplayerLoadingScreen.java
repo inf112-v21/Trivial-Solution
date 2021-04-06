@@ -8,27 +8,26 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
-public class GameLoadingScreen implements Screen {
-
-    private final GameInfo gameInfo;
-    private final boolean isThisMultiPlayer;
-    private final boolean amITheHost;
+public class MultiplayerLoadingScreen implements Screen {
+    private GameInfo gameInfo;
+    private boolean isThisMultiPlayer;
     private final GUI gui;
     private Stage stage;
     private boolean hasbeensetup = false;
 
-    public GameLoadingScreen(GameInfo gameInfo, boolean isThisMultiPlayer, boolean amITheHost, GUI gui){
+    public MultiplayerLoadingScreen(GameInfo gameInfo, boolean isThisMultiPlayer, GUI gui) {
         this.gameInfo = gameInfo;
         this.isThisMultiPlayer = isThisMultiPlayer;
-        this.amITheHost = amITheHost;
         this.gui = gui;
     }
+
+    //TODO 31.03.2021. Lag en metode for multiplayer slik at den connecter med Serveren
 
     @Override
     public void show() {
         stage = new Stage(new ScreenViewport());
         Table table = new Table();
-        Label title = new Label("Loading....", gui.getSkin());
+        Label title = new Label("Connecting....", gui.getSkin());
         title.setFontScale(4);
         table.add(title);
         table.setFillParent(true);
@@ -41,7 +40,7 @@ public class GameLoadingScreen implements Screen {
     public void render(float v) {
         stage.act();
         stage.draw();
-        if(hasbeensetup) gui.setScreen(new GameScreen(gameInfo, isThisMultiPlayer, amITheHost, gui));
+        if(hasbeensetup) gui.setScreen(new GameScreen(gameInfo, isThisMultiPlayer, false, gui));
         else hasbeensetup = true;
     }
 

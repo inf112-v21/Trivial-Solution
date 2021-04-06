@@ -280,8 +280,7 @@ public class GameScreen implements Screen {
         updateRobotPositions();
         updateLivesAndHP();
         for (Robot bot : gameBoard.getRecentlyDeceasedRobots()){
-            // TODO: 30.03.2021 Når gui.showPopUp() er implementert kan vi si ifra når folk dør her. 
-            //gui.showPopUp(bot.getName() + " fucking died, lmao", "Ooops!");
+            gui.showPopUp(bot.getName() + " fucking died, lmao", stage);
         }
 
         //Dette sørger for at kortene kun blir tegnet én gang per runde. Bedre kjøretid, yay

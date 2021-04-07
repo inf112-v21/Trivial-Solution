@@ -15,6 +15,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -29,7 +30,6 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
@@ -68,6 +68,9 @@ public class GameScreen implements Screen {
     private float timeSinceLastUpdate = -1; //Denne holder styr på hvor lenge det er siden forrige gang brettet ble tegnet.
     private boolean hasDrawnCardsYet = false;
 
+    private static Sprite backgroundSprite;
+    private SpriteBatch spriteBatch;
+
 
     public GameScreen(GameInfo gameInfo, boolean isThisMultiPlayer, boolean amITheHost, GUI gui){
         this.gui = gui;
@@ -104,7 +107,10 @@ public class GameScreen implements Screen {
 
     @Override
     public void show() {
-        Gdx.gl.glClearColor(1, 1, 1, 1);
+        spriteBatch = new SpriteBatch();
+        Texture backgroundTexture = new Texture(Gdx.files.internal("Aesthetic files/roborally.png"));
+        backgroundSprite = new Sprite(backgroundTexture);
+        backgroundSprite.setBounds(0,0,Gdx.graphics.getWidth(),Gdx.graphics.getHeight());
         stage = new Stage();
         Gdx.input.setInputProcessor(stage);
         chosenTable = new Table();
@@ -157,11 +163,11 @@ public class GameScreen implements Screen {
             }
         });
 
-        optionsTable.add(resume);
+        optionsTable.add(resume).size(150f,50f).spaceBottom(10);
         optionsTable.row();
-        optionsTable.add(menu);
+        optionsTable.add(menu).size(150f,50f).spaceBottom(10);
         optionsTable.row();
-        optionsTable.add(quit);
+        optionsTable.add(quit).size(150f,50f).spaceBottom(10);
     }
 
     private void createButtons(){
@@ -270,6 +276,9 @@ public class GameScreen implements Screen {
 
     @Override
     public void render(float v) {
+        spriteBatch.begin();
+        backgroundSprite.draw(spriteBatch);
+        spriteBatch.end();
         timeSinceLastUpdate += v;
         renderer.render();
         stage.draw();
@@ -280,8 +289,7 @@ public class GameScreen implements Screen {
         updateRobotPositions();
         updateLivesAndHP();
         for (Robot bot : gameBoard.getRecentlyDeceasedRobots()){
-            // TODO: 30.03.2021 Når gui.showPopUp() er implementert kan vi si ifra når folk dør her. 
-            //gui.showPopUp(bot.getName() + " fucking died, lmao", "Ooops!");
+            gui.showPopUp(bot.getName() + " fucking died, lmao", stage);
         }
 
         //Dette sørger for at kortene kun blir tegnet én gang per runde. Bedre kjøretid, yay
@@ -370,7 +378,10 @@ public class GameScreen implements Screen {
                 if (playerControlledRobot.getNumberOfChosenCards() >= Math.min(BoardController.PHASES_PER_ROUND, playerControlledRobot.getHP())) return;
                 ICard card = playerControlledRobot.getAvailableCards().get(index);
                 if (!playerControlledRobot.chooseCard(card)) return;
-                chosenTable.setBounds((Gdx.graphics.getWidth())/2f, (Gdx.graphics.getHeight()/5f*(5-playerControlledRobot.getNumberOfChosenCards())), Gdx.graphics.getWidth()/6f, Gdx.graphics.getHeight()-(Gdx.graphics.getHeight()/5f*(5-playerControlledRobot.getNumberOfChosenCards())));
+                chosenTable.setBounds((Gdx.graphics.getWidth())/2f,
+                        (Gdx.graphics.getHeight()/5f*(5-playerControlledRobot.getNumberOfChosenCards())),
+                        Gdx.graphics.getWidth()/6f,
+                        Gdx.graphics.getHeight()-(Gdx.graphics.getHeight()/5f*(5-playerControlledRobot.getNumberOfChosenCards())));
                 chosenTable.add(new Image(card.getCardImage()));
                 chosenTable.row();
             }

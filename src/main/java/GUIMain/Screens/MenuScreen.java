@@ -4,7 +4,10 @@ import GUIMain.GUI;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
@@ -23,6 +26,8 @@ public class MenuScreen extends InputAdapter implements Screen {
     protected TextButton quit;
     private final GUI gui;
     private FitViewport view;
+    private static Sprite backgroundSprite;
+    private SpriteBatch spriteBatch;
 
     public MenuScreen(GUI gui){
         super();
@@ -31,6 +36,10 @@ public class MenuScreen extends InputAdapter implements Screen {
 
     @Override
     public void show() {
+        spriteBatch = new SpriteBatch();
+        Texture backgroundTexture = new Texture(Gdx.files.internal("Aesthetic files/roborally1.png"));
+        backgroundSprite = new Sprite(backgroundTexture);
+        backgroundSprite.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         view = new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         stage = new Stage(view);
         BitmapFont font = new BitmapFont();
@@ -40,13 +49,14 @@ public class MenuScreen extends InputAdapter implements Screen {
         Table tabell = new Table();
         tabell.setBounds(0,0,Gdx.graphics.getWidth(),Gdx.graphics.getHeight());
         Label title = new Label("Robo-Rally", gui.getSkin());
-        title.setAlignment(Align.top);
         title.setFontScale(3);
-        tabell.add(title);
+        title.getStyle().fontColor = WHITE;
+        title.setAlignment(Align.top);
+        tabell.add(title).spaceBottom(20);
         tabell.row();
         Label undertitle = new Label("A Trivial Solution", gui.getSkin());
         undertitle.setFontScale(2);
-        tabell.add(undertitle);
+        tabell.add(undertitle).spaceBottom(40);
         tabell.row();
 
         singleplayer = new TextButton("Singleplayer", gui.getSkin());
@@ -72,44 +82,30 @@ public class MenuScreen extends InputAdapter implements Screen {
                 gui.setScreen(new OptionScreen(gui));
             }
         });
-
         quit.addListener(new ChangeListener() {
-             @Override
-             public void changed(ChangeEvent changeEvent, Actor actor) {
-                 System.exit(0);
-             }
-         });
+            @Override
+            public void changed(ChangeEvent changeEvent, Actor actor) {
+                System.exit(0);
+            }
+        });
 
-        tabell.add(singleplayer).prefWidth(200.0f).prefHeight(100.0f);
+        tabell.add(singleplayer).size(300f,80f).spaceBottom(20);
         tabell.row();
-        tabell.add(multiplayer).prefWidth(200.0f).prefHeight(100.0f);
+        tabell.add(multiplayer).size(300f,80f).spaceBottom(20);
         tabell.row();
-        tabell.add(options).prefWidth(200.0f).prefHeight(100.0f);
+        tabell.add(options).size(300f,80f).spaceBottom(20);
         tabell.row();
-        tabell.add(quit).prefWidth(200.0f).prefHeight(100.0f);
+        tabell.add(quit).size(300f,80f).spaceBottom(20);
 
         stage.addActor(tabell);
 
     }
-
-    /**
-     * Metode som viser et dialog-vindu med en valgt beskjed.
-     * @param message meldingen som skal vises på skjermen
-     */
-    public void showPopUp(String message){
-        Skin uiSkin = new Skin(Gdx.files.internal(gui.getSkinString()));
-        Dialog dialog = new Dialog("", uiSkin) {
-            public void result(Object obj) {
-                System.out.println("result "+obj);
-            }
-        };
-        dialog.text(message);
-        dialog.button("OK", true); //sends "true" as the result
-        dialog.show(stage);
-    }
     
     @Override
     public void render(float v) {
+        spriteBatch.begin();
+        backgroundSprite.draw(spriteBatch);
+        spriteBatch.end();
         stage.act(Gdx.graphics.getDeltaTime());
         stage.draw();
     }

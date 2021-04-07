@@ -2,11 +2,13 @@ package GUIMain.Screens;
 
 import GUIMain.GUI;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Graphics;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Graphics;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
@@ -21,6 +23,8 @@ public class OptionScreen extends InputAdapter implements Screen {
     private final GUI gui;
     private Viewport view;
     private boolean window;
+    private static Sprite backgroundSprite;
+    private SpriteBatch spriteBatch;
 
     public OptionScreen(GUI gui){
         super();
@@ -29,6 +33,10 @@ public class OptionScreen extends InputAdapter implements Screen {
 
     @Override
     public void show() {
+        spriteBatch = new SpriteBatch();
+        Texture backgroundTexture = new Texture(Gdx.files.internal("Aesthetic files/roborally1.png"));
+        backgroundSprite = new Sprite(backgroundTexture);
+        backgroundSprite.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         view = new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         stage = new Stage(view);
         BitmapFont font = new BitmapFont();
@@ -40,9 +48,13 @@ public class OptionScreen extends InputAdapter implements Screen {
         Table screenMode = new Table();
         tabell.setFillParent(true);
         Label title = new Label("Options", gui.getSkin());
-        title.setBounds(0,0,Gdx.graphics.getWidth(),Gdx.graphics.getHeight());
-        title.setFontScale(3);
-        tabell.add(title);
+        Label gameSpeed = new Label("Game speed", gui.getSkin());
+        tabell.setBounds(0,0,Gdx.graphics.getWidth(),Gdx.graphics.getHeight());
+        title.setFontScale(4f);
+        gameSpeed.setFontScale(2f);
+        tabell.add(title).spaceBottom(40f);
+        tabell.row();
+        tabell.add(gameSpeed).spaceBottom(10f);
         tabell.row();
         TextButton slow = new TextButton("Slow", gui.getSkin());
         TextButton medium = new TextButton("Medium", gui.getSkin());
@@ -51,19 +63,23 @@ public class OptionScreen extends InputAdapter implements Screen {
         TextButton windowed = new TextButton("Windowed", gui.getSkin());
         Label deltaInfo = new Label("default: Medium", gui.getSkin());
         TextButton returnButton = new TextButton("Return", gui.getSkin());
-        speed.add(slow).left();
-        speed.add(medium).center();
-        speed.add(fast).right();
-        screenMode.add(fullscreen);
-        screenMode.add(windowed);
+        speed.add(slow).size(200f,50f);
+        speed.add(medium).size(200f,50f);
+        speed.add(fast).size(200f,50f);
+        screenMode.add(fullscreen).size(300f,50f);
+        screenMode.add(windowed).size(300f,50f);
+        Label display = new Label("Display", gui.getSkin());
+        display.setFontScale(2f);
         window = false;
-        tabell.add(speed);
+        tabell.add(speed).spaceBottom(10f);
         tabell.row();
-        tabell.add(deltaInfo);
+        tabell.add(deltaInfo).spaceBottom(40f);
         tabell.row();
-        tabell.add(screenMode);
+        tabell.add(display).spaceBottom(10f);
         tabell.row();
-        tabell.add(returnButton);
+        tabell.add(screenMode).spaceBottom(40f);
+        tabell.row();
+        tabell.add(returnButton).size(200f,50f);
 
         stage.addActor(tabell);
         fullscreen.addListener(new ChangeListener() {
@@ -112,6 +128,9 @@ public class OptionScreen extends InputAdapter implements Screen {
 
     @Override
     public void render(float v) {
+        spriteBatch.begin();
+        backgroundSprite.draw(spriteBatch);
+        spriteBatch.end();
         stage.act(Gdx.graphics.getDeltaTime());
         stage.draw();
     }

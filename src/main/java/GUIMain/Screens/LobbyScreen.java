@@ -7,6 +7,9 @@ import NetworkMultiplayer.NetworkClient;
 import NetworkMultiplayer.NetworkServer;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -29,6 +32,8 @@ public class LobbyScreen implements Screen {
     private final boolean isHost;
     private boolean hasBeenSetup = false;
     private Connection[] connections;
+    private static Sprite backgroundSprite;
+    private SpriteBatch spriteBatch;
     private GameInfo gameInfo;
 
 
@@ -64,6 +69,10 @@ public class LobbyScreen implements Screen {
 
     @Override
     public void show() {
+        spriteBatch = new SpriteBatch();
+        Texture backgroundTexture = new Texture(Gdx.files.internal("Aesthetic files/roborally1.png"));
+        backgroundSprite = new Sprite(backgroundTexture);
+        backgroundSprite.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         FitViewport view = new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         stage = new Stage(view);
         table = new Table();
@@ -127,6 +136,9 @@ public class LobbyScreen implements Screen {
 
     @Override
     public void render(float v) {
+        spriteBatch.begin();
+        backgroundSprite.draw(spriteBatch);
+        spriteBatch.end();
         stage.act();
         stage.draw();
     }

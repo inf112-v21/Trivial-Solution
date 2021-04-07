@@ -10,6 +10,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -81,6 +82,25 @@ public class RobotTest {
         bot.repairRobot(9001);
 
         assertEquals(Robot.INITIAL_HP, bot.getHP());
+    }
+
+    @Test
+    public void canSortRobots(){
+        ArrayList<Robot> bots = new ArrayList<>();
+        Robot bot1 = new Robot("aa", false);
+        Robot bot2 = new Robot("aa", false);
+        bot2.applyDamage(1);
+        Robot bot3 = new Robot("bb", false);
+        bots.add(bot1);
+        bots.add(bot2);
+        bots.add(bot3);
+
+        Collections.shuffle(bots);
+        Collections.sort(bots);
+
+        assertEquals(bot2, bots.get(0));
+        assertEquals(bot1, bots.get(1));
+        assertEquals(bot3, bots.get(2));
     }
 
 }

@@ -18,4 +18,11 @@ public abstract class SimpleComponent implements IComponent {
 
     @Override
     public int getID() { return id; }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (! (obj instanceof SimpleComponent)) return false;
+        SimpleComponent simp = (SimpleComponent) obj;
+        return this.id == simp.id;
+    }
 }

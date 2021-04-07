@@ -44,8 +44,6 @@ public class BoardTests {
     @BeforeAll
     public static void setUp(){
         Lwjgl3ApplicationConfiguration cfg = new Lwjgl3ApplicationConfiguration();
-        cfg.setTitle("CLOSE THIS WINDOW TO START THE TESTS");
-        cfg.setWindowedMode(500, 100);
         new Lwjgl3Application(new Game() {
             @Override
             public void create() {

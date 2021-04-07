@@ -28,6 +28,7 @@ public class SinglePlayerLoadingScreen extends SimpleScreen {
 
     @Override
     public void show() {
+        super.show();
         Table table = new Table();
         Label title = new Label("Loading....", gui.getSkin());
         title.setFontScale(4);

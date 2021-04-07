@@ -2,7 +2,6 @@ package TestClasses;
 
 import GameBoard.Board;
 import GameBoard.Cards.ProgramCard;
-import GameBoard.Position;
 import GameBoard.Robot;
 import NetworkMultiplayer.Messages.InGameMessages.SanityCheck;
 import com.badlogic.gdx.Game;
@@ -12,8 +11,6 @@ import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import java.util.TreeMap;
 
 import static org.junit.Assert.fail;
 

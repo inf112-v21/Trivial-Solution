@@ -54,11 +54,11 @@ public class MenuScreen extends InputAdapter implements Screen {
         title.setFontScale(3);
         title.getStyle().fontColor = WHITE;
         title.setAlignment(Align.top);
-        tabell.add(title);
+        tabell.add(title).spaceBottom(20);
         tabell.row();
         Label undertitle = new Label("A Trivial Solution", gui.getSkin());
         undertitle.setFontScale(2);
-        tabell.add(undertitle);
+        tabell.add(undertitle).spaceBottom(40);
         tabell.row();
 
         singleplayer = new TextButton("Singleplayer", gui.getSkin());
@@ -91,13 +91,13 @@ public class MenuScreen extends InputAdapter implements Screen {
             }
         });
 
-        tabell.add(singleplayer).size(300f,80f);
+        tabell.add(singleplayer).size(300f,80f).spaceBottom(20);
         tabell.row();
-        tabell.add(multiplayer).size(300f,80f);
+        tabell.add(multiplayer).size(300f,80f).spaceBottom(20);
         tabell.row();
-        tabell.add(options).size(300f,80f);
+        tabell.add(options).size(300f,80f).spaceBottom(20);
         tabell.row();
-        tabell.add(quit).size(300f,80f);
+        tabell.add(quit).size(300f,80f).spaceBottom(20);
 
         stage.addActor(tabell);
 

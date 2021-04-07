@@ -165,11 +165,11 @@ public class GameScreen implements Screen {
             }
         });
 
-        optionsTable.add(resume);
+        optionsTable.add(resume).size(150f,50f).spaceBottom(10);
         optionsTable.row();
-        optionsTable.add(menu);
+        optionsTable.add(menu).size(150f,50f).spaceBottom(10);
         optionsTable.row();
-        optionsTable.add(quit);
+        optionsTable.add(quit).size(150f,50f).spaceBottom(10);
     }
 
     private void createButtons(){

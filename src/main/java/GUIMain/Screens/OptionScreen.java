@@ -2,47 +2,21 @@ package GUIMain.Screens;
 
 import GUIMain.GUI;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.InputAdapter;
-import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Graphics;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import com.badlogic.gdx.utils.viewport.FitViewport;
-import com.badlogic.gdx.utils.viewport.Viewport;
 
-
-import static com.badlogic.gdx.graphics.Color.*;
-
-public class OptionScreen extends InputAdapter implements Screen {
-    private Stage stage;
-    private final GUI gui;
-    private Viewport view;
+public class OptionScreen extends SimpleScreen {
     private boolean window;
-    private static Sprite backgroundSprite;
-    private SpriteBatch spriteBatch;
 
     public OptionScreen(GUI gui){
-        super();
-        this.gui = gui;
+        super(gui);
     }
 
     @Override
     public void show() {
-        spriteBatch = new SpriteBatch();
-        Texture backgroundTexture = new Texture(Gdx.files.internal("Background Images/roborally1.png"));
-        backgroundSprite = new Sprite(backgroundTexture);
-        backgroundSprite.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        view = new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        stage = new Stage(view);
-        BitmapFont font = new BitmapFont();
-        font.setColor(RED);
-
-        Gdx.input.setInputProcessor(stage);
+        super.show();
         Table tabell = new Table();
         Table speed = new Table();
         Table screenMode = new Table();
@@ -125,26 +99,4 @@ public class OptionScreen extends InputAdapter implements Screen {
         });
 
     }
-
-    @Override
-    public void render(float v) {
-        spriteBatch.begin();
-        backgroundSprite.draw(spriteBatch);
-        spriteBatch.end();
-        stage.act(Gdx.graphics.getDeltaTime());
-        stage.draw();
-    }
-
-    @Override
-    public void resize(int i, int i1) {
-        view.update(i,i1);
-    }
-    @Override
-    public void pause() { }
-    @Override
-    public void resume() { }
-    @Override
-    public void hide() { }
-    @Override
-    public void dispose() { }
 }

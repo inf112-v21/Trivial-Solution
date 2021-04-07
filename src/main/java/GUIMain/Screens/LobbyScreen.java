@@ -23,24 +23,19 @@ import com.esotericsoftware.kryonet.Connection;
 import java.net.InetAddress;
 import java.util.ArrayList;
 
-public class LobbyScreen implements Screen {
+public class LobbyScreen extends SimpleScreen {
 
     private ArrayList<String> listOfPlayers = new ArrayList<>();
-    private final GUI gui;
-    private Stage stage;
     private Table table;
     private final boolean isHost;
     private boolean hasBeenSetup = false;
     private Connection[] connections;
-    private static Sprite backgroundSprite;
-    private static Texture backgroundTexture;
-    private SpriteBatch spriteBatch;
     private GameInfo gameInfo;
 
 
 
     public LobbyScreen(GUI gui, boolean isHost) {
-        this.gui = gui;
+        super(gui);
         this.isHost = isHost;
         if(isHost) startMultiplayer();
     }
@@ -70,14 +65,8 @@ public class LobbyScreen implements Screen {
 
     @Override
     public void show() {
-        spriteBatch = new SpriteBatch();
-        backgroundTexture = new Texture(Gdx.files.internal("Background Images/roborally1.png"));
-        backgroundSprite = new Sprite(backgroundTexture);
-        backgroundSprite.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        FitViewport view = new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        stage = new Stage(view);
+        super.show();
         table = new Table();
-        Gdx.input.setInputProcessor(stage);
         if(isHost) {
             Label title = new Label("Currently connected to:", gui.getSkin());
             title.setFontScale(2f);
@@ -137,35 +126,7 @@ public class LobbyScreen implements Screen {
 
     @Override
     public void render(float v) {
-        spriteBatch.begin();
-        backgroundSprite.draw(spriteBatch);
-        spriteBatch.end();
-        stage.act();
-        stage.draw();
-    }
-
-    @Override
-    public void resize(int i, int i1) {
-
-    }
-
-    @Override
-    public void pause() {
-
-    }
-
-    @Override
-    public void resume() {
-
-    }
-
-    @Override
-    public void hide() {
-
-    }
-
-    @Override
-    public void dispose() {
-
+        super.render(v);
+        // TODO: 07.04.2021 Legg til en sjekk om at spillet er klart til å starte her eller noe sånt
     }
 }

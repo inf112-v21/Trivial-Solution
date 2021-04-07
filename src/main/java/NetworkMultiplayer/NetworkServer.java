@@ -1,14 +1,21 @@
 package NetworkMultiplayer;
 
 
+import GUIMain.Screens.GameScreen;
+import GameBoard.BoardController;
+import GameBoard.Robot;
+import NetworkMultiplayer.Messages.ConfirmationMessages;
 import NetworkMultiplayer.Messages.InGameMessages.ChosenCards;
 import NetworkMultiplayer.Messages.IMessage;
+import NetworkMultiplayer.Messages.PreGameMessages.GameInfo;
 import NetworkMultiplayer.Messages.PreGameMessages.Name;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Server;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 //Kortene er i deck
 //Hva må jeg sende:
@@ -16,14 +23,16 @@ import java.io.IOException;
 // 2. kort fra server til client (kan slettes etterpå, går det an)
 // 3.
 
-public class NetworkServer {
+public class NetworkServer extends Listener {
 
     //Selve serveren
     private Server server;
 
-    //Portene som data sendes imellom. Disse er beskrevet som standard på kryonet nettsiden
-    //Kanskje vi skal sette de som custom et annet sted i koden.
-    //Metoder for det er definert lengre ned i tilfelle
+    //antall tilkoblinger
+    private int numberOfConnections = 0;
+    private
+
+    //Portene som data sendes imellom. Valgfrie porter kan velges.
     final static int DEFAULT_UDP_PORT = 54777;
     final static int DEFAULT_TCP_PORT = 54555;
 
@@ -45,6 +54,8 @@ public class NetworkServer {
         //Registrer serveren i nettverket
         LanNetwork.register(server);
 
+
+
     }
 
     /**
@@ -59,7 +70,7 @@ public class NetworkServer {
      */
     private void bind() {
         try{
-            server.bind(DEFAULT_TCP_PORT,DEFAULT_UDP_PORT);
+            server.bind(DEFAULT_TCP_PORT, DEFAULT_UDP_PORT);
         } catch (IOException e) {
             System.err.println("Noe gikk galt med binden. Prøv annen Port?");
         }
@@ -71,15 +82,44 @@ public class NetworkServer {
      */
     private void addListeners() {
         server.addListener(new Listener() {
-            public void received (Connection connection, Object object) {
 
-                if (object instanceof ChosenCards){
+            //Kalles når vi mottar ting i nettverket
+            public void received (Connection connection, Object object) {
+                if(object instanceof ConfirmationMessages){
+                    ConfirmationMessages message = ((ConfirmationMessages) object);
+                    switch(message){
+                        case TEST_MESSAGE:
+                            System.out.println("Server received Message");
+                            List<Robot> bot = new ArrayList<>();
+                            Robot bot1 = new Robot("Hans",false);
+                            bot.add(bot1);
+                            IMessage game = new GameInfo(bot,"ok",3);
+                            sendMessageToAllClients(game);
+
+                        case CONNECTION_WAS_SUCCESSFUL:
+                            System.out.println("Message was received again");
+                            sendMessageToAllClients(ConfirmationMessages.CONNECTION_WAS_SUCCESSFUL);
+
+                        case GAME_WAS_STARTED_AND_CLIENT_IS_READY_TO_RECEIVE_CARDS:
+                            System.out.println("Message was sent succesfully");
+                    }
+                }
+
+                else if (object instanceof ChosenCards){
                     //simuler runde
                 }
 
                 else if (object instanceof Name){
                     //Sjekk om navnet og designen er god
                 }
+
+
+            }
+            //Kalles når vi oppretter en konneksjon
+            public void connected(Connection connection) {
+                System.out.println("Server connected to client " + connection.getRemoteAddressTCP().getHostString());
+                numberOfConnections++;
+
 
 
             }
@@ -95,13 +135,25 @@ public class NetworkServer {
         return server.getConnections();
     }
 
+    /**
+     * @return antall klienter serveren er connectet til. Brukes for
+     * å sjekke at alle klientene har sendt en melding
+     */
+    public int getNumberOfConnections(){ return numberOfConnections;}
+
+
 
 
     /**
      * Sender data til alle klientene via TCP
      */
     public void sendMessageToAllClients(IMessage m){
-        server.sendToAllTCP(m);
+        if (getConnections().length>1){
+            server.sendToAllTCP(m);
+        }else if (getConnections().length >0){
+            server.sendToTCP(getConnections()[0].getID(),m);
+        }
+
     }
 
 

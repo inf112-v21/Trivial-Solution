@@ -6,12 +6,22 @@ import GameBoard.Components.Flag;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-public class Robot implements Comparable<Robot>{
+/**
+ * Vi implementerer Serializable for at Kryonet skal kunne
+ * gjøre Robotene om til bytes og sende de over nettverket.
+ * Vi lager også et JavaSerializable objekt i LanNetwork
+ * for å få det til å virke.
+ * Vi kunne også lage en tom konstruktør her for å få
+ * det til å virke.
+ */
+
+public class Robot implements Serializable {
     public static final int INITIAL_HP = 10;
     public static final int INITIAL_LIVES = 3;
     public static final int MAX_AVAILABLE_CARDS = 9;
@@ -22,7 +32,6 @@ public class Robot implements Comparable<Robot>{
     private int lives = INITIAL_LIVES;
 	private int hp = INITIAL_HP;
 
-	private int design;
 	private final String name;
 	private TextureRegion image;
 	private int direction = INITIAL_DIRECTION;
@@ -34,8 +43,9 @@ public class Robot implements Comparable<Robot>{
 	private ArrayList<ICard> availableCards = new ArrayList<>(); //alle kortene som ble utdelt
 	private final ArrayList<ICard> chosenCards = new ArrayList<>(BoardController.PHASES_PER_ROUND); //De valgte kortene, rekkefølgen er samme som den spilleren valgte dem
 
+
+
 	public Robot(String name, int design, boolean isControlledByAI){
-	    this.design = design;
 		this.name = name;
 		this.isControlledByAI = isControlledByAI;
 		this.image = new TextureRegion(new Texture("Robotdesigns/robots.png")).split(GameScreen.CELL_SIZE, GameScreen.CELL_SIZE)[0][design];
@@ -182,28 +192,5 @@ public class Robot implements Comparable<Robot>{
         for (int i = 0; i < n; i++) defaultRobots[i].resetState();
 
         return new ArrayList<>(ret.subList(0, n));
-    }
-
-    public Robot copy(){
-        Robot copy = new Robot(name, design, isControlledByAI);
-        copy.lives = lives;
-        copy.hp = hp;
-        copy.direction = direction;
-        return copy;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-	    if (obj instanceof Robot){
-	        Robot o = (Robot) obj;
-	        return this.name.equals(o.name) && this.hp == o.hp && this.lives == o.lives && this.design == o.design && this.direction == o.direction;
-        }
-        return false;
-    }
-
-    @Override
-    public int compareTo(Robot o) {
-	    if ( ! this.name.equals(o.name)) return this.name.compareTo(o.name);
-        return 0;
     }
 }

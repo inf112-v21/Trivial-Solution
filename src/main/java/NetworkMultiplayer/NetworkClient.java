@@ -2,6 +2,7 @@ package NetworkMultiplayer;
 
 
 import GameBoard.Cards.ICard;
+import NetworkMultiplayer.Messages.ConfirmationMessages;
 import NetworkMultiplayer.Messages.InGameMessages.DistributedCards;
 import NetworkMultiplayer.Messages.PreGameMessages.GameInfo;
 import NetworkMultiplayer.Messages.IMessage;
@@ -27,14 +28,14 @@ public class NetworkClient {
 
     public NetworkClient() {
         client = new Client();
+        new Thread(client).start();
 
         //start klienten --> åpner opp en tråd for at den skal kunne sende og motta meldinger over nettverket.
-        client.start();
-
-        addListeners();
 
         //Registrer klienten i nettverket
         LanNetwork.register(client);
+
+        addListeners();
     }
 
     /**
@@ -46,13 +47,38 @@ public class NetworkClient {
         client.addListener(new Listener() {
             public void received (Connection connection, Object object) {
 
+                if(object instanceof ConfirmationMessages){
+                    ConfirmationMessages message = ((ConfirmationMessages) object);
+                    switch(message){
+                        case TEST_MESSAGE:
+                            System.out.println("Client received message. Now sending Message to server");
+                            sendToServer(ConfirmationMessages.CONNECTION_WAS_SUCCESSFUL);
+                        case CONNECTION_WAS_SUCCESSFUL:
+                            System.out.println("The message returned again");
+                    }
+
+                }
+
                 if(object instanceof DistributedCards){
                     ArrayList<ICard> cardsRecieved =((DistributedCards) object).getChosenCards();
                     //vi velger kort. Kall metode i game som gjør det mulig for klienten å velge kort
                 }
 
                 else if (object instanceof GameInfo){
-                    //Her får vi oppdattert informasjon så herfra må vi simulere ting i
+
+                    GameInfo game = (GameInfo) object;
+                    System.out.println("Robots are: " + game.getRobots());
+                    System.out.println("Map is: " + game.getMapName());
+                    System.out.println("Robots are: " + game.getRobots().get(0).getHP());
+
+
+                    /*System.out.println("Received object");
+                    GameInfo2 game = (GameInfo2) object;
+                    System.out.println("Robots are: " + game.robots);
+                    System.out.println("Map is: " + game.mapName);
+                    System.out.println("Robots are: " + game.robots);
+                    sendToServer(ConfirmationMessages.GAME_WAS_STARTED_AND_CLIENT_IS_READY_TO_RECEIVE_CARDS);
+                    */
                 }
             }
         });
@@ -67,10 +93,11 @@ public class NetworkClient {
      * @return
      */
     public boolean connect(String ipAdress) {
+        System.out.println(ipAdress);
         boolean connectionEstablished = true;
         try {
             //connecter til hosten
-            client.connect(6000, ipAdress, DEFAULT_TCP_PORT, DEFAULT_UDP_PORT);
+            client.connect(9999999, ipAdress, DEFAULT_TCP_PORT, DEFAULT_UDP_PORT);
 
         } catch (IllegalStateException e) {
             System.out.println(e.toString() + ": Connect ble kalt fra konneksjonens update thread");
@@ -101,7 +128,7 @@ public class NetworkClient {
      *
      */
     public InetAddress findServer(){
-        return client.discoverHost(DEFAULT_UDP_PORT,6000);
+        return client.discoverHost(DEFAULT_UDP_PORT,5000);
     }
 
 

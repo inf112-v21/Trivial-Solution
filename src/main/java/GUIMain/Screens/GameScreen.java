@@ -48,6 +48,7 @@ public class GameScreen implements Screen {
 	private Stage stage;
 	private Table availableTable;
 	private Table chosenTable;
+    private ArrayList<ICard> chosenCards = new ArrayList<>();
     private Table optionsTable;
     private Table buttonTable;
 	protected Robot playerControlledRobot;
@@ -198,7 +199,8 @@ public class GameScreen implements Screen {
             public void changed(ChangeEvent event, Actor actor) {
                 if(optionsCheck){
                     playerControlledRobot.resetChosenCards();
-                    chosenTable.clear();
+                    clearCards();
+                    renderCards();
                 }
             }
         });
@@ -239,11 +241,13 @@ public class GameScreen implements Screen {
         updateLivesAndHP();
         for (Robot bot : gameBoard.getRecentlyDeceasedRobots()){
             gui.showPopUp(bot.getName() + " fucking died, lmao", stage);
+            // TODO 06.04.2021: Spillet krasjer når denne blir kalt her
         }
 
         //Dette sørger for at kortene kun blir tegnet én gang per runde. Bedre kjøretid, yay
         if(gameBoard.isWaitingForPlayersToPickCards()){
             if (hasDrawnCardsYet) return;
+            clearCards();
             renderCards();
             hasDrawnCardsYet = true;
         }
@@ -264,9 +268,13 @@ public class GameScreen implements Screen {
             else playerLayer.setCell(pos.getX(), gameBoard.getHeight() - pos.getY() - 1, new TiledMapTileLayer.Cell());
         }
     }
-    private void renderCards(){
+    private void clearCards(){
         availableTable.clear();
         chosenTable.clear();
+        chosenCards.clear();
+    }
+
+    private void renderCards(){
         renderer.getBatch().begin();
         boolean odd = false;
         int yScale = (playerControlledRobot.getAvailableCards().size()+1)/2;
@@ -276,12 +284,19 @@ public class GameScreen implements Screen {
             Image img = new Image(card.getCardImage());
             img.addListener(new CardListener(i));
 
-            availableTable.add(img).size(Gdx.graphics.getWidth()/6f,Gdx.graphics.getHeight()/5f);
+            if(!chosenCards.contains(card))
+                availableTable.add(img).size(Gdx.graphics.getWidth()/6f,Gdx.graphics.getHeight()/5f);
+            else{
+                Image emptyImg = new Image();
+                availableTable.add(emptyImg).size(Gdx.graphics.getWidth()/6f,Gdx.graphics.getHeight()/5f);
+            }
+            
             if(odd){
                 availableTable.row();
                 odd = false;
             }
             else odd = true;
+
         }
         renderer.getBatch().end();
     }
@@ -326,10 +341,15 @@ public class GameScreen implements Screen {
 	        if(optionsCheck){
                 if (playerControlledRobot.getNumberOfChosenCards() >= Math.min(BoardController.PHASES_PER_ROUND, playerControlledRobot.getHP())) return;
                 ICard card = playerControlledRobot.getAvailableCards().get(index);
+                chosenCards.add(card);
+
                 if (!playerControlledRobot.chooseCard(card)) return;
                 chosenTable.setBounds((Gdx.graphics.getWidth())/2f, (Gdx.graphics.getHeight()/5f*(5-playerControlledRobot.getNumberOfChosenCards())), Gdx.graphics.getWidth()/6f, Gdx.graphics.getHeight()-(Gdx.graphics.getHeight()/5f*(5-playerControlledRobot.getNumberOfChosenCards())));
                 chosenTable.add(new Image(card.getCardImage()));
                 chosenTable.row();
+
+                availableTable.clear();
+                renderCards();
             }
         }
     }

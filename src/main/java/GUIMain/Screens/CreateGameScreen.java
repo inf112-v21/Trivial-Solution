@@ -40,7 +40,7 @@ public class CreateGameScreen implements Screen {
     @Override
     public void show() {
         spriteBatch = new SpriteBatch();
-        Texture backgroundTexture = new Texture(Gdx.files.internal("Aesthetic files/roborally1.png"));
+        Texture backgroundTexture = new Texture(Gdx.files.internal("Background Images/roborally1.png"));
         backgroundSprite = new Sprite(backgroundTexture);
         backgroundSprite.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         view = new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
@@ -61,30 +61,28 @@ public class CreateGameScreen implements Screen {
 
         Label numberplayerlabel = new Label("Number of players: ", gui.getSkin());
         numberplayerlabel.setFontScale(2);
-        leftTable.add(numberplayerlabel).spaceBottom(50);
-        leftTable.row();
+        temp.add(numberplayerlabel).spaceBottom(50);
 
         numberOfRobots = new SelectBox<>(gui.getSkin());
         numberOfRobots.setItems(2, 3, 4, 5, 6, 7, 8);
-        rightTable.add(numberOfRobots).spaceBottom(37f);
-        rightTable.row();
+        temp.add(numberOfRobots).spaceBottom(37f);
+        temp.row();
 
         Label yourName = new Label("Your robot's name: ", gui.getSkin());
         yourName.setFontScale(2);
-        leftTable.add(yourName).spaceBottom(50);
-        leftTable.row();
+        temp.add(yourName).spaceBottom(50);
 
         textField = new TextField("", gui.getSkin());
-        rightTable.add(textField).spaceBottom(23f);
-        rightTable.row();
+        temp.add(textField).spaceBottom(23f);
+        temp.row();
 
         Label chooseMapLabel = new Label("Choose map: ", gui.getSkin());
         chooseMapLabel.setFontScale(2);
-        leftTable.add(chooseMapLabel).spaceBottom(50);
+        temp.add(chooseMapLabel).spaceBottom(50);
 
         choosemapbox = new SelectBox<>(gui.getSkin());
         choosemapbox.setItems(getMapNames());
-        rightTable.add(choosemapbox).spaceBottom(50);
+        temp.add(choosemapbox).spaceBottom(50);
         TextButton start = new TextButton("Start game", gui.getSkin());
         start.addListener(new InputListener(){
             @Override
@@ -109,8 +107,6 @@ public class CreateGameScreen implements Screen {
             }
         });
 
-        temp.add(leftTable);
-        temp.add(rightTable);
         temp.padBottom(50);
         table.add(temp);
         table.row();
@@ -128,6 +124,7 @@ public class CreateGameScreen implements Screen {
         spriteBatch.begin();
         backgroundSprite.draw(spriteBatch);
         spriteBatch.end();
+        stage.act(Math.min(Gdx.graphics.getDeltaTime(), 1 / 30f));
         stage.draw();
     }
 

@@ -7,12 +7,11 @@ import NetworkMultiplayer.Messages.IMessage;
 
 import java.util.ArrayList;
 import java.util.TreeMap;
-import java.util.TreeSet;
 
 public class SanityCheck implements IMessage {
-    private IComponent[][] midgrid;
-    private IComponent[][] forgrid;
-    private TreeMap<Robot, Position> botPositions;
+    private final IComponent[][] midgrid;
+    private final IComponent[][] forgrid;
+    private final TreeMap<Robot, Position> botPositions;
 
     public SanityCheck(IComponent[][] midgrid, IComponent[][] forgrid, TreeMap<Robot, Position> botPositions){
         this.midgrid = midgrid;
@@ -21,7 +20,7 @@ public class SanityCheck implements IMessage {
     }
 
     @Override
-    public boolean equals(Object obj) {
+    public boolean equals(Object obj) throws UnequalSimulationException {
         if (! (obj instanceof SanityCheck)) return false;
         SanityCheck o = (SanityCheck) obj;
         if ( this.midgrid.length != o.midgrid.length)

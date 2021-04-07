@@ -130,7 +130,7 @@ public class Robot implements Serializable, Comparable<Robot> {
 	}
 
 	public void setChosenCards(ArrayList<ICard> chosen){
-	    if (chosenCards.isEmpty()) throw new IllegalStateException("My list of chosen cards are non-empty, and yet I got a new set of cards");
+	    if ( ! chosenCards.isEmpty()) throw new IllegalStateException("My list of chosen cards are non-empty, and yet I got a new set of cards");
 	    chosenCards.addAll(chosen);
 	}
 

@@ -22,7 +22,6 @@ public class SanityCheckTests {
 
     private final static String defaultMapName = "maps/TestMap.tmx";
     private static Board bård;
-    private static TreeMap<Robot, Position> defaultPositions;
     private static Robot bot1;
     private static Robot bot2;
 
@@ -35,8 +34,6 @@ public class SanityCheckTests {
                 Gdx.app.exit();
             }
         }, cfg);
-
-        defaultPositions = new TreeMap<>();
     }
 
     @BeforeEach

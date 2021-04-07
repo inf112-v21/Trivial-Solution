@@ -18,7 +18,6 @@ public class GameOverScreen implements Screen {
     private Stage stage;
     private final String message;
     private static Sprite backgroundSprite;
-    private static Texture backgroundTexture;
     private SpriteBatch spriteBatch;
 
     public GameOverScreen(String message, GUI gui){
@@ -30,7 +29,7 @@ public class GameOverScreen implements Screen {
     @Override
     public void show() {
         spriteBatch = new SpriteBatch();
-        backgroundTexture = new Texture(Gdx.files.internal("Aesthetic files/roborally1.png"));
+        Texture backgroundTexture = new Texture(Gdx.files.internal("Aesthetic files/roborally1.png"));
         backgroundSprite = new Sprite(backgroundTexture);
         backgroundSprite.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         stage = new Stage(new ScreenViewport());

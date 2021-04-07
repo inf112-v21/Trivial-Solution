@@ -20,7 +20,6 @@ public class HostOrJoinScreen implements Screen {
     private Stage stage;
     private FitViewport view;
     private static Sprite backgroundSprite;
-    private static Texture backgroundTexture;
     private SpriteBatch spriteBatch;
 
     public HostOrJoinScreen(GUI gui){
@@ -30,7 +29,7 @@ public class HostOrJoinScreen implements Screen {
     @Override
     public void show() {
         spriteBatch = new SpriteBatch();
-        backgroundTexture = new Texture(Gdx.files.internal("Aesthetic files/roborally1.png"));
+        Texture backgroundTexture = new Texture(Gdx.files.internal("Aesthetic files/roborally1.png"));
         backgroundSprite = new Sprite(backgroundTexture);
         backgroundSprite.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         view = new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());

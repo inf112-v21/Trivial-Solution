@@ -21,7 +21,6 @@ public class SinglePlayerLoadingScreen implements Screen {
     private Stage stage;
     private boolean hasbeensetup = false;
     private static Sprite backgroundSprite;
-    private static Texture backgroundTexture;
     private SpriteBatch spriteBatch;
 
     public SinglePlayerLoadingScreen(GameInfo gameInfo, boolean isThisMultiPlayer, boolean amITheHost, GUI gui){
@@ -34,7 +33,7 @@ public class SinglePlayerLoadingScreen implements Screen {
     @Override
     public void show() {
         spriteBatch = new SpriteBatch();
-        backgroundTexture = new Texture(Gdx.files.internal("Aesthetic files/roborally1.png"));
+        Texture backgroundTexture = new Texture(Gdx.files.internal("Aesthetic files/roborally1.png"));
         backgroundSprite = new Sprite(backgroundTexture);
         backgroundSprite.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         stage = new Stage(new ScreenViewport());

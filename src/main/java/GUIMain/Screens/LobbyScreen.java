@@ -33,7 +33,6 @@ public class LobbyScreen implements Screen {
     private boolean hasBeenSetup = false;
     private Connection[] connections;
     private static Sprite backgroundSprite;
-    private static Texture backgroundTexture;
     private SpriteBatch spriteBatch;
     private GameInfo gameInfo;
 
@@ -71,7 +70,7 @@ public class LobbyScreen implements Screen {
     @Override
     public void show() {
         spriteBatch = new SpriteBatch();
-        backgroundTexture = new Texture(Gdx.files.internal("Aesthetic files/roborally1.png"));
+        Texture backgroundTexture = new Texture(Gdx.files.internal("Aesthetic files/roborally1.png"));
         backgroundSprite = new Sprite(backgroundTexture);
         backgroundSprite.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         FitViewport view = new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());

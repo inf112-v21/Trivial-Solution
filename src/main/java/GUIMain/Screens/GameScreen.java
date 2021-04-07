@@ -30,7 +30,6 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
@@ -70,7 +69,6 @@ public class GameScreen implements Screen {
     private boolean hasDrawnCardsYet = false;
 
     private static Sprite backgroundSprite;
-    private static Texture backgroundTexture;
     private SpriteBatch spriteBatch;
 
 
@@ -110,7 +108,7 @@ public class GameScreen implements Screen {
     @Override
     public void show() {
         spriteBatch = new SpriteBatch();
-        backgroundTexture = new Texture(Gdx.files.internal("Aesthetic files/roborally.png"));
+        Texture backgroundTexture = new Texture(Gdx.files.internal("Aesthetic files/roborally.png"));
         backgroundSprite = new Sprite(backgroundTexture);
         backgroundSprite.setBounds(0,0,Gdx.graphics.getWidth(),Gdx.graphics.getHeight());
         stage = new Stage();

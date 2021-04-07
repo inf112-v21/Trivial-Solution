@@ -4,7 +4,6 @@ import GUIMain.GUI;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -28,7 +27,6 @@ public class MenuScreen extends InputAdapter implements Screen {
     private final GUI gui;
     private FitViewport view;
     private static Sprite backgroundSprite;
-    private static Texture backgroundTexture;
     private SpriteBatch spriteBatch;
 
     public MenuScreen(GUI gui){
@@ -39,7 +37,7 @@ public class MenuScreen extends InputAdapter implements Screen {
     @Override
     public void show() {
         spriteBatch = new SpriteBatch();
-        backgroundTexture = new Texture(Gdx.files.internal("Aesthetic files/roborally1.png"));
+        Texture backgroundTexture = new Texture(Gdx.files.internal("Aesthetic files/roborally1.png"));
         backgroundSprite = new Sprite(backgroundTexture);
         backgroundSprite.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         view = new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());

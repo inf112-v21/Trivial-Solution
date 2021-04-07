@@ -30,7 +30,6 @@ public class CreateGameScreen implements Screen {
     private TextField textField;
     private Viewport view;
     private static Sprite backgroundSprite;
-    private static Texture backgroundTexture;
     private SpriteBatch spriteBatch;
 
     public CreateGameScreen(GUI gui){
@@ -41,7 +40,7 @@ public class CreateGameScreen implements Screen {
     @Override
     public void show() {
         spriteBatch = new SpriteBatch();
-        backgroundTexture = new Texture(Gdx.files.internal("Aesthetic files/roborally1.png"));
+        Texture backgroundTexture = new Texture(Gdx.files.internal("Aesthetic files/roborally1.png"));
         backgroundSprite = new Sprite(backgroundTexture);
         backgroundSprite.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         view = new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());

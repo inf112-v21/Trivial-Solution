@@ -48,7 +48,7 @@ public class GameScreen implements Screen {
 	private Stage stage;
 	private Table availableTable;
 	private Table chosenTable;
-    private ArrayList<ICard> chosenCards = new ArrayList<ICard>();
+    private ArrayList<ICard> chosenCards = new ArrayList<>();
     private Table optionsTable;
     private Table buttonTable;
 	protected Robot playerControlledRobot;
@@ -284,15 +284,19 @@ public class GameScreen implements Screen {
             Image img = new Image(card.getCardImage());
             img.addListener(new CardListener(i));
 
-            if(!chosenCards.contains(card)){
+            if(!chosenCards.contains(card))
                 availableTable.add(img).size(Gdx.graphics.getWidth()/6f,Gdx.graphics.getHeight()/5f);
+            else{
+                Image emptyImg = new Image();
+                availableTable.add(emptyImg).size(Gdx.graphics.getWidth()/6f,Gdx.graphics.getHeight()/5f);
             }
-
+            
             if(odd){
                 availableTable.row();
                 odd = false;
             }
             else odd = true;
+
         }
         renderer.getBatch().end();
     }
@@ -346,8 +350,6 @@ public class GameScreen implements Screen {
 
                 availableTable.clear();
                 renderCards();
-
-                //TODO: delete the chosen cards from the availableTable
             }
         }
     }

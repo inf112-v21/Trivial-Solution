@@ -42,7 +42,7 @@ public class SanityCheckTests {
     @BeforeEach
     public void reset(){
         bård = new Board(defaultMapName);
-        bot1 = new Robot("aNebuchadnezzar", false);
+        bot1 = new Robot("Nebuchadnezzar", false);
         bot2 = new Robot("Alexstrasza", false);
     }
 

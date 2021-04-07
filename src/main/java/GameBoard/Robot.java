@@ -21,7 +21,7 @@ import java.util.List;
  * det til å virke.
  */
 
-public class Robot implements Serializable {
+public class Robot implements Serializable, Comparable<Robot> {
     public static final int INITIAL_HP = 10;
     public static final int INITIAL_LIVES = 3;
     public static final int MAX_AVAILABLE_CARDS = 9;
@@ -32,6 +32,7 @@ public class Robot implements Serializable {
     private int lives = INITIAL_LIVES;
 	private int hp = INITIAL_HP;
 
+	private int design;
 	private final String name;
 	private TextureRegion image;
 	private int direction = INITIAL_DIRECTION;
@@ -46,6 +47,7 @@ public class Robot implements Serializable {
 
 
 	public Robot(String name, int design, boolean isControlledByAI){
+	    this.design = design;
 		this.name = name;
 		this.isControlledByAI = isControlledByAI;
 		this.image = new TextureRegion(new Texture("Robotdesigns/robots.png")).split(GameScreen.CELL_SIZE, GameScreen.CELL_SIZE)[0][design];
@@ -192,5 +194,29 @@ public class Robot implements Serializable {
         for (int i = 0; i < n; i++) defaultRobots[i].resetState();
 
         return new ArrayList<>(ret.subList(0, n));
+    }
+
+
+    public Robot copy(){
+        Robot copy = new Robot(name, design, isControlledByAI);
+        copy.lives = lives;
+        copy.hp = hp;
+        copy.direction = direction;
+        return copy;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof Robot){
+            Robot o = (Robot) obj;
+            return this.name.equals(o.name) && this.hp == o.hp && this.lives == o.lives && this.design == o.design && this.direction == o.direction;
+        }
+        return false;
+    }
+
+    @Override
+    public int compareTo(Robot o) {
+        if ( ! this.name.equals(o.name)) return this.name.compareTo(o.name);
+        return 0;
     }
 }

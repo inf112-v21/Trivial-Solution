@@ -3,13 +3,13 @@ package NetworkMultiplayer.Messages.InGameMessages;
 import GameBoard.Components.IComponent;
 import GameBoard.Position;
 import GameBoard.Robot;
-import NetworkMultiplayer.Messages.Message;
+import NetworkMultiplayer.Messages.IMessage;
 
 import java.util.ArrayList;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
-public class SanityCheck extends Message {
+public class SanityCheck implements IMessage {
     private IComponent[][] midgrid;
     private IComponent[][] forgrid;
     private TreeMap<Robot, Position> botPositions;

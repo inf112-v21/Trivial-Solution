@@ -52,7 +52,7 @@ public class GameScreen implements Screen {
 	private Stage stage;
 	private Table availableTable;
 	private Table chosenTable;
-    private ArrayList<ICard> chosenCards = new ArrayList<>();
+    private ArrayList<Texture> chosenCards = new ArrayList<>();
     private Table optionsTable;
     private Table buttonTable;
 	protected Robot playerControlledRobot;
@@ -335,12 +335,13 @@ public class GameScreen implements Screen {
             Image img = new Image(card.getCardImage());
             img.addListener(new CardListener(i));
 
-            if(!chosenCards.contains(card))
+            if(!chosenCards.contains(card.getCardImage()))
                 availableTable.add(img).size(Gdx.graphics.getWidth()/6f,Gdx.graphics.getHeight()/5f);
             else{
                 Image emptyImg = new Image();
                 availableTable.add(emptyImg).size(Gdx.graphics.getWidth()/6f,Gdx.graphics.getHeight()/5f);
             }
+
             
             if(odd){
                 availableTable.row();
@@ -392,7 +393,7 @@ public class GameScreen implements Screen {
 	        if(optionsCheck){
                 if (playerControlledRobot.getNumberOfChosenCards() >= Math.min(BoardController.PHASES_PER_ROUND, playerControlledRobot.getHP())) return;
                 ICard card = playerControlledRobot.getAvailableCards().get(index);
-                chosenCards.add(card);
+                chosenCards.add(card.getCardImage());
 
                 if (!playerControlledRobot.chooseCard(card)) return;
                 chosenTable.setBounds((Gdx.graphics.getWidth())/2f,

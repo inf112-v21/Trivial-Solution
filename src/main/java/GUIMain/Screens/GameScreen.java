@@ -108,7 +108,7 @@ public class GameScreen implements Screen {
     @Override
     public void show() {
         spriteBatch = new SpriteBatch();
-        Texture backgroundTexture = new Texture(Gdx.files.internal("Aesthetic files/roborally.png"));
+        Texture backgroundTexture = new Texture(Gdx.files.internal("Background Images/roborally.png"));
         backgroundSprite = new Sprite(backgroundTexture);
         backgroundSprite.setBounds(0,0,Gdx.graphics.getWidth(),Gdx.graphics.getHeight());
         stage = new Stage();

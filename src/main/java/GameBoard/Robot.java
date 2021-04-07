@@ -152,9 +152,8 @@ public class Robot implements Serializable, Comparable<Robot> {
      * @return true om kortet ble satt, false ellers
 	 */
 	public boolean chooseCard(ICard chosenCard){
-	    if (chosenCards.contains(chosenCard)) return false;
 	    if (! availableCards.contains(chosenCard)) throw new IllegalArgumentException("This card isn't in the list of available cards for som reason");
-	    if (chosenCards.size() == getChosenCardSlots()) throw new IllegalStateException("I already have the maximum number of cards!");
+	    if (chosenCards.size() >= getChosenCardSlots()) throw new IllegalStateException("I already have the maximum number of cards!");
 		chosenCards.add(chosenCard);
 		return true;
 	}

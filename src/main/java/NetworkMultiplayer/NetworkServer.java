@@ -1,23 +1,18 @@
 package NetworkMultiplayer;
 
 
-import GUIMain.Screens.GameScreen;
-import GameBoard.BoardController;
-import GameBoard.Cards.ICard;
 import GameBoard.Robot;
 import NetworkMultiplayer.Messages.ConfirmationMessages;
 import NetworkMultiplayer.Messages.InGameMessages.ChosenCards;
 import NetworkMultiplayer.Messages.IMessage;
-import NetworkMultiplayer.Messages.PreGameMessages.GameInfo;
-import NetworkMultiplayer.Messages.PreGameMessages.Name;
+import NetworkMultiplayer.Messages.PreGameMessages.RobotInfo;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Server;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
+
 
 //Kortene er i deck
 //Hva må jeg sende:
@@ -33,6 +28,7 @@ public class NetworkServer extends Listener {
     //antall tilkoblinger
     private int numberOfConnections = 0;
     private HashMap<Connection,IMessage> connectedClients = new HashMap<>();
+    private HashMap<Connection, Robot> clientRobots = new HashMap<>();
 
     //Portene som data sendes imellom. Valgfrie porter kan velges.
     final static int DEFAULT_UDP_PORT = 54777;
@@ -87,6 +83,7 @@ public class NetworkServer extends Listener {
 
             //Kalles når vi mottar ting i nettverket
             public void received (Connection connection, Object object) {
+
                 if(object instanceof ConfirmationMessages) {
                     ConfirmationMessages message = ((ConfirmationMessages) object);
                     //skriv confirmations messages here.
@@ -96,8 +93,10 @@ public class NetworkServer extends Listener {
                     connectedClients.put(connection,cards);
                 }
 
-                else if (object instanceof Name){
-                    //Sjekk om navnet og designen er god
+                else if (object instanceof RobotInfo){
+                    RobotInfo ri = (RobotInfo) object;
+
+
                 }
 
 
@@ -109,6 +108,9 @@ public class NetworkServer extends Listener {
 
                 if (!connectedClients.containsKey(connection)){
                     connectedClients.put(connection,ConfirmationMessages.CONNECTION_WAS_SUCCESSFUL);
+                }
+                if (!clientRobots.containsKey(connection)){
+                    clientRobots.put(connection,null);
                 }
 
 

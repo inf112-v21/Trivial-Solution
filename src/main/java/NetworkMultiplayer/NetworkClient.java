@@ -2,6 +2,7 @@ package NetworkMultiplayer;
 
 
 import GameBoard.Cards.ICard;
+import NetworkMultiplayer.Messages.ConfirmationAndErrorMessages;
 import NetworkMultiplayer.Messages.ConfirmationMessages;
 import NetworkMultiplayer.Messages.InGameMessages.DistributedCards;
 import NetworkMultiplayer.Messages.PreGameMessages.GameInfo;
@@ -46,6 +47,14 @@ public class NetworkClient {
     private void addListeners() {
         client.addListener(new Listener() {
             public void received (Connection connection, Object object) {
+
+                if(object instanceof ConfirmationAndErrorMessages){
+                    ConfirmationAndErrorMessages message = ((ConfirmationAndErrorMessages) object);
+                    switch(message){
+                        case UNAVAILABLE_DESIGN:
+
+                    }
+                }
 
                 if(object instanceof ConfirmationMessages){
                     ConfirmationMessages message = ((ConfirmationMessages) object);

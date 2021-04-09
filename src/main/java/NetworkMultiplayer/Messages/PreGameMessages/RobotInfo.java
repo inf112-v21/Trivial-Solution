@@ -2,7 +2,7 @@ package NetworkMultiplayer.Messages.PreGameMessages;
 
 import NetworkMultiplayer.Messages.IMessage;
 
-public class Name implements IMessage {
+public class RobotInfo implements IMessage {
     /**
      * Navnet og nummeret på design som bruker har valgt.
      * Serveren er nødt til å sjekke at begge disse er unike.
@@ -11,7 +11,7 @@ public class Name implements IMessage {
     private final String botName;
     private final int botDesignNr;
 
-    public Name(String botName, int botDesignNr){
+    public RobotInfo(String botName, int botDesignNr){
         this.botName = botName;
         this.botDesignNr = botDesignNr;
     }

@@ -51,6 +51,8 @@ public abstract class SimpleScreen implements Screen {
     public void hide() { }
     @Override
     public void dispose() {
-        // TODO: 07.04.2021 Tror vi burde skrive noe her, slik at al blir lukket riktig
+        // TODO: 09.04.2021 Her må vi definere hvordan en Screen lukkes.
+        //stage.dispose();
+        //batch.dispose();
     }
 }

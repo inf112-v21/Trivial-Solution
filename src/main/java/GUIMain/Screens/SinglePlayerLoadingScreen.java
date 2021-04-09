@@ -3,7 +3,6 @@ package GUIMain.Screens;
 import GUIMain.GUI;
 import NetworkMultiplayer.Messages.PreGameMessages.GameInfo;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -12,31 +11,24 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
-public class SinglePlayerLoadingScreen implements Screen {
+public class SinglePlayerLoadingScreen extends SimpleScreen {
 
     private final GameInfo gameInfo;
     private final boolean isThisMultiPlayer;
     private final boolean amITheHost;
-    private final GUI gui;
-    private Stage stage;
     private boolean hasbeensetup = false;
     private static Sprite backgroundSprite;
-    private SpriteBatch spriteBatch;
 
     public SinglePlayerLoadingScreen(GameInfo gameInfo, boolean isThisMultiPlayer, boolean amITheHost, GUI gui){
+        super(gui);
         this.gameInfo = gameInfo;
         this.isThisMultiPlayer = isThisMultiPlayer;
         this.amITheHost = amITheHost;
-        this.gui = gui;
     }
 
     @Override
     public void show() {
-        spriteBatch = new SpriteBatch();
-        Texture backgroundTexture = new Texture(Gdx.files.internal("Background Images/roborally1.png"));
-        backgroundSprite = new Sprite(backgroundTexture);
-        backgroundSprite.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        stage = new Stage(new ScreenViewport());
+        super.show();
         Table table = new Table();
         Label title = new Label("Loading....", gui.getSkin());
         title.setFontScale(4);
@@ -49,23 +41,8 @@ public class SinglePlayerLoadingScreen implements Screen {
 
     @Override
     public void render(float v) {
-        spriteBatch.begin();
-        backgroundSprite.draw(spriteBatch);
-        spriteBatch.end();
-        stage.act();
-        stage.draw();
+        super.render(v);
         if(hasbeensetup) gui.setScreen(new GameScreen(gameInfo, isThisMultiPlayer, amITheHost, gui));
         else hasbeensetup = true;
     }
-
-    @Override
-    public void resize(int i, int i1) { }
-    @Override
-    public void pause() { }
-    @Override
-    public void resume() { }
-    @Override
-    public void hide() { }
-    @Override
-    public void dispose() { }
 }

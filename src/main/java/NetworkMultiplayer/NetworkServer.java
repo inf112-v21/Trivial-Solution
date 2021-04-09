@@ -3,6 +3,7 @@ package NetworkMultiplayer;
 
 import GUIMain.Screens.GameScreen;
 import GameBoard.BoardController;
+import GameBoard.Cards.ICard;
 import GameBoard.Robot;
 import NetworkMultiplayer.Messages.ConfirmationMessages;
 import NetworkMultiplayer.Messages.InGameMessages.ChosenCards;
@@ -15,6 +16,7 @@ import com.esotericsoftware.kryonet.Server;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 //Kortene er i deck
@@ -26,11 +28,11 @@ import java.util.List;
 public class NetworkServer extends Listener {
 
     //Selve serveren
-    private Server server;
+    final private Server server;
 
     //antall tilkoblinger
     private int numberOfConnections = 0;
-    private
+    private HashMap<Connection,IMessage> connectedClients = new HashMap<>();
 
     //Portene som data sendes imellom. Valgfrie porter kan velges.
     final static int DEFAULT_UDP_PORT = 54777;
@@ -85,28 +87,13 @@ public class NetworkServer extends Listener {
 
             //Kalles når vi mottar ting i nettverket
             public void received (Connection connection, Object object) {
-                if(object instanceof ConfirmationMessages){
+                if(object instanceof ConfirmationMessages) {
                     ConfirmationMessages message = ((ConfirmationMessages) object);
-                    switch(message){
-                        case TEST_MESSAGE:
-                            System.out.println("Server received Message");
-                            List<Robot> bot = new ArrayList<>();
-                            Robot bot1 = new Robot("Hans",false);
-                            bot.add(bot1);
-                            IMessage game = new GameInfo(bot,"ok",3);
-                            sendMessageToAllClients(game);
+                    //skriv confirmations messages here.
 
-                        case CONNECTION_WAS_SUCCESSFUL:
-                            System.out.println("Message was received again");
-                            sendMessageToAllClients(ConfirmationMessages.CONNECTION_WAS_SUCCESSFUL);
-
-                        case GAME_WAS_STARTED_AND_CLIENT_IS_READY_TO_RECEIVE_CARDS:
-                            System.out.println("Message was sent succesfully");
-                    }
-                }
-
-                else if (object instanceof ChosenCards){
-                    //simuler runde
+                } else if (object instanceof ChosenCards){
+                    ChosenCards cards = (ChosenCards) object;
+                    connectedClients.put(connection,cards);
                 }
 
                 else if (object instanceof Name){
@@ -117,8 +104,12 @@ public class NetworkServer extends Listener {
             }
             //Kalles når vi oppretter en konneksjon
             public void connected(Connection connection) {
-                System.out.println("Server connected to client " + connection.getRemoteAddressTCP().getHostString());
+                System.out.println("Server connected to client " + connection.getID());
                 numberOfConnections++;
+
+                if (!connectedClients.containsKey(connection)){
+                    connectedClients.put(connection,ConfirmationMessages.CONNECTION_WAS_SUCCESSFUL);
+                }
 
 
 
@@ -127,13 +118,6 @@ public class NetworkServer extends Listener {
 
     }
 
-    /**
-     * @return alle konneksjonene, altså alle klientene serveren
-     * har en konneksjon til.
-     */
-    public Connection[] getConnections(){
-        return server.getConnections();
-    }
 
     /**
      * @return antall klienter serveren er connectet til. Brukes for
@@ -148,10 +132,10 @@ public class NetworkServer extends Listener {
      * Sender data til alle klientene via TCP
      */
     public void sendMessageToAllClients(IMessage m){
-        if (getConnections().length>1){
+        if (connectedClients.size()>1){
             server.sendToAllTCP(m);
-        }else if (getConnections().length >0){
-            server.sendToTCP(getConnections()[0].getID(),m);
+        }else if (connectedClients.size() >0){
+            //server.sendToTCP(connectedClients.get().getID(),m);
         }
 
     }

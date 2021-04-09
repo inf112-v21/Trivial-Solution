@@ -2,7 +2,6 @@ package TestClasses;
 
 import GameBoard.Board;
 import GameBoard.Cards.ProgramCard;
-import GameBoard.Position;
 import GameBoard.Robot;
 import NetworkMultiplayer.Messages.InGameMessages.SanityCheck;
 import com.badlogic.gdx.Game;
@@ -13,8 +12,6 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.TreeMap;
-
 import static org.junit.Assert.fail;
 
 
@@ -22,7 +19,6 @@ public class SanityCheckTests {
 
     private final static String defaultMapName = "maps/TestMap.tmx";
     private static Board bård;
-    private static TreeMap<Robot, Position> defaultPositions;
     private static Robot bot1;
     private static Robot bot2;
 
@@ -35,8 +31,6 @@ public class SanityCheckTests {
                 Gdx.app.exit();
             }
         }, cfg);
-
-        defaultPositions = new TreeMap<>();
     }
 
     @BeforeEach

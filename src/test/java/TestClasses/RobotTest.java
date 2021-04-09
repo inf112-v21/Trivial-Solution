@@ -1,11 +1,9 @@
 package TestClasses;
 
-import AIs.Randbot;
 import GameBoard.Cards.Deck;
 import GameBoard.Cards.ICard;
 import GameBoard.Cards.ProgramCard;
 import GameBoard.Robot;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -56,6 +54,7 @@ public class RobotTest {
     public void canOnlyChooseAvailableCards(){
         try{
             bot.chooseCard(new ProgramCard(69, 0, 420, null)); //Dette kortet er antagelig ikke i listen
+            fail();
         }catch (IllegalArgumentException e){
             //Yay
         }
@@ -88,19 +87,16 @@ public class RobotTest {
     public void canSortRobots(){
         ArrayList<Robot> bots = new ArrayList<>();
         Robot bot1 = new Robot("aa", false);
-        Robot bot2 = new Robot("aa", false);
-        bot2.applyDamage(1);
-        Robot bot3 = new Robot("bb", false);
+        Robot bot2 = new Robot("bb", false);
         bots.add(bot1);
         bots.add(bot2);
-        bots.add(bot3);
 
-        Collections.shuffle(bots);
-        Collections.sort(bots);
+        for (int i = 0; i < 10; i++) {
+            Collections.shuffle(bots);
+            Collections.sort(bots);
 
-        assertEquals(bot2, bots.get(0));
-        assertEquals(bot1, bots.get(1));
-        assertEquals(bot3, bots.get(2));
+            assertEquals(bot1, bots.get(0));
+            assertEquals(bot2, bots.get(1));
+        }
     }
-
 }

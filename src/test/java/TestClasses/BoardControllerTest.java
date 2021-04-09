@@ -105,7 +105,7 @@ class BoardControllerTest {
     public void robotsAreSortedInCorrectOrderEveryPhase(){
         ArrayList<ICard> nebbie_cards = new ArrayList<>();
         nebbie_cards.add(new ProgramCard(1, 0, 100, null));
-        nebbie_cards.add(new ProgramCard(1, 0, 1, null));
+        nebbie_cards.add(new ProgramCard(1, 0, 10, null));
         nebbie_cards.add(new ProgramCard(1, 0, 1, null));
         robot1.setAvailableCards(nebbie_cards);
         for (ICard card : robot1.getAvailableCards()) robot1.chooseCard(card);
@@ -117,7 +117,6 @@ class BoardControllerTest {
         for (ICard card : robot2.getAvailableCards()) robot2.chooseCard(card);
 
         boardController.playersAreReady();
-
 
         boardController.simulate();
         assertEquals(robot1, boardController.getRobotAt(9, 2));

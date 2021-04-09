@@ -52,6 +52,22 @@ public class ComponentFactory {
             case 54:
                 return new Gear(54, 1);
 
+            case 116: //hull med kun venstre-kant
+                return new Hole(116);
+            case 115: //hull uten øverste og venstre-kanter
+                return new Hole(115);
+            case 114: //hull med nederste-kant
+                return new Hole(114);
+            case 113: // hull uten øverste og høyre-kanter
+                return new Hole(113);
+            case 108: //hull med høyre-kant
+                return new Hole(108);
+            case 107: // hull uten nederste og venstre-kanter
+                return new Hole(107);
+            case 106: //hull med kun øverste-kant
+                return new Hole(106);
+            case 105: //hull uten nederste og høyre-kanter
+                return new Hole(105);
             //Alt under dette til neste kommentar er kun diverse samlebånd
             case 13:
                 return new ConveyorBelt(13, 0, 2);

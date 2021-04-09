@@ -109,11 +109,16 @@ public class GameScreen implements Screen {
     @Override
     public void show() {
         spriteBatch = new SpriteBatch();
-        Texture backgroundTexture = new Texture(Gdx.files.internal("Background Images/roborally.png"));
+        Texture backgroundTexture = new Texture(Gdx.files.internal("Background Images/CircuitboardDark.jpg"));
         backgroundSprite = new Sprite(backgroundTexture);
         backgroundSprite.setBounds(0,0,Gdx.graphics.getWidth(),Gdx.graphics.getHeight());
         stage = new Stage();
         Gdx.input.setInputProcessor(stage);
+        Table cardSlots = new Table();
+        cardSlots.setBounds(Gdx.graphics.getWidth()/2,0,Gdx.graphics.getWidth()/6,Gdx.graphics.getHeight() );
+        Texture slots = new Texture(Gdx.files.internal("CardSlots/Cardslots.png"));
+        Image slot = new Image(slots);
+        cardSlots.add(slot);
         chosenTable = new Table();
         availableTable = new Table();
         buttonTable = new Table();
@@ -134,6 +139,7 @@ public class GameScreen implements Screen {
         createButtons();
         stage.addActor(buttonTable);
         stage.addActor(optionsTable);
+        stage.addActor(cardSlots);
     }
 
     private void createOptions(){

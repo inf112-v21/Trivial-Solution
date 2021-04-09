@@ -12,6 +12,7 @@ import com.esotericsoftware.kryonet.Server;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.HashSet;
 
 
 //Kortene er i deck
@@ -29,6 +30,9 @@ public class NetworkServer extends Listener {
     private int numberOfConnections = 0;
     private HashMap<Connection,IMessage> connectedClients = new HashMap<>();
     private HashMap<Connection, Robot> clientRobots = new HashMap<>();
+
+    //Brukes for å opprette design og navn
+    private HashSet<Robot> robots = new HashSet<>();
 
     //Portene som data sendes imellom. Valgfrie porter kan velges.
     final static int DEFAULT_UDP_PORT = 54777;
@@ -94,7 +98,14 @@ public class NetworkServer extends Listener {
                 }
 
                 else if (object instanceof RobotInfo){
-                    RobotInfo ri = (RobotInfo) object;
+                    RobotInfo bot = (RobotInfo) object;
+                    String newRobotName = bot.getBotName();
+                    int choosenDesign = bot.getBotDesignNr();
+
+
+                    clientRobots.put(connection,new Robot(bot.getBotName(), bot.getBotDesignNr(), false));
+
+
 
 
                 }

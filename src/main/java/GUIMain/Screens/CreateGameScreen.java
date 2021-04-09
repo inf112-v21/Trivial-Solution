@@ -3,53 +3,32 @@ package GUIMain.Screens;
 import GUIMain.GUI;
 import GameBoard.Robot;
 import NetworkMultiplayer.Messages.PreGameMessages.GameInfo;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Align;
-import com.badlogic.gdx.utils.viewport.FitViewport;
-import com.badlogic.gdx.utils.viewport.Viewport;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 
-public class CreateGameScreen implements Screen {
+public class CreateGameScreen extends SimpleScreen {
 
     private static final String MAP_LOCATION = "assets/maps";
-    private Stage stage;
-    private final GUI gui;
     private SelectBox<Integer> numberOfRobots;
     private SelectBox<String> choosemapbox;
     private TextField textField;
-    private Viewport view;
-    private static Sprite backgroundSprite;
-    private SpriteBatch spriteBatch;
 
     public CreateGameScreen(GUI gui){
-        super();
-        this.gui = gui;
+        super(gui);
     }
 
     @Override
     public void show() {
-        spriteBatch = new SpriteBatch();
-        Texture backgroundTexture = new Texture(Gdx.files.internal("Background Images/roborally1.png"));
-        backgroundSprite = new Sprite(backgroundTexture);
-        backgroundSprite.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        view = new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        stage = new Stage(view);
-        Gdx.input.setInputProcessor(stage);
+        super.show();
         Table table = new Table();
         table.setFillParent(true);
-        Table leftTable = new Table();
-        Table rightTable = new Table();
         Table temp = new Table();
 
 
@@ -118,28 +97,6 @@ public class CreateGameScreen implements Screen {
         stage.addActor(table);
 
     }
-
-    @Override
-    public void render(float v) {
-        spriteBatch.begin();
-        backgroundSprite.draw(spriteBatch);
-        spriteBatch.end();
-        stage.act(Math.min(Gdx.graphics.getDeltaTime(), 1 / 30f));
-        stage.draw();
-    }
-
-    @Override
-    public void resize(int width, int height) {
-        view.update(width, height);
-    }
-    @Override
-    public void pause() { }
-    @Override
-    public void resume() { }
-    @Override
-    public void hide() { }
-    @Override
-    public void dispose() { }
 
     private String[] getMapNames(){
         File f = new File(MAP_LOCATION);

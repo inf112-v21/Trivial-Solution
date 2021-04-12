@@ -98,7 +98,7 @@ public class CreateGameScreen extends SimpleScreen {
 
     }
 
-    private String[] getMapNames(){
+    public static String[] getMapNames(){
         File f = new File(MAP_LOCATION);
         String[] maplist = Arrays.stream(f.list()).filter(n -> !n.equals("TestMap.tmx")).toArray(String[]::new);
         for (int i = 0; i < maplist.length; i++) {

@@ -18,7 +18,6 @@ public class Board {
     private int WIDTH;
 
     private TiledMapTileLayer laserLayer;
-    private TiledMapTileLayer emptyLaserLayer;
 
     //Grids. Disse må initialiseres i readFromTMX().
     //Merk at vi ikke har noe grid for bakgrunnen,
@@ -31,6 +30,7 @@ public class Board {
     private final TreeMap<Robot, Position> botPositions = new TreeMap<>();
     private final TreeMap<Laser, Position> laserPositions = new TreeMap<>(Comparator.comparingInt((ToIntFunction<Object>) Object::hashCode));
     private final TreeSet<Position> dirtyLocations = new TreeSet<>();
+    private final TreeSet<Position> laserLocations = new TreeSet<>();
     private final LinkedList<Position> availableSpawnPoints = new LinkedList<>();
     private final LinkedList<Robot> robotsWaitingToBeRespawned = new LinkedList<>();
 
@@ -55,7 +55,6 @@ public class Board {
         TiledMapTileLayer middleground = (TiledMapTileLayer) map.getLayers().get("Middleground");
         TiledMapTileLayer foreground   = (TiledMapTileLayer) map.getLayers().get("Foreground");
         laserLayer = (TiledMapTileLayer) map.getLayers().get("Laserlayer");
-        emptyLaserLayer = (TiledMapTileLayer) map.getLayers().get("emptyLaserLayer");
 
         HEIGHT = background.getHeight();
         WIDTH  = background.getWidth();
@@ -69,7 +68,6 @@ public class Board {
         for (int y = 0; y < background.getHeight(); y++) {
             for (int x = 0; x < background.getWidth(); x++) {
 
-                // setter posisjonene med lasere i griden
                 laserGrid[HEIGHT-1-y][x] = ComponentFactory.spawnComponent(laserLayer.getCell(x, y));
 
                 midgrid[HEIGHT-1-y][x] = ComponentFactory.spawnComponent(middleground.getCell(x, y));
@@ -91,8 +89,7 @@ public class Board {
         newSpawnPositions.sort((o1, o2) -> Integer.compare(o2[0].hashCode(), o1[0].hashCode()));
         for(Object[] o : newSpawnPositions) availableSpawnPoints.addFirst((Position) o[1]);
 
-        //TODO: remove this
-        drawLasers();
+        findLasers();
     }
 
     /**
@@ -185,7 +182,6 @@ public class Board {
         pickUpFlags();
         updateRespawnPoints();
         fireAllLasers();
-        //drawLasers();
         removeDestroyedRobots();
         respawnRobots();
     }
@@ -335,21 +331,13 @@ public class Board {
         return true;
     }
 
-    private void drawLasers(){
-        for(int x = 0; x < WIDTH; x++){
-            for(int y = 0; y < HEIGHT; y++){
-                if(laserGrid[x][y] != null){
-                    LaserBeam l = (LaserBeam) laserGrid[x][y];
-
-                    TiledMapTileLayer.Cell cell = new TiledMapTileLayer.Cell();
-                    cell.setTile(new StaticTiledMapTile(new Sprite(l.getImage())));
-                    emptyLaserLayer.setCell(x, y, cell);
-                }
-                else
-                    emptyLaserLayer.setCell(x, y, new TiledMapTileLayer.Cell());
+    private void findLasers(){
+        for(int x = 0; x < HEIGHT; x++){
+            for(int y = 0; y < WIDTH; y++){
+                if(laserGrid[x][y] != null)
+                    laserLocations.add(new Position(x, y));
             }
         }
-        //grid inneholder nå alle laserne, men klarer ikke tegne dem
 
     }
 
@@ -404,6 +392,12 @@ public class Board {
         return ret;
     }
 
+    public TreeSet<Position> getLaserLocations() {
+        TreeSet<Position> ret = new TreeSet<>(laserLocations);
+        laserLocations.clear();
+        return ret;
+    }
+
     private void botFellOff(Robot bot){
         bot.takeLife();
         if(bot.hasRemainingLives()) robotsWaitingToBeRespawned.addLast(bot);
@@ -412,6 +406,7 @@ public class Board {
     }
 
     public Robot getRobotAt(int x, int y){ return botgrid[y][x]; }
+    public IComponent getLaserAt(int x, int y){return laserGrid[y][x];}
     public IComponent getForgridAt(int x, int y){ return forgrid[y][x]; }
     public IComponent getMidgridAt(int x, int y){ return midgrid[y][x]; }
 

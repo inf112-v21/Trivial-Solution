@@ -3,6 +3,7 @@ package GUIMain.Screens;
 import GameBoard.Cards.ICard;
 import GUIMain.GUI;
 import GameBoard.BoardController;
+import GameBoard.Components.LaserBeam;
 import GameBoard.Position;
 import GameBoard.Robot;
 
@@ -40,7 +41,10 @@ public class GameScreen implements Screen {
 
     private SpriteBatch batch;
     private BitmapFont font;
+
     private final TiledMapTileLayer playerLayer;
+    private TiledMapTileLayer emptyLaserLayer;
+
     private final OrthogonalTiledMapRenderer renderer;
     private final OrthographicCamera camera;
     private final String mapName;
@@ -91,6 +95,9 @@ public class GameScreen implements Screen {
         largeView.update(WIDTH*2, HEIGHT,true);
 
         playerLayer = (TiledMapTileLayer) map.getLayers().get("Robot");
+
+        emptyLaserLayer = (TiledMapTileLayer) map.getLayers().get("emptyLaserLayer");
+
         camera = (OrthographicCamera) largeView.getCamera();
         camera.update();
 
@@ -289,6 +296,7 @@ public class GameScreen implements Screen {
         timeSinceLastUpdate = 0;
         gameBoard.simulate();
         updateRobotPositions();
+        drawLasers();
         updateLivesAndHP();
         for (Robot bot : gameBoard.getRecentlyDeceasedRobots()){
             gui.showPopUp(bot.getName() + " fucking died, lmao", stage);
@@ -304,7 +312,23 @@ public class GameScreen implements Screen {
         }
         else hasDrawnCardsYet = false;
     }
-    
+
+    private void drawLasers(){
+        for (Position pos : gameBoard.getLaserLocations()){
+            LaserBeam laser = (LaserBeam) gameBoard.getLaserAt(pos.getX(), pos.getY());
+            if(laser != null){
+                TiledMapTileLayer.Cell cell = new TiledMapTileLayer.Cell();
+                cell.setTile(new StaticTiledMapTile(new Sprite(laser.getImage())));
+
+                emptyLaserLayer.setCell(pos.getX(), gameBoard.getHeight() - pos.getY() - 1, cell);
+            }
+            else emptyLaserLayer.setCell(pos.getX(), gameBoard.getHeight() - pos.getY() - 1, new TiledMapTileLayer.Cell());
+        }
+
+        //grid inneholder nå alle laserne, men klarer ikke tegne dem
+
+    }
+
     private void updateRobotPositions(){
         for (Position pos : gameBoard.getDirtyLocations()){
             Robot bot = gameBoard.getRobotAt(pos.getX(), pos.getY());

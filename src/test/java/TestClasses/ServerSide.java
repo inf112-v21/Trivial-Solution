@@ -17,8 +17,6 @@ class MockServer {
 
 class runTest{
     public static void main(String[] args) {
-        NetworkServer server = new NetworkServer();
-
-
+        NetworkServer server = new NetworkServer(null);
     }
 }

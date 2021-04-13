@@ -1,6 +1,7 @@
 package NetworkMultiplayer;
 
 
+import GUIMain.GUI;
 import GameBoard.Robot;
 import NetworkMultiplayer.Messages.MinorErrorMessage;
 import NetworkMultiplayer.Messages.ConfirmationMessages;
@@ -26,6 +27,8 @@ public class NetworkServer extends Listener {
 
     //Selve serveren
     final private Server server;
+
+    private GUI gui;
 
     //antall tilkoblinger
     private int numberOfConnections = 0;
@@ -71,7 +74,8 @@ public class NetworkServer extends Listener {
     /**
      * Starter game-hosten vår aka. serveren i nettverket. Bør kalles når spillet starter
      */
-    public NetworkServer(){
+    public NetworkServer(GUI gui){
+        this.gui = gui;
         server = new Server();
 
         //Starter en ny tråd som gjør det mulig å sende og motta informasjon fra et nettverk

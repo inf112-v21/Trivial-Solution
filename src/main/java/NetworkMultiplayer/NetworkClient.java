@@ -1,6 +1,7 @@
 package NetworkMultiplayer;
 
 
+import GUIMain.GUI;
 import GameBoard.Cards.ICard;
 import GameBoard.Robot;
 import NetworkMultiplayer.Messages.MinorErrorMessage;
@@ -28,14 +29,15 @@ public class NetworkClient {
     private GameInfo setup;
     private boolean design;
     private boolean botName;
-
+    private GUI gui;
 
 
     //Roboter startes inne i networkclient og networkserver.
     //private Robot = new Robot();
 
 
-    public NetworkClient() {
+    public NetworkClient(GUI gui) {
+        this.gui = gui;
         client = new Client();
         new Thread(client).start();
 

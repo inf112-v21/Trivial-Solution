@@ -109,20 +109,6 @@ public class LobbyScreen extends SimpleScreen {
         table.add(rtrn).spaceTop(400);
     }
 
-    public void addPlayer(String playername){
-        listOfPlayers.add(playername);
-    }
-
-    public void setGameInfo(GameInfo gameInfo){
-        this.gameInfo = gameInfo;
-        hasBeenSetup = true;
-    }
-
-    public void startTheGame(){
-        if (! hasBeenSetup) throw new IllegalStateException("Cannot start the game before receiving game information");
-        gui.setScreen(new MultiplayerLoadingScreen(gameInfo, true, gui));
-    }
-
     @Override
     public void render(float v) {
         if ( ! hasTriedToConnectYet){

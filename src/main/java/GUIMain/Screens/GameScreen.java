@@ -116,9 +116,14 @@ public class GameScreen implements Screen {
         Gdx.input.setInputProcessor(stage);
         Table cardSlots = new Table();
         cardSlots.setBounds(Gdx.graphics.getWidth()/2,0,Gdx.graphics.getWidth()/6,Gdx.graphics.getHeight() );
-        Texture slots = new Texture(Gdx.files.internal("CardSlots/Cardslots.png"));
-        Image slot = new Image(slots);
-        cardSlots.add(slot);
+        for (int i = 0; i<5; i++){
+            Texture slots = new Texture(Gdx.files.internal("CardSlots/input.png"));
+            Image slot = new Image(slots);
+            cardSlots.add(slot);
+            if( i != 4){
+                cardSlots.row();
+            }
+        }
         chosenTable = new Table();
         availableTable = new Table();
         buttonTable = new Table();
@@ -135,11 +140,11 @@ public class GameScreen implements Screen {
 
         createOptions();
         stage.addActor(chosenTable);
+        stage.addActor(cardSlots);
         stage.addActor(availableTable);
         createButtons();
         stage.addActor(buttonTable);
         stage.addActor(optionsTable);
-        stage.addActor(cardSlots);
     }
 
     private void createOptions(){

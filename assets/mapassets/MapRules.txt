@@ -3,6 +3,7 @@ Et kart skal bestå av 3 lag:
 Background: bakgrunnstiles som kun er visuelle og ikke har innvirkning på gameplay.
 Middleground: Samlebånd, hull, checkpoints, gears, skiftenøkler.
 Foreground: Vegger, lasere, flagg, spawnpunkter.
+Laserlayer: De visuelle laser-strålene.
 
 Merk at roboter ikke skal plasseres på kartet. Istedet skal vi plassere 1-8 unike spawnpunkter,
  og la Board plassere robotene selv etter hvor mange de er.

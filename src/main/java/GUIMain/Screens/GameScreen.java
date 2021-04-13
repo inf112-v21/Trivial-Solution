@@ -304,7 +304,7 @@ public class GameScreen implements Screen {
         }
         else hasDrawnCardsYet = false;
     }
-
+    
     private void updateRobotPositions(){
         for (Position pos : gameBoard.getDirtyLocations()){
             Robot bot = gameBoard.getRobotAt(pos.getX(), pos.getY());

@@ -3,9 +3,11 @@ package GameBoard;
 import GameBoard.Cards.ICard;
 import GameBoard.Components.*;
 import NetworkMultiplayer.Messages.InGameMessages.SanityCheck;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
+import com.badlogic.gdx.maps.tiled.tiles.StaticTiledMapTile;
 
 import java.util.*;
 import java.util.function.ToIntFunction;
@@ -15,12 +17,16 @@ public class Board {
     private int HEIGHT;
     private int WIDTH;
 
+    private TiledMapTileLayer laserLayer;
+    private TiledMapTileLayer emptyLaserLayer;
+
     //Grids. Disse må initialiseres i readFromTMX().
     //Merk at vi ikke har noe grid for bakgrunnen,
     // siden tilesene der er kun visuelle og ikke har noen innvirkning på gameplay.
     private Robot[][]      botgrid;
     private IComponent[][] midgrid;
     private IComponent[][] forgrid;
+    private IComponent[][] laserGrid;
 
     private final TreeMap<Robot, Position> botPositions = new TreeMap<>();
     private final TreeMap<Laser, Position> laserPositions = new TreeMap<>(Comparator.comparingInt((ToIntFunction<Object>) Object::hashCode));
@@ -48,6 +54,8 @@ public class Board {
         TiledMapTileLayer background   = (TiledMapTileLayer) map.getLayers().get("Background");
         TiledMapTileLayer middleground = (TiledMapTileLayer) map.getLayers().get("Middleground");
         TiledMapTileLayer foreground   = (TiledMapTileLayer) map.getLayers().get("Foreground");
+        laserLayer = (TiledMapTileLayer) map.getLayers().get("Laserlayer");
+        emptyLaserLayer = (TiledMapTileLayer) map.getLayers().get("emptyLaserLayer");
 
         HEIGHT = background.getHeight();
         WIDTH  = background.getWidth();
@@ -55,10 +63,15 @@ public class Board {
         botgrid  = new Robot     [HEIGHT][WIDTH];
         midgrid  = new IComponent[HEIGHT][WIDTH];
         forgrid  = new IComponent[HEIGHT][WIDTH];
+        laserGrid = new IComponent[HEIGHT][WIDTH];
 
         ArrayList<Object[]> newSpawnPositions = new ArrayList<>(8);
         for (int y = 0; y < background.getHeight(); y++) {
             for (int x = 0; x < background.getWidth(); x++) {
+
+                // setter posisjonene med lasere i griden
+                laserGrid[HEIGHT-1-y][x] = ComponentFactory.spawnComponent(laserLayer.getCell(x, y));
+
                 midgrid[HEIGHT-1-y][x] = ComponentFactory.spawnComponent(middleground.getCell(x, y));
 
                 IComponent forcomp = ComponentFactory.spawnComponent(foreground.getCell(x, y));
@@ -77,6 +90,9 @@ public class Board {
         //Dette burde være det samme som å sortere etter lavest ID.
         newSpawnPositions.sort((o1, o2) -> Integer.compare(o2[0].hashCode(), o1[0].hashCode()));
         for(Object[] o : newSpawnPositions) availableSpawnPoints.addFirst((Position) o[1]);
+
+        //TODO: remove this
+        drawLasers();
     }
 
     /**
@@ -169,6 +185,7 @@ public class Board {
         pickUpFlags();
         updateRespawnPoints();
         fireAllLasers();
+        //drawLasers();
         removeDestroyedRobots();
         respawnRobots();
     }
@@ -318,7 +335,23 @@ public class Board {
         return true;
     }
 
+    private void drawLasers(){
+        for(int x = 0; x < WIDTH; x++){
+            for(int y = 0; y < HEIGHT; y++){
+                if(laserGrid[x][y] != null){
+                    LaserBeam l = (LaserBeam) laserGrid[x][y];
 
+                    TiledMapTileLayer.Cell cell = new TiledMapTileLayer.Cell();
+                    cell.setTile(new StaticTiledMapTile(new Sprite(l.getImage())));
+                    emptyLaserLayer.setCell(x, y, cell);
+                }
+                else
+                    emptyLaserLayer.setCell(x, y, new TiledMapTileLayer.Cell());
+            }
+        }
+        //grid inneholder nå alle laserne, men klarer ikke tegne dem
+
+    }
 
     /**
      * Avfyrer alle lasere. inkludert de skutt av robotene.

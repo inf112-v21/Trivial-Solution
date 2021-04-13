@@ -183,7 +183,7 @@ public class Board {
         fireAllLasers();
         removeDestroyedRobots();
         respawnRobots();
-        
+
         //TODO: Må fjerne laserne etter hver phase
     }
 

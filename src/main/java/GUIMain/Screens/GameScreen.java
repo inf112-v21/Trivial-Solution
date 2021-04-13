@@ -296,7 +296,7 @@ public class GameScreen implements Screen {
         timeSinceLastUpdate = 0;
         gameBoard.simulate();
         updateRobotPositions();
-        //drawLasers();
+        drawLasers();
         updateLivesAndHP();
         for (Robot bot : gameBoard.getRecentlyDeceasedRobots()){
             gui.showPopUp(bot.getName() + " fucking died, lmao", stage);

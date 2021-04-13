@@ -21,6 +21,7 @@ public class LobbyScreen extends SimpleScreen {
 
 
 
+
     public LobbyScreen(GUI gui) {
         super(gui);
     }
@@ -29,49 +30,40 @@ public class LobbyScreen extends SimpleScreen {
     public void show() {
         super.show();
         table = new Table();
-        table.setBounds(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        Label choose = new Label("Choose map: ", gui.getSkin());
-        SelectBox<String> choosemap = new SelectBox<>(gui.getSkin());
-        choosemap.setItems(CreateGameScreen.getMapNames());
-        table.add(choose);
-        table.add(choosemap).spaceBottom(100);
-
-        TextButton rtrn = new TextButton("Return", gui.getSkin());
-        rtrn.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent changeEvent, Actor actor) {
-                gui.setScreen(new MenuScreen(gui));
-            }
-        });
-        table.add(rtrn).spaceTop(400);
-        table.row();
+        table.setBounds(0,0,Gdx.graphics.getWidth(),Gdx.graphics.getHeight());
         chooseRobot();
-        table.setBounds(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         stage.addActor(table);
     }
 
 
     public void chooseRobot(){
         chooseTable = new Table();
+        chooseTable.setBounds(0,0,Gdx.graphics.getWidth(),Gdx.graphics.getHeight());
+        Table topTable = new Table();
+        Label choose = new Label("Choose map: ", gui.getSkin());
+        SelectBox<String> choosemap = new SelectBox<>(gui.getSkin());
+        choosemap.setItems(CreateGameScreen.getMapNames());
+        topTable.add(choose).spaceRight(50f);
+        topTable.add(choosemap);
 
 
-        Table lefttable = new Table();
-        Table righttable = new Table();
+        Table midtable = new Table();
+        Table bottomtable = new Table();
 
-        lefttable.add(new Label("Choose username: ", gui.getSkin()));
-        lefttable.row();
+        midtable.add(new Label("Choose username: ", gui.getSkin())).spaceRight(50f);
         robotname = new TextField("", gui.getSkin());
-        righttable.add(robotname);
-        righttable.row();
+        midtable.add(robotname);
 
-        lefttable.add(new Label("Choose your Robot's design: ", gui.getSkin()));
+        bottomtable.add(new Label("Choose your Robot's design: ", gui.getSkin())).spaceRight(50f);
         robotdesign = new SelectBox<>(gui.getSkin());
         robotdesign.setItems(1, 2, 3, 4, 5, 6, 7, 8);
-        righttable.add(robotdesign);
-        lefttable.row();
+        bottomtable.add(robotdesign);
 
-        chooseTable.add(lefttable);
-        chooseTable.add(righttable);
+        chooseTable.add(topTable).spaceBottom(50f);
+        chooseTable.row();
+        chooseTable.add(midtable).spaceBottom(50f);
+        chooseTable.row();
+        chooseTable.add(bottomtable).spaceBottom(50f);
         chooseTable.row();
 
         TextButton send = new TextButton("Confirm", gui.getSkin());

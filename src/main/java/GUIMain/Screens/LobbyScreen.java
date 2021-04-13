@@ -81,7 +81,17 @@ public class LobbyScreen extends SimpleScreen {
                 // TODO: 09.04.2021 Her skal navn og ID sendes til serveren
             }
         });
-        chooseTable.add(send);
+        TextButton rtrn = new TextButton("Return", gui.getSkin());
+        rtrn.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent changeEvent, Actor actor) {
+                gui.setScreen(new MenuScreen(gui));
+            }
+        });
+        Table buttons = new Table();
+        buttons.add(send);
+        buttons.add(rtrn);
+        chooseTable.add(buttons);
         table.add(chooseTable);
     }
 

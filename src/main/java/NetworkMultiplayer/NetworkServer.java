@@ -79,7 +79,7 @@ public class NetworkServer extends Listener {
         server = new Server();
 
         //Starter en ny tråd som gjør det mulig å sende og motta informasjon fra et nettverk
-        server.start();
+        new Thread(server).start();
 
         //Bind serveren til port
         bind();

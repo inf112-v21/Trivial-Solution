@@ -52,7 +52,7 @@ public class GameScreen implements Screen {
 	private Stage stage;
 	private Table availableTable;
 	private Table chosenTable;
-    private ArrayList<Texture> chosenCards = new ArrayList<>();
+    private final ArrayList<Texture> chosenCards = new ArrayList<>();
     private Table optionsTable;
     private Table buttonTable;
 	protected Robot playerControlledRobot;
@@ -116,8 +116,8 @@ public class GameScreen implements Screen {
         Gdx.input.setInputProcessor(stage);
         Table cardSlots = new Table();
         Table placements = new Table();
-        placements.setBounds(Gdx.graphics.getWidth()/2,0,Gdx.graphics.getWidth()/6,Gdx.graphics.getHeight() );
-        cardSlots.setBounds(Gdx.graphics.getWidth()/2,0,Gdx.graphics.getWidth()/6,Gdx.graphics.getHeight() );
+        placements.setBounds(Gdx.graphics.getWidth()/2f,0,Gdx.graphics.getWidth()/6f,Gdx.graphics.getHeight() );
+        cardSlots.setBounds(Gdx.graphics.getWidth()/2f,0,Gdx.graphics.getWidth()/6f,Gdx.graphics.getHeight() );
         for (int i = 0; i<5; i++){
             Texture slots = new Texture(Gdx.files.internal("CardSlots/input.png"));
             Image slot = new Image(slots);

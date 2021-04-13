@@ -109,9 +109,8 @@ public class LobbyScreen extends SimpleScreen {
 
     @Override
     public void render(float v) {
-        if ( ! hasTriedToConnectYet){
+        if (gui.getServer() == null){
             gui.startServer();
-            hasTriedToConnectYet = true;
         }
         else{
             super.render(v);

@@ -25,6 +25,7 @@ import java.util.HashSet;
 
 public class NetworkServer extends Listener {
 
+
     //Selve serveren
     final private Server server;
 
@@ -123,7 +124,10 @@ public class NetworkServer extends Listener {
 
                 if(object instanceof ConfirmationMessages) {
                     ConfirmationMessages message = ((ConfirmationMessages) object);
-                    //skriv confirmations messages here.
+                    switch (message){
+                        case CONNECTION_WAS_SUCCESSFUL:
+                            System.out.println("Woho!");
+                    }
 
                 }
 
@@ -201,6 +205,8 @@ public class NetworkServer extends Listener {
     public void sendToClient(Connection con, IMessage m){
         server.sendToTCP(con.getID(),m);
     }
+
+
 
 
     /**

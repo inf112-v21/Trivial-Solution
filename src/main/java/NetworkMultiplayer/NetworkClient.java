@@ -57,9 +57,7 @@ public class NetworkClient {
         return AllChooseRobotCards;
     }
 
-    public GameInfo getSetup() {
-        return setup;
-    }
+
 
     /**
      * @return true hvis navnet er valgt
@@ -120,6 +118,11 @@ public class NetworkClient {
 
 
 
+            }
+
+            @Override
+            public void connected(Connection connection){
+                gui.getClient().sendToServer(ConfirmationMessages.CONNECTION_WAS_SUCCESSFUL);
             }
         });
 

@@ -1,21 +1,21 @@
 package NetworkMultiplayer;
 
 
-import GUIMain.Screens.GameScreen;
-import GameBoard.BoardController;
+import GUIMain.GUI;
 import GameBoard.Robot;
+import NetworkMultiplayer.Messages.MinorErrorMessage;
 import NetworkMultiplayer.Messages.ConfirmationMessages;
 import NetworkMultiplayer.Messages.InGameMessages.ChosenCards;
 import NetworkMultiplayer.Messages.IMessage;
-import NetworkMultiplayer.Messages.PreGameMessages.GameInfo;
-import NetworkMultiplayer.Messages.PreGameMessages.Name;
+import NetworkMultiplayer.Messages.PreGameMessages.RobotInfo;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Server;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.HashSet;
+
 
 //Kortene er i deck
 //Hva må jeg sende:
@@ -26,25 +26,60 @@ import java.util.List;
 public class NetworkServer extends Listener {
 
     //Selve serveren
-    private Server server;
+    final private Server server;
+
+    private GUI gui;
 
     //antall tilkoblinger
     private int numberOfConnections = 0;
-    private
+
+    //Mappinger som sjekker at vi har alt på plass
+    private HashMap<Connection,IMessage> connectedClients = new HashMap<>();
+    private HashMap<Connection, Robot> clientRobots = new HashMap<>();
+
+    //Brukes for å opprette design og navn
+    private HashSet<Robot> robots = new HashSet<>();
+
+
+    //Det vi sender til klientene for at de skal kunne simulere trekken
+    //TODO: Lag en set metode?
+    private HashMap<Robot,IMessage> robotActions = new HashMap<>();
 
     //Portene som data sendes imellom. Valgfrie porter kan velges.
     final static int DEFAULT_UDP_PORT = 54777;
     final static int DEFAULT_TCP_PORT = 54555;
 
+    /**
+     * @return - HashMap med robotene mappet til hvilke kort de valgte
+     */
+    public HashMap<Robot, IMessage> getRobotActions(HashMap<Robot, IMessage> robotActions) {
+        return robotActions;
+    }
+
+    /**
+     * @return konneksjonen med dens tilhørende melding
+     */
+    public HashMap<Connection, IMessage> getConnectedClients() {
+        return connectedClients;
+    }
+
+    /**
+     *
+     * @return konneksjonen med dens tilhørende robot.
+     */
+    public HashMap<Connection, Robot> getClientRobots() {
+        return clientRobots;
+    }
 
     /**
      * Starter game-hosten vår aka. serveren i nettverket. Bør kalles når spillet starter
      */
-    public NetworkServer(){
+    public NetworkServer(GUI gui){
+        this.gui = gui;
         server = new Server();
 
         //Starter en ny tråd som gjør det mulig å sende og motta informasjon fra et nettverk
-        server.start();
+        new Thread(server).start();
 
         //Bind serveren til port
         bind();
@@ -85,55 +120,71 @@ public class NetworkServer extends Listener {
 
             //Kalles når vi mottar ting i nettverket
             public void received (Connection connection, Object object) {
-                if(object instanceof ConfirmationMessages){
+
+                if(object instanceof ConfirmationMessages) {
                     ConfirmationMessages message = ((ConfirmationMessages) object);
-                    switch(message){
-                        case TEST_MESSAGE:
-                            System.out.println("Server received Message");
-                            List<Robot> bot = new ArrayList<>();
-                            Robot bot1 = new Robot("Hans",false);
-                            bot.add(bot1);
-                            IMessage game = new GameInfo(bot,"ok",3);
-                            sendMessageToAllClients(game);
+                    //skriv confirmations messages here.
 
-                        case CONNECTION_WAS_SUCCESSFUL:
-                            System.out.println("Message was received again");
-                            sendMessageToAllClients(ConfirmationMessages.CONNECTION_WAS_SUCCESSFUL);
-
-                        case GAME_WAS_STARTED_AND_CLIENT_IS_READY_TO_RECEIVE_CARDS:
-                            System.out.println("Message was sent succesfully");
-                    }
                 }
 
+                //Her sjekker vi hva som skal skje med kortene hvis vi finner noen.
                 else if (object instanceof ChosenCards){
-                    //simuler runde
+                    ChosenCards cards = (ChosenCards) object;
+                    connectedClients.put(connection,cards);
+
+                    //Gjør dette for å lagre kortene klienten sendte
+                    //Nå er de lagret i robotActions som vi kan sende med en gang
+                    //over nettverket.
+                    Robot thisRobotsAction = clientRobots.get(connection);
+                    robotActions.put(thisRobotsAction,cards);
+
                 }
 
-                else if (object instanceof Name){
-                    //Sjekk om navnet og designen er god
+
+                //Her sjekker vi om roboten blir registrert riktig
+                //I spillet vår har vi bestemt det at kun en robot kan ha en type design
+                //Send melding på hvilken designs som er tilgjengelige?
+                else if (object instanceof RobotInfo){
+                    RobotInfo bot = (RobotInfo) object;
+                    String newRobotName = bot.getBotName();
+                    int chosenDesign = bot.getBotDesignNr();
+
+                    for(Robot registeredBot: robots){
+                        if (registeredBot.getDesign() == chosenDesign){
+                            sendToClient(connection, MinorErrorMessage.UNAVAILABLE_DESIGN);
+                        }
+                        if (registeredBot.getName().equals(newRobotName)){
+                            sendToClient(connection, MinorErrorMessage.UNAVAILABLE_NAME);
+                        }
+
+                    }
+                    //Hvis alt er greit så legger vi til roboten.
+                    Robot newBot = new Robot(newRobotName,chosenDesign,false);
+                    clientRobots.put(connection,newBot);
+
                 }
+
 
 
             }
             //Kalles når vi oppretter en konneksjon
+            //Da registrerer vi den konneksjonen og Roboten som tilhører konneksjonen.
             public void connected(Connection connection) {
-                System.out.println("Server connected to client " + connection.getRemoteAddressTCP().getHostString());
+                System.out.println("Server connected to client " + connection.getID());
                 numberOfConnections++;
 
-
+                if (!connectedClients.containsKey(connection)){
+                    connectedClients.put(connection,ConfirmationMessages.CONNECTION_WAS_SUCCESSFUL);
+                }
+                if (!clientRobots.containsKey(connection)){
+                    clientRobots.put(connection,null);
+                }
 
             }
         });
 
     }
 
-    /**
-     * @return alle konneksjonene, altså alle klientene serveren
-     * har en konneksjon til.
-     */
-    public Connection[] getConnections(){
-        return server.getConnections();
-    }
 
     /**
      * @return antall klienter serveren er connectet til. Brukes for
@@ -141,19 +192,22 @@ public class NetworkServer extends Listener {
      */
     public int getNumberOfConnections(){ return numberOfConnections;}
 
-
+    /**
+     *Sender en melding fra serveren til en klient
+     *
+     * @param con - konneksjonen (representerer klienten som skal få meldingen)
+     * @param m - meldingen vi vil sende
+     */
+    public void sendToClient(Connection con, IMessage m){
+        server.sendToTCP(con.getID(),m);
+    }
 
 
     /**
      * Sender data til alle klientene via TCP
      */
     public void sendMessageToAllClients(IMessage m){
-        if (getConnections().length>1){
             server.sendToAllTCP(m);
-        }else if (getConnections().length >0){
-            server.sendToTCP(getConnections()[0].getID(),m);
-        }
-
     }
 
 

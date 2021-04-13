@@ -1,7 +1,11 @@
 package NetworkMultiplayer;
 
 
+import GUIMain.GUI;
+import GUIMain.Screens.WaitingForHostScreen;
 import GameBoard.Cards.ICard;
+import GameBoard.Robot;
+import NetworkMultiplayer.Messages.MinorErrorMessage;
 import NetworkMultiplayer.Messages.ConfirmationMessages;
 import NetworkMultiplayer.Messages.InGameMessages.DistributedCards;
 import NetworkMultiplayer.Messages.PreGameMessages.GameInfo;
@@ -13,6 +17,7 @@ import com.esotericsoftware.kryonet.Client;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class NetworkClient {
 
@@ -21,12 +26,19 @@ public class NetworkClient {
     final static int DEFAULT_UDP_PORT = 54777;
     final static int DEFAULT_TCP_PORT = 54555;
 
+    private HashMap<Robot,IMessage> AllChooseRobotCards;
+    private GameInfo setup;
+    private boolean design;
+    private boolean botName;
+    private GUI gui;
+
 
     //Roboter startes inne i networkclient og networkserver.
     //private Robot = new Robot();
 
 
-    public NetworkClient() {
+    public NetworkClient(GUI gui) {
+        this.gui = gui;
         client = new Client();
         new Thread(client).start();
 
@@ -39,6 +51,31 @@ public class NetworkClient {
     }
 
     /**
+     * @return Henter robotene og kortene hver robot valgte
+     */
+    public HashMap<Robot, IMessage> getChooseCards() {
+        return AllChooseRobotCards;
+    }
+
+    public GameInfo getSetup() {
+        return setup;
+    }
+
+    /**
+     * @return true hvis navnet er valgt
+     */
+    public boolean isBotName() {
+        return botName;
+    }
+
+    /**
+     * @return true hvis designet er tatt
+     */
+    public boolean isDesign() {
+        return design;
+    }
+
+    /**
      * Metode som skaper listeners
      * Disse håndterer mottate packer/Messages som kommer fra
      * serveren til klienten vår
@@ -46,6 +83,16 @@ public class NetworkClient {
     private void addListeners() {
         client.addListener(new Listener() {
             public void received (Connection connection, Object object) {
+
+                if(object instanceof MinorErrorMessage){
+                    MinorErrorMessage message = ((MinorErrorMessage) object);
+                    switch(message){
+                        case UNAVAILABLE_DESIGN:
+                            design = true;
+                        case UNAVAILABLE_NAME:
+                            botName = true;
+                    }
+                }
 
                 if(object instanceof ConfirmationMessages){
                     ConfirmationMessages message = ((ConfirmationMessages) object);
@@ -59,27 +106,20 @@ public class NetworkClient {
 
                 }
 
+                //Klienten velger kortene sine
                 if(object instanceof DistributedCards){
-                    ArrayList<ICard> cardsRecieved =((DistributedCards) object).getChosenCards();
-                    //vi velger kort. Kall metode i game som gjør det mulig for klienten å velge kort
+                    DistributedCards cardsRecieved =((DistributedCards) object);
+                    //AllChooseRobotCards = cardsRecieved.getChosenCards();
                 }
 
+                //Setter opp spillet hos klienten
                 else if (object instanceof GameInfo){
-
-                    GameInfo game = (GameInfo) object;
-                    System.out.println("Robots are: " + game.getRobots());
-                    System.out.println("Map is: " + game.getMapName());
-                    System.out.println("Robots are: " + game.getRobots().get(0).getHP());
-
-
-                    /*System.out.println("Received object");
-                    GameInfo2 game = (GameInfo2) object;
-                    System.out.println("Robots are: " + game.robots);
-                    System.out.println("Map is: " + game.mapName);
-                    System.out.println("Robots are: " + game.robots);
-                    sendToServer(ConfirmationMessages.GAME_WAS_STARTED_AND_CLIENT_IS_READY_TO_RECEIVE_CARDS);
-                    */
+                    GameInfo gi = (GameInfo) object;
+                    setup = gi;
                 }
+
+
+
             }
         });
 

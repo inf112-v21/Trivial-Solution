@@ -26,7 +26,7 @@ public class HostOrJoinScreen extends SimpleScreen{
         join.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent changeEvent, Actor actor) {
-                gui.setScreen(new LobbyScreen(gui, false));
+                gui.setScreen(new ConnectingScreen(gui));
 
             }
         });
@@ -36,7 +36,7 @@ public class HostOrJoinScreen extends SimpleScreen{
         host.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent changeEvent, Actor actor) {
-                gui.setScreen(new LobbyScreen(gui,true));
+                gui.setScreen(new LobbyScreen(gui));
             }
         });
         table.add(host).spaceBottom(40);

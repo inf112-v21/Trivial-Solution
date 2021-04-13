@@ -1,6 +1,10 @@
 package GUIMain;
 
-        import GUIMain.Screens.MenuScreen;
+import GUIMain.Screens.LobbyScreen;
+import GUIMain.Screens.MenuScreen;
+        import NetworkMultiplayer.Messages.ConfirmationMessages;
+        import NetworkMultiplayer.NetworkClient;
+        import NetworkMultiplayer.NetworkServer;
         import com.badlogic.gdx.Game;
         import com.badlogic.gdx.Gdx;
         import com.badlogic.gdx.Screen;
@@ -9,13 +13,15 @@ package GUIMain;
         import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
         import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
-        import javax.swing.JOptionPane;
+        import java.net.InetAddress;
 
 public class GUI extends Game {
 
     private Skin skin;
     private static final String SKIN_NAME = "assets/comic/skin/comic-ui.json";
     private Screen currentScreen;
+    private NetworkServer server;
+    private NetworkClient client;
 
     /**
      * Standard GUI. Bruk denne.
@@ -42,8 +48,35 @@ public class GUI extends Game {
 
     @Override
     public void setScreen(Screen nextScreen){
+        currentScreen.dispose();
         currentScreen = nextScreen;
         super.setScreen(nextScreen);
+    }
+
+    public void startServer(){
+        server = new NetworkServer(this);
+    }
+
+    public void startClient(){
+        try {
+            client = new NetworkClient(this);
+
+            //Finner Ip-addressen til hosten.
+            InetAddress hostIpadress = client.findServer();
+
+            //Connect to client
+            client.connect(hostIpadress.getHostName());
+
+            if (client.isConnected()) {
+                client.sendToServer(ConfirmationMessages.CONNECTION_WAS_SUCCESSFUL);
+                setScreen(new LobbyScreen(this));
+            }
+        }catch (NullPointerException ex){
+            Stage stage = new Stage();
+            Gdx.input.setInputProcessor(stage);
+            showPopUp("Couldn't find any online servers :(", stage);
+            setScreen(new MenuScreen(this));
+        }
     }
 
     @Override

@@ -2,6 +2,7 @@ package NetworkMultiplayer;
 
 
 import GUIMain.GUI;
+import GUIMain.Screens.WaitingForHostScreen;
 import GameBoard.Cards.ICard;
 import GameBoard.Robot;
 import NetworkMultiplayer.Messages.MinorErrorMessage;

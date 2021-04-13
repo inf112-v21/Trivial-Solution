@@ -37,9 +37,4 @@ public class ConnectingScreen extends SimpleScreen{
             hasTriedToConnectYet = true;
         }
     }
-
-    /** Når en kobling til serveren er etablert kan vi kalle denne får å gå videre til lobbyen. */
-    public void connected(){
-        gui.setScreen(new LobbyScreen(gui, false));
-    }
 }

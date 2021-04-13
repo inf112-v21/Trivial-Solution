@@ -1,7 +1,7 @@
 package GUIMain.Screens;
 
 import GUIMain.GUI;
-import NetworkMultiplayer.Messages.PreGameMessages.GameInfo;
+import GameBoard.Robot;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
@@ -11,12 +11,11 @@ import java.util.ArrayList;
 
 public class LobbyScreen extends SimpleScreen {
 
-    private ArrayList<String> listOfPlayers = new ArrayList<>();
+    private ArrayList<Robot> listOfPlayers = new ArrayList<>();
     private Table table;
     private final boolean isHost;
     private boolean hasBeenSetup = false;
     private boolean hasTriedToConnectYet = false;
-    private GameInfo gameInfo;
     private TextField robotname;
     private SelectBox robotdesign;
     private Table chooseTable;
@@ -109,16 +108,20 @@ public class LobbyScreen extends SimpleScreen {
         table.add(rtrn).spaceTop(400);
     }
 
+    public void addPlayer(Robot bot){
+        listOfPlayers.add(bot);
+    }
+
     @Override
     public void render(float v) {
         if ( ! hasTriedToConnectYet){
             if (isHost) gui.startServer();
             else gui.startClient();
             hasTriedToConnectYet = true;
+            System.out.println("yo");
         }
         else{
             super.render(v);
         }
-        // TODO: 07.04.2021 Legg til en sjekk om at spillet er klart til å starte her eller noe sånt
     }
 }

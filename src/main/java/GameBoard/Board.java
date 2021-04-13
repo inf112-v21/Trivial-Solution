@@ -89,7 +89,6 @@ public class Board {
         newSpawnPositions.sort((o1, o2) -> Integer.compare(o2[0].hashCode(), o1[0].hashCode()));
         for(Object[] o : newSpawnPositions) availableSpawnPoints.addFirst((Position) o[1]);
 
-        findLasers();
     }
 
     /**
@@ -116,7 +115,6 @@ public class Board {
         int dist = card.getDistance();
         if (dist < 0 ) moveTowards(Math.abs(dist), pos.getX(), pos.getY(), Math.floorMod(bot.getDirection() + 2, Robot.TAU));
         else moveTowards(dist, pos.getX(), pos.getY(), bot.getDirection());
-
     }
 
     /**
@@ -175,6 +173,7 @@ public class Board {
      * Lasere blir avfyrt, samlebånd går av, roboter blir reparert, etc.
      */
     public void endPhase(){
+        findLasers();
         moveConveyorBelts(false);
         moveConveyorBelts(true);
         turnGears();
@@ -184,6 +183,8 @@ public class Board {
         fireAllLasers();
         removeDestroyedRobots();
         respawnRobots();
+        
+        //TODO: Må fjerne laserne etter hver phase
     }
 
     /** @param moveAll: om alle samlebånd skal flytte seg, eller kun de blå. */
@@ -332,13 +333,21 @@ public class Board {
     }
 
     private void findLasers(){
-        for(int x = 0; x < HEIGHT; x++){
-            for(int y = 0; y < WIDTH; y++){
-                if(laserGrid[x][y] != null)
+        for(int y = 0; y < HEIGHT; y++){
+            for(int x = 0; x < WIDTH; x++){
+                if(laserGrid[y][x] != null)
                     laserLocations.add(new Position(x, y));
             }
         }
+    }
 
+    public void removeLasers() {
+        for(int y = 0; y < HEIGHT; y++){
+            for(int x = 0; x < WIDTH; x++){
+                if(laserGrid[y][x] != null)
+                    laserLocations.clear();
+            }
+        }
     }
 
     /**
@@ -476,4 +485,5 @@ public class Board {
         }
         return new SanityCheck(midcopy, forgrid, positionCopy);
     }
+
 }

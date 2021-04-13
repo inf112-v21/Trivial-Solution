@@ -296,7 +296,7 @@ public class GameScreen implements Screen {
         timeSinceLastUpdate = 0;
         gameBoard.simulate();
         updateRobotPositions();
-        drawLasers();
+        //drawLasers();
         updateLivesAndHP();
         for (Robot bot : gameBoard.getRecentlyDeceasedRobots()){
             gui.showPopUp(bot.getName() + " fucking died, lmao", stage);
@@ -324,8 +324,6 @@ public class GameScreen implements Screen {
             }
             else emptyLaserLayer.setCell(pos.getX(), gameBoard.getHeight() - pos.getY() - 1, new TiledMapTileLayer.Cell());
         }
-
-        //grid inneholder nå alle laserne, men klarer ikke tegne dem
 
     }
 

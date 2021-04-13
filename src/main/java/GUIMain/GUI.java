@@ -62,12 +62,12 @@ public class GUI extends Game {
     }
 
     public void startServer(){
-        server = new NetworkServer(this);
+        server = new NetworkServer();
     }
 
     public void startClient(){
         try {
-            client = new NetworkClient(this);
+            client = new NetworkClient();
 
             //Finner Ip-addressen til hosten.
             InetAddress hostIpadress = client.findServer();

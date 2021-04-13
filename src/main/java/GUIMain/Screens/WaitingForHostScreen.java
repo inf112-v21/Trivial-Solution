@@ -15,10 +15,11 @@ public class WaitingForHostScreen extends SimpleScreen{
     public void show(){
         super.show();
 
-        Label label = new Label("Waiting for the host to start the game...", gui.getSkin());
-        Table table = new Table(gui.getSkin());
-
-        table.add(label);
+        Table table = new Table();
+        Label title = new Label("Waiting for the host to start the game...", gui.getSkin());
+        title.setFontScale(3f);
+        table.add(title).spaceBottom(200);
+        table.setBounds(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         stage.addActor(table);
     }
 

@@ -44,7 +44,7 @@ public class CreateGameScreen extends SimpleScreen {
 
         numberOfRobots = new SelectBox<>(gui.getSkin());
         numberOfRobots.setItems(2, 3, 4, 5, 6, 7, 8);
-        temp.add(numberOfRobots).spaceBottom(37f);
+        temp.add(numberOfRobots).spaceBottom(50f);
         temp.row();
 
         Label yourName = new Label("Your robot's name: ", gui.getSkin());
@@ -52,7 +52,7 @@ public class CreateGameScreen extends SimpleScreen {
         temp.add(yourName).spaceBottom(50);
 
         textField = new TextField("", gui.getSkin());
-        temp.add(textField).spaceBottom(23f);
+        temp.add(textField).spaceBottom(40f);
         temp.row();
 
         Label chooseMapLabel = new Label("Choose map: ", gui.getSkin());

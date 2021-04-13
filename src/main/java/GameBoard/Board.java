@@ -216,7 +216,7 @@ public class Board {
     private void turnGears(){
         for (Position pos : botPositions.values()) {
             IComponent comp = midgrid[pos.getY()][pos.getX()];
-            if (comp instanceof Gear) {
+            if (comp instanceof Gear && getRobotAt(pos.getX(), pos.getY()) != null) {
                 int rotation = ((Gear) comp).getRotation();
                 getRobotAt(pos.getX(), pos.getY()).rotate(rotation);
                 dirtyLocations.add(pos);
@@ -227,7 +227,7 @@ public class Board {
     private void repairRobots(){
         for (Position pos : botPositions.values()) {
             IComponent comp = midgrid[pos.getY()][pos.getX()];
-            if (comp instanceof Wrench) {
+            if (comp instanceof Wrench && getRobotAt(pos.getX(), pos.getY()) != null) {
                 getRobotAt(pos.getX(), pos.getY()).repairRobot(1);
                 dirtyLocations.add(pos);
             }

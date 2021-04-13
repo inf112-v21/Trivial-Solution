@@ -30,7 +30,7 @@ public class NetworkClient {
     private GameInfo setup;
     private boolean design;
     private boolean botName;
-    private GUI gui;
+    private final GUI gui;
 
 
     //Roboter startes inne i networkclient og networkserver.

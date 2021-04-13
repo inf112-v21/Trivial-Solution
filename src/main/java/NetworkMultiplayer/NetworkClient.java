@@ -31,15 +31,15 @@ public class NetworkClient {
     private GameInfo setup;
     private boolean design;
     private boolean botName;
-    private final GUI gui;
+
 
 
     //Roboter startes inne i networkclient og networkserver.
     //private Robot = new Robot();
 
 
-    public NetworkClient(GUI gui) {
-        this.gui = gui;
+    public NetworkClient() {
+
         client = new Client();
         new Thread(client).start();
 
@@ -72,6 +72,10 @@ public class NetworkClient {
      */
     public boolean isDesign() {
         return design;
+    }
+
+    public GameInfo getSetup() {
+        return setup;
     }
 
     /**
@@ -123,7 +127,7 @@ public class NetworkClient {
 
             @Override
             public void connected(Connection connection){
-                gui.getClient().sendToServer(ConfirmationMessages.CONNECTION_WAS_SUCCESSFUL);
+                sendToServer(ConfirmationMessages.CONNECTION_WAS_SUCCESSFUL);
             }
         });
 

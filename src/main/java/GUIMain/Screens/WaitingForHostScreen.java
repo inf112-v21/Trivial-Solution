@@ -14,7 +14,7 @@ public class WaitingForHostScreen extends SimpleScreen{
     public void show(){
         super.show();
 
-        Label label = new Label("Waiting for host....", gui.getSkin());
+        Label label = new Label("Waiting for the host to start the game...", gui.getSkin());
         Table table = new Table(gui.getSkin());
 
         table.add(label);

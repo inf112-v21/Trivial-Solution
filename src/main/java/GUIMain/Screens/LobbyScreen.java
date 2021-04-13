@@ -13,7 +13,6 @@ public class LobbyScreen extends SimpleScreen {
 
     private ArrayList<Robot> listOfPlayers = new ArrayList<>();
     private Table table;
-    private final boolean isHost;
     private boolean hasBeenSetup = false;
     private boolean hasTriedToConnectYet = false;
     private TextField robotname;
@@ -22,9 +21,8 @@ public class LobbyScreen extends SimpleScreen {
 
 
 
-    public LobbyScreen(GUI gui, boolean isHost) {
+    public LobbyScreen(GUI gui) {
         super(gui);
-        this.isHost = isHost;
     }
 
     @Override
@@ -32,23 +30,20 @@ public class LobbyScreen extends SimpleScreen {
         super.show();
         table = new Table();
         table.setBounds(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        if(isHost) {
-            Label choose = new Label("Choose map: ", gui.getSkin());
-            SelectBox<String> choosemap = new SelectBox<>(gui.getSkin());
-            choosemap.setItems(CreateGameScreen.getMapNames());
-            table.add(choose);
-            table.add(choosemap).spaceBottom(100);
+        Label choose = new Label("Choose map: ", gui.getSkin());
+        SelectBox<String> choosemap = new SelectBox<>(gui.getSkin());
+        choosemap.setItems(CreateGameScreen.getMapNames());
+        table.add(choose);
+        table.add(choosemap).spaceBottom(100);
 
-        } else {
-            TextButton rtrn = new TextButton("Return", gui.getSkin());
-            rtrn.addListener(new ChangeListener() {
-                @Override
-                public void changed(ChangeEvent changeEvent, Actor actor) {
-                    gui.setScreen(new MenuScreen(gui));
-                }
-            });
-            table.add(rtrn).spaceTop(400);
-        }
+        TextButton rtrn = new TextButton("Return", gui.getSkin());
+        rtrn.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent changeEvent, Actor actor) {
+                gui.setScreen(new MenuScreen(gui));
+            }
+        });
+        table.add(rtrn).spaceTop(400);
         table.row();
         chooseRobot();
         table.setBounds(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
@@ -115,10 +110,8 @@ public class LobbyScreen extends SimpleScreen {
     @Override
     public void render(float v) {
         if ( ! hasTriedToConnectYet){
-            if (isHost) gui.startServer();
-            else gui.startClient();
+            gui.startServer();
             hasTriedToConnectYet = true;
-            System.out.println("yo");
         }
         else{
             super.render(v);

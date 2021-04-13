@@ -69,7 +69,7 @@ public class GUI extends Game {
 
             if (client.isConnected()) {
                 client.sendToServer(ConfirmationMessages.CONNECTION_WAS_SUCCESSFUL);
-                setScreen(new LobbyScreen(this, false));
+                setScreen(new LobbyScreen(this));
             }
         }catch (NullPointerException ex){
             Stage stage = new Stage();

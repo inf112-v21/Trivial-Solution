@@ -71,6 +71,7 @@ public class GameScreen implements Screen {
 
     private static Sprite backgroundSprite;
     private SpriteBatch spriteBatch;
+    public static Robot winningbot;
 
 
     public GameScreen(GameInfo gameInfo, boolean isThisMultiPlayer, boolean amITheHost, GUI gui){
@@ -308,10 +309,11 @@ public class GameScreen implements Screen {
         gameBoard.simulate();
         updateRobotPositions();
         updateLivesAndHP();
-        for (Robot bot : gameBoard.getRecentlyDeceasedRobots()){
+        /**for (Robot bot : gameBoard.getRecentlyDeceasedRobots()){
             gui.showPopUp(bot.getName() + " fucking died, lmao", stage);
             // TODO 06.04.2021: Spillet krasjer når denne blir kalt her
-        }
+        }**/
+        finishedCheck();
 
         //Dette sørger for at kortene kun blir tegnet én gang per runde. Bedre kjøretid, yay
         if(gameBoard.isWaitingForPlayers()){
@@ -323,6 +325,28 @@ public class GameScreen implements Screen {
         else hasDrawnCardsYet = false;
     }
 
+    private void finishedCheck(){
+        if(winningbot !=null){
+            if(playerControlledRobot == winningbot){
+                gui.setScreen(new WinScreen(gui));
+            }
+            else{
+                gui.setScreen(new GameOverScreen(gui));
+            }
+        }
+        if(playerControlledRobot.getLives() <= 0){
+            gui.setScreen(new GameOverScreen(gui));
+        }
+        int alive = 0;
+        for(Robot bot: robots){
+            if (bot.getLives()>0){
+                alive++;
+            }
+        }
+        if(alive == 1 && playerControlledRobot.getLives()>0){
+            gui.setScreen(new WinScreen(gui));
+        }
+    }
     private void updateRobotPositions(){
         for (Position pos : gameBoard.getDirtyLocations()){
             Robot bot = gameBoard.getRobotAt(pos.getX(), pos.getY());

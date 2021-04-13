@@ -67,6 +67,10 @@ public class Robot implements Serializable, Comparable<Robot> {
 		return hp;
 	}
 
+	public int getDesign() {
+		return design;
+	}
+
 	public void repairRobot(int repairPoints){hp = Math.min(INITIAL_HP, hp + repairPoints); }
 	public void applyDamage(int dmg) { hp -= dmg; }
 	public void takeLife(){ lives--; }

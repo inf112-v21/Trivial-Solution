@@ -1,8 +1,10 @@
 package NetworkMultiplayer;
 
 
+import GameBoard.Cards.ICard;
 import GameBoard.Robot;
 import NetworkMultiplayer.Messages.*;
+import NetworkMultiplayer.Messages.InGameMessages.AllChosenCardsFromAllRobots;
 import NetworkMultiplayer.Messages.InGameMessages.ChosenCards;
 import NetworkMultiplayer.Messages.InGameMessages.DistributedCards;
 import NetworkMultiplayer.Messages.PreGameMessages.GameInfo;
@@ -39,6 +41,8 @@ public class LanNetwork {
         kryo.register(IMessage.class);
         kryo.register(RobotInfo.class);
         kryo.register(ConfirmationMessages.class);
+        kryo.register(ICard.class, new JavaSerializer());
+        kryo.register(AllChosenCardsFromAllRobots.class, new JavaSerializer());
 
 
     }

@@ -2,6 +2,7 @@ package NetworkMultiplayer;
 
 
 import GameBoard.Robot;
+import NetworkMultiplayer.Messages.MinorErrorMessage;
 import NetworkMultiplayer.Messages.ConfirmationMessages;
 import NetworkMultiplayer.Messages.InGameMessages.ChosenCards;
 import NetworkMultiplayer.Messages.IMessage;
@@ -28,16 +29,44 @@ public class NetworkServer extends Listener {
 
     //antall tilkoblinger
     private int numberOfConnections = 0;
+
+    //Mappinger som sjekker at vi har alt på plass
     private HashMap<Connection,IMessage> connectedClients = new HashMap<>();
     private HashMap<Connection, Robot> clientRobots = new HashMap<>();
 
     //Brukes for å opprette design og navn
     private HashSet<Robot> robots = new HashSet<>();
 
+
+    //Det vi sender til klientene for at de skal kunne simulere trekken
+    //TODO: Lag en set metode?
+    private HashMap<Robot,IMessage> robotActions = new HashMap<>();
+
     //Portene som data sendes imellom. Valgfrie porter kan velges.
     final static int DEFAULT_UDP_PORT = 54777;
     final static int DEFAULT_TCP_PORT = 54555;
 
+    /**
+     * @return - HashMap med robotene mappet til hvilke kort de valgte
+     */
+    public HashMap<Robot, IMessage> getRobotActions(HashMap<Robot, IMessage> robotActions) {
+        return robotActions;
+    }
+
+    /**
+     * @return konneksjonen med dens tilhørende melding
+     */
+    public HashMap<Connection, IMessage> getConnectedClients() {
+        return connectedClients;
+    }
+
+    /**
+     *
+     * @return konneksjonen med dens tilhørende robot.
+     */
+    public HashMap<Connection, Robot> getClientRobots() {
+        return clientRobots;
+    }
 
     /**
      * Starter game-hosten vår aka. serveren i nettverket. Bør kalles når spillet starter
@@ -92,27 +121,50 @@ public class NetworkServer extends Listener {
                     ConfirmationMessages message = ((ConfirmationMessages) object);
                     //skriv confirmations messages here.
 
-                } else if (object instanceof ChosenCards){
-                    ChosenCards cards = (ChosenCards) object;
-                    connectedClients.put(connection,cards);
                 }
 
+                //Her sjekker vi hva som skal skje med kortene hvis vi finner noen.
+                else if (object instanceof ChosenCards){
+                    ChosenCards cards = (ChosenCards) object;
+                    connectedClients.put(connection,cards);
+
+                    //Gjør dette for å lagre kortene klienten sendte
+                    //Nå er de lagret i robotActions som vi kan sende med en gang
+                    //over nettverket.
+                    Robot thisRobotsAction = clientRobots.get(connection);
+                    robotActions.put(thisRobotsAction,cards);
+
+                }
+
+
+                //Her sjekker vi om roboten blir registrert riktig
+                //I spillet vår har vi bestemt det at kun en robot kan ha en type design
+                //Send melding på hvilken designs som er tilgjengelige?
                 else if (object instanceof RobotInfo){
                     RobotInfo bot = (RobotInfo) object;
                     String newRobotName = bot.getBotName();
-                    int choosenDesign = bot.getBotDesignNr();
+                    int chosenDesign = bot.getBotDesignNr();
 
+                    for(Robot registeredBot: robots){
+                        if (registeredBot.getDesign() == chosenDesign){
+                            sendToClient(connection, MinorErrorMessage.UNAVAILABLE_DESIGN);
+                        }
+                        if (registeredBot.getName().equals(newRobotName)){
+                            sendToClient(connection, MinorErrorMessage.UNAVAILABLE_NAME);
+                        }
 
-                    clientRobots.put(connection,new Robot(bot.getBotName(), bot.getBotDesignNr(), false));
-
-
-
+                    }
+                    //Hvis alt er greit så legger vi til roboten.
+                    Robot newBot = new Robot(newRobotName,chosenDesign,false);
+                    clientRobots.put(connection,newBot);
 
                 }
+
 
 
             }
             //Kalles når vi oppretter en konneksjon
+            //Da registrerer vi den konneksjonen og Roboten som tilhører konneksjonen.
             public void connected(Connection connection) {
                 System.out.println("Server connected to client " + connection.getID());
                 numberOfConnections++;
@@ -123,8 +175,6 @@ public class NetworkServer extends Listener {
                 if (!clientRobots.containsKey(connection)){
                     clientRobots.put(connection,null);
                 }
-
-
 
             }
         });
@@ -138,19 +188,22 @@ public class NetworkServer extends Listener {
      */
     public int getNumberOfConnections(){ return numberOfConnections;}
 
-
+    /**
+     *Sender en melding fra serveren til en klient
+     *
+     * @param con - konneksjonen (representerer klienten som skal få meldingen)
+     * @param m - meldingen vi vil sende
+     */
+    public void sendToClient(Connection con, IMessage m){
+        server.sendToTCP(con.getID(),m);
+    }
 
 
     /**
      * Sender data til alle klientene via TCP
      */
     public void sendMessageToAllClients(IMessage m){
-        if (connectedClients.size()>1){
             server.sendToAllTCP(m);
-        }else if (connectedClients.size() >0){
-            //server.sendToTCP(connectedClients.get().getID(),m);
-        }
-
     }
 
 

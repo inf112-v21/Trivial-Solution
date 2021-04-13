@@ -65,7 +65,7 @@ public class GUI extends Game {
             InetAddress hostIpadress = client.findServer();
 
             //Connect to client
-            client.connect(hostIpadress.toString());
+            client.connect(hostIpadress.getHostName());
 
             if (client.isConnected()) {
                 client.sendToServer(ConfirmationMessages.CONNECTION_WAS_SUCCESSFUL);

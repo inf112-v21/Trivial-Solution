@@ -1,6 +1,7 @@
 package TestClasses;
 
 import NetworkMultiplayer.Messages.ConfirmationMessages;
+import NetworkMultiplayer.Messages.PreGameMessages.GameInfo;
 import NetworkMultiplayer.NetworkClient;
 
 import java.net.InetAddress;
@@ -17,6 +18,21 @@ public class MockClient {
 
         //Finner Ip-addressen til hosten.
         InetAddress hostIpadress = client.findServer();
+
+        /*
+        GameInfo game = new GameInfo()
+        System.out.println("Robots are: " + game.getRobots());
+        System.out.println("Map is: " + game.getMapName());
+        System.out.println("Robots are: " + game.getRobots().get(0).getHP());
+
+
+                    System.out.println("Received object");
+                    GameInfo2 game = (GameInfo2) object;
+                    System.out.println("Robots are: " + game.robots);
+                    System.out.println("Map is: " + game.mapName);
+                    System.out.println("Robots are: " + game.robots);
+                    sendToServer(ConfirmationMessages.GAME_WAS_STARTED_AND_CLIENT_IS_READY_TO_RECEIVE_CARDS);
+                    */
 
 
 

@@ -4,6 +4,7 @@ package NetworkMultiplayer.Messages.InGameMessages;
 import GameBoard.Cards.ICard;
 import NetworkMultiplayer.Messages.IMessage;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
@@ -13,7 +14,7 @@ import java.util.ArrayList;
  */
 
 
-public class ChosenCards implements IMessage {
+public class ChosenCards implements IMessage, Serializable {
     private final ArrayList<ICard> chosen;
     public ChosenCards(ArrayList<ICard> chosencards){
         chosen = chosencards;

@@ -7,6 +7,9 @@ import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 
+import static com.badlogic.gdx.graphics.Color.BLACK;
+import static com.badlogic.gdx.graphics.Color.WHITE;
+
 public class OptionScreen extends SimpleScreen {
     private boolean window;
 
@@ -17,15 +20,28 @@ public class OptionScreen extends SimpleScreen {
     @Override
     public void show() {
         super.show();
+        parameter.size = 42;
+        parameter.borderWidth = 3f;
+        parameter.color = WHITE;
+        parameter.borderColor = BLACK;
+        smoothfont = generator.generateFont(parameter);
+        style.font = smoothfont;
         Table tabell = new Table();
         Table speed = new Table();
         Table screenMode = new Table();
         tabell.setFillParent(true);
-        Label title = new Label("Options", gui.getSkin());
-        Label gameSpeed = new Label("Game speed", gui.getSkin());
+        Label title = new Label("Options", style);
+
+        parameter.size = 24;
+        smoothfont = generator.generateFont(parameter);
+        style.font = smoothfont;
+        Label display = new Label("Display", style);
+        Label gameSpeed = new Label("Game speed", style);
+
+        parameter.size = 18;
+        smoothfont = generator.generateFont(parameter);
+        style.font = smoothfont;
         tabell.setBounds(0,0,Gdx.graphics.getWidth(),Gdx.graphics.getHeight());
-        title.setFontScale(4f);
-        gameSpeed.setFontScale(2f);
         tabell.add(title).spaceBottom(40f);
         tabell.row();
         tabell.add(gameSpeed).spaceBottom(10f);
@@ -35,15 +51,13 @@ public class OptionScreen extends SimpleScreen {
         TextButton fast = new TextButton("Fast", gui.getSkin());
         TextButton fullscreen = new TextButton("Fullscreen", gui.getSkin());
         TextButton windowed = new TextButton("Windowed", gui.getSkin());
-        Label deltaInfo = new Label("default: Medium", gui.getSkin());
+        Label deltaInfo = new Label("default: Medium", style);
         TextButton returnButton = new TextButton("Return", gui.getSkin());
         speed.add(slow).size(200f,50f);
         speed.add(medium).size(200f,50f);
         speed.add(fast).size(200f,50f);
         screenMode.add(fullscreen).size(300f,50f);
         screenMode.add(windowed).size(300f,50f);
-        Label display = new Label("Display", gui.getSkin());
-        display.setFontScale(2f);
         window = false;
         tabell.add(speed).spaceBottom(10f);
         tabell.row();
@@ -61,14 +75,19 @@ public class OptionScreen extends SimpleScreen {
             public void changed(ChangeEvent changeEvent, Actor actor) {
                 window = false;
                 Gdx.graphics.setFullscreenMode(Gdx.graphics.getDisplayMode());
+                GameScreen.fontsize = 26;
             }
         });
         windowed.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent changeEvent, Actor actor) {
                 if(!window){
-                    Gdx.graphics.setWindowedMode(Gdx.graphics.getWidth()-(Gdx.graphics.getWidth()/3),Gdx.graphics.getHeight()-(Gdx.graphics.getHeight()/3));
-                    ((Lwjgl3Graphics)Gdx.graphics).getWindow().setPosition((Gdx.graphics.getWidth()/4),(Gdx.graphics.getHeight()/4));
+                    float height = Gdx.graphics.getHeight();
+                    float width = Gdx.graphics.getWidth();
+                    int scale = 4;
+                    Gdx.graphics.setWindowedMode((int) (width-(width/scale)), (int) (height-(height/scale)));
+                    ((Lwjgl3Graphics)Gdx.graphics).getWindow().setPosition((int)(width/(2*scale)),(int)(height/(2*scale)));
+                    GameScreen.fontsize = 18;
                     window = true;
                 }
             }

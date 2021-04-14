@@ -8,6 +8,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 
+import static com.badlogic.gdx.graphics.Color.BLACK;
+import static com.badlogic.gdx.graphics.Color.WHITE;
+
 public class HostOrJoinScreen extends SimpleScreen{
     public HostOrJoinScreen(GUI gui){
         super(gui);
@@ -17,16 +20,21 @@ public class HostOrJoinScreen extends SimpleScreen{
     public void show() {
         super.show();
         Table table = new Table();
-        Label multiplayer = new Label("Multiplayer", gui.getSkin());
+        parameter.size = 48;
+        parameter.borderWidth = 3f;
+        parameter.color = WHITE;
+        parameter.borderColor = BLACK;
+        smoothfont = generator.generateFont(parameter);
+        style.font = smoothfont;
+        Label multiplayer = new Label("Multiplayer", style);
         table.add(multiplayer).spaceBottom(50);
-        multiplayer.setFontScale(5f);
         table.row();
 
         TextButton join = new TextButton("Join Game", gui.getSkin());
         join.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent changeEvent, Actor actor) {
-                gui.setScreen(new LobbyScreen(gui, false));
+                gui.setScreen(new LobbyScreen(gui));
 
             }
         });
@@ -36,7 +44,7 @@ public class HostOrJoinScreen extends SimpleScreen{
         host.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent changeEvent, Actor actor) {
-                gui.setScreen(new LobbyScreen(gui,true));
+                gui.setScreen(new LobbyScreen(gui));
             }
         });
         table.add(host).spaceBottom(40);

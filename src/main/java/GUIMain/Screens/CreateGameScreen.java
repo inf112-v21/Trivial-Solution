@@ -13,6 +13,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 
+import static com.badlogic.gdx.graphics.Color.BLACK;
+import static com.badlogic.gdx.graphics.Color.WHITE;
+
 public class CreateGameScreen extends SimpleScreen {
 
     private static final String MAP_LOCATION = "assets/maps";
@@ -32,14 +35,20 @@ public class CreateGameScreen extends SimpleScreen {
         Table temp = new Table();
 
 
-        Label title = new Label("Create Game", gui.getSkin());
-        title.setFontScale(4);
-        title.setAlignment(Align.top);
+        parameter.size = 36;
+        parameter.borderWidth = 3f;
+        parameter.color = WHITE;
+        parameter.borderColor = BLACK;
+        smoothfont = generator.generateFont(parameter);
+        style.font = smoothfont;
+        Label title = new Label("Create Game",style);
         table.add(title).spaceBottom(80);
         table.row();
 
-        Label numberplayerlabel = new Label("Number of players: ", gui.getSkin());
-        numberplayerlabel.setFontScale(2);
+        parameter.size = 14;
+        smoothfont = generator.generateFont(parameter);
+        style.font = smoothfont;
+        Label numberplayerlabel = new Label("Number of players: ", style);
         temp.add(numberplayerlabel).spaceBottom(50);
 
         numberOfRobots = new SelectBox<>(gui.getSkin());
@@ -47,16 +56,14 @@ public class CreateGameScreen extends SimpleScreen {
         temp.add(numberOfRobots).spaceBottom(50f);
         temp.row();
 
-        Label yourName = new Label("Your robot's name: ", gui.getSkin());
-        yourName.setFontScale(2);
+        Label yourName = new Label("Your robot's name: ", style);
         temp.add(yourName).spaceBottom(50);
 
         textField = new TextField("", gui.getSkin());
         temp.add(textField).spaceBottom(40f);
         temp.row();
 
-        Label chooseMapLabel = new Label("Choose map: ", gui.getSkin());
-        chooseMapLabel.setFontScale(2);
+        Label chooseMapLabel = new Label("Choose map: ", style);
         temp.add(chooseMapLabel).spaceBottom(50);
 
         choosemapbox = new SelectBox<>(gui.getSkin());
@@ -98,7 +105,7 @@ public class CreateGameScreen extends SimpleScreen {
 
     }
 
-    private String[] getMapNames(){
+    public static String[] getMapNames(){
         File f = new File(MAP_LOCATION);
         String[] maplist = Arrays.stream(f.list()).filter(n -> !n.equals("TestMap.tmx")).toArray(String[]::new);
         for (int i = 0; i < maplist.length; i++) {

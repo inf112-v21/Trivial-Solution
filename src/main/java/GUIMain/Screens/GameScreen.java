@@ -81,7 +81,7 @@ public class GameScreen implements Screen {
     private FreeTypeFontGenerator.FreeTypeFontParameter parameter;
     private BitmapFont smoothfont;
     private Label.LabelStyle style;
-    public static int fontsize = 26;
+    public static int fontsize = 30;
 
 
     public GameScreen(GameInfo gameInfo, boolean isThisMultiPlayer, boolean amITheHost, GUI gui){
@@ -108,7 +108,7 @@ public class GameScreen implements Screen {
         renderer = new OrthogonalTiledMapRenderer(map, 1);
         playerControlledRobot = robots.get(gameInfo.getThisPlayersBotIndex());
 
-        generator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/oberondeux.ttf"));
+        generator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/ObliviousFont.ttf"));
         parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
         style = new Label.LabelStyle();
         parameter.size = fontsize;
@@ -277,7 +277,7 @@ public class GameScreen implements Screen {
                 }
             }
         });
-        buttonTable.add(label).size(Gdx.graphics.getWidth()/6f,Gdx.graphics.getHeight()/25f);
+        buttonTable.add(label);
         buttonTable.row();
         buttonTable.add(powerDown).size(Gdx.graphics.getWidth()/6f,Gdx.graphics.getHeight()/25f);
         buttonTable.row();

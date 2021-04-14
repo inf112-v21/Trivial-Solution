@@ -32,7 +32,7 @@ public abstract class SimpleScreen implements Screen {
 
     @Override
     public void show() {
-        generator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/oberondeux.ttf"));
+        generator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/ObliviousFont.ttf"));
         parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
         parameter.size = 12;
         smoothfont = generator.generateFont(parameter);

@@ -3,6 +3,7 @@ package NetworkMultiplayer;
 
 import GUIMain.GUI;
 import GameBoard.Robot;
+import NetworkMultiplayer.Messages.InGameMessages.SanityCheck;
 import NetworkMultiplayer.Messages.MinorErrorMessage;
 import NetworkMultiplayer.Messages.ConfirmationMessages;
 import NetworkMultiplayer.Messages.InGameMessages.ChosenCards;
@@ -33,23 +34,27 @@ public class NetworkServer extends Listener {
     private int numberOfConnections = 0;
 
     //Mappinger som sjekker at vi har alt på plass
-    private HashMap<Connection, Robot> connectionsAndRobots = new HashMap<>();
+    private TreeMap<Connection, Robot> connectionsAndRobots = new TreeMap<>();
 
     //Brukes for å opprette design og navn
-    private HashSet<Robot> robots = new HashSet<>();
+    private TreeSet<Robot> robots = new TreeSet<>();
 
 
     //Valgene de ulike klientene/robotenes tar.
-    private HashMap<Robot,IMessage> robotActions = new HashMap<>();
+    private TreeMap<Robot,IMessage> robotActions = new TreeMap<>();
 
     //Portene som data sendes imellom. Valgfrie porter kan velges.
     final static int DEFAULT_UDP_PORT = 54777;
     final static int DEFAULT_TCP_PORT = 54555;
 
+    SanityCheck checkAllIsRight;
+
+
+
     /**
      * @return - HashMap med robotene mappet til hvilke kort de valgte
      */
-    public HashMap<Robot, IMessage> getRobotActions(HashMap<Robot, IMessage> robotActions) {
+    public TreeMap<Robot, IMessage> getRobotActions() {
         return robotActions;
     }
 
@@ -58,7 +63,7 @@ public class NetworkServer extends Listener {
      *
      * @return konneksjonen med dens tilhørende robot.
      */
-    public HashMap<Connection, Robot> getConnectionsAndRobots() {
+    public TreeMap<Connection, Robot> getConnectionsAndRobots() {
         return connectionsAndRobots;
     }
 
@@ -155,6 +160,11 @@ public class NetworkServer extends Listener {
                     Robot newBot = new Robot(newRobotName,chosenDesign,false);
                     connectionsAndRobots.put(connection,newBot);
 
+                }
+
+                //Test (sanity check)
+                if(object instanceof SanityCheck){
+                    checkAllIsRight = (SanityCheck) object;
                 }
 
 

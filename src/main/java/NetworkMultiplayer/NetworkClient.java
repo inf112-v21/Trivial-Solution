@@ -114,11 +114,12 @@ public class NetworkClient {
                 if(object instanceof ConfirmationMessages){
                     ConfirmationMessages message = ((ConfirmationMessages) object);
                     switch(message){
+
+                        //Brukes kun for testing.
                         case TEST_MESSAGE:
                             System.out.println("Client received message. Now sending Message to server");
                             sendToServer(ConfirmationMessages.CONNECTION_WAS_SUCCESSFUL);
-                        case CONNECTION_WAS_SUCCESSFUL:
-                            System.out.println("The message returned again");
+
                     }
 
                 }

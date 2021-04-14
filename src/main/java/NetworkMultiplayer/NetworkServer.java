@@ -16,6 +16,7 @@ import com.esotericsoftware.kryonet.Server;
 
 import java.io.IOException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 
 //Kortene er i deck
@@ -36,18 +37,19 @@ public class NetworkServer extends Listener {
     //Mappinger som sjekker at vi har alt på plass
     private TreeMap<Connection, Robot> connectionsAndRobots = new TreeMap<>();
 
-    //Brukes for å opprette design og navn
-    private TreeSet<Robot> robots = new TreeSet<>();
-
-
     //Valgene de ulike klientene/robotenes tar.
     private TreeMap<Robot,IMessage> robotActions = new TreeMap<>();
+
 
     //Portene som data sendes imellom. Valgfrie porter kan velges.
     final static int DEFAULT_UDP_PORT = 54777;
     final static int DEFAULT_TCP_PORT = 54555;
 
+    //Brukes for å sjekke at alt er riktig
     SanityCheck checkAllIsRight;
+
+    //Gi serveren beskjed om å dele ut kort
+    boolean simulationIsOver;
 
 
 
@@ -85,6 +87,7 @@ public class NetworkServer extends Listener {
 
         //Registrer serveren i nettverket
         LanNetwork.register(server);
+
     }
 
     /**
@@ -120,6 +123,9 @@ public class NetworkServer extends Listener {
                     switch (message){
                         case CONNECTION_WAS_SUCCESSFUL:
                             System.out.println("Woho!");
+
+                        case SIMULATION_IS_OVER:
+                            simulationIsOver = true;
                     }
 
                 }
@@ -145,7 +151,7 @@ public class NetworkServer extends Listener {
                     String newRobotName = bot.getBotName();
                     int chosenDesign = bot.getBotDesignNr();
 
-                    for(Robot registeredBot: robots){
+                    for(Robot registeredBot: robotActions.keySet()){
                         if (registeredBot.getDesign() == chosenDesign){
                             sendToClient(connection, MinorErrorMessage.UNAVAILABLE_DESIGN);
                             return;
@@ -159,6 +165,8 @@ public class NetworkServer extends Listener {
                     //Hvis alt er greit så legger vi til roboten.
                     Robot newBot = new Robot(newRobotName,chosenDesign,false);
                     connectionsAndRobots.put(connection,newBot);
+                    robotActions.put(newBot,null);
+
 
                 }
 

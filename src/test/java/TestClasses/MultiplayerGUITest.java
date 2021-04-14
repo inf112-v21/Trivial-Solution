@@ -1,6 +1,7 @@
 package TestClasses;
 
 import GUIMain.GUI;
+import GUIMain.Main;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
 
@@ -15,8 +16,11 @@ import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
  * Deretter kan man velge flere ting...
  */
 
-class host{
-    public static void main(String[] args) {
+
+
+public class MultiplayerGUITest{
+
+    public static void startProgram(){
         Lwjgl3ApplicationConfiguration cfg = new Lwjgl3ApplicationConfiguration();
         cfg.setTitle("Robo-Rally");
         cfg.setAutoIconify(true);
@@ -24,26 +28,41 @@ class host{
 
         new Lwjgl3Application(new GUI(), cfg);
     }
-}
 
-class client1{
     public static void main(String[] args) {
-        Lwjgl3ApplicationConfiguration cfg = new Lwjgl3ApplicationConfiguration();
-        cfg.setTitle("Robo-Rally");
-        cfg.setAutoIconify(true);
-        cfg.setResizable(false);
 
-        new Lwjgl3Application(new GUI(), cfg);
+        Thread Host = new Thread(new host());
+        Thread Client1 = new Thread(new client1());
+        Thread Client2 = new Thread(new client2());
+
+        Host.start();
+        Client1.start();
+        Client2.start();
+
     }
-}
 
-class client2{
-    public static void main(String[] args) {
-        Lwjgl3ApplicationConfiguration cfg = new Lwjgl3ApplicationConfiguration();
-        cfg.setTitle("Robo-Rally");
-        cfg.setAutoIconify(true);
-        cfg.setResizable(false);
+    static class host implements Runnable{
 
-        new Lwjgl3Application(new GUI(), cfg);
+        @Override
+        public void run() {
+            startProgram();
+        }
+    }
+
+
+    static class client1 implements Runnable{
+
+        @Override
+        public void run() {
+            startProgram();
+        }
+    }
+
+    static class client2 implements Runnable{
+
+        @Override
+        public void run() {
+            startProgram();
+        }
     }
 }

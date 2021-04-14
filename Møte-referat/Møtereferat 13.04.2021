@@ -1,0 +1,19 @@
+Møte Referat 13.04.2021
+
+Møte handler om Å sette opp navn og design i mulitplayer, gameOver og win screen
+
+Alle i gruppen er innkalt.
+Alle i gruppen er tilstede.
+Møtetid, sted: 14-18, sem3
+
+Saker som skal diskuteres:
+-Implementasjon av navn og design i mulitplayer
+-gameOver og win screen
+
+Hva vi har gjort:
+-tweaks og litt refactoring
+-Satt opp mesaages som klient og server kan motta
+-La til slots i GameScreen, slik at de valgte kortene blir displayet i rekkefølge.
+
+Hva vi skal jobbe videre med:
+- Bli ferdig med Multiplayer, Screens overgang, AI og Laser

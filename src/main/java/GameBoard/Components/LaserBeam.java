@@ -9,14 +9,18 @@ public class LaserBeam extends SimpleComponent{
 
     private final boolean isDoubleLaser;
     private final int dir;
+    private final int x;
+    private final int y;
     private final TextureRegion image;
 
-    public LaserBeam(Integer ID, Integer dir, boolean isDoubleLaser){
+    public LaserBeam(Integer ID, Integer dir, boolean isDoubleLaser, int x, int y){
         super(ID);
         this.isDoubleLaser = isDoubleLaser;
         this.dir = dir;
-        this.image = new TextureRegion(new Texture("mapassets/player.png")).split(GameScreen.CELL_SIZE, GameScreen.CELL_SIZE)[0][0];
-        //TODO: Sette inn riktige bilder for lasere.
+        this.x = x;
+        this.y = y;
+        this.image = new TextureRegion(new Texture("mapassets/tiles.png")).split(GameScreen.CELL_SIZE, GameScreen.CELL_SIZE)[x][y];
+
     }
 
     public TextureRegion getImage() {

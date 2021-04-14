@@ -240,11 +240,11 @@ public class ComponentFactory {
 
             // de visuelle laser-strålene
             case 39:
-                return new LaserBeam(39, 3, false);
+                return new LaserBeam(39, 3, false, 4, 6);
             case 47:
-                return new LaserBeam(47,0,false);
+                return new LaserBeam(47,0,false, 5, 6);
             case 102:
-                return new LaserBeam(102,0, true);
+                return new LaserBeam(102,0, true, 12, 5);
             //TODO: Add all lasers with their images
 
             case 121:

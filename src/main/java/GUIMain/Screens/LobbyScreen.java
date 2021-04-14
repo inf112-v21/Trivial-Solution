@@ -2,12 +2,17 @@ package GUIMain.Screens;
 
 import GUIMain.GUI;
 import GameBoard.Robot;
+import NetworkMultiplayer.Messages.MinorErrorMessage;
+import NetworkMultiplayer.Messages.PreGameMessages.RobotInfo;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 
 import java.util.TreeSet;
+
+import static NetworkMultiplayer.Messages.MinorErrorMessage.UNAVAILABLE_DESIGN;
+import static NetworkMultiplayer.Messages.MinorErrorMessage.UNAVAILABLE_NAME;
 
 public class LobbyScreen extends SimpleScreen {
 
@@ -62,7 +67,22 @@ public class LobbyScreen extends SimpleScreen {
         confirm.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent changeEvent, Actor actor) {
-                // TODO: 14.04.2021 det som skjer når hosten skal prøve å lage en robot
+                if (robotname.getText().equals("")){
+                    gui.showPopUp("Please choose a nickname for you robot!", stage);
+                    return;
+                }
+                MinorErrorMessage msg = gui.getServer().setHostRobot(new RobotInfo(robotname.getText(), design));
+                if (msg == null){
+                    chooserobottable.clear();
+                }
+                else {
+                    switch (msg) {
+                        case UNAVAILABLE_DESIGN:
+                            gui.showPopUp("That robot has already been taken, please choose another one", stage);
+                        case UNAVAILABLE_NAME:
+                            gui.showPopUp("That name has already been taken, please be more original", stage);
+                    }
+                }
             }
         });
         chooserobottable.add(confirm);
@@ -77,7 +97,7 @@ public class LobbyScreen extends SimpleScreen {
             gui.startServer();
             return;
         }
-        // TODO: 14.04.2021 Sjekk om serveren har mott hostens navn og design, så det kan legges i listen 
+        // TODO: 14.04.2021 Sjekk om serveren har mottatt hostens navn og design, så det kan legges i listen
         // TODO: 14.04.2021 Sjekk resten av serverens tilkoblede roboter, og legg dem til i listOfPlayers
         // TODO: 14.04.2021 Legg til en sjekk for om spillet er klart for å begynne, og bytt deretter til GameScreen.
 

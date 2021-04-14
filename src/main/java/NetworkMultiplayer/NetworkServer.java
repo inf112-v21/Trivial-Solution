@@ -40,6 +40,7 @@ public class NetworkServer extends Listener {
     //Valgene de ulike klientene/robotenes tar.
     private TreeMap<Robot,IMessage> robotActions = new TreeMap<>();
 
+    private Robot hostRobot;
 
     //Portene som data sendes imellom. Valgfrie porter kan velges.
     final static int DEFAULT_UDP_PORT = 54777;
@@ -184,13 +185,19 @@ public class NetworkServer extends Listener {
                 numberOfConnections++;
 
                 //Vi registrer kommunikasjonslinken (connection). Robot opprettes senere da.
-                if (!connectionsAndRobots.containsKey(connection)){
+                //if (!connectionsAndRobots.containsKey(connection)){
                     connectionsAndRobots.put(connection,null);
-                }
+                //}
 
             }
         });
 
+    }
+
+    public MinorErrorMessage setHostRobot(RobotInfo info){
+        if (robotActions.keySet().stream().map(Robot::getDesign).collect(Collectors.toList()).contains(info.getBotDesignNr())) return MinorErrorMessage.UNAVAILABLE_DESIGN;
+        if (robotActions.keySet().stream().map(Robot::getName).collect(Collectors.toList()).contains(info.getBotName())) return MinorErrorMessage.UNAVAILABLE_NAME;
+        return null;
     }
 
 

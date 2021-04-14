@@ -6,6 +6,7 @@ import GUIMain.Screens.MultiplayerLoadingScreen;
 import GUIMain.Screens.WaitingForHostScreen;
 import GameBoard.Cards.ICard;
 import GameBoard.Robot;
+import NetworkMultiplayer.Messages.InGameMessages.AllChosenCardsFromAllRobots;
 import NetworkMultiplayer.Messages.MinorErrorMessage;
 import NetworkMultiplayer.Messages.ConfirmationMessages;
 import NetworkMultiplayer.Messages.InGameMessages.DistributedCards;
@@ -19,6 +20,7 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.TreeMap;
 
 public class NetworkClient {
 
@@ -35,7 +37,7 @@ public class NetworkClient {
 
     //In-game meldinger
     private ArrayList<ICard> cardsToChoseFrom = new ArrayList<>();
-    private HashMap<Robot,IMessage> AllChooseRobotCards = new HashMap<>();
+    private TreeMap<Robot,IMessage> AllChooseRobotCards = new TreeMap<>();
 
 
 
@@ -79,7 +81,7 @@ public class NetworkClient {
     /**
      * @return Henter robotene og kortene hver robot valgte
      */
-    public HashMap<Robot, IMessage> getChooseCards() {
+    public TreeMap<Robot, IMessage> getChooseCards() {
         return AllChooseRobotCards;
     }
 
@@ -119,6 +121,11 @@ public class NetworkClient {
                             System.out.println("The message returned again");
                     }
 
+                }
+
+                //Alle de valgte kortene fra hver robot
+                if(object instanceof AllChosenCardsFromAllRobots){
+                    AllChooseRobotCards = ((AllChosenCardsFromAllRobots) object).getAllDesicions();
                 }
 
                 //Kortene som klienten kan velge mellom

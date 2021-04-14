@@ -322,9 +322,10 @@ public class GameScreen implements Screen {
     private void drawLasers(){
         if(lasersHaveBeenRendered){
             for (Position pos : gameBoard.getLaserLocations()){
+                System.out.println(gameBoard.getLaserLocations());
                 emptyLaserLayer.setCell(pos.getX(), gameBoard.getHeight() - pos.getY() - 1, new TiledMapTileLayer.Cell());
-                lasersHaveBeenRendered = false;
             }
+            lasersHaveBeenRendered = false;
         }else {
             for (Position pos : gameBoard.getLaserLocations()){
                 LaserBeam laser = (LaserBeam) gameBoard.getLaserAt(pos.getX(), pos.getY());

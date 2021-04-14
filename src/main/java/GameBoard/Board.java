@@ -16,7 +16,6 @@ public class Board {
     private int WIDTH;
 
     private TiledMapTileLayer laserLayer;
-    boolean isLasersDrawn = false;
 
     //Grids. Disse må initialiseres i readFromTMX().
     //Merk at vi ikke har noe grid for bakgrunnen,
@@ -331,6 +330,7 @@ public class Board {
      * Avfyrer alle lasere. inkludert de skutt av robotene.
      */
     private void fireAllLasers(){
+        laserLocations.clear();
         for(Laser laser : laserPositions.keySet()){
             Position pos = laserPositions.get(laser);
             fireOneLaser(pos.getX(), pos.getY(), laser.getDirection(), laser.isDoubleLaser(), false);
@@ -340,6 +340,7 @@ public class Board {
             fireOneLaser(pos.getX(), pos.getY(), bot.getDirection(), false, true);
         }
     }
+
 
     /**
      * Skyter en laser ett og ett skritt, rekursivt.
@@ -359,7 +360,8 @@ public class Board {
 
         if(forgrid[y][x] instanceof Wall && !((Wall) forgrid[y][x]).canLeaveInDirection(dir)) return;
 
-        laserLocations.add(new Position(x, y));
+        laserLocations.add(new Position(x,y));
+        //TODO: Litt bugs her når laserne tegnes opp
 
         int nextX = x + directionToX(dir);
         int nextY = y + directionToY(dir);
@@ -382,7 +384,6 @@ public class Board {
 
     public TreeSet<Position> getLaserLocations() {
         TreeSet<Position> ret = new TreeSet<>(laserLocations);
-        //laserLocations.clear();
         return ret;
     }
 
@@ -415,7 +416,6 @@ public class Board {
     public int getHeight(){
         return HEIGHT;
     }
-
 
     /**
      * Konverterer retninger på formen 0, 1, 2, 3 til hvilken retning det vil si for x-aksen.

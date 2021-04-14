@@ -135,8 +135,6 @@ public class BoardController {
     public TreeSet<Position> getDirtyLocations(){ return board.getDirtyLocations(); }
     public TreeSet<Position> getLaserLocations() { return board.getLaserLocations();}
 
-    public void removeLasers() { board.removeLasers();}
-
     private static class BotComparator implements Comparator<Robot> {
         final int phase;
         public BotComparator(int phase){ this.phase = phase; }

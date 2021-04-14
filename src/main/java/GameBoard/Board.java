@@ -171,7 +171,6 @@ public class Board {
      * Lasere blir avfyrt, samlebånd går av, roboter blir reparert, etc.
      */
     public void endPhase(){
-        findLasers();
         moveConveyorBelts(false);
         moveConveyorBelts(true);
         turnGears();
@@ -328,23 +327,10 @@ public class Board {
         return true;
     }
 
-    private void findLasers() {
-        for(int y = 0; y < HEIGHT; y++){
-            for(int x = 0; x < WIDTH; x++){
-                if(laserGrid[y][x] != null)
-                    laserLocations.add(new Position(x, y));
-            }
-        }
-    }
-    public void removeLasers(){
-        laserLocations.clear();
-    }
-
     /**
      * Avfyrer alle lasere. inkludert de skutt av robotene.
      */
     private void fireAllLasers(){
-
         for(Laser laser : laserPositions.keySet()){
             Position pos = laserPositions.get(laser);
             fireOneLaser(pos.getX(), pos.getY(), laser.getDirection(), laser.isDoubleLaser(), false);
@@ -372,6 +358,8 @@ public class Board {
         }
 
         if(forgrid[y][x] instanceof Wall && !((Wall) forgrid[y][x]).canLeaveInDirection(dir)) return;
+
+        laserLocations.add(new Position(x, y));
 
         int nextX = x + directionToX(dir);
         int nextY = y + directionToY(dir);

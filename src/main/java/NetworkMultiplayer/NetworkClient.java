@@ -22,15 +22,21 @@ import java.util.HashMap;
 
 public class NetworkClient {
 
-    public Client client;
+    final private Client client;
 
+    //Porter som meldinger blir sendt til
     final static int DEFAULT_UDP_PORT = 54777;
     final static int DEFAULT_TCP_PORT = 54555;
 
-    private HashMap<Robot,IMessage> AllChooseRobotCards;
+    //Pre-game meldinger
     private GameInfo setup;
     private boolean design;
     private boolean botName;
+
+    //In-game meldinger
+    private ArrayList<ICard> cardsToChoseFrom = new ArrayList<>();
+    private HashMap<Robot,IMessage> AllChooseRobotCards = new HashMap<>();
+
 
 
 
@@ -49,16 +55,16 @@ public class NetworkClient {
         LanNetwork.register(client);
 
         addListeners();
+
     }
 
     /**
-     * @return Henter robotene og kortene hver robot valgte
+     * @return GameInfo som vi trenger for å starte opp spillet hos klienten
+     * Bruk getMapName(), getRobots() eller getThisPlayersBotIndex() for å hente ut verdier
      */
-    public HashMap<Robot, IMessage> getChooseCards() {
-        return AllChooseRobotCards;
+    public GameInfo getSetup() {
+        return setup;
     }
-
-
 
     /**
      * @return true hvis navnet er valgt
@@ -74,8 +80,19 @@ public class NetworkClient {
         return design;
     }
 
-    public GameInfo getSetup() {
-        return setup;
+
+    /**
+     * @return Henter robotene og kortene hver robot valgte
+     */
+    public HashMap<Robot, IMessage> getChooseCards() {
+        return AllChooseRobotCards;
+    }
+
+    /**
+     * @return De utdelte kortene som roboten kan velge mellom
+     */
+    public ArrayList<ICard> getCardsToChoseFrom() {
+        return cardsToChoseFrom;
     }
 
     /**
@@ -109,16 +126,14 @@ public class NetworkClient {
 
                 }
 
-                //Klienten velger kortene sine
+                //Kortene som klienten kan velge mellom
                 if(object instanceof DistributedCards){
-                    DistributedCards cardsRecieved =((DistributedCards) object);
-                    //AllChooseRobotCards = cardsRecieved.getChosenCards();
+                    cardsToChoseFrom =((DistributedCards) object).getChosenCards();
                 }
 
                 //Setter opp spillet hos klienten
                 else if (object instanceof GameInfo){
-                    GameInfo gi = (GameInfo) object;
-                    setup = gi;
+                    setup = (GameInfo) object;
                 }
 
 
@@ -128,6 +143,7 @@ public class NetworkClient {
             @Override
             public void connected(Connection connection){
                 sendToServer(ConfirmationMessages.CONNECTION_WAS_SUCCESSFUL);
+                System.out.println("Good");
             }
         });
 

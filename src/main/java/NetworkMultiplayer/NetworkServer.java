@@ -33,15 +33,13 @@ public class NetworkServer extends Listener {
     private int numberOfConnections = 0;
 
     //Mappinger som sjekker at vi har alt på plass
-    private HashMap<Connection,IMessage> connectedClients = new HashMap<>();
-    private HashMap<Connection, Robot> clientRobots = new HashMap<>();
+    private HashMap<Connection, Robot> connectionsAndRobots = new HashMap<>();
 
     //Brukes for å opprette design og navn
     private HashSet<Robot> robots = new HashSet<>();
 
 
-    //Det vi sender til klientene for at de skal kunne simulere trekken
-    //TODO: Lag en set metode?
+    //Valgene de ulike klientene/robotenes tar.
     private HashMap<Robot,IMessage> robotActions = new HashMap<>();
 
     //Portene som data sendes imellom. Valgfrie porter kan velges.
@@ -55,20 +53,15 @@ public class NetworkServer extends Listener {
         return robotActions;
     }
 
-    /**
-     * @return konneksjonen med dens tilhørende melding
-     */
-    public HashMap<Connection, IMessage> getConnectedClients() {
-        return connectedClients;
-    }
 
     /**
      *
      * @return konneksjonen med dens tilhørende robot.
      */
-    public HashMap<Connection, Robot> getClientRobots() {
-        return clientRobots;
+    public HashMap<Connection, Robot> getConnectionsAndRobots() {
+        return connectionsAndRobots;
     }
+
 
     /**
      * Starter game-hosten vår aka. serveren i nettverket. Bør kalles når spillet starter
@@ -132,12 +125,11 @@ public class NetworkServer extends Listener {
                 //Her sjekker vi hva som skal skje med kortene hvis vi finner noen.
                 else if (object instanceof ChosenCards){
                     ChosenCards cards = (ChosenCards) object;
-                    connectedClients.put(connection,cards);
 
                     //Gjør dette for å lagre kortene klienten sendte
                     //Nå er de lagret i robotActions som vi kan sende med en gang
                     //over nettverket.
-                    Robot thisRobotsAction = clientRobots.get(connection);
+                    Robot thisRobotsAction = connectionsAndRobots.get(connection);
                     robotActions.put(thisRobotsAction,cards);
 
                 }
@@ -154,32 +146,31 @@ public class NetworkServer extends Listener {
                     for(Robot registeredBot: robots){
                         if (registeredBot.getDesign() == chosenDesign){
                             sendToClient(connection, MinorErrorMessage.UNAVAILABLE_DESIGN);
+                            return;
                         }
                         if (registeredBot.getName().equals(newRobotName)){
                             sendToClient(connection, MinorErrorMessage.UNAVAILABLE_NAME);
+                            return;
                         }
 
                     }
                     //Hvis alt er greit så legger vi til roboten.
                     Robot newBot = new Robot(newRobotName,chosenDesign,false);
-                    clientRobots.put(connection,newBot);
+                    connectionsAndRobots.put(connection,newBot);
 
                 }
 
 
 
             }
-            //Kalles når vi oppretter en konneksjon
-            //Da registrerer vi den konneksjonen og Roboten som tilhører konneksjonen.
+            //Kalles når vi oppretter en konneksjon med en klient
             public void connected(Connection connection) {
                 System.out.println("Server connected to client " + connection.getID());
                 numberOfConnections++;
 
-                if (!connectedClients.containsKey(connection)){
-                    connectedClients.put(connection,ConfirmationMessages.CONNECTION_WAS_SUCCESSFUL);
-                }
-                if (!clientRobots.containsKey(connection)){
-                    clientRobots.put(connection,null);
+                //Vi registrer kommunikasjonslinken (connection). Robot opprettes senere da.
+                if (!connectionsAndRobots.containsKey(connection)){
+                    connectionsAndRobots.put(connection,null);
                 }
 
             }
@@ -188,11 +179,14 @@ public class NetworkServer extends Listener {
     }
 
 
+
     /**
      * @return antall klienter serveren er connectet til. Brukes for
      * å sjekke at alle klientene har sendt en melding
      */
     public int getNumberOfConnections(){ return numberOfConnections;}
+
+
 
     /**
      *Sender en melding fra serveren til en klient

@@ -127,8 +127,6 @@ public class Board {
 
                     if (robotCanPickUpFlag(bot, newFlag)) {
                         bot.addToFlagsVisited(newFlag);
-                        System.out.println("Robot picked up flag just now:" + newFlag.toString());
-                        System.out.println("Robot has picked up" + bot.getVisitedFlags().toString());
                     }
                 }
             }

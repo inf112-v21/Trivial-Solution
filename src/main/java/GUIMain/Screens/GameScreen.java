@@ -42,8 +42,6 @@ public class GameScreen implements Screen {
     public static float TIME_DELTA = 0.6f;
     public static final int CELL_SIZE = 300;
 
-    private SpriteBatch batch;
-    private BitmapFont font;
     private final TiledMapTileLayer playerLayer;
     private final OrthogonalTiledMapRenderer renderer;
     private final OrthographicCamera camera;
@@ -116,8 +114,7 @@ public class GameScreen implements Screen {
 
     @Override
     public void dispose() {
-        batch.dispose();
-        font.dispose();
+        spriteBatch.dispose();
         stage.dispose();
         renderer.dispose();
     }
@@ -152,9 +149,6 @@ public class GameScreen implements Screen {
 
         gameBoard = new BoardController(robots, mapName, amITheHost);
         updateRobotPositions();
-
-        batch = new SpriteBatch();
-        font = new BitmapFont();
         String playerHealthAndLives = "HP: " + playerControlledRobot.getHP() + " Lives: " + playerControlledRobot.getLives();
 
         label = new Label(playerHealthAndLives, style);
@@ -327,7 +321,6 @@ public class GameScreen implements Screen {
             gui.showPopUp(bot.getName() + " fucking died, lmao", stage);
             // TODO 06.04.2021: Spillet krasjer når denne blir kalt her
         }**/
-        finishedCheck();
 
         //Dette sørger for at kortene kun blir tegnet én gang per runde. Bedre kjøretid, yay
         if(gameBoard.isWaitingForPlayers()){
@@ -342,9 +335,11 @@ public class GameScreen implements Screen {
     private void finishedCheck(){
         if(winningbot !=null){
             if(playerControlledRobot == winningbot){
+                winningbot = null;
                 gui.setScreen(new WinScreen(gui));
             }
             else{
+                winningbot = null;
                 gui.setScreen(new GameOverScreen(gui));
             }
         }
@@ -374,6 +369,7 @@ public class GameScreen implements Screen {
             }
             else playerLayer.setCell(pos.getX(), gameBoard.getHeight() - pos.getY() - 1, new TiledMapTileLayer.Cell());
         }
+        finishedCheck();
     }
     private void clearCards(){
         availableTable.clear();
@@ -426,19 +422,7 @@ public class GameScreen implements Screen {
     public void resume() { }
     @Override
     public void hide() { }
-	
-	/**
-	 * Maybe an alternative for showPopUp()
-	 * prints message at the top of GUI
-	 * @param msg meldingen som skal vises
-	 */
-	public void printMessage(String msg) {batch.begin();
-		batch.setProjectionMatrix(camera.combined);
-		font.setColor(Color.RED);
-		font.draw(batch, msg, WIDTH,  HEIGHT*310);
-		font.getData().setScale(5, 5);
-		batch.end();
-	}
+
 
 	private class CardListener extends ClickListener{
 	    private final int index;

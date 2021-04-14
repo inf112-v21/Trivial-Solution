@@ -228,7 +228,7 @@ public class NetworkServer extends Listener {
      * Starter opp spillet for alle.
      * TODO Sørg for at serveren selv også får starte opp spillet.
      * @param mapname
-     */
+
     public void startTheGame(String mapname){
         List<Robot> bots = Collections.unmodifiableList(new ArrayList<>(clientRobots.values()));
         for (Connection con : connectedClients.keySet()){
@@ -236,6 +236,6 @@ public class NetworkServer extends Listener {
             sendToClient(con, new GameInfo(bots, mapname, index));
         }
     }
-
+    */
 
 }

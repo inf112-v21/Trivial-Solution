@@ -3,8 +3,11 @@ package GUIMain.Screens;
 import GUIMain.GUI;
 import GameBoard.Robot;
 import NetworkMultiplayer.Messages.PreGameMessages.GameInfo;
+import com.badlogic.gdx.graphics.Camera;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
@@ -21,7 +24,9 @@ public class CreateGameScreen extends SimpleScreen {
     private static final String MAP_LOCATION = "assets/maps";
     private SelectBox<Integer> numberOfRobots;
     private SelectBox<String> choosemapbox;
+    private Table designTable;
     private TextField textField;
+    private ShapeRenderer sr;
     protected int design = 0;
 
     public CreateGameScreen(GUI gui){
@@ -31,6 +36,7 @@ public class CreateGameScreen extends SimpleScreen {
     @Override
     public void show() {
         super.show();
+        sr = new ShapeRenderer();
         Table table = new Table();
         table.setFillParent(true);
         Table temp = new Table();
@@ -94,7 +100,14 @@ public class CreateGameScreen extends SimpleScreen {
         table.add(temp);
         table.row();
 
-        table.add(showRobotDesigns());
+        Label choosedesign = new Label("Choose robot:", gui.getSkin());
+        choosedesign.setFontScale(2f);
+        table.add(choosedesign);
+        table.row();
+
+        designTable = new Table();
+        showRobotDesigns(-1);
+        table.add(designTable);
         table.row();
 
         Table bottomButtons = new Table();
@@ -106,15 +119,20 @@ public class CreateGameScreen extends SimpleScreen {
 
     }
 
-    private Table showRobotDesigns() {
-        Table ret = new Table(gui.getSkin());
+    protected void showRobotDesigns(int chosenDesign) {
+        designTable.clear();
         TextureRegion[][] region = new TextureRegion(new Texture("Robotdesigns/robots.png")).split(GameScreen.CELL_SIZE, GameScreen.CELL_SIZE);
+        sr.setProjectionMatrix(view.getCamera().combined);
+        sr.begin(ShapeRenderer.ShapeType.Line);
+        sr.setColor(new Color(1, 0, 0, 0));
+        sr.circle(100, 100, 50, 10);
+        //sr.rect(500, 500, 1000, 1000);
+        sr.end();
         for (int i = 0; i < Robot.NUMBER_OF_DESIGNS; i++) {
             Image img = new Image(region[0][i]);
             img.addListener(new RobotSpriteListener(i));
-            ret.add(img);
+            designTable.add(img);
         }
-        return ret;
     }
 
     public static String[] getMapNames(){
@@ -132,6 +150,7 @@ public class CreateGameScreen extends SimpleScreen {
         @Override
         public void clicked(InputEvent event, float x, float y) {
             design = i;
+            showRobotDesigns(i);
         }
     }
 }

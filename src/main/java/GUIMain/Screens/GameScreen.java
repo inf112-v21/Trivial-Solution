@@ -20,6 +20,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
@@ -38,6 +39,8 @@ public class GameScreen implements Screen {
 
     public static float TIME_DELTA = 0.6f;
     public static final int CELL_SIZE = 300;
+    public static boolean roundFinished = false;
+    boolean lasersHaveBeenRendered = false;
 
     private SpriteBatch batch;
     private BitmapFont font;
@@ -314,16 +317,28 @@ public class GameScreen implements Screen {
     }
 
     private void drawLasers(){
-        for (Position pos : gameBoard.getLaserLocations()){
-            LaserBeam laser = (LaserBeam) gameBoard.getLaserAt(pos.getX(), pos.getY());
-            if(laser != null){
-                TiledMapTileLayer.Cell cell = new TiledMapTileLayer.Cell();
-                cell.setTile(new StaticTiledMapTile(new Sprite(laser.getImage())));
+        if(roundFinished)
+            lasersHaveBeenRendered = true;
 
-                emptyLaserLayer.setCell(pos.getX(), gameBoard.getHeight() - pos.getY() - 1, cell);
+        if(lasersHaveBeenRendered){
+            for (Position pos : gameBoard.getLaserLocations()){
+                emptyLaserLayer.setCell(pos.getX(), gameBoard.getHeight() - pos.getY() - 1, new TiledMapTileLayer.Cell());
+                lasersHaveBeenRendered = false;
             }
-            else emptyLaserLayer.setCell(pos.getX(), gameBoard.getHeight() - pos.getY() - 1, new TiledMapTileLayer.Cell());
+        }else{
+            for (Position pos : gameBoard.getLaserLocations()){
+                LaserBeam laser = (LaserBeam) gameBoard.getLaserAt(pos.getX(), pos.getY());
+                if(laser != null){
+                    TiledMapTileLayer.Cell cell = new TiledMapTileLayer.Cell();
+                    cell.setTile(new StaticTiledMapTile(new Sprite(laser.getImage())));
+
+                    emptyLaserLayer.setCell(pos.getX(), gameBoard.getHeight() - pos.getY() - 1, cell);
+                }
+                else emptyLaserLayer.setCell(pos.getX(), gameBoard.getHeight() - pos.getY() - 1, new TiledMapTileLayer.Cell());
+            }
+            lasersHaveBeenRendered = true;
         }
+
 
     }
 

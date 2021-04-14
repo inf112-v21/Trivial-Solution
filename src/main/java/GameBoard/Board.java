@@ -3,11 +3,9 @@ package GameBoard;
 import GameBoard.Cards.ICard;
 import GameBoard.Components.*;
 import NetworkMultiplayer.Messages.InGameMessages.SanityCheck;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
-import com.badlogic.gdx.maps.tiled.tiles.StaticTiledMapTile;
 
 import java.util.*;
 import java.util.function.ToIntFunction;
@@ -18,6 +16,7 @@ public class Board {
     private int WIDTH;
 
     private TiledMapTileLayer laserLayer;
+    boolean isLasersDrawn = false;
 
     //Grids. Disse må initialiseres i readFromTMX().
     //Merk at vi ikke har noe grid for bakgrunnen,
@@ -138,7 +137,6 @@ public class Board {
                 }
             }
         }
-
     }
 
 
@@ -183,8 +181,6 @@ public class Board {
         fireAllLasers();
         removeDestroyedRobots();
         respawnRobots();
-
-        //TODO: Må fjerne laserne etter hver phase
     }
 
     /** @param moveAll: om alle samlebånd skal flytte seg, eller kun de blå. */
@@ -332,7 +328,7 @@ public class Board {
         return true;
     }
 
-    private void findLasers(){
+    private void findLasers() {
         for(int y = 0; y < HEIGHT; y++){
             for(int x = 0; x < WIDTH; x++){
                 if(laserGrid[y][x] != null)
@@ -340,20 +336,15 @@ public class Board {
             }
         }
     }
-
-    public void removeLasers() {
-        for(int y = 0; y < HEIGHT; y++){
-            for(int x = 0; x < WIDTH; x++){
-                if(laserGrid[y][x] != null)
-                    laserLocations.clear();
-            }
-        }
+    public void removeLasers(){
+        laserLocations.clear();
     }
 
     /**
      * Avfyrer alle lasere. inkludert de skutt av robotene.
      */
     private void fireAllLasers(){
+
         for(Laser laser : laserPositions.keySet()){
             Position pos = laserPositions.get(laser);
             fireOneLaser(pos.getX(), pos.getY(), laser.getDirection(), laser.isDoubleLaser(), false);
@@ -403,7 +394,7 @@ public class Board {
 
     public TreeSet<Position> getLaserLocations() {
         TreeSet<Position> ret = new TreeSet<>(laserLocations);
-        laserLocations.clear();
+        //laserLocations.clear();
         return ret;
     }
 

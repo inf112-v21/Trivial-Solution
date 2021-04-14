@@ -2,6 +2,7 @@ package GameBoard;
 
 import AIs.AI;
 import AIs.Randbot;
+import GUIMain.Screens.GameScreen;
 import GameBoard.Cards.Deck;
 import GameBoard.Cards.ICard;
 import GameBoard.Components.Flag;
@@ -15,6 +16,7 @@ import java.util.TreeSet;
 
 public class BoardController {
 
+    boolean lasersAreDrawn = false;
     public static final int PHASES_PER_ROUND = 5;
     private final ArrayList<Flag> flagWinningFormation = new ArrayList<>();
     private final ArrayList<Robot> aliveRobots;
@@ -57,6 +59,7 @@ public class BoardController {
 
         if (currentPhase == PHASES_PER_ROUND){
             endRound();
+            GameScreen.roundFinished = true;
             currentPhase = 0;
             waitingForPlayers = true;
             if (amITheHost) startRound(); //Deler ut kort, om vi er host eller i singleplayer.

@@ -184,9 +184,7 @@ public class NetworkServer extends Listener {
                 numberOfConnections++;
 
                 //Vi registrer kommunikasjonslinken (connection). Robot opprettes senere da.
-                if (!connectionsAndRobots.containsKey(connection)){
-                    connectionsAndRobots.put(connection,null);
-                }
+                connectionsAndRobots.put(connection,null);
 
             }
         });

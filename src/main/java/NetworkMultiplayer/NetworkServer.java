@@ -167,16 +167,12 @@ public class NetworkServer extends Listener {
                     Robot newBot = new Robot(newRobotName, chosenDesign, false);
                     connectionsAndRobots.put(connection, newBot);
                     robotActions.put(newBot, null);
-
-
                 }
 
                 //Test (sanity check)
                 if (object instanceof SanityCheck) {
                     checkAllIsRight = (SanityCheck) object;
                 }
-
-
             }
 
             //Kalles når vi oppretter en konneksjon med en klient
@@ -194,6 +190,8 @@ public class NetworkServer extends Listener {
     public MinorErrorMessage setHostRobot(RobotInfo info){
         if (robotActions.keySet().stream().map(Robot::getDesign).collect(Collectors.toList()).contains(info.getBotDesignNr())) return MinorErrorMessage.UNAVAILABLE_DESIGN;
         if (robotActions.keySet().stream().map(Robot::getName).collect(Collectors.toList()).contains(info.getBotName())) return MinorErrorMessage.UNAVAILABLE_NAME;
+        hostRobot = new Robot(info.getBotName(), info.getBotDesignNr(), false);
+        robotActions.put(hostRobot, null);
         return null;
     }
 

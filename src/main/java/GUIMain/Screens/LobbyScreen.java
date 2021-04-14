@@ -16,7 +16,7 @@ import static NetworkMultiplayer.Messages.MinorErrorMessage.UNAVAILABLE_NAME;
 
 public class LobbyScreen extends SimpleScreen {
 
-    private TreeSet<Robot> listOfPlayers = new TreeSet<>();
+    private TreeSet<String> listOfPlayers = new TreeSet<>();
     private Table table;
     private TextField robotname;
     private Table chooserobottable;
@@ -38,8 +38,8 @@ public class LobbyScreen extends SimpleScreen {
 
         Label title = new Label("Lobby", gui.getSkin());
         table.add(title).row();
-        Table settingtable = new Table();
-        playerlisttable = new Table();
+        Table settingtable = new Table(gui.getSkin());
+        playerlisttable = new Table(gui.getSkin());
 
         settingtable.add(new Label("Choose map: ", gui.getSkin()));
         SelectBox<String> map = new SelectBox<>(gui.getSkin());
@@ -47,11 +47,8 @@ public class LobbyScreen extends SimpleScreen {
         settingtable.add(map).row();
         table.add(settingtable).row();
 
-        playerlisttable = new Table();
+        playerlisttable = new Table(gui.getSkin());
         playerlisttable.add(new Label("Currently connected players: ", gui.getSkin())).row();
-        for (Robot bot : listOfPlayers){
-            playerlisttable.add(bot.getName()).row();
-        }
         table.add(playerlisttable).row();
 
         chooserobottable = new Table(gui.getSkin());
@@ -97,12 +94,16 @@ public class LobbyScreen extends SimpleScreen {
             gui.startServer();
             return;
         }
+        for (Robot bot : gui.getServer().getRobotActions().keySet()){
+            String name = bot.getName();
+            if (listOfPlayers.contains(name)) continue;
+            playerlisttable.add(name).row();
+            listOfPlayers.add(name);
+        }
         // TODO: 14.04.2021 Sjekk om serveren har mottatt hostens navn og design, så det kan legges i listen
         // TODO: 14.04.2021 Sjekk resten av serverens tilkoblede roboter, og legg dem til i listOfPlayers
         // TODO: 14.04.2021 Legg til en sjekk for om spillet er klart for å begynne, og bytt deretter til GameScreen.
 
-        else{
             super.render(v);
-        }
     }
 }

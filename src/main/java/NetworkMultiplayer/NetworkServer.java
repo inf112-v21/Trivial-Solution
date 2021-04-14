@@ -80,9 +80,6 @@ public class NetworkServer extends Listener {
 
         //Registrer serveren i nettverket
         LanNetwork.register(server);
-
-
-
     }
 
     /**

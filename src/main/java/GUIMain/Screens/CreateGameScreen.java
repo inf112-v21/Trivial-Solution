@@ -3,8 +3,7 @@ package GUIMain.Screens;
 import GUIMain.GUI;
 import GameBoard.Robot;
 import NetworkMultiplayer.Messages.PreGameMessages.GameInfo;
-import com.badlogic.gdx.graphics.Camera;
-import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -36,7 +35,6 @@ public class CreateGameScreen extends SimpleScreen {
     @Override
     public void show() {
         super.show();
-        sr = new ShapeRenderer();
         Table table = new Table();
         table.setFillParent(true);
         Table temp = new Table();
@@ -122,16 +120,10 @@ public class CreateGameScreen extends SimpleScreen {
     protected void showRobotDesigns(int chosenDesign) {
         designTable.clear();
         TextureRegion[][] region = new TextureRegion(new Texture("Robotdesigns/robots.png")).split(GameScreen.CELL_SIZE, GameScreen.CELL_SIZE);
-        sr.setProjectionMatrix(view.getCamera().combined);
-        sr.begin(ShapeRenderer.ShapeType.Line);
-        sr.setColor(new Color(1, 0, 0, 0));
-        sr.circle(100, 100, 50, 10);
-        //sr.rect(500, 500, 1000, 1000);
-        sr.end();
         for (int i = 0; i < Robot.NUMBER_OF_DESIGNS; i++) {
             Image img = new Image(region[0][i]);
             img.addListener(new RobotSpriteListener(i));
-            designTable.add(img);
+            designTable.add(img).size(Gdx.graphics.getWidth()/11f, Gdx.graphics.getHeight()/8f);
         }
     }
 
@@ -144,7 +136,7 @@ public class CreateGameScreen extends SimpleScreen {
         return maplist;
     }
 
-    public class RobotSpriteListener extends ClickListener{
+    private class RobotSpriteListener extends ClickListener{
         private int i;
         public RobotSpriteListener(int i){ this.i = i; }
         @Override

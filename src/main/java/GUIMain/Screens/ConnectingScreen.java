@@ -39,8 +39,7 @@ public class ConnectingScreen extends SimpleScreen{
         }
 
         if(gui.getClient().isConnected()){
-            gui.setScreen(new WaitingForHostScreen(gui));
+            gui.setScreen(new CreateRobotScreen(gui));
         }
-
     }
 }

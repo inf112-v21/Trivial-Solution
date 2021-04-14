@@ -35,7 +35,7 @@ public class NetworkServer extends Listener {
     private int numberOfConnections = 0;
 
     //Mappinger som sjekker at vi har alt på plass
-    private TreeMap<Connection, Robot> connectionsAndRobots = new TreeMap<>();
+    private HashMap<Connection, Robot> connectionsAndRobots = new HashMap<>();
 
     //Valgene de ulike klientene/robotenes tar.
     private TreeMap<Robot,IMessage> robotActions = new TreeMap<>();
@@ -66,7 +66,7 @@ public class NetworkServer extends Listener {
      *
      * @return konneksjonen med dens tilhørende robot.
      */
-    public TreeMap<Connection, Robot> getConnectionsAndRobots() {
+    public HashMap<Connection, Robot> getConnectionsAndRobots() {
         return connectionsAndRobots;
     }
 

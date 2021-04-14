@@ -117,11 +117,11 @@ public class NetworkServer extends Listener {
         server.addListener(new Listener() {
 
             //Kalles når vi mottar ting i nettverket
-            public void received (Connection connection, Object object) {
+            public void received(Connection connection, Object object) {
 
-                if(object instanceof ConfirmationMessages) {
+                if (object instanceof ConfirmationMessages) {
                     ConfirmationMessages message = ((ConfirmationMessages) object);
-                    switch (message){
+                    switch (message) {
                         case CONNECTION_WAS_SUCCESSFUL:
                             System.out.println("Woho!");
 
@@ -132,14 +132,14 @@ public class NetworkServer extends Listener {
                 }
 
                 //Her sjekker vi hva som skal skje med kortene hvis vi finner noen.
-                else if (object instanceof ChosenCards){
+                else if (object instanceof ChosenCards) {
                     ChosenCards cards = (ChosenCards) object;
 
                     //Gjør dette for å lagre kortene klienten sendte
                     //Nå er de lagret i robotActions som vi kan sende med en gang
                     //over nettverket.
                     Robot thisRobotsAction = connectionsAndRobots.get(connection);
-                    robotActions.put(thisRobotsAction,cards);
+                    robotActions.put(thisRobotsAction, cards);
 
                 }
 
@@ -147,51 +147,48 @@ public class NetworkServer extends Listener {
                 //Her sjekker vi om roboten blir registrert riktig
                 //I spillet vår har vi bestemt det at kun en robot kan ha en type design
                 //Send melding på hvilken designs som er tilgjengelige?
-                else if (object instanceof RobotInfo){
+                else if (object instanceof RobotInfo) {
                     RobotInfo bot = (RobotInfo) object;
                     String newRobotName = bot.getBotName();
                     int chosenDesign = bot.getBotDesignNr();
 
-                    for(Robot registeredBot: robotActions.keySet()){
-                        if (registeredBot.getDesign() == chosenDesign){
+                    for (Robot registeredBot : robotActions.keySet()) {
+                        if (registeredBot.getDesign() == chosenDesign) {
                             sendToClient(connection, MinorErrorMessage.UNAVAILABLE_DESIGN);
                             return;
                         }
-                        if (registeredBot.getName().equals(newRobotName)){
+                        if (registeredBot.getName().equals(newRobotName)) {
                             sendToClient(connection, MinorErrorMessage.UNAVAILABLE_NAME);
                             return;
                         }
 
                     }
                     //Hvis alt er greit så legger vi til roboten.
-                    Robot newBot = new Robot(newRobotName,chosenDesign,false);
-                    connectionsAndRobots.put(connection,newBot);
-                    robotActions.put(newBot,null);
+                    Robot newBot = new Robot(newRobotName, chosenDesign, false);
+                    connectionsAndRobots.put(connection, newBot);
+                    robotActions.put(newBot, null);
 
 
                 }
 
                 //Test (sanity check)
-                if(object instanceof SanityCheck){
+                if (object instanceof SanityCheck) {
                     checkAllIsRight = (SanityCheck) object;
                 }
 
 
-
             }
+
             //Kalles når vi oppretter en konneksjon med en klient
             public void connected(Connection connection) {
                 System.out.println("Server connected to client " + connection.getID());
                 numberOfConnections++;
 
                 //Vi registrer kommunikasjonslinken (connection). Robot opprettes senere da.
-                //if (!connectionsAndRobots.containsKey(connection)){
-                    connectionsAndRobots.put(connection,null);
-                //}
+                connectionsAndRobots.put(connection, null);
 
             }
         });
-
     }
 
     public MinorErrorMessage setHostRobot(RobotInfo info){

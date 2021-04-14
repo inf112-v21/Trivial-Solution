@@ -39,7 +39,7 @@ public class LanNetwork {
         kryo.register(DistributedCards.class);
         kryo.register(GameInfo.class, new JavaSerializer());
         kryo.register(IMessage.class);
-        kryo.register(RobotInfo.class);
+        kryo.register(RobotInfo.class, new JavaSerializer());
         kryo.register(ConfirmationMessages.class);
         kryo.register(ICard.class, new JavaSerializer());
         kryo.register(AllChosenCardsFromAllRobots.class, new JavaSerializer());

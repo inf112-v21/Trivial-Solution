@@ -39,17 +39,12 @@ public class NetworkClient {
 
 
 
-
-    //Roboter startes inne i networkclient og networkserver.
-    //private Robot = new Robot();
-
-
     public NetworkClient() {
 
         client = new Client();
-        new Thread(client).start();
 
         //start klienten --> åpner opp en tråd for at den skal kunne sende og motta meldinger over nettverket.
+        new Thread(client).start();
 
         //Registrer klienten i nettverket
         LanNetwork.register(client);
@@ -143,7 +138,6 @@ public class NetworkClient {
             @Override
             public void connected(Connection connection){
                 sendToServer(ConfirmationMessages.CONNECTION_WAS_SUCCESSFUL);
-                System.out.println("Good");
             }
         });
 

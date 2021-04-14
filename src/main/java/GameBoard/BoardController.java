@@ -30,6 +30,7 @@ public class BoardController {
     private int currentMove  = 0;
     private boolean waitingForPlayers;
 
+
     public BoardController(List<Robot> robots, String mapName, boolean amITheHost){
         this.amITheHost = amITheHost;
         board = new Board(mapName);
@@ -64,7 +65,9 @@ public class BoardController {
             waitingForPlayers = true;
             if (amITheHost) startRound(); //Deler ut kort, om vi er host eller i singleplayer.
         }
+
         hasWon();
+
     }
 
     private void moveNextRobot(){

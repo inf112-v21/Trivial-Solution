@@ -40,7 +40,7 @@ public class Robot implements Serializable, Comparable<Robot> {
 	private final boolean isControlledByAI;
 	private boolean powerDown;
 
-	private final ArrayList<Flag> flagsVisited = new ArrayList<>();
+	private ArrayList<Flag> flagsVisited = new ArrayList<>();
 	private ArrayList<ICard> availableCards = new ArrayList<>(); //alle kortene som ble utdelt
 	private final ArrayList<ICard> chosenCards = new ArrayList<>(BoardController.PHASES_PER_ROUND); //De valgte kortene, rekkefølgen er samme som den spilleren valgte dem
 

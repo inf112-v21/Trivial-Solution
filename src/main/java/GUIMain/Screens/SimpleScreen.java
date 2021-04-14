@@ -21,7 +21,6 @@ public abstract class SimpleScreen implements Screen {
     protected SpriteBatch batch;
     protected FreeTypeFontGenerator generator;
     protected FreeTypeFontGenerator.FreeTypeFontParameter parameter;
-    protected BitmapFont smoothfont;
     protected Label.LabelStyle style;
 
     public SimpleScreen(GUI gui){
@@ -33,8 +32,7 @@ public abstract class SimpleScreen implements Screen {
     public void show() {
         generator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/ObliviousFont.ttf"));
         parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
-        parameter.size = 12;
-        smoothfont = generator.generateFont(parameter);
+        parameter.size = 48;
         style = new Label.LabelStyle();
         view = new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         stage = new Stage(view);

@@ -20,12 +20,10 @@ public class HostOrJoinScreen extends SimpleScreen{
     public void show() {
         super.show();
         Table table = new Table();
-        parameter.size = 48;
         parameter.borderWidth = 3f;
         parameter.color = WHITE;
         parameter.borderColor = BLACK;
-        smoothfont = generator.generateFont(parameter);
-        style.font = smoothfont;
+        style.font = generator.generateFont(parameter);
         Label multiplayer = new Label("Multiplayer", style);
         table.add(multiplayer).spaceBottom(50);
         table.row();

@@ -35,19 +35,16 @@ public class CreateGameScreen extends SimpleScreen {
         Table temp = new Table();
 
 
-        parameter.size = 36;
         parameter.borderWidth = 3f;
         parameter.color = WHITE;
         parameter.borderColor = BLACK;
-        smoothfont = generator.generateFont(parameter);
-        style.font = smoothfont;
+        style.font = generator.generateFont(parameter);;
         Label title = new Label("Create Game",style);
         table.add(title).spaceBottom(80);
         table.row();
 
         parameter.size = 14;
-        smoothfont = generator.generateFont(parameter);
-        style.font = smoothfont;
+        style.font = generator.generateFont(parameter);
         Label numberplayerlabel = new Label("Number of players: ", style);
         temp.add(numberplayerlabel).spaceBottom(50);
 

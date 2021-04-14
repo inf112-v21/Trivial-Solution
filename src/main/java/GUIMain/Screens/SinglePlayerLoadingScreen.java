@@ -31,8 +31,7 @@ public class SinglePlayerLoadingScreen extends SimpleScreen {
         parameter.borderWidth = 3f;
         parameter.color = WHITE;
         parameter.borderColor = BLACK;
-        smoothfont = generator.generateFont(parameter);
-        style.font = smoothfont;
+        style.font = generator.generateFont(parameter);
         Table table = new Table();
         Label title = new Label("Loading....", style);
         table.add(title);

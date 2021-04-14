@@ -20,12 +20,10 @@ public class OptionScreen extends SimpleScreen {
     @Override
     public void show() {
         super.show();
-        parameter.size = 42;
         parameter.borderWidth = 3f;
         parameter.color = WHITE;
         parameter.borderColor = BLACK;
-        smoothfont = generator.generateFont(parameter);
-        style.font = smoothfont;
+        style.font = generator.generateFont(parameter);
         Table tabell = new Table();
         Table speed = new Table();
         Table screenMode = new Table();
@@ -33,14 +31,12 @@ public class OptionScreen extends SimpleScreen {
         Label title = new Label("Options", style);
 
         parameter.size = 24;
-        smoothfont = generator.generateFont(parameter);
-        style.font = smoothfont;
+        style.font = generator.generateFont(parameter);
         Label display = new Label("Display", style);
         Label gameSpeed = new Label("Game speed", style);
 
         parameter.size = 18;
-        smoothfont = generator.generateFont(parameter);
-        style.font = smoothfont;
+        style.font = generator.generateFont(parameter);
         tabell.setBounds(0,0,Gdx.graphics.getWidth(),Gdx.graphics.getHeight());
         tabell.add(title).spaceBottom(40f);
         tabell.row();

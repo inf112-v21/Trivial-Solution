@@ -28,14 +28,12 @@ public class MenuScreen extends SimpleScreen {
         parameter.borderWidth = 3f;
         parameter.color = WHITE;
         parameter.borderColor = BLACK;
-        smoothfont = generator.generateFont(parameter);
-        style.font = smoothfont;
+        style.font = generator.generateFont(parameter);
         Label title = new Label("Robo-Rally",style);
         tabell.add(title).spaceBottom(20);
         tabell.row();
         parameter.size = 36;
-        smoothfont = generator.generateFont(parameter);
-        style.font = smoothfont;
+        style.font = generator.generateFont(parameter);
         Label undertitle = new Label("A Trivial Solution", style);
         tabell.add(undertitle).spaceBottom(40);
         tabell.row();

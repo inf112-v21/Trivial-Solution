@@ -45,8 +45,7 @@ public class LobbyScreen extends SimpleScreen {
         parameter.borderWidth = 3f;
         parameter.color = WHITE;
         parameter.borderColor = BLACK;
-        smoothfont = generator.generateFont(parameter);
-        style.font = smoothfont;
+        style.font = generator.generateFont(parameter);
         Label choose = new Label("Choose map: ", style);
         SelectBox<String> choosemap = new SelectBox<>(gui.getSkin());
         choosemap.setItems(CreateGameScreen.getMapNames());

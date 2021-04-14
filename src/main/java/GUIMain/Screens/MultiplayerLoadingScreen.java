@@ -29,8 +29,7 @@ public class MultiplayerLoadingScreen extends SimpleScreen {
         parameter.borderWidth = 3f;
         parameter.color = WHITE;
         parameter.borderColor = BLACK;
-        smoothfont = generator.generateFont(parameter);
-        style.font = smoothfont;
+        style.font = generator.generateFont(parameter);
         Label title = new Label("Connecting....", style);
         table.add(title);
         table.setFillParent(true);

@@ -77,10 +77,7 @@ public class GameScreen implements Screen {
     private SpriteBatch spriteBatch;
     public static Robot winningbot;
 
-    private FreeTypeFontGenerator generator;
-    private FreeTypeFontGenerator.FreeTypeFontParameter parameter;
-    private BitmapFont smoothfont;
-    private Label.LabelStyle style;
+    private final Label.LabelStyle style;
     public static int fontsize = 30;
 
 
@@ -107,16 +104,14 @@ public class GameScreen implements Screen {
 
         renderer = new OrthogonalTiledMapRenderer(map, 1);
         playerControlledRobot = robots.get(gameInfo.getThisPlayersBotIndex());
-
-        generator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/ObliviousFont.ttf"));
-        parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
+        FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/ObliviousFont.ttf"));
+        FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
         style = new Label.LabelStyle();
         parameter.size = fontsize;
         parameter.borderWidth = 3f;
         parameter.color = WHITE;
         parameter.borderColor = BLACK;
-        smoothfont = generator.generateFont(parameter);
-        style.font = smoothfont;
+        style.font = generator.generateFont(parameter);
     }
 
     @Override

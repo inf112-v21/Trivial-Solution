@@ -7,17 +7,16 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 
-import java.util.ArrayList;
+import java.util.TreeSet;
 
 public class LobbyScreen extends SimpleScreen {
 
-    private ArrayList<Robot> listOfPlayers = new ArrayList<>();
+    private TreeSet<Robot> listOfPlayers = new TreeSet<>();
     private Table table;
-    private boolean hasBeenSetup = false;
-    private boolean hasTriedToConnectYet = false;
     private TextField robotname;
-    private SelectBox robotdesign;
-    private Table chooseTable;
+    private Table chooserobottable;
+    private Table playerlisttable;
+
 
 
 
@@ -31,89 +30,57 @@ public class LobbyScreen extends SimpleScreen {
         super.show();
         table = new Table();
         table.setBounds(0,0,Gdx.graphics.getWidth(),Gdx.graphics.getHeight());
-        chooseRobot();
-        stage.addActor(table);
-    }
 
-
-    public void chooseRobot(){
-        chooseTable = new Table();
-        chooseTable.setBounds(0,0,Gdx.graphics.getWidth(),Gdx.graphics.getHeight());
-        Table topTable = new Table();
-        Label choose = new Label("Choose map: ", gui.getSkin());
-        SelectBox<String> choosemap = new SelectBox<>(gui.getSkin());
-        choosemap.setItems(CreateGameScreen.getMapNames());
-        topTable.add(choose).spaceRight(50f);
-        topTable.add(choosemap);
-
-
-        Table midtable = new Table();
-        Table bottomtable = new Table();
-
-        midtable.add(new Label("Choose username: ", gui.getSkin())).spaceRight(50f);
-        robotname = new TextField("", gui.getSkin());
-        midtable.add(robotname);
-
-        bottomtable.add(new Label("Choose your Robot's design: ", gui.getSkin())).spaceRight(50f);
-        robotdesign = new SelectBox<>(gui.getSkin());
-        robotdesign.setItems(1, 2, 3, 4, 5, 6, 7, 8);
-        bottomtable.add(robotdesign);
-
-        chooseTable.add(topTable).spaceBottom(50f);
-        chooseTable.row();
-        chooseTable.add(midtable).spaceBottom(50f);
-        chooseTable.row();
-        chooseTable.add(bottomtable).spaceBottom(50f);
-        chooseTable.row();
-
-        TextButton send = new TextButton("Confirm", gui.getSkin());
-        send.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent changeEvent, Actor actor) {
-                // TODO: 09.04.2021 Her skal navn og ID sendes til serveren
-            }
-        });
-        TextButton rtrn = new TextButton("Return", gui.getSkin());
-        rtrn.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent changeEvent, Actor actor) {
-                gui.setScreen(new MenuScreen(gui));
-            }
-        });
-        Table buttons = new Table();
-        buttons.add(send);
-        buttons.add(rtrn);
-        chooseTable.add(buttons);
-        table.add(chooseTable);
-    }
-
-    public void showLobby(){
-        stage.clear();
-        table = new Table();
         Label title = new Label("Lobby", gui.getSkin());
-        title.setFontScale(2.5f);
-        table.add(title).spaceBottom(50);
-        // TODO: 06.04.2021 Vis de andre som er med i spillet her
+        table.add(title).row();
+        Table settingtable = new Table();
+        playerlisttable = new Table();
 
-        TextButton rtrn = new TextButton("Return", gui.getSkin());
-        rtrn.addListener(new ChangeListener() {
+        settingtable.add(new Label("Choose map: ", gui.getSkin()));
+        SelectBox<String> map = new SelectBox<>(gui.getSkin());
+        map.setItems(CreateGameScreen.getMapNames());
+        settingtable.add(map).row();
+        table.add(settingtable).row();
+
+        playerlisttable = new Table();
+        playerlisttable.add(new Label("Currently connected players: ", gui.getSkin())).row();
+        for (Robot bot : listOfPlayers){
+            playerlisttable.add(bot.getName()).row();
+        }
+        table.add(playerlisttable).row();
+
+        chooserobottable = new Table(gui.getSkin());
+        chooserobottable.add(new Label("Choose nickname: ", gui.getSkin()));
+        robotname = new TextField("", gui.getSkin());
+        chooserobottable.add(robotname).row();
+
+        chooserobottable.add(new Label("Choose robot: ", gui.getSkin())).row();
+        showRobotDesigns();
+        chooserobottable.add(designTable).row();
+
+        TextButton confirm = new TextButton("Confirm robot", gui.getSkin());
+        confirm.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent changeEvent, Actor actor) {
-                gui.setScreen(new MenuScreen(gui));
+                // TODO: 14.04.2021 det som skjer når hosten skal prøve å lage en robot
             }
         });
-        table.add(rtrn).spaceTop(400);
-    }
+        chooserobottable.add(confirm);
+        table.add(chooserobottable);
 
-    public void addPlayer(Robot bot){
-        listOfPlayers.add(bot);
+        stage.addActor(table);
     }
 
     @Override
     public void render(float v) {
         if (gui.getServer() == null){
             gui.startServer();
+            return;
         }
+        // TODO: 14.04.2021 Sjekk om serveren har mott hostens navn og design, så det kan legges i listen 
+        // TODO: 14.04.2021 Sjekk resten av serverens tilkoblede roboter, og legg dem til i listOfPlayers
+        // TODO: 14.04.2021 Legg til en sjekk for om spillet er klart for å begynne, og bytt deretter til GameScreen.
+
         else{
             super.render(v);
         }

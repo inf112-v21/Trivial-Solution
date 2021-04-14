@@ -97,7 +97,7 @@ public class LobbyScreen extends SimpleScreen {
     public void showLobby(){
         stage.clear();
         table = new Table();
-        Label title = new Label("Lobby", gui.getSkin());
+        Label title = new Label("Lobby", gui.getSkin()); //TODO må legge inn den nye fonten og sette den opp
         title.setFontScale(2.5f);
         table.add(title).spaceBottom(50);
         // TODO: 06.04.2021 Vis de andre som er med i spillet her

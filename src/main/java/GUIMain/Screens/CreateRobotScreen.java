@@ -14,9 +14,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 public class CreateRobotScreen extends SimpleScreen{
 
-    private Table designTable;
     private TextField textField;
-    protected int design = 0;
 
     public CreateRobotScreen(GUI gui) {
         super(gui);
@@ -40,8 +38,7 @@ public class CreateRobotScreen extends SimpleScreen{
         chooseRobot.setFontScale(2f);
         table.add(chooseRobot).row();
 
-        designTable = new Table();
-        showRobotDesigns(-1);
+        showRobotDesigns();
         table.add(designTable).row();
 
         TextButton confirm = new TextButton("Confirm", gui.getSkin());
@@ -54,26 +51,5 @@ public class CreateRobotScreen extends SimpleScreen{
         table.add(confirm);
         table.setFillParent(true);
         stage.addActor(table);
-    }
-
-
-    protected void showRobotDesigns(int chosenDesign) {
-        designTable.clear();
-        TextureRegion[][] region = new TextureRegion(new Texture("Robotdesigns/robots.png")).split(GameScreen.CELL_SIZE, GameScreen.CELL_SIZE);
-        for (int i = 0; i < Robot.NUMBER_OF_DESIGNS; i++) {
-            Image img = new Image(region[0][i]);
-            img.addListener(new RobotSpriteListener(i));
-            designTable.add(img).size(Gdx.graphics.getWidth()/11f, Gdx.graphics.getHeight()/8f);
-        }
-    }
-
-    private class RobotSpriteListener extends ClickListener {
-        private int i;
-        public RobotSpriteListener(int i){ this.i = i; }
-        @Override
-        public void clicked(InputEvent event, float x, float y) {
-            design = i;
-            showRobotDesigns(i);
-        }
     }
 }

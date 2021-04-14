@@ -1,12 +1,18 @@
 package GUIMain.Screens;
 
 import GUIMain.GUI;
+import GameBoard.Robot;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 
 public abstract class SimpleScreen implements Screen {
@@ -16,10 +22,11 @@ public abstract class SimpleScreen implements Screen {
     protected FitViewport view;
     protected Sprite backgroundSprite;
     protected SpriteBatch batch;
+    protected Table designTable; //Kun til bruk for LobbyScreen, CreateRobotScreen og CreateGameScreen.
+    protected int design = 3; //    --------------//-----------------------
 
     public SimpleScreen(GUI gui){
         this.gui = gui;
-
     }
 
     @Override
@@ -30,6 +37,7 @@ public abstract class SimpleScreen implements Screen {
         backgroundSprite.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         batch = new SpriteBatch();
         Gdx.input.setInputProcessor(stage);
+        designTable = new Table();
     }
 
     @Override
@@ -54,5 +62,25 @@ public abstract class SimpleScreen implements Screen {
         // TODO: 09.04.2021 Her må vi definere hvordan en Screen lukkes.
         //stage.dispose();
         //batch.dispose();
+    }
+
+    protected void showRobotDesigns() {
+        designTable.clear();
+        TextureRegion[][] region = new TextureRegion(new Texture("Robotdesigns/robots.png")).split(GameScreen.CELL_SIZE, GameScreen.CELL_SIZE);
+        for (int i = 0; i < Robot.NUMBER_OF_DESIGNS; i++) {
+            Image img = new Image(region[0][i]);
+            img.addListener(new RobotSpriteListener(i));
+            designTable.add(img).size(Gdx.graphics.getWidth()/11f, Gdx.graphics.getHeight()/8f);
+        }
+    }
+
+    protected class RobotSpriteListener extends ClickListener {
+        private int i;
+        public RobotSpriteListener(int i){ this.i = i; }
+        @Override
+        public void clicked(InputEvent event, float x, float y) {
+            design = i;
+            showRobotDesigns();
+        }
     }
 }

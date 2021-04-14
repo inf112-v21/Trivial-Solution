@@ -23,10 +23,8 @@ public class CreateGameScreen extends SimpleScreen {
     private static final String MAP_LOCATION = "assets/maps";
     private SelectBox<Integer> numberOfRobots;
     private SelectBox<String> choosemapbox;
-    private Table designTable;
     private TextField textField;
     private ShapeRenderer sr;
-    protected int design = 0;
 
     public CreateGameScreen(GUI gui){
         super(gui);
@@ -103,10 +101,8 @@ public class CreateGameScreen extends SimpleScreen {
         table.add(choosedesign);
         table.row();
 
-        designTable = new Table();
-        showRobotDesigns(-1);
-        table.add(designTable);
-        table.row();
+        showRobotDesigns();
+        table.add(designTable).row();
 
         Table bottomButtons = new Table();
         bottomButtons.add(start);
@@ -117,16 +113,6 @@ public class CreateGameScreen extends SimpleScreen {
 
     }
 
-    protected void showRobotDesigns(int chosenDesign) {
-        designTable.clear();
-        TextureRegion[][] region = new TextureRegion(new Texture("Robotdesigns/robots.png")).split(GameScreen.CELL_SIZE, GameScreen.CELL_SIZE);
-        for (int i = 0; i < Robot.NUMBER_OF_DESIGNS; i++) {
-            Image img = new Image(region[0][i]);
-            img.addListener(new RobotSpriteListener(i));
-            designTable.add(img).size(Gdx.graphics.getWidth()/11f, Gdx.graphics.getHeight()/8f);
-        }
-    }
-
     public static String[] getMapNames(){
         File f = new File(MAP_LOCATION);
         String[] maplist = Arrays.stream(f.list()).filter(n -> !n.equals("TestMap.tmx")).toArray(String[]::new);
@@ -134,15 +120,5 @@ public class CreateGameScreen extends SimpleScreen {
             maplist[i] = maplist[i].substring(0, maplist[i].length()-4);
         }
         return maplist;
-    }
-
-    private class RobotSpriteListener extends ClickListener{
-        private int i;
-        public RobotSpriteListener(int i){ this.i = i; }
-        @Override
-        public void clicked(InputEvent event, float x, float y) {
-            design = i;
-            showRobotDesigns(i);
-        }
     }
 }

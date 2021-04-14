@@ -9,14 +9,16 @@ public class LaserBeam extends SimpleComponent{
 
     private final boolean isDoubleLaser;
     private final int dir;
+    private final boolean crossingLasers;
     private final int x;
     private final int y;
     private final TextureRegion image;
 
-    public LaserBeam(Integer ID, Integer dir, boolean isDoubleLaser, int x, int y){
+    public LaserBeam(Integer ID, Integer dir, boolean isDoubleLaser, boolean crossingLasers, int x, int y){
         super(ID);
         this.isDoubleLaser = isDoubleLaser;
         this.dir = dir;
+        this.crossingLasers = crossingLasers;
         this.x = x;
         this.y = y;
         this.image = new TextureRegion(new Texture("mapassets/tiles.png")).split(GameScreen.CELL_SIZE, GameScreen.CELL_SIZE)[x][y];
@@ -34,4 +36,6 @@ public class LaserBeam extends SimpleComponent{
     public int getDirection(){
         return dir;
     }
+
+    //TODO: Legg til getters ved behov
 }

@@ -238,14 +238,19 @@ public class ComponentFactory {
             case 95:
                 return new Laser(95, 3, true);
 
-            // de visuelle laser-strålene
+            // De visuelle laser-strålene
             case 39:
-                return new LaserBeam(39, 3, false, 4, 6);
+                return new LaserBeam(39, 3, false, false,4, 6);
+            case 40:
+                return new LaserBeam(40,0,false, true, 4, 7);
             case 47:
-                return new LaserBeam(47,0,false, 5, 6);
+                return new LaserBeam(47,0,false, false, 5, 6);
             case 102:
-                return new LaserBeam(102,0, true, 12, 5);
-            //TODO: Add all lasers with their images
+                return new LaserBeam(102,0, true, false, 12, 5);
+            case 103:
+                return new LaserBeam(103,3,true, false, 12, 6);
+            case 101:
+                return new LaserBeam(101,0,true, true, 12, 4);
 
             case 121:
                 return new SpawnPoint(121);

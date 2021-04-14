@@ -37,10 +37,10 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 
 public class GameScreen implements Screen {
 
-    public static float TIME_DELTA = 0.6f;
+    public static float TIME_DELTA = 1.0f;
     public static final int CELL_SIZE = 300;
-    public static boolean roundFinished = false;
-    boolean lasersHaveBeenRendered = false;
+    public static boolean shouldLasersBeDrawn = false;
+    private boolean lasersHaveBeenRendered = false;
 
     private SpriteBatch batch;
     private BitmapFont font;
@@ -98,7 +98,6 @@ public class GameScreen implements Screen {
         largeView.update(WIDTH*2, HEIGHT,true);
 
         playerLayer = (TiledMapTileLayer) map.getLayers().get("Robot");
-
         emptyLaserLayer = (TiledMapTileLayer) map.getLayers().get("emptyLaserLayer");
 
         camera = (OrthographicCamera) largeView.getCamera();
@@ -298,8 +297,12 @@ public class GameScreen implements Screen {
         if(timeSinceLastUpdate < TIME_DELTA) return;
         timeSinceLastUpdate = 0;
         gameBoard.simulate();
+        if(shouldLasersBeDrawn){
+            drawLasers();
+            shouldLasersBeDrawn = false;
+            //TODO: The lasers in the first round does not get drawn
+        }
         updateRobotPositions();
-        drawLasers();
         updateLivesAndHP();
         for (Robot bot : gameBoard.getRecentlyDeceasedRobots()){
             gui.showPopUp(bot.getName() + " fucking died, lmao", stage);
@@ -317,15 +320,12 @@ public class GameScreen implements Screen {
     }
 
     private void drawLasers(){
-        if(roundFinished)
-            lasersHaveBeenRendered = true;
-
         if(lasersHaveBeenRendered){
             for (Position pos : gameBoard.getLaserLocations()){
                 emptyLaserLayer.setCell(pos.getX(), gameBoard.getHeight() - pos.getY() - 1, new TiledMapTileLayer.Cell());
                 lasersHaveBeenRendered = false;
             }
-        }else{
+        }else {
             for (Position pos : gameBoard.getLaserLocations()){
                 LaserBeam laser = (LaserBeam) gameBoard.getLaserAt(pos.getX(), pos.getY());
                 if(laser != null){
@@ -338,8 +338,6 @@ public class GameScreen implements Screen {
             }
             lasersHaveBeenRendered = true;
         }
-
-
     }
 
     private void updateRobotPositions(){

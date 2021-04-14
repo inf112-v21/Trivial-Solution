@@ -3,9 +3,12 @@ package GUIMain.Screens;
 import GUIMain.GUI;
 import GameBoard.Robot;
 import NetworkMultiplayer.Messages.PreGameMessages.GameInfo;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 
 import java.io.File;
@@ -19,6 +22,7 @@ public class CreateGameScreen extends SimpleScreen {
     private SelectBox<Integer> numberOfRobots;
     private SelectBox<String> choosemapbox;
     private TextField textField;
+    protected int design = 0;
 
     public CreateGameScreen(GUI gui){
         super(gui);
@@ -70,8 +74,8 @@ public class CreateGameScreen extends SimpleScreen {
                     gui.showPopUp("Please enter a name for your robot.", stage);
                     return false;
                 }
-                ArrayList<Robot> robots = Robot.getDefaultRobots(numberOfRobots.getSelected()-1); // -1, siden spilleren inngår i disse robotene
-                robots.add(new Robot(textField.getText(), 3, false));
+                ArrayList<Robot> robots = Robot.getDefaultRobots(numberOfRobots.getSelected()-1, design); // -1, siden spilleren inngår i disse robotene
+                robots.add(new Robot(textField.getText(), design, false));
                 String map = MAP_LOCATION + "/" + choosemapbox.getSelected() + ".tmx";
                 gui.setScreen(new SinglePlayerLoadingScreen(new GameInfo(Collections.unmodifiableList(robots), map, numberOfRobots.getSelected()-1), false, true, gui));
 
@@ -89,6 +93,10 @@ public class CreateGameScreen extends SimpleScreen {
         temp.padBottom(50);
         table.add(temp);
         table.row();
+
+        table.add(showRobotDesigns());
+        table.row();
+
         Table bottomButtons = new Table();
         bottomButtons.add(start);
         bottomButtons.add(back);
@@ -98,6 +106,17 @@ public class CreateGameScreen extends SimpleScreen {
 
     }
 
+    private Table showRobotDesigns() {
+        Table ret = new Table(gui.getSkin());
+        TextureRegion[][] region = new TextureRegion(new Texture("Robotdesigns/robots.png")).split(GameScreen.CELL_SIZE, GameScreen.CELL_SIZE);
+        for (int i = 0; i < Robot.NUMBER_OF_DESIGNS; i++) {
+            Image img = new Image(region[0][i]);
+            img.addListener(new RobotSpriteListener(i));
+            ret.add(img);
+        }
+        return ret;
+    }
+
     public static String[] getMapNames(){
         File f = new File(MAP_LOCATION);
         String[] maplist = Arrays.stream(f.list()).filter(n -> !n.equals("TestMap.tmx")).toArray(String[]::new);
@@ -105,5 +124,14 @@ public class CreateGameScreen extends SimpleScreen {
             maplist[i] = maplist[i].substring(0, maplist[i].length()-4);
         }
         return maplist;
+    }
+
+    public class RobotSpriteListener extends ClickListener{
+        private int i;
+        public RobotSpriteListener(int i){ this.i = i; }
+        @Override
+        public void clicked(InputEvent event, float x, float y) {
+            design = i;
+        }
     }
 }

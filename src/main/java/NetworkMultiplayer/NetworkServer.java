@@ -7,14 +7,14 @@ import NetworkMultiplayer.Messages.MinorErrorMessage;
 import NetworkMultiplayer.Messages.ConfirmationMessages;
 import NetworkMultiplayer.Messages.InGameMessages.ChosenCards;
 import NetworkMultiplayer.Messages.IMessage;
+import NetworkMultiplayer.Messages.PreGameMessages.GameInfo;
 import NetworkMultiplayer.Messages.PreGameMessages.RobotInfo;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Server;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.HashSet;
+import java.util.*;
 
 
 //Kortene er i deck
@@ -229,6 +229,19 @@ public class NetworkServer extends Listener {
     public void deleteServer() throws IOException { server.dispose();}
 
 
+    /**
+     * WIP
+     * Starter opp spillet for alle.
+     * TODO Sørg for at serveren selv også får starte opp spillet.
+     * @param mapname
+     */
+    public void startTheGame(String mapname){
+        List<Robot> bots = Collections.unmodifiableList(new ArrayList<>(clientRobots.values()));
+        for (Connection con : connectedClients.keySet()){
+            int index = bots.indexOf(clientRobots.get(con));
+            sendToClient(con, new GameInfo(bots, mapname, index));
+        }
+    }
 
 
 }

@@ -119,11 +119,17 @@ public class Board {
             int posY = pos.getY();
             int posX = pos.getX();
 
-            if (forgrid[posY][posX] instanceof Flag) {
-                Flag newFlag = (Flag) forgrid[posY][posX];
+            //Ingen grunn å sjekke om roboten står på et flagg hvis alle flag er hentet.
+            if(bot.getVisitedFlags().size() < flagWinningFormation.size()) {
 
-                if (robotCanPickUpFlag(bot, newFlag)) {
-                    bot.addToFlagsVisited(newFlag);
+                if (forgrid[posY][posX] instanceof Flag) {
+                    Flag newFlag = (Flag) forgrid[posY][posX];
+
+                    if (robotCanPickUpFlag(bot, newFlag)) {
+                        bot.addToFlagsVisited(newFlag);
+                        System.out.println("Robot picked up flag just now:" + newFlag.toString());
+                        System.out.println("Robot has picked up" + bot.getVisitedFlags().toString());
+                    }
                 }
             }
         }
@@ -150,11 +156,17 @@ public class Board {
             int nextFlag = flagWinningFormation.indexOf(lastVisitedFlag) + 1;
 
             //Hvis neste flagg som skal registreres er det flagget roboten fant så kan vi registrere det.
-            return foundFlag.equals(flagWinningFormation.get(nextFlag));
+            if(foundFlag.equals(flagWinningFormation.get(nextFlag)) && !visited.contains(foundFlag)){
+                return true;
+            }
         }
 
         //Hvis inget flagg er registrert så sjekker vi om roboten landet på det første flagget
-        return foundFlag.equals(flagWinningFormation.get(0));
+        if (foundFlag.equals(flagWinningFormation.get(0)) && visited.isEmpty()){
+            return true;
+        }
+
+        return false;
     }
 
     /**

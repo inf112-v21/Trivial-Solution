@@ -53,16 +53,10 @@ public class Robot implements Serializable, Comparable<Robot> {
 		this.name = name;
 		this.isControlledByAI = isControlledByAI;
 		powerDown = false;
-		try{
-		setImage();
-		} catch (Exception e){
-			System.out.println("Something went wrong" + e);
-		}
+
+		this.image = new TextureRegion(new Texture("Robotdesigns/robots.png")).split(GameScreen.CELL_SIZE, GameScreen.CELL_SIZE)[0][design];
 	}
 
-	private void setImage() {
-		image = new TextureRegion(new Texture("Robotdesigns/robots.png")).split(GameScreen.CELL_SIZE, GameScreen.CELL_SIZE)[0][design];
-	}
 
 	public Robot(String name, boolean isControlledByAI){
         this.name = name;

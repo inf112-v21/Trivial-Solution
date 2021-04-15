@@ -2,7 +2,9 @@ package GameBoard.Cards;
 
 import com.badlogic.gdx.graphics.Texture;
 
-public interface ICard {
+import java.io.Serializable;
+
+public interface ICard extends Serializable {
 
     /**
      * Om dette er et bevgelseskort, er tallet -1, 1, 2 eller 3 for hvor langt roboten skal gå.

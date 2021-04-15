@@ -2,50 +2,37 @@ package GUIMain.Screens;
 
 import GUIMain.GUI;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import com.badlogic.gdx.utils.viewport.FitViewport;
 
-public class HostOrJoinScreen implements Screen {
+import static com.badlogic.gdx.graphics.Color.BLACK;
+import static com.badlogic.gdx.graphics.Color.WHITE;
 
-    private final GUI gui;
-    private Stage stage;
-    private FitViewport view;
-    private static Sprite backgroundSprite;
-    private SpriteBatch spriteBatch;
-
+public class HostOrJoinScreen extends SimpleScreen{
     public HostOrJoinScreen(GUI gui){
-        this.gui = gui;
+        super(gui);
     }
 
     @Override
     public void show() {
-        spriteBatch = new SpriteBatch();
-        Texture backgroundTexture = new Texture(Gdx.files.internal("Background Images/roborally1.png"));
-        backgroundSprite = new Sprite(backgroundTexture);
-        backgroundSprite.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        view = new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        stage = new Stage();
-        Gdx.input.setInputProcessor(stage);
+        super.show();
         Table table = new Table();
-        Label multiplayer = new Label("Multiplayer", gui.getSkin());
+        parameter.borderWidth = 3f;
+        parameter.color = WHITE;
+        parameter.borderColor = BLACK;
+        style.font = generator.generateFont(parameter);
+        Label multiplayer = new Label("Multiplayer", style);
         table.add(multiplayer).spaceBottom(50);
-        multiplayer.setFontScale(5f);
         table.row();
 
         TextButton join = new TextButton("Join Game", gui.getSkin());
         join.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent changeEvent, Actor actor) {
-                gui.setScreen(new LobbyScreen(gui, false));
+                gui.setScreen(new ConnectingScreen(gui));
 
             }
         });
@@ -55,7 +42,7 @@ public class HostOrJoinScreen implements Screen {
         host.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent changeEvent, Actor actor) {
-                gui.setScreen(new LobbyScreen(gui,true));
+                gui.setScreen(new LobbyScreen(gui));
             }
         });
         table.add(host).spaceBottom(40);
@@ -74,24 +61,4 @@ public class HostOrJoinScreen implements Screen {
 
         stage.addActor(table);
     }
-
-    @Override
-    public void render(float v) {
-        spriteBatch.begin();
-        backgroundSprite.draw(spriteBatch);
-        spriteBatch.end();
-        stage.draw();
-    }
-    @Override
-    public void resize(int width, int height) {
-        view.update(width, height);
-    }
-    @Override
-    public void pause() { }
-    @Override
-    public void resume() { }
-    @Override
-    public void hide() { }
-    @Override
-    public void dispose() { }
 }

@@ -1,6 +1,8 @@
 package GUIMain;
 
-        import GUIMain.Screens.MenuScreen;
+import GUIMain.Screens.MenuScreen;
+        import NetworkMultiplayer.NetworkClient;
+        import NetworkMultiplayer.NetworkServer;
         import com.badlogic.gdx.Game;
         import com.badlogic.gdx.Gdx;
         import com.badlogic.gdx.Screen;
@@ -9,13 +11,23 @@ package GUIMain;
         import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
         import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
-        import javax.swing.JOptionPane;
+        import java.net.InetAddress;
 
 public class GUI extends Game {
 
     private Skin skin;
     private static final String SKIN_NAME = "assets/comic/skin/comic-ui.json";
     private Screen currentScreen;
+    private NetworkServer server;
+    private NetworkClient client;
+
+    public NetworkServer getServer() {
+        return server;
+    }
+
+    public NetworkClient getClient() {
+        return client;
+    }
 
     /**
      * Standard GUI. Bruk denne.
@@ -23,14 +35,6 @@ public class GUI extends Game {
     public GUI(){
         super();
         currentScreen = new MenuScreen(this);
-    }
-
-    /**
-     * GUI kun for testing. Hopper umiddelbart til initialScreen etter konstruktøren er ferdig.
-     */
-    public GUI(Screen initialScreen){
-        super();
-        currentScreen = initialScreen;
     }
 
     @Override
@@ -42,8 +46,31 @@ public class GUI extends Game {
 
     @Override
     public void setScreen(Screen nextScreen){
+        currentScreen.dispose();
         currentScreen = nextScreen;
         super.setScreen(nextScreen);
+    }
+
+    public void startServer(){
+        server = new NetworkServer();
+    }
+
+    public void startClient(){
+        try {
+            client = new NetworkClient();
+
+            //Finner Ip-addressen til hosten.
+            InetAddress hostIpadress = client.findServer();
+
+            //Connect to client
+            client.connect(hostIpadress.getHostName());
+
+        }catch (NullPointerException ex){
+            Stage stage = new Stage();
+            Gdx.input.setInputProcessor(stage);
+            showPopUp("Couldn't find any online servers :(", stage);
+            setScreen(new MenuScreen(this));
+        }
     }
 
     @Override

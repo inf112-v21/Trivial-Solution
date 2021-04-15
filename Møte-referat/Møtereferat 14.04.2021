@@ -1,0 +1,24 @@
+Møte Referat 14.04.2021
+
+Møte handler om å sette opp navn og design i mulitplayer, gameOver og win screen
+
+Alle i gruppen er innkalt.
+Alle i gruppen er tilstede.
+Møtetid, sted: 10-14, sem3
+
+Saker som skal diskuteres:
+-Fremvising av hvordan man skal velge navn og design i mulitplayer.
+-Laser utskyttning i hver fase.
+-Smart AI.
+
+Hva vi har gjort:
+-Meldingene er ferdig (multiplayer) (Dusan)
+-La til font som skalerer (Samuel)
+-Lasere implementasjon, altså at de syns når de blir skyttet ut. (Må jobbes videre med) (Sander)
+-AI (ILyas)
+-Screens i mulitplayer(Steinar)
+
+Hva vi skal jobbe videre med:
+- Bli ferdig med Multiplayer, Screens overgang, AI og Laser
+- Lage test Multiplayer.
+- Bug --> fikse winCondition (Flag)

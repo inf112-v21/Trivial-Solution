@@ -1,171 +1,106 @@
 package GUIMain.Screens;
 
 import GUIMain.GUI;
-import NetworkMultiplayer.Messages.ConfirmationMessages;
-import NetworkMultiplayer.Messages.PreGameMessages.GameInfo;
-import NetworkMultiplayer.NetworkClient;
-import NetworkMultiplayer.NetworkServer;
+import GameBoard.Robot;
+import NetworkMultiplayer.Messages.MinorErrorMessage;
+import NetworkMultiplayer.Messages.PreGameMessages.RobotInfo;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import com.badlogic.gdx.utils.viewport.FitViewport;
-import com.badlogic.gdx.utils.viewport.ScreenViewport;
-import com.esotericsoftware.kryonet.Connection;
 
-import java.net.InetAddress;
-import java.util.ArrayList;
+import java.util.TreeSet;
 
-public class LobbyScreen implements Screen {
+public class LobbyScreen extends SimpleScreen {
 
-    private ArrayList<String> listOfPlayers = new ArrayList<>();
-    private final GUI gui;
-    private Stage stage;
+    private TreeSet<String> listOfPlayers = new TreeSet<>();
     private Table table;
-    private final boolean isHost;
-    private boolean hasBeenSetup = false;
-    private Connection[] connections;
-    private static Sprite backgroundSprite;
-    private static Texture backgroundTexture;
-    private SpriteBatch spriteBatch;
-    private GameInfo gameInfo;
+    private TextField robotname;
+    private Table chooserobottable;
+    private Table playerlisttable;
 
 
 
-    public LobbyScreen(GUI gui, boolean isHost) {
-        this.gui = gui;
-        this.isHost = isHost;
-        if(isHost) startMultiplayer();
-    }
-
-    private void startMultiplayer() {
-        if (isHost){
-            //Dette er en host/
-            NetworkServer server = new NetworkServer();
 
 
-        } else {
-            //Dette er en klient
-            NetworkClient client = new NetworkClient();
-
-            //Finner Ip-addressen til hosten.
-            InetAddress hostIpadress = client.findServer();
-
-            //Connect to client
-            client.connect(hostIpadress.toString());
-
-            if (client.isConnected()){
-                client.sendToServer(ConfirmationMessages.CONNECTION_WAS_SUCCESSFUL);
-            }
-        }
-
+    public LobbyScreen(GUI gui) {
+        super(gui);
     }
 
     @Override
     public void show() {
-        spriteBatch = new SpriteBatch();
-        backgroundTexture = new Texture(Gdx.files.internal("Background Images/roborally1.png"));
-        backgroundSprite = new Sprite(backgroundTexture);
-        backgroundSprite.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        FitViewport view = new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        stage = new Stage(view);
+        super.show();
         table = new Table();
-        Gdx.input.setInputProcessor(stage);
-        if(isHost) {
-            Label title = new Label("Currently connected to:", gui.getSkin());
-            title.setFontScale(2f);
-            table.add(title);
-            table.row();
-            // TODO: 06.04.2021 Finn ut av hvordan vi kan vise en liste over tilkoblede klienter
-        } else {
-            stage = new Stage(new ScreenViewport());
-            Label title = new Label("Connecting....", gui.getSkin());
-            title.setFontScale(4);
-            table.add(title);
-            table.row();
-            table.setBounds(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-            TextButton rtrn = new TextButton("Return", gui.getSkin());
-            rtrn.addListener(new ChangeListener() {
-                @Override
-                public void changed(ChangeEvent changeEvent, Actor actor) {
-                    gui.setScreen(new MenuScreen(gui));
-                }
-            });
-            table.add(rtrn).spaceTop(400);
-        }
-        table.setBounds(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        stage.addActor(table);
-    }
+        table.setBounds(0,0,Gdx.graphics.getWidth(),Gdx.graphics.getHeight());
 
-    /** Det klienten skal se når han joiner en lobby. Da må han velge navn og robot. */
-    public void connected(){
-        if (isHost) throw new IllegalStateException("I am the host, I am always connected by default. This method is meant for clients only!");
-        stage.clear();
-        table = new Table();
         Label title = new Label("Lobby", gui.getSkin());
-        title.setFontScale(2.5f);
-        table.add(title).spaceBottom(50);
+        table.add(title).row();
+        Table settingtable = new Table(gui.getSkin());
+        playerlisttable = new Table(gui.getSkin());
 
-        // TODO: 06.04.2021 Vis de andre som er med i spillet her
+        settingtable.add(new Label("Choose map: ", gui.getSkin()));
+        SelectBox<String> map = new SelectBox<>(gui.getSkin());
+        map.setItems(CreateGameScreen.getMapNames());
+        settingtable.add(map).row();
+        table.add(settingtable).row();
 
-        TextButton rtrn = new TextButton("Return", gui.getSkin());
-        rtrn.addListener(new ChangeListener() {
+        playerlisttable = new Table(gui.getSkin());
+        playerlisttable.add(new Label("Currently connected players: ", gui.getSkin())).row();
+        table.add(playerlisttable).row();
+
+        chooserobottable = new Table(gui.getSkin());
+        chooserobottable.add(new Label("Choose nickname: ", gui.getSkin()));
+        robotname = new TextField("", gui.getSkin());
+        chooserobottable.add(robotname).row();
+
+        chooserobottable.add(new Label("Choose robot: ", gui.getSkin())).row();
+        showRobotDesigns();
+        chooserobottable.add(designTable).row();
+
+        TextButton confirm = new TextButton("Confirm robot", gui.getSkin());
+        confirm.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent changeEvent, Actor actor) {
-                gui.setScreen(new MenuScreen(gui));
+                if (robotname.getText().equals("")){
+                    gui.showPopUp("Please choose a nickname for you robot!", stage);
+                    return;
+                }
+                MinorErrorMessage msg = gui.getServer().setHostRobot(new RobotInfo(robotname.getText(), design));
+                if (msg == null){
+                    chooserobottable.clear();
+                }
+                else {
+                    switch (msg) {
+                        case UNAVAILABLE_DESIGN:
+                            gui.showPopUp("That robot has already been taken, please choose another one", stage);
+                        case UNAVAILABLE_NAME:
+                            gui.showPopUp("That name has already been taken, please be more original", stage);
+                    }
+                }
             }
         });
-        table.add(rtrn).spaceTop(400);
-    }
+        chooserobottable.add(confirm);
+        table.add(chooserobottable);
 
-    public void setGameInfo(GameInfo gameInfo){
-        this.gameInfo = gameInfo;
-        hasBeenSetup = true;
-    }
-
-    public void startTheGame(){
-        if (! hasBeenSetup) throw new IllegalStateException("Cannot start the game before receiving game information");
-        gui.setScreen(new MultiplayerLoadingScreen(gameInfo, true, gui));
+        stage.addActor(table);
     }
 
     @Override
     public void render(float v) {
-        spriteBatch.begin();
-        backgroundSprite.draw(spriteBatch);
-        spriteBatch.end();
-        stage.act();
-        stage.draw();
-    }
+        if (gui.getServer() == null){
+            gui.startServer();
+            return;
+        }
+        for (Robot bot : gui.getServer().getRobotActions().keySet()){
+            String name = bot.getName();
+            if (listOfPlayers.contains(name)) continue;
+            playerlisttable.add(name).row();
+            listOfPlayers.add(name);
+        }
+        // TODO: 14.04.2021 Sjekk om serveren har mottatt hostens navn og design, så det kan legges i listen
+        // TODO: 14.04.2021 Sjekk resten av serverens tilkoblede roboter, og legg dem til i listOfPlayers
+        // TODO: 14.04.2021 Legg til en sjekk for om spillet er klart for å begynne, og bytt deretter til GameScreen.
 
-    @Override
-    public void resize(int i, int i1) {
-
-    }
-
-    @Override
-    public void pause() {
-
-    }
-
-    @Override
-    public void resume() {
-
-    }
-
-    @Override
-    public void hide() {
-
-    }
-
-    @Override
-    public void dispose() {
-
+            super.render(v);
     }
 }

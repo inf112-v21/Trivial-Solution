@@ -11,11 +11,11 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 
-public class GameOverScreen extends SimpleScreen {
+public class WinScreen extends SimpleScreen {
     private SpriteBatch spriteBatch;
 
 
-    public GameOverScreen(GUI gui) {
+    public WinScreen(GUI gui) {
         super(gui);
     }
 
@@ -23,7 +23,7 @@ public class GameOverScreen extends SimpleScreen {
     public void show() {
         super.show();
         spriteBatch = new SpriteBatch();
-        Texture backgroundTexture = new Texture(Gdx.files.internal("Background Images/Gameover.png"));
+        Texture backgroundTexture = new Texture(Gdx.files.internal("Background Images/Youwon.png"));
         backgroundSprite = new Sprite(backgroundTexture);
         backgroundSprite.setBounds(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         stage = new Stage();

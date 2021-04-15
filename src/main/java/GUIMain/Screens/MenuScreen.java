@@ -2,60 +2,39 @@ package GUIMain.Screens;
 
 import GUIMain.GUI;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.InputAdapter;
-import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import com.badlogic.gdx.utils.Align;
-import com.badlogic.gdx.utils.viewport.FitViewport;
-
 
 import static com.badlogic.gdx.graphics.Color.*;
 
-public class MenuScreen extends InputAdapter implements Screen {
+public class MenuScreen extends SimpleScreen {
 
-    private Stage stage;
     protected TextButton singleplayer;
     protected TextButton multiplayer;
     protected TextButton options;
     protected TextButton quit;
-    private final GUI gui;
-    private FitViewport view;
-    private static Sprite backgroundSprite;
-    private SpriteBatch spriteBatch;
 
     public MenuScreen(GUI gui){
-        super();
-        this.gui = gui;
+        super(gui);
     }
 
     @Override
     public void show() {
-        spriteBatch = new SpriteBatch();
-        Texture backgroundTexture = new Texture(Gdx.files.internal("Background Images/roborally1.png"));
-        backgroundSprite = new Sprite(backgroundTexture);
-        backgroundSprite.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        view = new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        stage = new Stage(view);
-        BitmapFont font = new BitmapFont();
-        font.setColor(RED);
-
-        Gdx.input.setInputProcessor(stage);
+        super.show();
         Table tabell = new Table();
         tabell.setBounds(0,0,Gdx.graphics.getWidth(),Gdx.graphics.getHeight());
-        Label title = new Label("Robo-Rally", gui.getSkin());
-        title.setFontScale(3);
-        title.getStyle().fontColor = WHITE;
-        title.setAlignment(Align.top);
+        parameter.size = 58;
+        parameter.borderWidth = 3f;
+        parameter.color = WHITE;
+        parameter.borderColor = BLACK;
+        style.font = generator.generateFont(parameter);
+        Label title = new Label("Robo-Rally",style);
         tabell.add(title).spaceBottom(20);
         tabell.row();
-        Label undertitle = new Label("A Trivial Solution", gui.getSkin());
-        undertitle.setFontScale(2);
+        parameter.size = 36;
+        style.font = generator.generateFont(parameter);
+        Label undertitle = new Label("A Trivial Solution", style);
         tabell.add(undertitle).spaceBottom(40);
         tabell.row();
 
@@ -100,27 +79,12 @@ public class MenuScreen extends InputAdapter implements Screen {
         stage.addActor(tabell);
 
     }
-    
     @Override
-    public void render(float v) {
-        spriteBatch.begin();
-        backgroundSprite.draw(spriteBatch);
-        spriteBatch.end();
+    public void render(float i){
+        batch.begin();
+        backgroundSprite.draw(batch);
+        batch.end();
         stage.act(Gdx.graphics.getDeltaTime());
         stage.draw();
-    }
-
-    @Override
-    public void resize(int i, int i1) {
-        view.update(i,i1);
-    }
-    @Override
-    public void pause() { }
-    @Override
-    public void resume() { }
-    @Override
-    public void hide() { }
-    @Override
-    public void dispose() {
     }
 }

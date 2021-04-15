@@ -82,7 +82,7 @@ public abstract class SimpleScreen implements Screen {
             if (design != i) img = new Image(region[0][i]);
             else             img = new Image(border[0][i]);
             img.addListener(new RobotSpriteListener(i));
-            designTable.add(img).size(Gdx.graphics.getWidth()/11f, Gdx.graphics.getHeight()/8f);
+            designTable.add(img).size(Gdx.graphics.getWidth()/13f, Gdx.graphics.getHeight()/7f);
         }
     }
 

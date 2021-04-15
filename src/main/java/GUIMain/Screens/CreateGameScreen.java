@@ -3,7 +3,6 @@ package GUIMain.Screens;
 import GUIMain.GUI;
 import GameBoard.Robot;
 import NetworkMultiplayer.Messages.PreGameMessages.GameInfo;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
@@ -22,7 +21,6 @@ public class CreateGameScreen extends SimpleScreen {
     private SelectBox<Integer> numberOfRobots;
     private SelectBox<String> choosemapbox;
     private TextField textField;
-    private ShapeRenderer sr;
 
     public CreateGameScreen(GUI gui){
         super(gui);
@@ -44,7 +42,7 @@ public class CreateGameScreen extends SimpleScreen {
         table.add(title).spaceBottom(80);
         table.row();
 
-        parameter.size = 14;
+        parameter.size = 25;
         style.font = generator.generateFont(parameter);
         Label numberplayerlabel = new Label("Number of players: ", style);
         temp.add(numberplayerlabel).spaceBottom(50);
@@ -95,7 +93,9 @@ public class CreateGameScreen extends SimpleScreen {
         table.add(temp);
         table.row();
 
-        Label choosedesign = new Label("Choose robot:", gui.getSkin());
+        parameter.size = 12;
+        style.font = generator.generateFont(parameter);
+        Label choosedesign = new Label("Choose robot:", style);
         choosedesign.setFontScale(2f);
         table.add(choosedesign);
         table.row();

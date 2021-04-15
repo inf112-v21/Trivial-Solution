@@ -361,7 +361,7 @@ public class Board {
         if(forgrid[y][x] instanceof Wall && !((Wall) forgrid[y][x]).canLeaveInDirection(dir)) return;
 
         laserLocations.add(new Position(x,y));
-        //TODO: Litt bugs her når laserne tegnes opp
+        //TODO: 14.04.2021 Litt bugs her når laserne tegnes opp
 
         int nextX = x + directionToX(dir);
         int nextY = y + directionToY(dir);

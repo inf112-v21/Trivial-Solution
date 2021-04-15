@@ -6,15 +6,25 @@ import NetworkMultiplayer.Messages.IMessage;
 
 import java.io.Serializable;
 import java.util.HashMap;
+import java.util.TreeMap;
 
 public class AllChosenCardsFromAllRobots implements IMessage, Serializable {
 
-    final private HashMap<Robot,IMessage> allDesicions;
-    AllChosenCardsFromAllRobots(HashMap<Robot,IMessage> allDesicions){
+    /**
+     * Hashmap som mapper robotene til lister med de valgte av kort.
+     * Robotene skal bli identifisert hos klientene med navn.
+     */
+
+    final private TreeMap<Robot,IMessage> allDesicions;
+    AllChosenCardsFromAllRobots(TreeMap<Robot,IMessage> allDesicions){
         this.allDesicions = allDesicions;
     }
 
-    public HashMap<Robot, IMessage> getAllDesicions() {
+    /**
+     *
+     * @return Hashmap med roboter og deres valgte kort.
+     */
+    public TreeMap<Robot, IMessage> getAllDesicions() {
         return allDesicions;
     }
 }

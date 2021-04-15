@@ -1,6 +1,7 @@
 package GUIMain.Screens;
 
 import GUIMain.GUI;
+import NetworkMultiplayer.Messages.ConfirmationMessages;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -28,13 +29,17 @@ public class ConnectingScreen extends SimpleScreen{
     @Override
     public void render(float v){
         super.render(v);
+
         if (waitone){
             waitone = false;
             return;
         }
-        if ( ! hasTriedToConnectYet){
+        if (gui.getClient() == null){
             gui.startClient();
-            hasTriedToConnectYet = true;
+        }
+
+        if(gui.getClient().isConnected()){
+            gui.setScreen(new CreateRobotScreen(gui));
         }
     }
 }

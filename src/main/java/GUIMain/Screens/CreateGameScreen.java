@@ -3,6 +3,7 @@ package GUIMain.Screens;
 import GUIMain.GUI;
 import GameBoard.Robot;
 import NetworkMultiplayer.Messages.PreGameMessages.GameInfo;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
@@ -22,6 +23,7 @@ public class CreateGameScreen extends SimpleScreen {
     private SelectBox<Integer> numberOfRobots;
     private SelectBox<String> choosemapbox;
     private TextField textField;
+    private ShapeRenderer sr;
 
     public CreateGameScreen(GUI gui){
         super(gui);
@@ -74,8 +76,8 @@ public class CreateGameScreen extends SimpleScreen {
                     gui.showPopUp("Please enter a name for your robot.", stage);
                     return false;
                 }
-                ArrayList<Robot> robots = Robot.getDefaultRobots(numberOfRobots.getSelected()-1); // -1, siden spilleren inngår i disse robotene
-                robots.add(new Robot(textField.getText(), 3, false));
+                ArrayList<Robot> robots = Robot.getDefaultRobots(numberOfRobots.getSelected()-1, design); // -1, siden spilleren inngår i disse robotene
+                robots.add(new Robot(textField.getText(), design, false));
                 String map = MAP_LOCATION + "/" + choosemapbox.getSelected() + ".tmx";
                 gui.setScreen(new SinglePlayerLoadingScreen(new GameInfo(Collections.unmodifiableList(robots), map, numberOfRobots.getSelected()-1), false, true, gui));
 
@@ -93,6 +95,15 @@ public class CreateGameScreen extends SimpleScreen {
         temp.padBottom(50);
         table.add(temp);
         table.row();
+
+        Label choosedesign = new Label("Choose robot:", gui.getSkin());
+        choosedesign.setFontScale(2f);
+        table.add(choosedesign);
+        table.row();
+
+        showRobotDesigns();
+        table.add(designTable).row();
+
         Table bottomButtons = new Table();
         bottomButtons.add(start);
         bottomButtons.add(back);

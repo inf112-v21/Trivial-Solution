@@ -2,9 +2,11 @@ package NetworkMultiplayer;
 
 
 import GUIMain.GUI;
+import GUIMain.Screens.MultiplayerLoadingScreen;
 import GUIMain.Screens.WaitingForHostScreen;
 import GameBoard.Cards.ICard;
 import GameBoard.Robot;
+import NetworkMultiplayer.Messages.InGameMessages.AllChosenCardsFromAllRobots;
 import NetworkMultiplayer.Messages.MinorErrorMessage;
 import NetworkMultiplayer.Messages.ConfirmationMessages;
 import NetworkMultiplayer.Messages.InGameMessages.DistributedCards;
@@ -18,43 +20,45 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.TreeMap;
 
 public class NetworkClient {
 
-    public Client client;
+    final private Client client;
 
+    //Porter som meldinger blir sendt til
     final static int DEFAULT_UDP_PORT = 54777;
     final static int DEFAULT_TCP_PORT = 54555;
 
-    private HashMap<Robot,IMessage> AllChooseRobotCards;
+    //Pre-game meldinger
     private GameInfo setup;
     private boolean design;
     private boolean botName;
 
+    //In-game meldinger
+    private ArrayList<ICard> cardsToChoseFrom = new ArrayList<>();
+    private TreeMap<Robot,IMessage> AllChooseRobotCards = new TreeMap<>();
 
-    //Roboter startes inne i networkclient og networkserver.
-    //private Robot = new Robot();
 
 
     public NetworkClient() {
+
         client = new Client();
-        new Thread(client).start();
 
         //start klienten --> åpner opp en tråd for at den skal kunne sende og motta meldinger over nettverket.
+        new Thread(client).start();
 
         //Registrer klienten i nettverket
         LanNetwork.register(client);
 
         addListeners();
+
     }
 
     /**
-     * @return Henter robotene og kortene hver robot valgte
+     * @return GameInfo som vi trenger for å starte opp spillet hos klienten
+     * Bruk getMapName(), getRobots() eller getThisPlayersBotIndex() for å hente ut verdier
      */
-    public HashMap<Robot, IMessage> getChooseCards() {
-        return AllChooseRobotCards;
-    }
-
     public GameInfo getSetup() {
         return setup;
     }
@@ -71,6 +75,21 @@ public class NetworkClient {
      */
     public boolean isDesign() {
         return design;
+    }
+
+
+    /**
+     * @return Henter robotene og kortene hver robot valgte
+     */
+    public TreeMap<Robot, IMessage> getChooseCards() {
+        return AllChooseRobotCards;
+    }
+
+    /**
+     * @return De utdelte kortene som roboten kan velge mellom
+     */
+    public ArrayList<ICard> getCardsToChoseFrom() {
+        return cardsToChoseFrom;
     }
 
     /**
@@ -95,29 +114,38 @@ public class NetworkClient {
                 if(object instanceof ConfirmationMessages){
                     ConfirmationMessages message = ((ConfirmationMessages) object);
                     switch(message){
+
+                        //Brukes kun for testing.
                         case TEST_MESSAGE:
                             System.out.println("Client received message. Now sending Message to server");
                             sendToServer(ConfirmationMessages.CONNECTION_WAS_SUCCESSFUL);
-                        case CONNECTION_WAS_SUCCESSFUL:
-                            System.out.println("The message returned again");
+
                     }
 
                 }
 
-                //Klienten velger kortene sine
+                //Alle de valgte kortene fra hver robot
+                if(object instanceof AllChosenCardsFromAllRobots){
+                    AllChooseRobotCards = ((AllChosenCardsFromAllRobots) object).getAllDesicions();
+                }
+
+                //Kortene som klienten kan velge mellom
                 if(object instanceof DistributedCards){
-                    DistributedCards cardsRecieved =((DistributedCards) object);
-                    //AllChooseRobotCards = cardsRecieved.getChosenCards();
+                    cardsToChoseFrom =((DistributedCards) object).getChosenCards();
                 }
 
                 //Setter opp spillet hos klienten
                 else if (object instanceof GameInfo){
-                    GameInfo gi = (GameInfo) object;
-                    setup = gi;
+                    setup = (GameInfo) object;
                 }
 
 
 
+            }
+
+            @Override
+            public void connected(Connection connection){
+                sendToServer(ConfirmationMessages.CONNECTION_WAS_SUCCESSFUL);
             }
         });
 

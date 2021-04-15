@@ -23,6 +23,14 @@ public class GUI extends Game {
     private NetworkServer server;
     private NetworkClient client;
 
+    public NetworkServer getServer() {
+        return server;
+    }
+
+    public NetworkClient getClient() {
+        return client;
+    }
+
     /**
      * Standard GUI. Bruk denne.
      */
@@ -67,10 +75,6 @@ public class GUI extends Game {
             //Connect to client
             client.connect(hostIpadress.getHostName());
 
-            if (client.isConnected()) {
-                client.sendToServer(ConfirmationMessages.CONNECTION_WAS_SUCCESSFUL);
-                setScreen(new LobbyScreen(this));
-            }
         }catch (NullPointerException ex){
             Stage stage = new Stage();
             Gdx.input.setInputProcessor(stage);

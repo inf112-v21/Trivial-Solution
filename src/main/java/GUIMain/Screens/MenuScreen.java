@@ -5,7 +5,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import com.badlogic.gdx.utils.Align;
 
 import static com.badlogic.gdx.graphics.Color.*;
 
@@ -25,14 +24,17 @@ public class MenuScreen extends SimpleScreen {
         super.show();
         Table tabell = new Table();
         tabell.setBounds(0,0,Gdx.graphics.getWidth(),Gdx.graphics.getHeight());
-        Label title = new Label("Robo-Rally", gui.getSkin());
-        title.setFontScale(3);
-        title.getStyle().fontColor = WHITE;
-        title.setAlignment(Align.top);
+        parameter.size = 58;
+        parameter.borderWidth = 3f;
+        parameter.color = WHITE;
+        parameter.borderColor = BLACK;
+        style.font = generator.generateFont(parameter);
+        Label title = new Label("Robo-Rally",style);
         tabell.add(title).spaceBottom(20);
         tabell.row();
-        Label undertitle = new Label("A Trivial Solution", gui.getSkin());
-        undertitle.setFontScale(2);
+        parameter.size = 36;
+        style.font = generator.generateFont(parameter);
+        Label undertitle = new Label("A Trivial Solution", style);
         tabell.add(undertitle).spaceBottom(40);
         tabell.row();
 
@@ -76,5 +78,13 @@ public class MenuScreen extends SimpleScreen {
 
         stage.addActor(tabell);
 
+    }
+    @Override
+    public void render(float i){
+        batch.begin();
+        backgroundSprite.draw(batch);
+        batch.end();
+        stage.act(Gdx.graphics.getDeltaTime());
+        stage.draw();
     }
 }

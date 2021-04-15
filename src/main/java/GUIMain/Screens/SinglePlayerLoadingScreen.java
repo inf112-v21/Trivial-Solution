@@ -2,14 +2,12 @@ package GUIMain.Screens;
 
 import GUIMain.GUI;
 import NetworkMultiplayer.Messages.PreGameMessages.GameInfo;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.utils.viewport.ScreenViewport;
+
+import static com.badlogic.gdx.graphics.Color.BLACK;
+import static com.badlogic.gdx.graphics.Color.WHITE;
 
 public class SinglePlayerLoadingScreen extends SimpleScreen {
 
@@ -29,9 +27,13 @@ public class SinglePlayerLoadingScreen extends SimpleScreen {
     @Override
     public void show() {
         super.show();
+        parameter.size = 58;
+        parameter.borderWidth = 3f;
+        parameter.color = WHITE;
+        parameter.borderColor = BLACK;
+        style.font = generator.generateFont(parameter);
         Table table = new Table();
-        Label title = new Label("Loading....", gui.getSkin());
-        title.setFontScale(4);
+        Label title = new Label("Loading....", style);
         table.add(title);
         table.setFillParent(true);
         table.padBottom(350);

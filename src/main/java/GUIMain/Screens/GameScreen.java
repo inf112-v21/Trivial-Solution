@@ -19,6 +19,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
@@ -32,6 +33,9 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+
+import static com.badlogic.gdx.graphics.Color.BLACK;
+import static com.badlogic.gdx.graphics.Color.WHITE;
 
 public class GameScreen implements Screen {
 
@@ -73,6 +77,9 @@ public class GameScreen implements Screen {
     private SpriteBatch spriteBatch;
     public static Robot winningbot;
 
+    private final Label.LabelStyle style;
+    public static int fontsize = 30;
+
 
     public GameScreen(GameInfo gameInfo, boolean isThisMultiPlayer, boolean amITheHost, GUI gui){
         this.gui = gui;
@@ -97,6 +104,14 @@ public class GameScreen implements Screen {
 
         renderer = new OrthogonalTiledMapRenderer(map, 1);
         playerControlledRobot = robots.get(gameInfo.getThisPlayersBotIndex());
+        FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/ObliviousFont.ttf"));
+        FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
+        style = new Label.LabelStyle();
+        parameter.size = fontsize;
+        parameter.borderWidth = 3f;
+        parameter.color = WHITE;
+        parameter.borderColor = BLACK;
+        style.font = generator.generateFont(parameter);
     }
 
     @Override
@@ -142,8 +157,7 @@ public class GameScreen implements Screen {
         font = new BitmapFont();
         String playerHealthAndLives = "HP: " + playerControlledRobot.getHP() + " Lives: " + playerControlledRobot.getLives();
 
-        label = new Label(playerHealthAndLives, gui.getSkin());
-        label.setFontScale(2f);
+        label = new Label(playerHealthAndLives, style);
 
         createOptions();
         stage.addActor(placements);

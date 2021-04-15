@@ -6,9 +6,11 @@ import GameBoard.Robot;
 import NetworkMultiplayer.Messages.*;
 import NetworkMultiplayer.Messages.InGameMessages.AllChosenCardsFromAllRobots;
 import NetworkMultiplayer.Messages.InGameMessages.ChosenCards;
+import NetworkMultiplayer.Messages.InGameMessages.ChosenRobot;
 import NetworkMultiplayer.Messages.InGameMessages.DistributedCards;
 import NetworkMultiplayer.Messages.PreGameMessages.GameInfo;
 import NetworkMultiplayer.Messages.PreGameMessages.RobotInfo;
+import NetworkMultiplayer.Messages.PreGameMessages.SetupRobotNameDesignMessage;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.serializers.JavaSerializer;
 import com.esotericsoftware.kryonet.EndPoint;
@@ -43,7 +45,8 @@ public class LanNetwork {
         kryo.register(ConfirmationMessages.class);
         kryo.register(ICard.class, new JavaSerializer());
         kryo.register(AllChosenCardsFromAllRobots.class, new JavaSerializer());
-        kryo.register(MinorErrorMessage.class);
+        kryo.register(SetupRobotNameDesignMessage.class);
+        kryo.register(ChosenRobot.class, new JavaSerializer());
 
 
     }

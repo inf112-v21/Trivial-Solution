@@ -2,7 +2,7 @@ package GUIMain.Screens;
 
 import GUIMain.GUI;
 import GameBoard.Robot;
-import NetworkMultiplayer.Messages.MinorErrorMessage;
+import NetworkMultiplayer.Messages.PreGameMessages.SetupRobotNameDesignMessage;
 import NetworkMultiplayer.Messages.PreGameMessages.RobotInfo;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -65,7 +65,8 @@ public class LobbyScreen extends SimpleScreen {
                     gui.showPopUp("Please choose a nickname for you robot!", stage);
                     return;
                 }
-                MinorErrorMessage msg = gui.getServer().setHostRobot(new RobotInfo(robotname.getText(), design));
+                SetupRobotNameDesignMessage msg = gui.getServer().setHostRobot(new RobotInfo(robotname.getText(), design));
+
                 if (msg == null){
                     chooserobottable.clear();
                 }

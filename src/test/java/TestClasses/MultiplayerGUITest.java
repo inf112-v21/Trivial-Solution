@@ -40,6 +40,18 @@ public class MultiplayerGUITest {
         }
     }
 
+    static class Client2{
+        public static void main(String[] args) {
+            Lwjgl3ApplicationConfiguration cfg = new Lwjgl3ApplicationConfiguration();
+            cfg.setTitle("Robo-Rally");
+            cfg.setAutoIconify(true);
+            cfg.setResizable(false);
+
+            new Lwjgl3Application(new GUI(), cfg);
+        }
+    }
+
+
 }
 
 

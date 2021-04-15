@@ -3,7 +3,7 @@ package NetworkMultiplayer;
 import GameBoard.Cards.ICard;
 import GameBoard.Robot;
 import NetworkMultiplayer.Messages.InGameMessages.AllChosenCardsFromAllRobots;
-import NetworkMultiplayer.Messages.MinorErrorMessage;
+import NetworkMultiplayer.Messages.PreGameMessages.SetupRobotNameDesignMessage;
 import NetworkMultiplayer.Messages.ConfirmationMessages;
 import NetworkMultiplayer.Messages.InGameMessages.DistributedCards;
 import NetworkMultiplayer.Messages.PreGameMessages.GameInfo;
@@ -15,7 +15,6 @@ import com.esotericsoftware.kryonet.Client;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.TreeMap;
 
 public class NetworkClient {
@@ -30,12 +29,31 @@ public class NetworkClient {
     private GameInfo setup;
     private boolean design;
     private boolean botName;
+    Robot clientRobot;
+    private int chosenDesign;
+    private String chosenName;
+
+
+    public void setChosenDesign(int chosenDesign) {
+        this.chosenDesign = chosenDesign;
+    }
+
+    public void setChosenName(String chosenName) {
+        this.chosenName = chosenName;
+    }
 
     //In-game meldinger
     private ArrayList<ICard> cardsToChoseFrom = new ArrayList<>();
     private TreeMap<Robot,IMessage> AllChooseRobotCards = new TreeMap<>();
 
+    //pre-game melding
+    //Denne forteller oss om det går fint å sette opp en robot
+    private SetupRobotNameDesignMessage state;
 
+
+    public SetupRobotNameDesignMessage getState() {
+        return state;
+    }
 
     public NetworkClient() {
 
@@ -97,13 +115,16 @@ public class NetworkClient {
         client.addListener(new Listener() {
             public void received (Connection connection, Object object) {
 
-                if(object instanceof MinorErrorMessage){
-                    MinorErrorMessage message = ((MinorErrorMessage) object);
+                if(object instanceof SetupRobotNameDesignMessage){
+                    SetupRobotNameDesignMessage message = ((SetupRobotNameDesignMessage) object);
                     switch(message){
                         case UNAVAILABLE_DESIGN:
-                            design = true;
+                            state = SetupRobotNameDesignMessage.UNAVAILABLE_DESIGN;
                         case UNAVAILABLE_NAME:
-                            botName = true;
+                            state = SetupRobotNameDesignMessage.UNAVAILABLE_NAME;
+                        case ROBOT_DESIGN_AND_NAME_ARE_OKEY:
+                            state = SetupRobotNameDesignMessage.ROBOT_DESIGN_AND_NAME_ARE_OKEY;
+
                     }
                 }
 
@@ -115,6 +136,7 @@ public class NetworkClient {
                         case TEST_MESSAGE:
                             System.out.println("Client received message. Now sending Message to server");
                             sendToServer(ConfirmationMessages.CONNECTION_WAS_SUCCESSFUL);
+
 
                     }
 

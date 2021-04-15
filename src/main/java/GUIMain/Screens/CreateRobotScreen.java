@@ -1,7 +1,10 @@
 package GUIMain.Screens;
 
 import GUIMain.GUI;
+import GameBoard.Robot;
+import NetworkMultiplayer.Messages.InGameMessages.ChosenRobot;
 import NetworkMultiplayer.Messages.PreGameMessages.RobotInfo;
+import NetworkMultiplayer.Messages.PreGameMessages.SetupRobotNameDesignMessage;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
@@ -39,11 +42,35 @@ public class CreateRobotScreen extends SimpleScreen{
         confirm.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent changeEvent, Actor actor) {
-                gui.getClient().sendToServer(new RobotInfo(textField.getText(), design));
+                gui.getClient().sendToServer(new RobotInfo(textField.getText(),design));
+
+
+                if (textField.getText().equals("")){
+                    gui.showPopUp("Please choose a nickname for you robot!", stage);
+                    return;
+                }
+                SetupRobotNameDesignMessage msg = gui.getClient().getState();
+
+                switch (msg) {
+                    case UNAVAILABLE_DESIGN:
+                        gui.showPopUp("That robot has already been taken, please choose another one", stage);
+                    case UNAVAILABLE_NAME:
+                        gui.showPopUp("That name has already been taken, please be more original", stage);
+                    case ROBOT_DESIGN_AND_NAME_ARE_OKEY:
+                        //TODO 15.04.2021 Sett dette i render?
+                         Robot newBot = new Robot(textField.getText(), design,false);
+                         gui.getClient().sendToServer(new ChosenRobot(newBot));
+                }
             }
+
         });
         table.add(confirm);
         table.setFillParent(true);
         stage.addActor(table);
+    }
+
+    @Override
+    public void render(float i) {
+        super.render(i);
     }
 }

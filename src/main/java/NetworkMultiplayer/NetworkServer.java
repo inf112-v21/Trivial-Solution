@@ -1,8 +1,9 @@
 package NetworkMultiplayer;
 
 import GameBoard.Robot;
+import NetworkMultiplayer.Messages.InGameMessages.ChosenRobot;
 import NetworkMultiplayer.Messages.InGameMessages.SanityCheck;
-import NetworkMultiplayer.Messages.MinorErrorMessage;
+import NetworkMultiplayer.Messages.PreGameMessages.SetupRobotNameDesignMessage;
 import NetworkMultiplayer.Messages.ConfirmationMessages;
 import NetworkMultiplayer.Messages.InGameMessages.ChosenCards;
 import NetworkMultiplayer.Messages.IMessage;
@@ -10,6 +11,7 @@ import NetworkMultiplayer.Messages.PreGameMessages.RobotInfo;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Server;
+import org.javatuples.Pair;
 
 import java.io.IOException;
 import java.util.*;
@@ -37,7 +39,22 @@ public class NetworkServer extends Listener {
     //Valgene de ulike klientene/robotenes tar.
     private TreeMap<Robot,IMessage> robotActions = new TreeMap<>();
 
+    private HashMap<Connection,Pair<String,Integer>> connectionAndNameDesign= new HashMap<>();
+
+    private String hostName;
+    private int hostDesign;
+
+    public void setHostDesign(int hostDesign) {
+        this.hostDesign = hostDesign;
+    }
+
+    public void setHostName(String hostName) {
+        this.hostName = hostName;
+    }
+
     private Robot hostRobot;
+
+
 
     //Portene som data sendes imellom. Valgfrie porter kan velges.
     final static int DEFAULT_UDP_PORT = 54777;
@@ -48,6 +65,8 @@ public class NetworkServer extends Listener {
 
     //Gi serveren beskjed om å dele ut kort
     boolean simulationIsOver;
+
+
 
 
 
@@ -76,7 +95,7 @@ public class NetworkServer extends Listener {
         server = new Server();
 
         //Starter en ny tråd som gjør det mulig å sende og motta informasjon fra et nettverk
-        new Thread(server).start();
+        server.start();
 
         //Bind serveren til port
         bind();
@@ -150,21 +169,36 @@ public class NetworkServer extends Listener {
                     String newRobotName = bot.getBotName();
                     int chosenDesign = bot.getBotDesignNr();
 
-                    for (Robot registeredBot : robotActions.keySet()) {
-                        if (registeredBot.getDesign() == chosenDesign) {
-                            sendToClient(connection, MinorErrorMessage.UNAVAILABLE_DESIGN);
-                            return;
-                        }
-                        if (registeredBot.getName().equals(newRobotName)) {
-                            sendToClient(connection, MinorErrorMessage.UNAVAILABLE_NAME);
-                            return;
-                        }
 
+                    if(!connectionAndNameDesign.isEmpty()) {
+                        for (Pair<String, Integer> tuple : connectionAndNameDesign.values()) {
+                            if (tuple.getValue1().equals(chosenDesign) || tuple.getValue1().equals(hostDesign)) {
+                                sendToClient(connection, SetupRobotNameDesignMessage.UNAVAILABLE_DESIGN);
+                                return;
+                            }
+                            if (tuple.getValue0().equals(newRobotName) || tuple.getValue0().equals(hostName)) {
+                                sendToClient(connection, SetupRobotNameDesignMessage.UNAVAILABLE_NAME);
+                                return;
+                            }
+
+                        }
                     }
-                    //Hvis alt er greit så legger vi til roboten.
-                    Robot newBot = new Robot(newRobotName, chosenDesign, false);
+
+                    Pair<String,Integer> chosenND = new Pair<>(newRobotName,chosenDesign);
+
+                    //Inneholder kun designen og navnet til klientene
+                    connectionAndNameDesign.put(connection,chosenND);
+
+                    //Vi sender meldingen til klienten om at den kan skape roboten med det designet og navnet
+                    sendToClient(connection,SetupRobotNameDesignMessage.ROBOT_DESIGN_AND_NAME_ARE_OKEY);
+
+                }
+
+                if (object instanceof ChosenRobot){
+                    Robot newBot = ((ChosenRobot) object).getRobot();
                     connectionsAndRobots.put(connection, newBot);
                     robotActions.put(newBot, null);
+
                 }
 
                 //Test (sanity check)
@@ -177,6 +211,7 @@ public class NetworkServer extends Listener {
             public void connected(Connection connection) {
                 System.out.println("Server connected to client " + connection.getID());
                 numberOfConnections++;
+                System.out.println(connection);
 
                 //Vi registrer kommunikasjonslinken (connection). Robot opprettes senere da.
                 connectionsAndRobots.put(connection, null);
@@ -185,9 +220,9 @@ public class NetworkServer extends Listener {
         });
     }
 
-    public MinorErrorMessage setHostRobot(RobotInfo info){
-        if (robotActions.keySet().stream().map(Robot::getDesign).collect(Collectors.toList()).contains(info.getBotDesignNr())) return MinorErrorMessage.UNAVAILABLE_DESIGN;
-        if (robotActions.keySet().stream().map(Robot::getName).collect(Collectors.toList()).contains(info.getBotName())) return MinorErrorMessage.UNAVAILABLE_NAME;
+    public SetupRobotNameDesignMessage setHostRobot(RobotInfo info){
+        if (connectionAndNameDesign.values().stream().map(Pair<String,Integer>::getValue0).collect(Collectors.toList()).contains(info.getBotName())) return SetupRobotNameDesignMessage.UNAVAILABLE_DESIGN;
+        if (connectionAndNameDesign.values().stream().map(Pair<String,Integer>::getValue1).collect(Collectors.toList()).contains(info.getBotDesignNr())) return SetupRobotNameDesignMessage.UNAVAILABLE_NAME;
         hostRobot = new Robot(info.getBotName(), info.getBotDesignNr(), false);
         robotActions.put(hostRobot, null);
         return null;

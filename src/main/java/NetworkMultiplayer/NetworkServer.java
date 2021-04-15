@@ -118,6 +118,7 @@ public class NetworkServer extends Listener {
 
             //Kalles når vi mottar ting i nettverket
             public void received(Connection connection, Object object) {
+                System.out.println("Received " + object.getClass());
 
                 if (object instanceof ConfirmationMessages) {
                     ConfirmationMessages message = ((ConfirmationMessages) object);

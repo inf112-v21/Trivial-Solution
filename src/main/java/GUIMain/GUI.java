@@ -1,8 +1,6 @@
 package GUIMain;
 
-import GUIMain.Screens.LobbyScreen;
 import GUIMain.Screens.MenuScreen;
-        import NetworkMultiplayer.Messages.ConfirmationMessages;
         import NetworkMultiplayer.NetworkClient;
         import NetworkMultiplayer.NetworkServer;
         import com.badlogic.gdx.Game;
@@ -37,14 +35,6 @@ public class GUI extends Game {
     public GUI(){
         super();
         currentScreen = new MenuScreen(this);
-    }
-
-    /**
-     * GUI kun for testing. Hopper umiddelbart til initialScreen etter konstruktøren er ferdig.
-     */
-    public GUI(Screen initialScreen){
-        super();
-        currentScreen = initialScreen;
     }
 
     @Override

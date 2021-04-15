@@ -68,8 +68,6 @@ public abstract class SimpleScreen implements Screen {
         designTable.clear();
         TextureRegion[][] region = new TextureRegion(new Texture("Robotdesigns/robots.png")).split(GameScreen.CELL_SIZE, GameScreen.CELL_SIZE);
         TextureRegion[][] border = new TextureRegion(new Texture("Robotdesigns/bordered_robots.png")).split(300, 300);
-        System.out.println(border.length);
-        System.out.println(region.length);
         for (int i = 0; i < Robot.NUMBER_OF_DESIGNS; i++) {
             Image img;
             if (design != i) img = new Image(region[0][i]);

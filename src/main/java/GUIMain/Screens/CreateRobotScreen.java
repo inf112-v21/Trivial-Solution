@@ -1,16 +1,10 @@
 package GUIMain.Screens;
 
 import GUIMain.GUI;
-import GameBoard.Robot;
 import NetworkMultiplayer.Messages.PreGameMessages.RobotInfo;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 public class CreateRobotScreen extends SimpleScreen{
 

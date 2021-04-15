@@ -30,15 +30,13 @@ public class NetworkClient {
     private GameInfo setup;
     private boolean design;
     private boolean botName;
-    private GUI gui;
 
 
     //Roboter startes inne i networkclient og networkserver.
     //private Robot = new Robot();
 
 
-    public NetworkClient(GUI gui) {
-        this.gui = gui;
+    public NetworkClient() {
         client = new Client();
         new Thread(client).start();
 

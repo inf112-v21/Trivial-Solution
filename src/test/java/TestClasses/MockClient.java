@@ -14,7 +14,7 @@ public class MockClient {
      * MockServer må startes først da.
      */
     public static void main(String[] args) {
-        NetworkClient client = new NetworkClient(null);
+        NetworkClient client = new NetworkClient();
 
         //Finner Ip-addressen til hosten.
         InetAddress hostIpadress = client.findServer();
@@ -46,7 +46,7 @@ public class MockClient {
 
 class MockClient2{
     public static void main(String[] args) {
-        NetworkClient client = new NetworkClient(null);
+        NetworkClient client = new NetworkClient();
 
         //Finner Ip-addressen til hosten.
         InetAddress hostIpadress = client.findServer();

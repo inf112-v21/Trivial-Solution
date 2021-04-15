@@ -3,6 +3,7 @@ package NetworkMultiplayer;
 import GameBoard.Robot;
 import NetworkMultiplayer.Messages.InGameMessages.ChosenRobot;
 import NetworkMultiplayer.Messages.InGameMessages.SanityCheck;
+import NetworkMultiplayer.Messages.PreGameMessages.GameInfo;
 import NetworkMultiplayer.Messages.PreGameMessages.SetupRobotNameDesignMessage;
 import NetworkMultiplayer.Messages.ConfirmationMessages;
 import NetworkMultiplayer.Messages.InGameMessages.ChosenCards;
@@ -277,20 +278,18 @@ public class NetworkServer extends Listener {
      */
     public void deleteServer() throws IOException { server.dispose();}
 
-
-    /**
+     /**
      * WIP
      * Starter opp spillet for alle.
-     * TODO Sørg for at serveren selv også får starte opp spillet.
      * @param mapname
-
-    public void startTheGame(String mapname){
-        List<Robot> bots = Collections.unmodifiableList(new ArrayList<>(clientRobots.values()));
-        for (Connection con : connectedClients.keySet()){
-            int index = bots.indexOf(clientRobots.get(con));
-            sendToClient(con, new GameInfo(bots, mapname, index));
+     */
+    public GameInfo startTheGame(String mapname){
+        List<Robot> robots = Collections.unmodifiableList(new ArrayList<>(robotActions.keySet()));
+        for (Connection con : connectionsAndRobots.keySet()){
+            sendToClient(con, new GameInfo(robots, mapname, robots.indexOf(connectionsAndRobots.get(con))));
         }
+        return new GameInfo(robots, mapname, robots.indexOf(hostRobot));
     }
-    */
+
 
 }

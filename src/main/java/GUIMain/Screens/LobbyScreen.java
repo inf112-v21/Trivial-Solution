@@ -2,6 +2,7 @@ package GUIMain.Screens;
 
 import GUIMain.GUI;
 import GameBoard.Robot;
+import NetworkMultiplayer.Messages.PreGameMessages.GameInfo;
 import NetworkMultiplayer.Messages.PreGameMessages.SetupRobotNameDesignMessage;
 import NetworkMultiplayer.Messages.PreGameMessages.RobotInfo;
 import com.badlogic.gdx.Gdx;
@@ -69,6 +70,15 @@ public class LobbyScreen extends SimpleScreen {
 
                 if (msg == null){
                     chooserobottable.clear();
+                    TextButton butt = new TextButton("Start game", gui.getSkin());
+                    butt.addListener(new ChangeListener() {
+                        @Override
+                        public void changed(ChangeEvent changeEvent, Actor actor) {
+                            GameInfo info = gui.getServer().startTheGame(map.getSelected());
+                            gui.setScreen(new GameScreen(info, true, true, gui));
+                        }
+                    });
+                    table.add(butt);
                 }
                 else {
                     switch (msg) {

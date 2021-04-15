@@ -1,11 +1,9 @@
 package NetworkMultiplayer.Messages.InGameMessages;
 
-import GameBoard.Cards.ICard;
 import GameBoard.Robot;
 import NetworkMultiplayer.Messages.IMessage;
 
 import java.io.Serializable;
-import java.util.HashMap;
 import java.util.TreeMap;
 
 public class AllChosenCardsFromAllRobots implements IMessage, Serializable {

@@ -11,12 +11,6 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 
 import java.util.TreeSet;
 
-import static NetworkMultiplayer.Messages.MinorErrorMessage.UNAVAILABLE_DESIGN;
-import static NetworkMultiplayer.Messages.MinorErrorMessage.UNAVAILABLE_NAME;
-
-import static com.badlogic.gdx.graphics.Color.BLACK;
-import static com.badlogic.gdx.graphics.Color.WHITE;
-
 public class LobbyScreen extends SimpleScreen {
 
     private TreeSet<String> listOfPlayers = new TreeSet<>();

@@ -42,25 +42,11 @@ public class CreateRobotScreen extends SimpleScreen{
         confirm.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent changeEvent, Actor actor) {
-                gui.getClient().sendToServer(new RobotInfo(textField.getText(),design));
-
-
                 if (textField.getText().equals("")){
                     gui.showPopUp("Please choose a nickname for you robot!", stage);
                     return;
                 }
-                SetupRobotNameDesignMessage msg = gui.getClient().getState();
-
-                switch (msg) {
-                    case UNAVAILABLE_DESIGN:
-                        gui.showPopUp("That robot has already been taken, please choose another one", stage);
-                    case UNAVAILABLE_NAME:
-                        gui.showPopUp("That name has already been taken, please be more original", stage);
-                    case ROBOT_DESIGN_AND_NAME_ARE_OKEY:
-                        //TODO 15.04.2021 Sett dette i render?
-                         Robot newBot = new Robot(textField.getText(), design,false);
-                         gui.getClient().sendToServer(new ChosenRobot(newBot));
-                }
+                gui.getClient().sendToServer(new RobotInfo(textField.getText(),design));
             }
 
         });
@@ -72,5 +58,16 @@ public class CreateRobotScreen extends SimpleScreen{
     @Override
     public void render(float i) {
         super.render(i);
+        SetupRobotNameDesignMessage msg = gui.getClient().getState();
+        if (msg == null) return;
+        switch (msg) {
+            case UNAVAILABLE_DESIGN:
+                gui.showPopUp("That robot has already been taken, please choose another one", stage);
+            case UNAVAILABLE_NAME:
+                gui.showPopUp("That name has already been taken, please be more original", stage);
+            //case ROBOT_DESIGN_AND_NAME_ARE_OKEY:
+            //    Robot newBot = new Robot(textField.getText(), design,false);
+            //    gui.getClient().sendToServer(new ChosenRobot(newBot));
+        }
     }
 }

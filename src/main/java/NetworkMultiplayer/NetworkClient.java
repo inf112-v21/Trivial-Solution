@@ -50,7 +50,7 @@ public class NetworkClient {
     //Denne forteller oss om det går fint å sette opp en robot
     private SetupRobotNameDesignMessage state;
 
-
+    public void resetState(){ state = null; }
     public SetupRobotNameDesignMessage getState() {
         return state;
     }

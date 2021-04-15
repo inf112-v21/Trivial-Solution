@@ -183,7 +183,10 @@ public class NetworkServer extends Listener {
 
                         }
                     }
-
+                    Robot newbot = new Robot(newRobotName, chosenDesign, false);
+                    connectionsAndRobots.put(connection, newbot);
+                    robotActions.put(newbot, null);
+                    /*
                     Pair<String,Integer> chosenND = new Pair<>(newRobotName,chosenDesign);
 
                     //Inneholder kun designen og navnet til klientene
@@ -191,6 +194,8 @@ public class NetworkServer extends Listener {
 
                     //Vi sender meldingen til klienten om at den kan skape roboten med det designet og navnet
                     sendToClient(connection,SetupRobotNameDesignMessage.ROBOT_DESIGN_AND_NAME_ARE_OKEY);
+
+                     */
 
                 }
 

@@ -34,7 +34,7 @@ public class Robot implements Serializable, Comparable<Robot> {
     private int lives = INITIAL_LIVES;
 	private int hp = INITIAL_HP;
 
-	private int design;
+	private int design = -1;
 	private final String name;
 	private TextureRegion image;
 	private int direction = INITIAL_DIRECTION;
@@ -54,7 +54,7 @@ public class Robot implements Serializable, Comparable<Robot> {
 		this.isControlledByAI = isControlledByAI;
 		powerDown = false;
 
-		this.image = new TextureRegion(new Texture("Robotdesigns/robots.png")).split(GameScreen.CELL_SIZE, GameScreen.CELL_SIZE)[0][design];
+		//this.image = new TextureRegion(new Texture("Robotdesigns/robots.png")).split(GameScreen.CELL_SIZE, GameScreen.CELL_SIZE)[0][design];
 	}
 
 
@@ -118,7 +118,10 @@ public class Robot implements Serializable, Comparable<Robot> {
     public void rotate(int degree) { direction = Math.floorMod(direction + degree, TAU); }
 
 	public TextureRegion getImage() {
-	    if (image == null) throw new IllegalStateException("This robot has no image. If it should have one, please use the other Robot constructor instead.");
+	    if (design  == -1) throw new IllegalStateException("This robot has no image. If it should have one, please use the other Robot constructor instead.");
+	    if (image  == null){
+			image = new TextureRegion(new Texture("Robotdesigns/robots.png")).split(GameScreen.CELL_SIZE, GameScreen.CELL_SIZE)[0][design];
+		}
 		return image;
 	}
 

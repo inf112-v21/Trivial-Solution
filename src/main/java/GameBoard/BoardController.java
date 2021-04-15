@@ -2,6 +2,7 @@ package GameBoard;
 
 import AIs.AI;
 import AIs.Randbot;
+import GUIMain.Screens.GameScreen;
 import GameBoard.Cards.Deck;
 import GameBoard.Cards.ICard;
 import GameBoard.Components.Flag;
@@ -124,6 +125,7 @@ public class BoardController {
     public Robot hasWon() {
         for (Robot bot : aliveRobots) {
             if (bot.getVisitedFlags().equals(flagWinningFormation)) {
+                GameScreen.winningbot = bot;
                 return bot;
             }
         }

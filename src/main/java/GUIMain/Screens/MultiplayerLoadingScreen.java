@@ -5,6 +5,9 @@ import NetworkMultiplayer.Messages.PreGameMessages.GameInfo;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 
+import static com.badlogic.gdx.graphics.Color.BLACK;
+import static com.badlogic.gdx.graphics.Color.WHITE;
+
 public class MultiplayerLoadingScreen extends SimpleScreen {
     private GameInfo gameInfo;
     private boolean isThisMultiPlayer;
@@ -22,8 +25,12 @@ public class MultiplayerLoadingScreen extends SimpleScreen {
     public void show() {
         super.show();
         Table table = new Table();
-        Label title = new Label("Connecting....", gui.getSkin());
-        title.setFontScale(4);
+        parameter.size = 58;
+        parameter.borderWidth = 3f;
+        parameter.color = WHITE;
+        parameter.borderColor = BLACK;
+        style.font = generator.generateFont(parameter);
+        Label title = new Label("Connecting....", style);
         table.add(title);
         table.setFillParent(true);
         table.padBottom(350);

@@ -19,6 +19,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
@@ -32,6 +33,9 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+
+import static com.badlogic.gdx.graphics.Color.BLACK;
+import static com.badlogic.gdx.graphics.Color.WHITE;
 
 public class GameScreen implements Screen {
 
@@ -52,7 +56,7 @@ public class GameScreen implements Screen {
 	private Stage stage;
 	private Table availableTable;
 	private Table chosenTable;
-    private ArrayList<Texture> chosenCards = new ArrayList<>();
+    private final ArrayList<Texture> chosenCards = new ArrayList<>();
     private Table optionsTable;
     private Table buttonTable;
 	protected Robot playerControlledRobot;
@@ -71,6 +75,10 @@ public class GameScreen implements Screen {
 
     private static Sprite backgroundSprite;
     private SpriteBatch spriteBatch;
+    public static Robot winningbot;
+
+    private final Label.LabelStyle style;
+    public static int fontsize = 30;
 
 
     public GameScreen(GameInfo gameInfo, boolean isThisMultiPlayer, boolean amITheHost, GUI gui){
@@ -96,6 +104,14 @@ public class GameScreen implements Screen {
 
         renderer = new OrthogonalTiledMapRenderer(map, 1);
         playerControlledRobot = robots.get(gameInfo.getThisPlayersBotIndex());
+        FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/ObliviousFont.ttf"));
+        FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
+        style = new Label.LabelStyle();
+        parameter.size = fontsize;
+        parameter.borderWidth = 3f;
+        parameter.color = WHITE;
+        parameter.borderColor = BLACK;
+        style.font = generator.generateFont(parameter);
     }
 
     @Override
@@ -109,11 +125,27 @@ public class GameScreen implements Screen {
     @Override
     public void show() {
         spriteBatch = new SpriteBatch();
-        Texture backgroundTexture = new Texture(Gdx.files.internal("Background Images/roborally.png"));
+        Texture backgroundTexture = new Texture(Gdx.files.internal("Background Images/CircuitboardDark.jpg"));
         backgroundSprite = new Sprite(backgroundTexture);
         backgroundSprite.setBounds(0,0,Gdx.graphics.getWidth(),Gdx.graphics.getHeight());
         stage = new Stage();
         Gdx.input.setInputProcessor(stage);
+        Table cardSlots = new Table();
+        Table placements = new Table();
+        placements.setBounds(Gdx.graphics.getWidth()/2f,0,Gdx.graphics.getWidth()/6f,Gdx.graphics.getHeight() );
+        cardSlots.setBounds(Gdx.graphics.getWidth()/2f,0,Gdx.graphics.getWidth()/6f,Gdx.graphics.getHeight() );
+        for (int i = 0; i<5; i++){
+            Texture slots = new Texture(Gdx.files.internal("CardSlots/input.png"));
+            Image slot = new Image(slots);
+            Texture number = new Texture(Gdx.files.internal("CardSlots/"+i+".png"));
+            Image placement = new Image(number);
+            placements.add(placement);
+            cardSlots.add(slot);
+            if( i != 4){
+                placements.row();
+                cardSlots.row();
+            }
+        }
         chosenTable = new Table();
         availableTable = new Table();
         buttonTable = new Table();
@@ -125,11 +157,12 @@ public class GameScreen implements Screen {
         font = new BitmapFont();
         String playerHealthAndLives = "HP: " + playerControlledRobot.getHP() + " Lives: " + playerControlledRobot.getLives();
 
-        label = new Label(playerHealthAndLives, gui.getSkin());
-        label.setFontScale(2f);
+        label = new Label(playerHealthAndLives, style);
 
         createOptions();
+        stage.addActor(placements);
         stage.addActor(chosenTable);
+        stage.addActor(cardSlots);
         stage.addActor(availableTable);
         createButtons();
         stage.addActor(buttonTable);
@@ -290,10 +323,11 @@ public class GameScreen implements Screen {
         gameBoard.simulate();
         updateRobotPositions();
         updateLivesAndHP();
-        for (Robot bot : gameBoard.getRecentlyDeceasedRobots()){
+        /**for (Robot bot : gameBoard.getRecentlyDeceasedRobots()){
             gui.showPopUp(bot.getName() + " fucking died, lmao", stage);
             // TODO 06.04.2021: Spillet krasjer når denne blir kalt her
-        }
+        }**/
+        finishedCheck();
 
         //Dette sørger for at kortene kun blir tegnet én gang per runde. Bedre kjøretid, yay
         if(gameBoard.isWaitingForPlayers()){
@@ -305,6 +339,28 @@ public class GameScreen implements Screen {
         else hasDrawnCardsYet = false;
     }
 
+    private void finishedCheck(){
+        if(winningbot !=null){
+            if(playerControlledRobot == winningbot){
+                gui.setScreen(new WinScreen(gui));
+            }
+            else{
+                gui.setScreen(new GameOverScreen(gui));
+            }
+        }
+        if(playerControlledRobot.getLives() <= 0){
+            gui.setScreen(new GameOverScreen(gui));
+        }
+        int alive = 0;
+        for(Robot bot: robots){
+            if (bot.getLives()>0){
+                alive++;
+            }
+        }
+        if(alive == 1 && playerControlledRobot.getLives()>0){
+            gui.setScreen(new WinScreen(gui));
+        }
+    }
     private void updateRobotPositions(){
         for (Position pos : gameBoard.getDirtyLocations()){
             Robot bot = gameBoard.getRobotAt(pos.getX(), pos.getY());

@@ -47,6 +47,7 @@ public class LanNetwork {
         kryo.register(AllChosenCardsFromAllRobots.class, new JavaSerializer());
         kryo.register(SetupRobotNameDesignMessage.class);
         kryo.register(ChosenRobot.class, new JavaSerializer());
+        kryo.register(String.class, new JavaSerializer());
 
 
     }

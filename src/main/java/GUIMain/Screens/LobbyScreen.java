@@ -67,26 +67,25 @@ public class LobbyScreen extends SimpleScreen {
                     return;
                 }
                 SetupRobotNameDesignMessage msg = gui.getServer().setHostRobot(new RobotInfo(robotname.getText(), design));
-
-                if (msg == null){
-                    chooserobottable.clear();
-                    TextButton butt = new TextButton("Start game", gui.getSkin());
-                    butt.addListener(new ChangeListener() {
-                        @Override
-                        public void changed(ChangeEvent changeEvent, Actor actor) {
-                            GameInfo info = gui.getServer().startTheGame(map.getSelected());
-                            gui.setScreen(new GameScreen(info, true, true, gui));
-                        }
-                    });
-                    table.add(butt);
-                }
-                else {
-                    switch (msg) {
-                        case UNAVAILABLE_DESIGN:
-                            gui.showPopUp("That robot has already been taken, please choose another one", stage);
-                        case UNAVAILABLE_NAME:
-                            gui.showPopUp("That name has already been taken, please be more original", stage);
-                    }
+                switch (msg) {
+                    case ROBOT_DESIGN_AND_NAME_ARE_OKEY:
+                        chooserobottable.clear();
+                        TextButton butt = new TextButton("Start game", gui.getSkin());
+                        butt.addListener(new ChangeListener() {
+                            @Override
+                            public void changed(ChangeEvent changeEvent, Actor actor) {
+                                GameInfo info = gui.getServer().startTheGame(map.getSelected());
+                                gui.setScreen(new GameScreen(info, true, true, gui));
+                            }
+                        });
+                        table.add(butt);
+                        return;
+                    case UNAVAILABLE_DESIGN:
+                        gui.showPopUp("That robot has already been taken, please choose another one", stage);
+                        return;
+                    case UNAVAILABLE_NAME:
+                        gui.showPopUp("That name has already been taken, please be more original", stage);
+                        return;
                 }
             }
         });

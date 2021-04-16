@@ -227,11 +227,13 @@ public class NetworkServer extends Listener {
     }
 
     public SetupRobotNameDesignMessage setHostRobot(RobotInfo info){
+        if (robotActions.keySet().stream().map(Robot::getDesign).collect(Collectors.toList()).contains(info.getBotDesignNr())) return SetupRobotNameDesignMessage.UNAVAILABLE_DESIGN;
+        if (robotActions.keySet().stream().map(Robot::getName  ).collect(Collectors.toList()).contains(info.getBotName()    )) return SetupRobotNameDesignMessage.UNAVAILABLE_NAME;
         if (connectionAndNameDesign.values().stream().map(Pair<String,Integer>::getValue0).collect(Collectors.toList()).contains(info.getBotName())) return SetupRobotNameDesignMessage.UNAVAILABLE_DESIGN;
         if (connectionAndNameDesign.values().stream().map(Pair<String,Integer>::getValue1).collect(Collectors.toList()).contains(info.getBotDesignNr())) return SetupRobotNameDesignMessage.UNAVAILABLE_NAME;
         hostRobot = new Robot(info.getBotName(), info.getBotDesignNr(), false);
         robotActions.put(hostRobot, null);
-        return null;
+        return SetupRobotNameDesignMessage.ROBOT_DESIGN_AND_NAME_ARE_OKEY;
     }
 
 

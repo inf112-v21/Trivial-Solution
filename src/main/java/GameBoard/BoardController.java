@@ -78,6 +78,7 @@ public class BoardController {
     public void playersAreReady(){ waitingForPlayers = false; }
 
     private void startRound(){
+        GameScreen.roundFinished = false;
         deck.shuffleDeck();
         for (Robot bot : aliveRobots){
             ArrayList<ICard> cardlist = new ArrayList<>();

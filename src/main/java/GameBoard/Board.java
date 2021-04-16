@@ -370,9 +370,12 @@ public class Board {
         }
         if(forgrid[y][x] instanceof Wall && !((Wall) forgrid[y][x]).canLeaveInDirection(dir)) return;
 
-        findCorrespondingLaser(x, y, dir, isDoubleLaser);
-        //TODO: 14.04.2021 Litt bugs her når laserne tegnes opp, tegnes ikka alltid riktig
-        // TODO: 15.04 Robotene tegner laser oppå seg selv + crossingLasers vises ikke
+        if(!ignoreFirst)
+            findCorrespondingLaser(x, y, dir, isDoubleLaser);
+
+        //TODO: 14.04.2021 Litt bugs her når laserne tegnes opp, tegnes ikka alltid korrekt.
+        // Tror dette har noe med sammenhengen av når laserne blir tegnet og robotene flytter seg
+        //TODO: 15.04 crossingLasers vises ikke
 
         int nextX = x + directionToX(dir);
         int nextY = y + directionToY(dir);

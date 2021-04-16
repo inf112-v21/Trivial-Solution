@@ -32,7 +32,7 @@ public class NetworkClient {
 
     //In-game meldinger
     private ArrayList<ICard> cardsToChoseFrom = new ArrayList<>();
-    private TreeMap<Robot,IMessage> AllChooseRobotCards = new TreeMap<>();
+    private TreeMap<Robot,ArrayList<ICard>> AllChoseRobotCards = new TreeMap<>();
 
     //pre-game melding
     //Denne forteller oss om det går fint å sette opp en robot
@@ -66,6 +66,7 @@ public class NetworkClient {
     }
 
 
+
     /**
      * @return Henter robotene og kortene hver robot valgte
      */
@@ -80,7 +81,10 @@ public class NetworkClient {
      * @return De utdelte kortene som roboten kan velge mellom
      */
     public ArrayList<ICard> getCardsToChoseFrom() {
-        return cardsToChoseFrom;
+        if(cardsToChoseFrom == null) return null;
+        ArrayList<ICard> ret = new ArrayList(cardsToChoseFrom);
+        cardsToChoseFrom = null;
+        return ret;
     }
 
     /**
@@ -123,7 +127,7 @@ public class NetworkClient {
 
                 //Alle de valgte kortene fra hver robot
                 else if(object instanceof AllChosenCardsFromAllRobots){
-                    AllChooseRobotCards = ((AllChosenCardsFromAllRobots) object).getAllDesicions();
+                    AllChoseRobotCards = ((AllChosenCardsFromAllRobots) object).getAllDesicions();
                 }
 
                 //Kortene som klienten kan velge mellom

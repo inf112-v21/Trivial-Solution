@@ -1,6 +1,8 @@
 package NetworkMultiplayer;
 
+import GameBoard.Cards.ICard;
 import GameBoard.Robot;
+import NetworkMultiplayer.Messages.InGameMessages.AllChosenCards;
 import NetworkMultiplayer.Messages.InGameMessages.ChosenRobot;
 import NetworkMultiplayer.Messages.InGameMessages.SanityCheck;
 import NetworkMultiplayer.Messages.PreGameMessages.GameInfo;
@@ -34,24 +36,16 @@ public class NetworkServer extends Listener {
     //antall tilkoblinger
     private int numberOfConnections = 0;
 
+    //antall mottate kortset
+    private int numberOfSetsOfCardsReceived = 0;
+
     //Mappinger som sjekker at vi har alt på plass
     private HashMap<Connection, Robot> connectionsAndRobots = new HashMap<>();
 
     //Valgene de ulike klientene/robotenes tar.
-    private TreeMap<Robot,IMessage> robotActions = new TreeMap<>();
+    private TreeMap<Robot,ArrayList<ICard>> robotActions = new TreeMap<>();
 
 
-
-    private String hostName;
-    private int hostDesign;
-
-    public void setHostDesign(int hostDesign) {
-        this.hostDesign = hostDesign;
-    }
-
-    public void setHostName(String hostName) {
-        this.hostName = hostName;
-    }
 
     private Robot hostRobot;
 
@@ -67,14 +61,41 @@ public class NetworkServer extends Listener {
     //Gi serveren beskjed om å dele ut kort
     boolean simulationIsOver;
 
+    /**
+     * Setter antall set av kost vi har fått fra klientene lik 0
+     * Vi må gjøre dette hver gang vi sender ut alle valgte kortset til klientene
+     */
+    public void resetNumberOfSetsOfCardsReceived() {
+        this.numberOfSetsOfCardsReceived = 0;
+    }
 
+    /**
+     * Brukes for å sjekke at serveren har mottat alle kortsettene fra
+     * alle klientene som spiller spillet. Brukes med
+     *
+     * @return antall klienter som har valgt kortene sine
+     */
+    public int getNumberOfCardsReceived() {
+        return numberOfSetsOfCardsReceived;
+    }
+
+    /**
+     * Brukes til å oppdattere kortene hostens robot valgte.
+     *
+     * @param bot - roboten. Denne må være host
+     * @param cards - kortene roboten har valgt
+     */
+    public void setHostsChosenCards(Robot bot,ArrayList<ICard> cards){
+        if (!hostRobot.equals(bot)) throw new SanityCheck.UnequalSimulationException("Roboten er ikke host");
+        robotActions.put(bot,cards);
+    }
 
 
 
     /**
      * @return - HashMap med robotene mappet til hvilke kort de valgte
      */
-    public TreeMap<Robot, IMessage> getRobotActions() {
+    public TreeMap<Robot, ArrayList<ICard>> getRobotActions() {
         return robotActions;
     }
 
@@ -157,7 +178,7 @@ public class NetworkServer extends Listener {
                     //Nå er de lagret i robotActions som vi kan sende med en gang
                     //over nettverket.
                     Robot thisRobotsAction = connectionsAndRobots.get(connection);
-                    robotActions.put(thisRobotsAction, cards);
+                    robotActions.put(thisRobotsAction, cards.getChosenCards());
 
                 }
 

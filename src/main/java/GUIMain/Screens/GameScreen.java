@@ -8,8 +8,11 @@ import GameBoard.Robot;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.TreeMap;
 
 import NetworkMultiplayer.Messages.InGameMessages.AllChosenCards;
+import NetworkMultiplayer.Messages.InGameMessages.ChosenCards;
+import NetworkMultiplayer.Messages.InGameMessages.SanityCheck;
 import NetworkMultiplayer.Messages.PreGameMessages.GameInfo;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
@@ -225,16 +228,20 @@ public class GameScreen implements Screen {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 if(optionsCheck){
-                    if( ! isThisMultiPlayer) {
+                    if( !isThisMultiPlayer) {
                         gameBoard.playersAreReady();
                     }
 
-                    else if ( ! amITheHost){
+                    else if (!amITheHost){
                         // TODO: 31.03.2021 Her skal klienten sende en ChooseCArds til serveren
+                        // Vi må sjekke at dette virker
+                        gui.getClient().sendToServer(new ChosenCards(playerControlledRobot.getChosenCards()));
                     }
 
                     else{
                         // TODO: 31.03.2021 Hva skal skje når hosten selv er ferdig med å velge kort?
+                        //Vi mp sjekke at dette virker
+                        gui.getServer().setHostsChosenCards(playerControlledRobot,playerControlledRobot.getChosenCards());
                     }
                 }
             }

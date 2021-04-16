@@ -372,7 +372,7 @@ public class Board {
 
         findCorrespondingLaser(x, y, dir, isDoubleLaser);
         //TODO: 14.04.2021 Litt bugs her når laserne tegnes opp, tegnes ikka alltid riktig
-        //TODO: 15.04.2021 Robotene sine lasere fjernes ikke alltid fra mappet
+        // TODO: 15.04 Robotene tegner laser oppå seg selv + crossingLasers vises ikke
 
         int nextX = x + directionToX(dir);
         int nextY = y + directionToY(dir);
@@ -389,7 +389,14 @@ public class Board {
      * @param x
      * @param y
      */
-    private void setLaserLocations(int ID, int x, int y) {
+    private void setLaserLocations(int ID, int x, int y, boolean isDoubleLaser) {
+        for(Position pos : laserLocations.keySet()){
+            if(pos.getX() == x && pos.getY() == y){
+                if(isDoubleLaser) ID = 101;
+                else ID = 40;
+            }
+        }
+
         LaserBeam laser = allLaserBeams.get(ID);
         TiledMapTileLayer.Cell cell = new TiledMapTileLayer.Cell();
         cell.setTile(new StaticTiledMapTile(new Sprite(laser.getImage())));
@@ -417,7 +424,7 @@ public class Board {
                     else ID = 39;
                     break;
         }
-        setLaserLocations(ID, x, y);
+        setLaserLocations(ID, x, y, isDoubleLaser);
     }
 
     /**

@@ -3,12 +3,12 @@ package GUIMain.Screens;
 import GameBoard.Cards.ICard;
 import GUIMain.GUI;
 import GameBoard.BoardController;
-import GameBoard.Components.LaserBeam;
 import GameBoard.Position;
 import GameBoard.Robot;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.TreeSet;
 
 import NetworkMultiplayer.Messages.InGameMessages.AllChosenCards;
 import NetworkMultiplayer.Messages.PreGameMessages.GameInfo;
@@ -40,15 +40,17 @@ import static com.badlogic.gdx.graphics.Color.WHITE;
 
 public class GameScreen implements Screen {
 
-    public static float TIME_DELTA = 1.0f;
+    public static float TIME_DELTA = 1.5f;
     public static final int CELL_SIZE = 300;
     public static boolean shouldLasersBeDrawn = false;
     private boolean lasersHaveBeenRendered = false;
+    public static boolean roundFinished;
+    private final TreeSet<Position> previousLaserPositions = new TreeSet<>();
 
     private SpriteBatch batch;
     private BitmapFont font;
     private final TiledMapTileLayer playerLayer;
-    private  final TiledMapTileLayer emptyLaserLayer;
+    private final TiledMapTileLayer laserLayer;
     private final OrthogonalTiledMapRenderer renderer;
     private final OrthographicCamera camera;
     private final String mapName;
@@ -103,7 +105,7 @@ public class GameScreen implements Screen {
         largeView.update(WIDTH*2, HEIGHT,true);
 
         playerLayer = (TiledMapTileLayer) map.getLayers().get("Robot");
-        emptyLaserLayer = (TiledMapTileLayer) map.getLayers().get("emptyLaserLayer");
+        laserLayer = (TiledMapTileLayer) map.getLayers().get("emptyLaserLayer");
 
         camera = (OrthographicCamera) largeView.getCamera();
         camera.update();
@@ -324,12 +326,14 @@ public class GameScreen implements Screen {
         renderer.render();
         stage.draw();
 
+        if(!roundFinished)
+            drawLasers();
+
         if(timeSinceLastUpdate < TIME_DELTA) return;
         timeSinceLastUpdate = 0;
         gameBoard.simulate();
         //TODO: The lasers in the first round does not get draw
         updateRobotPositions();
-        drawLasers();
         updateLivesAndHP();
         //TODO: 15.04 Få robotene til å blinke
         finishedCheck();
@@ -369,14 +373,16 @@ public class GameScreen implements Screen {
         if(!shouldLasersBeDrawn) return;
         shouldLasersBeDrawn = false;
         if(lasersHaveBeenRendered) {
-            for (Position pos : gameBoard.getLaserLocations().keySet()) {
-                emptyLaserLayer.setCell(pos.getX(), gameBoard.getHeight() - pos.getY() - 1, new TiledMapTileLayer.Cell());
+            for (Position pos : previousLaserPositions) {
+                laserLayer.setCell(pos.getX(), gameBoard.getHeight() - pos.getY() - 1, new TiledMapTileLayer.Cell());
             }
+            previousLaserPositions.clear();
             lasersHaveBeenRendered = false;
         }else {
             for (Position pos : gameBoard.getLaserLocations().keySet()){
-                emptyLaserLayer.setCell(pos.getX(), gameBoard.getHeight() - pos.getY() - 1, gameBoard.getLaserLocations().get(pos));
-                }
+                laserLayer.setCell(pos.getX(), gameBoard.getHeight() - pos.getY() - 1, gameBoard.getLaserLocations().get(pos));
+                previousLaserPositions.add(pos);
+            }
             lasersHaveBeenRendered = true;
             }
 
@@ -395,6 +401,7 @@ public class GameScreen implements Screen {
             }
             else playerLayer.setCell(pos.getX(), gameBoard.getHeight() - pos.getY() - 1, new TiledMapTileLayer.Cell());
         }
+        shouldLasersBeDrawn = true;
     }
     private void clearCards(){
         availableTable.clear();

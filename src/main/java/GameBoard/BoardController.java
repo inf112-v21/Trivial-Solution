@@ -7,6 +7,7 @@ import GameBoard.Cards.Deck;
 import GameBoard.Cards.ICard;
 import GameBoard.Components.Flag;
 import GameBoard.Components.IComponent;
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.scenes.scene2d.ui.Cell;
 import org.lwjgl.system.CallbackI;
@@ -50,7 +51,6 @@ public class BoardController {
 
         moveNextRobot();
         currentMove++;
-        GameScreen.shouldLasersBeDrawn = true;
 
         if(currentMove == aliveRobots.size()){
             currentMove = 0;
@@ -58,6 +58,7 @@ public class BoardController {
             board.endPhase();
         }
         if (currentPhase == PHASES_PER_ROUND){
+            GameScreen.roundFinished = true;
             endRound();
             currentPhase = 0;
             waitingForPlayers = true;

@@ -3,9 +3,13 @@ package GameBoard;
 import GameBoard.Cards.ICard;
 import GameBoard.Components.*;
 import NetworkMultiplayer.Messages.InGameMessages.SanityCheck;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.maps.tiled.TiledMap;
+import com.badlogic.gdx.maps.tiled.TiledMapTile;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
+import com.badlogic.gdx.maps.tiled.tiles.StaticTiledMapTile;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 
 import java.util.*;
 import java.util.function.ToIntFunction;
@@ -17,20 +21,20 @@ public class Board {
 
     private boolean firstRoundFinished = false;
 
-    private TiledMapTileLayer laserLayer;
-
     //Grids. Disse må initialiseres i readFromTMX().
     //Merk at vi ikke har noe grid for bakgrunnen,
     // siden tilesene der er kun visuelle og ikke har noen innvirkning på gameplay.
     private Robot[][]      botgrid;
     private IComponent[][] midgrid;
     private IComponent[][] forgrid;
-    private IComponent[][] laserGrid;
 
     private final TreeMap<Robot, Position> botPositions = new TreeMap<>();
     private final TreeMap<Laser, Position> laserPositions = new TreeMap<>(Comparator.comparingInt((ToIntFunction<Object>) Object::hashCode));
     private final TreeSet<Position> dirtyLocations = new TreeSet<>();
-    private final TreeSet<Position> laserLocations = new TreeSet<>();
+    private final HashMap<Position, TiledMapTileLayer.Cell> laserLocations = new HashMap<>();
+    // Liste over alle typene laserBeams:
+    private final HashMap<Integer, LaserBeam> allLaserBeams = new HashMap<>();
+
     private final LinkedList<Position> availableSpawnPoints = new LinkedList<>();
     private final LinkedList<Robot> robotsWaitingToBeRespawned = new LinkedList<>();
 
@@ -54,7 +58,13 @@ public class Board {
         TiledMapTileLayer background   = (TiledMapTileLayer) map.getLayers().get("Background");
         TiledMapTileLayer middleground = (TiledMapTileLayer) map.getLayers().get("Middleground");
         TiledMapTileLayer foreground   = (TiledMapTileLayer) map.getLayers().get("Foreground");
-        laserLayer = (TiledMapTileLayer) map.getLayers().get("Laserlayer");
+
+        allLaserBeams.put(39,new LaserBeam(39, 3, false, false,4, 6));
+        allLaserBeams.put(40,new LaserBeam(40, 0, false, true,4, 7));
+        allLaserBeams.put(47,new LaserBeam(47, 0, false, false,5, 6));
+        allLaserBeams.put(102,new LaserBeam(102, 0, true, false,12, 5));
+        allLaserBeams.put(103,new LaserBeam(103, 3, true, false,12, 6));
+        allLaserBeams.put(101,new LaserBeam(101, 0, true, true,12, 4));
 
         HEIGHT = background.getHeight();
         WIDTH  = background.getWidth();
@@ -62,13 +72,10 @@ public class Board {
         botgrid  = new Robot     [HEIGHT][WIDTH];
         midgrid  = new IComponent[HEIGHT][WIDTH];
         forgrid  = new IComponent[HEIGHT][WIDTH];
-        laserGrid = new IComponent[HEIGHT][WIDTH];
 
         ArrayList<Object[]> newSpawnPositions = new ArrayList<>(8);
         for (int y = 0; y < background.getHeight(); y++) {
             for (int x = 0; x < background.getWidth(); x++) {
-
-                laserGrid[HEIGHT-1-y][x] = ComponentFactory.spawnComponent(laserLayer.getCell(x, y));
 
                 midgrid[HEIGHT-1-y][x] = ComponentFactory.spawnComponent(middleground.getCell(x, y));
 
@@ -361,11 +368,11 @@ public class Board {
             botgrid[y][x].applyDamage(isDoubleLaser ? 2 : 1);
             return;
         }
-
         if(forgrid[y][x] instanceof Wall && !((Wall) forgrid[y][x]).canLeaveInDirection(dir)) return;
 
-        laserLocations.add(new Position(x,y));
+        findCorrespondingLaser(x, y, dir, isDoubleLaser);
         //TODO: 14.04.2021 Litt bugs her når laserne tegnes opp, tegnes ikka alltid riktig
+        //TODO: 15.04.2021 Robotene sine lasere fjernes ikke alltid fra mappet
 
         int nextX = x + directionToX(dir);
         int nextY = y + directionToY(dir);
@@ -376,6 +383,42 @@ public class Board {
         fireOneLaser(nextX, nextY, dir, isDoubleLaser, false);
     }
 
+    /**
+     * Hjelpemetode for findCorrespondingLaser
+     * @param ID
+     * @param x
+     * @param y
+     */
+    private void setLaserLocations(int ID, int x, int y) {
+        LaserBeam laser = allLaserBeams.get(ID);
+        TiledMapTileLayer.Cell cell = new TiledMapTileLayer.Cell();
+        cell.setTile(new StaticTiledMapTile(new Sprite(laser.getImage())));
+        laserLocations.put(new Position(x,y), cell);
+    }
+
+    /**
+     * Metode som finner den grafiske representasjonen av lasere.
+     * @param x x-posisjonen akkurat nå
+     * @param y y-posisjonen akkurat nå
+     * @param dir retningen til laseren
+     * @param isDoubleLaser om det er en dobbellaser eller ikke.
+     */
+    private void findCorrespondingLaser(int x, int y, int dir, boolean isDoubleLaser) {
+        int ID = 0;
+            switch(dir){
+                case 0:
+                case 2:
+                    if(isDoubleLaser)ID = 102;
+                    else ID = 47;
+                    break;
+                case 1:
+                case 3:
+                    if(isDoubleLaser) ID = 103;
+                    else ID = 39;
+                    break;
+        }
+        setLaserLocations(ID, x, y);
+    }
 
     /**
      * @return et sett med posisjoner som har blitt endret siden forrige gang metoden ble kalt.
@@ -386,8 +429,8 @@ public class Board {
         return ret;
     }
 
-    public TreeSet<Position> getLaserLocations() {
-        TreeSet<Position> ret = new TreeSet<>(laserLocations);
+    public TreeMap<Position, TiledMapTileLayer.Cell> getLaserLocations() {
+        TreeMap<Position, TiledMapTileLayer.Cell> ret = new TreeMap<>(laserLocations);
         return ret;
     }
 
@@ -399,7 +442,6 @@ public class Board {
     }
 
     public Robot getRobotAt(int x, int y){ return botgrid[y][x]; }
-    public IComponent getLaserAt(int x, int y){return laserGrid[y][x];}
     public IComponent getForgridAt(int x, int y){ return forgrid[y][x]; }
     public IComponent getMidgridAt(int x, int y){ return midgrid[y][x]; }
 

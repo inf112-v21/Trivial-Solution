@@ -327,14 +327,11 @@ public class GameScreen implements Screen {
         if(timeSinceLastUpdate < TIME_DELTA) return;
         timeSinceLastUpdate = 0;
         gameBoard.simulate();
+        //TODO: The lasers in the first round does not get draw
         updateRobotPositions();
+        drawLasers();
         updateLivesAndHP();
         //TODO: 15.04 Få robotene til å blinke
-        if(shouldLasersBeDrawn){
-            drawLasers();
-            shouldLasersBeDrawn = false;
-            //TODO: The lasers in the first round does not get drawn
-        }
         finishedCheck();
         //Dette sørger for at kortene kun blir tegnet én gang per runde. Bedre kjøretid, yay
         if(gameBoard.isWaitingForPlayers()){
@@ -369,24 +366,20 @@ public class GameScreen implements Screen {
         }
     }
     private void drawLasers(){
-        if(lasersHaveBeenRendered){
-            for (Position pos : gameBoard.getLaserLocations()){
+        if(!shouldLasersBeDrawn) return;
+        shouldLasersBeDrawn = false;
+        if(lasersHaveBeenRendered) {
+            for (Position pos : gameBoard.getLaserLocations().keySet()) {
                 emptyLaserLayer.setCell(pos.getX(), gameBoard.getHeight() - pos.getY() - 1, new TiledMapTileLayer.Cell());
             }
             lasersHaveBeenRendered = false;
         }else {
-            for (Position pos : gameBoard.getLaserLocations()){
-                LaserBeam laser = (LaserBeam) gameBoard.getLaserAt(pos.getX(), pos.getY());
-                if(laser != null){
-                    TiledMapTileLayer.Cell cell = new TiledMapTileLayer.Cell();
-                    cell.setTile(new StaticTiledMapTile(new Sprite(laser.getImage())));
-
-                    emptyLaserLayer.setCell(pos.getX(), gameBoard.getHeight() - pos.getY() - 1, cell);
+            for (Position pos : gameBoard.getLaserLocations().keySet()){
+                emptyLaserLayer.setCell(pos.getX(), gameBoard.getHeight() - pos.getY() - 1, gameBoard.getLaserLocations().get(pos));
                 }
-                else emptyLaserLayer.setCell(pos.getX(), gameBoard.getHeight() - pos.getY() - 1, new TiledMapTileLayer.Cell());
-            }
             lasersHaveBeenRendered = true;
-        }
+            }
+
     }
 
     private void updateRobotPositions(){

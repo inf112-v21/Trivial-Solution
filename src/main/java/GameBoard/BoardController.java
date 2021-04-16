@@ -7,12 +7,11 @@ import GameBoard.Cards.Deck;
 import GameBoard.Cards.ICard;
 import GameBoard.Components.Flag;
 import GameBoard.Components.IComponent;
+import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
+import com.badlogic.gdx.scenes.scene2d.ui.Cell;
 import org.lwjgl.system.CallbackI;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.TreeSet;
+import java.util.*;
 
 
 public class BoardController {
@@ -135,7 +134,7 @@ public class BoardController {
     }
 
     public TreeSet<Position> getDirtyLocations(){ return board.getDirtyLocations(); }
-    public TreeSet<Position> getLaserLocations() { return board.getLaserLocations();}
+    public TreeMap<Position, TiledMapTileLayer.Cell> getLaserLocations() { return board.getLaserLocations();}
 
     private static class BotComparator implements Comparator<Robot> {
         final int phase;
@@ -154,6 +153,5 @@ public class BoardController {
     public int getNumberOfAliveRobots(){ return aliveRobots.size(); }
     public int getHeight(){ return board.getHeight(); } //bruket til konvertering av origo mellom, Board og GUI
     public Robot getRobotAt(int x, int y){ return board.getRobotAt(x, y);}
-    public IComponent getLaserAt(int x, int y) { return board.getLaserAt(x,y);}
     public IComponent getForgridAt(int x, int y){ return board.getForgridAt(x, y); }
 }

@@ -7,6 +7,7 @@ import GameBoard.Cards.Deck;
 import GameBoard.Cards.ICard;
 import GameBoard.Components.Flag;
 import GameBoard.Components.IComponent;
+import org.lwjgl.system.CallbackI;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -126,7 +127,7 @@ public class BoardController {
     public Robot hasWon() {
         for (Robot bot : aliveRobots) {
             if (bot.getVisitedFlags().equals(flagWinningFormation)) {
-                GameScreen.winningbot = bot;
+                GameScreen.winningBot = bot;
                 return bot;
             }
         }

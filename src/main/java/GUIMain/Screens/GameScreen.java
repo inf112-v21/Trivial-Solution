@@ -79,7 +79,7 @@ public class GameScreen implements Screen {
 
     private static Sprite backgroundSprite;
     private SpriteBatch spriteBatch;
-    public static Robot winningbot;
+    public static Robot winningBot;
 
     private final Label.LabelStyle style;
     public static int fontsize = 30;
@@ -327,21 +327,15 @@ public class GameScreen implements Screen {
         if(timeSinceLastUpdate < TIME_DELTA) return;
         timeSinceLastUpdate = 0;
         gameBoard.simulate();
+        updateRobotPositions();
+        updateLivesAndHP();
+        //TODO: 15.04 Få robotene til å blinke
         if(shouldLasersBeDrawn){
             drawLasers();
             shouldLasersBeDrawn = false;
             //TODO: The lasers in the first round does not get drawn
         }
-        updateRobotPositions();
-        updateLivesAndHP();
-
-        /*for (Robot bot : gameBoard.getRecentlyDeceasedRobots()){
-            gui.showPopUp(bot.getName() + " fucking died, lmao", stage);
-            // TODO 06.04.2021: Spillet krasjer når denne blir kalt her
-        }*/
-
         finishedCheck();
-
         //Dette sørger for at kortene kun blir tegnet én gang per runde. Bedre kjøretid, yay
         if(gameBoard.isWaitingForPlayers()){
             if (hasDrawnCardsYet) return;
@@ -353,8 +347,8 @@ public class GameScreen implements Screen {
     }
 
     private void finishedCheck(){
-        if(winningbot !=null){
-            if(playerControlledRobot == winningbot){
+        if(winningBot !=null){
+            if(playerControlledRobot == winningBot){
                 gui.setScreen(new WinScreen(gui));
             }
             else{
@@ -377,7 +371,6 @@ public class GameScreen implements Screen {
     private void drawLasers(){
         if(lasersHaveBeenRendered){
             for (Position pos : gameBoard.getLaserLocations()){
-                System.out.println(gameBoard.getLaserLocations());
                 emptyLaserLayer.setCell(pos.getX(), gameBoard.getHeight() - pos.getY() - 1, new TiledMapTileLayer.Cell());
             }
             lasersHaveBeenRendered = false;

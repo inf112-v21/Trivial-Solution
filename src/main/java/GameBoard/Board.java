@@ -15,6 +15,8 @@ public class Board {
     private int HEIGHT;
     private int WIDTH;
 
+    private boolean firstRoundFinished = false;
+
     private TiledMapTileLayer laserLayer;
 
     //Grids. Disse må initialiseres i readFromTMX().
@@ -330,7 +332,8 @@ public class Board {
      * Avfyrer alle lasere. inkludert de skutt av robotene.
      */
     private void fireAllLasers(){
-        laserLocations.clear();
+        if(firstRoundFinished)
+            laserLocations.clear();
         for(Laser laser : laserPositions.keySet()){
             Position pos = laserPositions.get(laser);
             fireOneLaser(pos.getX(), pos.getY(), laser.getDirection(), laser.isDoubleLaser(), false);
@@ -339,6 +342,7 @@ public class Board {
             Position pos = botPositions.get(bot);
             fireOneLaser(pos.getX(), pos.getY(), bot.getDirection(), false, true);
         }
+        firstRoundFinished = true;
     }
 
 
@@ -361,7 +365,7 @@ public class Board {
         if(forgrid[y][x] instanceof Wall && !((Wall) forgrid[y][x]).canLeaveInDirection(dir)) return;
 
         laserLocations.add(new Position(x,y));
-        //TODO: 14.04.2021 Litt bugs her når laserne tegnes opp
+        //TODO: 14.04.2021 Litt bugs her når laserne tegnes opp, tegnes ikka alltid riktig
 
         int nextX = x + directionToX(dir);
         int nextY = y + directionToY(dir);

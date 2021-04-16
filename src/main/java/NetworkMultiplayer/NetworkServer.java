@@ -40,7 +40,7 @@ public class NetworkServer extends Listener {
     //Valgene de ulike klientene/robotenes tar.
     private TreeMap<Robot,IMessage> robotActions = new TreeMap<>();
 
-    private HashMap<Connection,Pair<String,Integer>> connectionAndNameDesign= new HashMap<>();
+
 
     private String hostName;
     private int hostDesign;
@@ -170,26 +170,29 @@ public class NetworkServer extends Listener {
                     String newRobotName = bot.getBotName();
                     int chosenDesign = bot.getBotDesignNr();
 
-                    if (robotActions.keySet().stream().map(Robot::getDesign).collect(Collectors.toList()).contains(chosenDesign)){
-                        sendToClient(connection, SetupRobotNameDesignMessage.UNAVAILABLE_DESIGN);
-                        return;
+
+                    if(!robotActions.isEmpty()) {
+                        for (Robot registeredBot : robotActions.keySet()) {
+
+                            System.out.println(bot);
+                            if (registeredBot.getDesign() == chosenDesign) {
+                                sendToClient(connection, SetupRobotNameDesignMessage.UNAVAILABLE_DESIGN);
+                                return;
+                            }
+                            if (registeredBot.getName().equals(newRobotName)) {
+                                sendToClient(connection, SetupRobotNameDesignMessage.UNAVAILABLE_NAME);
+                                return;
+                            }
+
+                        }
                     }
-                    if (robotActions.keySet().stream().map(Robot::getName).collect(Collectors.toList()).contains(newRobotName)){
-                        sendToClient(connection, SetupRobotNameDesignMessage.UNAVAILABLE_NAME);
-                        return;
-                    }
+
                     Robot newbot = new Robot(newRobotName, chosenDesign, false);
                     connectionsAndRobots.put(connection, newbot);
                     robotActions.put(newbot, null);
                     sendToClient(connection, SetupRobotNameDesignMessage.ROBOT_DESIGN_AND_NAME_ARE_OKEY);
                 }
 
-                if (object instanceof ChosenRobot){
-                    Robot newBot = ((ChosenRobot) object).getRobot();
-                    connectionsAndRobots.put(connection, newBot);
-                    robotActions.put(newBot, null);
-
-                }
 
                 //Test (sanity check)
                 if (object instanceof SanityCheck) {

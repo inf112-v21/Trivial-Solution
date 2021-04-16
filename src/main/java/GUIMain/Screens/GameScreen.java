@@ -326,14 +326,14 @@ public class GameScreen implements Screen {
         renderer.render();
         stage.draw();
 
-        if(!roundFinished)
-            drawLasers();
-
         if(timeSinceLastUpdate < TIME_DELTA) return;
         timeSinceLastUpdate = 0;
         gameBoard.simulate();
         //TODO: The lasers in the first round does not get draw
+        if(!roundFinished)
+            drawLasers();
         updateRobotPositions();
+
         updateLivesAndHP();
         //TODO: 15.04 Få robotene til å blinke
         finishedCheck();

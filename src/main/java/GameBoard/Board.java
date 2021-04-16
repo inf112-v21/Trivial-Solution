@@ -388,9 +388,9 @@ public class Board {
 
     /**
      * Hjelpemetode for findCorrespondingLaser
-     * @param ID
-     * @param x
-     * @param y
+     * @param ID Component-ID
+     * @param x x-posisjon
+     * @param y y-posisjon
      */
     private void setLaserLocations(int ID, int x, int y, boolean isDoubleLaser) {
         for(Position pos : laserLocations.keySet()){
@@ -399,7 +399,6 @@ public class Board {
                 else ID = 40;
             }
         }
-
         LaserBeam laser = allLaserBeams.get(ID);
         TiledMapTileLayer.Cell cell = new TiledMapTileLayer.Cell();
         cell.setTile(new StaticTiledMapTile(new Sprite(laser.getImage())));

@@ -332,25 +332,19 @@ public class GameScreen implements Screen {
         else hasDrawnCardsYet = false;
     }
 
-    /**
-     * Vi må resete winningbot, hvis ikke så får vi GameOver screen hvis man fortsetter å
-     * spille fra samme vindu. Dette er en global variabel.
-     */
-    public void resetSoThatThereIsNoWinner() {
-        winningbot = null;
-    }
 
     private void finishedCheck(){
-        if(winningbot !=null){
-            if(playerControlledRobot == winningbot){
-                resetSoThatThereIsNoWinner();
+        //Sjekker om en spiller har vunnet og hvilken screen som skal vises.
+        Robot winner = gameBoard.hasWon();
+        if(winner != null){
+            if(playerControlledRobot.equals(winner)){
                 gui.setScreen(new WinScreen(gui));
             }
             else{
-                resetSoThatThereIsNoWinner();
                 gui.setScreen(new GameOverScreen(gui));
             }
         }
+
         if(playerControlledRobot.getLives() <= 0){
             gui.setScreen(new GameOverScreen(gui));
         }

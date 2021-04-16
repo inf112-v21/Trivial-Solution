@@ -18,7 +18,7 @@ import static com.badlogic.gdx.graphics.Color.WHITE;
 
 public class CreateGameScreen extends SimpleScreen {
 
-    private static final String MAP_LOCATION = "assets/maps";
+    public static final String MAP_LOCATION = "assets/maps";
     private SelectBox<Integer> numberOfRobots;
     private SelectBox<String> choosemapbox;
     private TextField textField;

@@ -19,6 +19,7 @@ public class LobbyScreen extends SimpleScreen {
     private TextField robotname;
     private Table chooserobottable;
     private Table playerlisttable;
+    private SelectBox<String> map;
 
 
 
@@ -40,7 +41,7 @@ public class LobbyScreen extends SimpleScreen {
         playerlisttable = new Table(gui.getSkin());
 
         settingtable.add(new Label("Choose map: ", gui.getSkin()));
-        SelectBox<String> map = new SelectBox<>(gui.getSkin());
+        map = new SelectBox<>(gui.getSkin());
         map.setItems(CreateGameScreen.getMapNames());
         settingtable.add(map).row();
         table.add(settingtable).row();
@@ -74,7 +75,7 @@ public class LobbyScreen extends SimpleScreen {
                         butt.addListener(new ChangeListener() {
                             @Override
                             public void changed(ChangeEvent changeEvent, Actor actor) {
-                                GameInfo info = gui.getServer().startTheGame(map.getSelected());
+                                GameInfo info = gui.getServer().startTheGame(CreateGameScreen.MAP_LOCATION + "/" + map.getSelected() + ".tmx");
                                 gui.setScreen(new GameScreen(info, true, true, gui));
                             }
                         });
@@ -111,6 +112,6 @@ public class LobbyScreen extends SimpleScreen {
         // TODO: 14.04.2021 Sjekk resten av serverens tilkoblede roboter, og legg dem til i listOfPlayers
         // TODO: 14.04.2021 Legg til en sjekk for om spillet er klart for å begynne, og bytt deretter til GameScreen.
 
-            super.render(v);
+        super.render(v);
     }
 }

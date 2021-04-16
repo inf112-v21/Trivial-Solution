@@ -11,6 +11,7 @@ import NetworkMultiplayer.Messages.InGameMessages.DistributedCards;
 import NetworkMultiplayer.Messages.PreGameMessages.GameInfo;
 import NetworkMultiplayer.Messages.PreGameMessages.RobotInfo;
 import NetworkMultiplayer.Messages.PreGameMessages.SetupRobotNameDesignMessage;
+import com.badlogic.gdx.graphics.Texture;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.serializers.JavaSerializer;
 import com.esotericsoftware.kryonet.EndPoint;

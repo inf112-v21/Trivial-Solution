@@ -125,7 +125,6 @@ public class BoardController {
     public Robot hasWon() {
         for (Robot bot : aliveRobots) {
             if (bot.getVisitedFlags().equals(flagWinningFormation)) {
-                GameScreen.winningbot = bot;
                 return bot;
             }
         }

@@ -96,7 +96,7 @@ public class NetworkServer extends Listener {
         server = new Server();
 
         //Starter en ny tråd som gjør det mulig å sende og motta informasjon fra et nettverk
-        server.start();
+        new Thread(server).start();
 
         //Bind serveren til port
         bind();
@@ -173,11 +173,13 @@ public class NetworkServer extends Listener {
 
                     if(!connectionAndNameDesign.isEmpty()) {
                         for (Pair<String, Integer> tuple : connectionAndNameDesign.values()) {
-                            if (tuple.getValue1().equals(chosenDesign) || tuple.getValue1().equals(hostDesign)) {
+
+                            System.out.println(tuple.getValue0() + tuple.getValue1().toString());
+                            if (tuple.getValue1().equals(chosenDesign) || hostDesign == chosenDesign) {
                                 sendToClient(connection, SetupRobotNameDesignMessage.UNAVAILABLE_DESIGN);
                                 return;
                             }
-                            if (tuple.getValue0().equals(newRobotName) || tuple.getValue0().equals(hostName)) {
+                            if (tuple.getValue0().equals(newRobotName) || newRobotName.equals(hostName)) {
                                 sendToClient(connection, SetupRobotNameDesignMessage.UNAVAILABLE_NAME);
                                 return;
                             }
@@ -189,9 +191,12 @@ public class NetworkServer extends Listener {
                     robotActions.put(newbot, null);
                     /*
                     Pair<String,Integer> chosenND = new Pair<>(newRobotName,chosenDesign);
+                    System.out.format(newRobotName + "%d",(chosenDesign));
 
                     //Inneholder kun designen og navnet til klientene
                     connectionAndNameDesign.put(connection,chosenND);
+
+                    System.out.println(connectionAndNameDesign.toString());
 
                     //Vi sender meldingen til klienten om at den kan skape roboten med det designet og navnet
                     sendToClient(connection,SetupRobotNameDesignMessage.ROBOT_DESIGN_AND_NAME_ARE_OKEY);
@@ -200,6 +205,7 @@ public class NetworkServer extends Listener {
 
                 }
 
+                //Når klienten har laget en robot så blir den sendt hit og vi registrer den i serveren.
                 if (object instanceof ChosenRobot){
                     Robot newBot = ((ChosenRobot) object).getRobot();
                     connectionsAndRobots.put(connection, newBot);

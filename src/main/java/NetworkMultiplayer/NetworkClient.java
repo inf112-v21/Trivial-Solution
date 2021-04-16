@@ -29,18 +29,10 @@ public class NetworkClient {
     private GameInfo setup;
     private boolean design;
     private boolean botName;
-    Robot clientRobot;
+    private Robot clientRobot;
     private int chosenDesign;
     private String chosenName;
 
-
-    public void setChosenDesign(int chosenDesign) {
-        this.chosenDesign = chosenDesign;
-    }
-
-    public void setChosenName(String chosenName) {
-        this.chosenName = chosenName;
-    }
 
     //In-game meldinger
     private ArrayList<ICard> cardsToChoseFrom = new ArrayList<>();
@@ -124,6 +116,7 @@ public class NetworkClient {
                             state = SetupRobotNameDesignMessage.UNAVAILABLE_NAME;
                         case ROBOT_DESIGN_AND_NAME_ARE_OKEY:
                             state = SetupRobotNameDesignMessage.ROBOT_DESIGN_AND_NAME_ARE_OKEY;
+                            System.out.print("recieved ok");
 
                     }
                 }

@@ -111,6 +111,10 @@ public class LobbyScreen extends SimpleScreen {
         // TODO: 14.04.2021 Sjekk resten av serverens tilkoblede roboter, og legg dem til i listOfPlayers
         // TODO: 14.04.2021 Legg til en sjekk for om spillet er klart for å begynne, og bytt deretter til GameScreen.
 
+        if(gui.getServer().getNumberOfConnections() == gui.getServer().getConnectionsAndRobots().size()){
+            //Spillet kan starte
+        }
+
             super.render(v);
     }
 }

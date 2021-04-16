@@ -170,34 +170,18 @@ public class NetworkServer extends Listener {
                     String newRobotName = bot.getBotName();
                     int chosenDesign = bot.getBotDesignNr();
 
-
-                    if(!connectionAndNameDesign.isEmpty()) {
-                        for (Pair<String, Integer> tuple : connectionAndNameDesign.values()) {
-                            if (tuple.getValue1().equals(chosenDesign) || tuple.getValue1().equals(hostDesign)) {
-                                sendToClient(connection, SetupRobotNameDesignMessage.UNAVAILABLE_DESIGN);
-                                return;
-                            }
-                            if (tuple.getValue0().equals(newRobotName) || tuple.getValue0().equals(hostName)) {
-                                sendToClient(connection, SetupRobotNameDesignMessage.UNAVAILABLE_NAME);
-                                return;
-                            }
-
-                        }
+                    if (robotActions.keySet().stream().map(Robot::getDesign).collect(Collectors.toList()).contains(chosenDesign)){
+                        sendToClient(connection, SetupRobotNameDesignMessage.UNAVAILABLE_DESIGN);
+                        return;
+                    }
+                    if (robotActions.keySet().stream().map(Robot::getName).collect(Collectors.toList()).contains(newRobotName)){
+                        sendToClient(connection, SetupRobotNameDesignMessage.UNAVAILABLE_NAME);
+                        return;
                     }
                     Robot newbot = new Robot(newRobotName, chosenDesign, false);
                     connectionsAndRobots.put(connection, newbot);
                     robotActions.put(newbot, null);
-                    /*
-                    Pair<String,Integer> chosenND = new Pair<>(newRobotName,chosenDesign);
-
-                    //Inneholder kun designen og navnet til klientene
-                    connectionAndNameDesign.put(connection,chosenND);
-
-                    //Vi sender meldingen til klienten om at den kan skape roboten med det designet og navnet
-                    sendToClient(connection,SetupRobotNameDesignMessage.ROBOT_DESIGN_AND_NAME_ARE_OKEY);
-
-                     */
-
+                    sendToClient(connection, SetupRobotNameDesignMessage.ROBOT_DESIGN_AND_NAME_ARE_OKEY);
                 }
 
                 if (object instanceof ChosenRobot){
@@ -229,8 +213,6 @@ public class NetworkServer extends Listener {
     public SetupRobotNameDesignMessage setHostRobot(RobotInfo info){
         if (robotActions.keySet().stream().map(Robot::getDesign).collect(Collectors.toList()).contains(info.getBotDesignNr())) return SetupRobotNameDesignMessage.UNAVAILABLE_DESIGN;
         if (robotActions.keySet().stream().map(Robot::getName  ).collect(Collectors.toList()).contains(info.getBotName()    )) return SetupRobotNameDesignMessage.UNAVAILABLE_NAME;
-        if (connectionAndNameDesign.values().stream().map(Pair<String,Integer>::getValue0).collect(Collectors.toList()).contains(info.getBotName())) return SetupRobotNameDesignMessage.UNAVAILABLE_DESIGN;
-        if (connectionAndNameDesign.values().stream().map(Pair<String,Integer>::getValue1).collect(Collectors.toList()).contains(info.getBotDesignNr())) return SetupRobotNameDesignMessage.UNAVAILABLE_NAME;
         hostRobot = new Robot(info.getBotName(), info.getBotDesignNr(), false);
         robotActions.put(hostRobot, null);
         return SetupRobotNameDesignMessage.ROBOT_DESIGN_AND_NAME_ARE_OKEY;

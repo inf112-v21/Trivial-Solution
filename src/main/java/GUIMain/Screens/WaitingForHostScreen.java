@@ -23,5 +23,11 @@ public class WaitingForHostScreen extends SimpleScreen{
         stage.addActor(table);
     }
 
-
+    @Override
+    public void render(float v){
+        super.render(v);
+        if (gui.getClient().getSetup() != null){
+            gui.setScreen(new GameScreen(gui.getClient().getSetup(), true, false, gui));
+        }
+    }
 }

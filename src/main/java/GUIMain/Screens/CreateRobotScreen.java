@@ -67,6 +67,10 @@ public class CreateRobotScreen extends SimpleScreen{
             case UNAVAILABLE_NAME:
                 gui.showPopUp("That name has already been taken, please be more original", stage);
                 return;
+            case ROBOT_DESIGN_AND_NAME_ARE_OKEY:
+                gui.setScreen(new WaitingForHostScreen(gui));
+                return;
+
             //case ROBOT_DESIGN_AND_NAME_ARE_OKEY:
             //    Robot newBot = new Robot(textField.getText(), design,false);
             //    gui.getClient().sendToServer(new ChosenRobot(newBot));

@@ -120,15 +120,17 @@ public class NetworkClient {
                     switch(message){
                         case UNAVAILABLE_DESIGN:
                             state = SetupRobotNameDesignMessage.UNAVAILABLE_DESIGN;
+                            return;
                         case UNAVAILABLE_NAME:
                             state = SetupRobotNameDesignMessage.UNAVAILABLE_NAME;
+                            return;
                         case ROBOT_DESIGN_AND_NAME_ARE_OKEY:
                             state = SetupRobotNameDesignMessage.ROBOT_DESIGN_AND_NAME_ARE_OKEY;
-
+                            return;
                     }
                 }
 
-                if(object instanceof ConfirmationMessages){
+                else if(object instanceof ConfirmationMessages){
                     ConfirmationMessages message = ((ConfirmationMessages) object);
                     switch(message){
 
@@ -143,12 +145,12 @@ public class NetworkClient {
                 }
 
                 //Alle de valgte kortene fra hver robot
-                if(object instanceof AllChosenCardsFromAllRobots){
+                else if(object instanceof AllChosenCardsFromAllRobots){
                     AllChooseRobotCards = ((AllChosenCardsFromAllRobots) object).getAllDesicions();
                 }
 
                 //Kortene som klienten kan velge mellom
-                if(object instanceof DistributedCards){
+                else if(object instanceof DistributedCards){
                     cardsToChoseFrom =((DistributedCards) object).getChosenCards();
                 }
 
@@ -157,6 +159,9 @@ public class NetworkClient {
                     setup = (GameInfo) object;
                 }
 
+                else{
+                    System.out.println("Received unidenitified message: " + object.getClass());
+                }
 
 
             }

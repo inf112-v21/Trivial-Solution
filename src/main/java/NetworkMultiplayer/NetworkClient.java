@@ -27,11 +27,6 @@ public class NetworkClient {
 
     //Pre-game meldinger
     private GameInfo setup;
-    private boolean design;
-    private boolean botName;
-    private Robot clientRobot;
-    private int chosenDesign;
-    private String chosenName;
 
 
     //In-game meldinger
@@ -69,20 +64,6 @@ public class NetworkClient {
         return setup;
     }
 
-    /**
-     * @return true hvis navnet er valgt
-     */
-    public boolean isBotName() {
-        return botName;
-    }
-
-    /**
-     * @return true hvis designet er tatt
-     */
-    public boolean isDesign() {
-        return design;
-    }
-
 
     /**
      * @return Henter robotene og kortene hver robot valgte
@@ -112,16 +93,17 @@ public class NetworkClient {
                     switch(message){
                         case UNAVAILABLE_DESIGN:
                             state = SetupRobotNameDesignMessage.UNAVAILABLE_DESIGN;
+                            return;
                         case UNAVAILABLE_NAME:
                             state = SetupRobotNameDesignMessage.UNAVAILABLE_NAME;
+                            return;
                         case ROBOT_DESIGN_AND_NAME_ARE_OKEY:
                             state = SetupRobotNameDesignMessage.ROBOT_DESIGN_AND_NAME_ARE_OKEY;
-                            System.out.print("recieved ok");
-
+                            return;
                     }
                 }
 
-                if(object instanceof ConfirmationMessages){
+                else if(object instanceof ConfirmationMessages){
                     ConfirmationMessages message = ((ConfirmationMessages) object);
                     switch(message){
 
@@ -136,12 +118,12 @@ public class NetworkClient {
                 }
 
                 //Alle de valgte kortene fra hver robot
-                if(object instanceof AllChosenCardsFromAllRobots){
+                else if(object instanceof AllChosenCardsFromAllRobots){
                     AllChooseRobotCards = ((AllChosenCardsFromAllRobots) object).getAllDesicions();
                 }
 
                 //Kortene som klienten kan velge mellom
-                if(object instanceof DistributedCards){
+                else if(object instanceof DistributedCards){
                     cardsToChoseFrom =((DistributedCards) object).getChosenCards();
                 }
 
@@ -150,6 +132,9 @@ public class NetworkClient {
                     setup = (GameInfo) object;
                 }
 
+                else{
+                    System.out.println("Received unidenitified message: " + object.getClass());
+                }
 
 
             }

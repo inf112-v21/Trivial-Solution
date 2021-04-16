@@ -8,10 +8,12 @@ import GameBoard.Cards.ICard;
 import GameBoard.Components.Flag;
 import GameBoard.Components.IComponent;
 
+import javax.management.timer.Timer;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.TreeSet;
+import java.util.concurrent.TimeUnit;
 
 
 public class BoardController {
@@ -27,6 +29,7 @@ public class BoardController {
     private int currentPhase = 0;
     private int currentMove  = 0;
     private boolean waitingForPlayers;
+
 
     public BoardController(List<Robot> robots, String mapName, boolean amITheHost){
         this.amITheHost = amITheHost;
@@ -62,6 +65,9 @@ public class BoardController {
             waitingForPlayers = true;
             if (amITheHost) startRound(); //Deler ut kort, om vi er host eller i singleplayer.
         }
+
+        hasWon();
+
     }
 
     private void moveNextRobot(){

@@ -73,7 +73,6 @@ public class GameScreen implements Screen {
 
     private static Sprite backgroundSprite;
     private SpriteBatch spriteBatch;
-    public static Robot winningbot;
 
     private final Label.LabelStyle style;
     public static int fontsize = 30;
@@ -221,7 +220,6 @@ public class GameScreen implements Screen {
             }
         });
 
-
         ready = new TextButton("Ready", gui.getSkin());
         ready.addListener(new ChangeListener(){
             @Override
@@ -266,41 +264,11 @@ public class GameScreen implements Screen {
                 }
             }
         });
-        buttonTable.add(label);
-        buttonTable.row();
-        buttonTable.add(powerDown).size(Gdx.graphics.getWidth()/6f,Gdx.graphics.getHeight()/25f);
-        buttonTable.row();
-        buttonTable.add(ready).size(Gdx.graphics.getWidth()/6f,Gdx.graphics.getHeight()/25f);
-        buttonTable.row();
-        buttonTable.add(clear).size(Gdx.graphics.getWidth()/6f,Gdx.graphics.getHeight()/25f);
-        buttonTable.row();
+        buttonTable.add(label).row();
+        buttonTable.add(powerDown).size(Gdx.graphics.getWidth()/6f,Gdx.graphics.getHeight()/25f).row();
+        buttonTable.add(ready).size(Gdx.graphics.getWidth()/6f,Gdx.graphics.getHeight()/25f).row();
+        buttonTable.add(clear).size(Gdx.graphics.getWidth()/6f,Gdx.graphics.getHeight()/25f).row();
         buttonTable.add(options).size(Gdx.graphics.getWidth()/6f,Gdx.graphics.getHeight()/25f);
-    }
-
-    public void setAvailableCards(ArrayList<ICard> cards){
-        if (! isThisMultiPlayer) throw new UnsupportedOperationException("There is no reason to use this method in singleplayer, the boardcontroller automatically set all robot's cards.");
-        playerControlledRobot.setAvailableCards(cards);
-    }
-
-    public ArrayList<ICard> getChosenCards(){
-        if (! isThisMultiPlayer) throw new UnsupportedOperationException("There is no reason to use this method in singleplayer, the boardcontroller automatically set all robot's cards.");
-        ArrayList<ICard> ret = new ArrayList<>();
-        for (int i = 0; i < BoardController.PHASES_PER_ROUND; i++) {
-            ret.add(playerControlledRobot.getNthChosenCard(i));
-        }
-        return ret;
-    }
-
-    public void setAllChosenCards(AllChosenCards acc){
-        if (! isThisMultiPlayer) throw new UnsupportedOperationException("There is no reason to use this method in singleplayer, the boardcontroller automatically set all robot's cards.");
-        ArrayList<ArrayList<ICard>> cards = acc.getOtherChoices();
-        for (int i = 0; i < cards.size(); i++) {
-            if (robots.get(i) == playerControlledRobot
-                    && ! playerControlledRobot.getNthChosenCard(0).equals(cards.get(i).get(0)))
-                    throw new IllegalArgumentException("Are you sure these are the correct cards in the correct order?" +
-                            " if I send cards to the server, and get cards back, the cards for my robot should all be the same. But they are not.");
-            robots.get(i).setChosenCards(cards.get(i));
-        }
     }
 
     @Override
@@ -317,6 +285,35 @@ public class GameScreen implements Screen {
         gameBoard.simulate();
         updateRobotPositions();
         updateLivesAndHP();
+
+        if(isThisMultiPlayer && ! amITheHost){
+            ArrayList<ICard> cardsToChooseFrom = gui.getClient().getCardsToChoseFrom();
+            if(cardsToChooseFrom != null){
+                playerControlledRobot.setAvailableCards(cardsToChooseFrom);
+                clearCards();
+                renderCards();
+            }
+            TreeMap<Robot, ArrayList<ICard>> allChosenCards = gui.getClient().getALLChosenCards();
+            if(allChosenCards != null) {
+                for(Robot bot : robots){
+                    if(bot.equals(playerControlledRobot)) {
+                        if(! allChosenCards.get(bot).equals(bot.getChosenCards())){
+                            throw new SanityCheck.UnequalSimulationException("Are you sure these are the correct cards in the correct order?\n" +
+                                    "if I send cards to the server, and get cards back, the cards for my robot should all be the same. But they are not.");
+                        }
+                    }
+                    bot.setChosenCards(allChosenCards.get(bot));
+                    gameBoard.playersAreReady();
+                }
+            }
+
+        }
+
+        else if (isThisMultiPlayer && amITheHost) {
+
+
+        }
+
         /**for (Robot bot : gameBoard.getRecentlyDeceasedRobots()){
             gui.showPopUp(bot.getName() + " fucking died, lmao", stage);
             // TODO 06.04.2021: Spillet krasjer når denne blir kalt her

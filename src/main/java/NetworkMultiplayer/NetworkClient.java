@@ -13,6 +13,7 @@ import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Client;
 
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.TreeMap;
@@ -68,8 +69,11 @@ public class NetworkClient {
     /**
      * @return Henter robotene og kortene hver robot valgte
      */
-    public TreeMap<Robot, IMessage> getChooseCards() {
-        return AllChooseRobotCards;
+    public TreeMap<Robot, ArrayList<ICard>> getALLChosenCards() {
+        if (AllChoseRobotCards == null) return null;
+        TreeMap<Robot, ArrayList<ICard>> ret = new TreeMap<>();
+        AllChoseRobotCards = null;
+        return ret;
     }
 
     /**

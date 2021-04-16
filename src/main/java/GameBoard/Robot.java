@@ -151,6 +151,8 @@ public class Robot implements Serializable, Comparable<Robot> {
         return chosenCards.get(n);
     }
 
+    public ArrayList<ICard> getChosenCards(){ return chosenCards; }
+
 	public void resetAllCards(){ availableCards.clear(); chosenCards.clear(); }
 	public void resetChosenCards(){ chosenCards.clear(); }
 

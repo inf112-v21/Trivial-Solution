@@ -305,10 +305,10 @@ public class GameScreen implements Screen {
                 isWaitingForCards = false;
             }
 
-            ArrayList<ICard> cardsToChooseFrom = gui.getClient().getCardsToChoseFrom();
-            if(cardsToChooseFrom != null){
-
-                    playerControlledRobot.setAvailableCards(cardsToChooseFrom);
+            ArrayList<ICard> cardsToChoseFrom = gui.getClient().getCardsToChoseFrom();
+            if(cardsToChoseFrom != null){
+                System.out.println("Kortene som kan velges: " + cardsToChoseFrom);
+                    playerControlledRobot.setAvailableCards(cardsToChoseFrom);
                     clearCards();
                     renderCards();
 

@@ -1,6 +1,8 @@
 package NetworkMultiplayer;
 
+import GameBoard.Cards.ICard;
 import GameBoard.Robot;
+import NetworkMultiplayer.Messages.InGameMessages.AllChosenCards;
 import NetworkMultiplayer.Messages.InGameMessages.ChosenRobot;
 import NetworkMultiplayer.Messages.InGameMessages.SanityCheck;
 import NetworkMultiplayer.Messages.PreGameMessages.GameInfo;
@@ -34,24 +36,16 @@ public class NetworkServer extends Listener {
     //antall tilkoblinger
     private int numberOfConnections = 0;
 
+    //antall mottate kortset
+    private int numberOfSetsOfCardsReceived = 0;
+
     //Mappinger som sjekker at vi har alt på plass
     private HashMap<Connection, Robot> connectionsAndRobots = new HashMap<>();
 
     //Valgene de ulike klientene/robotenes tar.
-    private TreeMap<Robot,IMessage> robotActions = new TreeMap<>();
+    private TreeMap<Robot,ArrayList<ICard>> robotActions = new TreeMap<>();
 
-    private HashMap<Connection,Pair<String,Integer>> connectionAndNameDesign= new HashMap<>();
 
-    private String hostName;
-    private int hostDesign;
-
-    public void setHostDesign(int hostDesign) {
-        this.hostDesign = hostDesign;
-    }
-
-    public void setHostName(String hostName) {
-        this.hostName = hostName;
-    }
 
     private Robot hostRobot;
 
@@ -67,14 +61,41 @@ public class NetworkServer extends Listener {
     //Gi serveren beskjed om å dele ut kort
     boolean simulationIsOver;
 
+    /**
+     * Setter antall set av kost vi har fått fra klientene lik 0
+     * Vi må gjøre dette hver gang vi sender ut alle valgte kortset til klientene
+     */
+    public void resetNumberOfSetsOfCardsReceived() {
+        this.numberOfSetsOfCardsReceived = 0;
+    }
 
+    /**
+     * Brukes for å sjekke at serveren har mottat alle kortsettene fra
+     * alle klientene som spiller spillet. Brukes med
+     *
+     * @return antall klienter som har valgt kortene sine
+     */
+    public int getNumberOfCardsReceived() {
+        return numberOfSetsOfCardsReceived;
+    }
+
+    /**
+     * Brukes til å oppdattere kortene hostens robot valgte.
+     *
+     * @param bot - roboten. Denne må være host
+     * @param cards - kortene roboten har valgt
+     */
+    public void setHostsChosenCards(Robot bot,ArrayList<ICard> cards){
+        if (!hostRobot.equals(bot)) throw new SanityCheck.UnequalSimulationException("Roboten er ikke host");
+        robotActions.put(bot,cards);
+    }
 
 
 
     /**
      * @return - HashMap med robotene mappet til hvilke kort de valgte
      */
-    public TreeMap<Robot, IMessage> getRobotActions() {
+    public TreeMap<Robot, ArrayList<ICard>> getRobotActions() {
         return robotActions;
     }
 
@@ -96,7 +117,7 @@ public class NetworkServer extends Listener {
         server = new Server();
 
         //Starter en ny tråd som gjør det mulig å sende og motta informasjon fra et nettverk
-        server.start();
+        new Thread(server).start();
 
         //Bind serveren til port
         bind();
@@ -157,7 +178,7 @@ public class NetworkServer extends Listener {
                     //Nå er de lagret i robotActions som vi kan sende med en gang
                     //over nettverket.
                     Robot thisRobotsAction = connectionsAndRobots.get(connection);
-                    robotActions.put(thisRobotsAction, cards);
+                    robotActions.put(thisRobotsAction, cards.getChosenCards());
 
                 }
 
@@ -170,26 +191,29 @@ public class NetworkServer extends Listener {
                     String newRobotName = bot.getBotName();
                     int chosenDesign = bot.getBotDesignNr();
 
-                    if (robotActions.keySet().stream().map(Robot::getDesign).collect(Collectors.toList()).contains(chosenDesign)){
-                        sendToClient(connection, SetupRobotNameDesignMessage.UNAVAILABLE_DESIGN);
-                        return;
+
+                    if(!robotActions.isEmpty()) {
+                        for (Robot registeredBot : robotActions.keySet()) {
+
+                            System.out.println(bot);
+                            if (registeredBot.getDesign() == chosenDesign) {
+                                sendToClient(connection, SetupRobotNameDesignMessage.UNAVAILABLE_DESIGN);
+                                return;
+                            }
+                            if (registeredBot.getName().equals(newRobotName)) {
+                                sendToClient(connection, SetupRobotNameDesignMessage.UNAVAILABLE_NAME);
+                                return;
+                            }
+
+                        }
                     }
-                    if (robotActions.keySet().stream().map(Robot::getName).collect(Collectors.toList()).contains(newRobotName)){
-                        sendToClient(connection, SetupRobotNameDesignMessage.UNAVAILABLE_NAME);
-                        return;
-                    }
+
                     Robot newbot = new Robot(newRobotName, chosenDesign, false);
                     connectionsAndRobots.put(connection, newbot);
                     robotActions.put(newbot, null);
                     sendToClient(connection, SetupRobotNameDesignMessage.ROBOT_DESIGN_AND_NAME_ARE_OKEY);
                 }
 
-                if (object instanceof ChosenRobot){
-                    Robot newBot = ((ChosenRobot) object).getRobot();
-                    connectionsAndRobots.put(connection, newBot);
-                    robotActions.put(newBot, null);
-
-                }
 
                 //Test (sanity check)
                 if (object instanceof SanityCheck) {

@@ -8,8 +8,11 @@ import GameBoard.Robot;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.TreeMap;
 
 import NetworkMultiplayer.Messages.InGameMessages.AllChosenCards;
+import NetworkMultiplayer.Messages.InGameMessages.ChosenCards;
+import NetworkMultiplayer.Messages.InGameMessages.SanityCheck;
 import NetworkMultiplayer.Messages.PreGameMessages.GameInfo;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
@@ -42,8 +45,6 @@ public class GameScreen implements Screen {
     public static float TIME_DELTA = 0.6f;
     public static final int CELL_SIZE = 300;
 
-    private SpriteBatch batch;
-    private BitmapFont font;
     private final TiledMapTileLayer playerLayer;
     private final OrthogonalTiledMapRenderer renderer;
     private final OrthographicCamera camera;
@@ -75,7 +76,6 @@ public class GameScreen implements Screen {
 
     private static Sprite backgroundSprite;
     private SpriteBatch spriteBatch;
-    public static Robot winningbot;
 
     private final Label.LabelStyle style;
     public static int fontsize = 30;
@@ -116,8 +116,7 @@ public class GameScreen implements Screen {
 
     @Override
     public void dispose() {
-        batch.dispose();
-        font.dispose();
+        spriteBatch.dispose();
         stage.dispose();
         renderer.dispose();
     }
@@ -152,9 +151,6 @@ public class GameScreen implements Screen {
 
         gameBoard = new BoardController(robots, mapName, amITheHost);
         updateRobotPositions();
-
-        batch = new SpriteBatch();
-        font = new BitmapFont();
         String playerHealthAndLives = "HP: " + playerControlledRobot.getHP() + " Lives: " + playerControlledRobot.getLives();
 
         label = new Label(playerHealthAndLives, style);
@@ -227,22 +223,25 @@ public class GameScreen implements Screen {
             }
         });
 
-
         ready = new TextButton("Ready", gui.getSkin());
         ready.addListener(new ChangeListener(){
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 if(optionsCheck){
-                    if( ! isThisMultiPlayer) {
+                    if( !isThisMultiPlayer) {
                         gameBoard.playersAreReady();
                     }
 
-                    else if ( ! amITheHost){
+                    else if (!amITheHost){
                         // TODO: 31.03.2021 Her skal klienten sende en ChooseCArds til serveren
+                        // Vi må sjekke at dette virker
+                        gui.getClient().sendToServer(new ChosenCards(playerControlledRobot.getChosenCards()));
                     }
 
                     else{
                         // TODO: 31.03.2021 Hva skal skje når hosten selv er ferdig med å velge kort?
+                        //Vi mp sjekke at dette virker
+                        gui.getServer().setHostsChosenCards(playerControlledRobot,playerControlledRobot.getChosenCards());
                     }
                 }
             }
@@ -272,41 +271,11 @@ public class GameScreen implements Screen {
                 }
             }
         });
-        buttonTable.add(label);
-        buttonTable.row();
-        buttonTable.add(powerDown).size(Gdx.graphics.getWidth()/6f,Gdx.graphics.getHeight()/25f);
-        buttonTable.row();
-        buttonTable.add(ready).size(Gdx.graphics.getWidth()/6f,Gdx.graphics.getHeight()/25f);
-        buttonTable.row();
-        buttonTable.add(clear).size(Gdx.graphics.getWidth()/6f,Gdx.graphics.getHeight()/25f);
-        buttonTable.row();
+        buttonTable.add(label).row();
+        buttonTable.add(powerDown).size(Gdx.graphics.getWidth()/6f,Gdx.graphics.getHeight()/25f).row();
+        buttonTable.add(ready).size(Gdx.graphics.getWidth()/6f,Gdx.graphics.getHeight()/25f).row();
+        buttonTable.add(clear).size(Gdx.graphics.getWidth()/6f,Gdx.graphics.getHeight()/25f).row();
         buttonTable.add(options).size(Gdx.graphics.getWidth()/6f,Gdx.graphics.getHeight()/25f);
-    }
-
-    public void setAvailableCards(ArrayList<ICard> cards){
-        if (! isThisMultiPlayer) throw new UnsupportedOperationException("There is no reason to use this method in singleplayer, the boardcontroller automatically set all robot's cards.");
-        playerControlledRobot.setAvailableCards(cards);
-    }
-
-    public ArrayList<ICard> getChosenCards(){
-        if (! isThisMultiPlayer) throw new UnsupportedOperationException("There is no reason to use this method in singleplayer, the boardcontroller automatically set all robot's cards.");
-        ArrayList<ICard> ret = new ArrayList<>();
-        for (int i = 0; i < BoardController.PHASES_PER_ROUND; i++) {
-            ret.add(playerControlledRobot.getNthChosenCard(i));
-        }
-        return ret;
-    }
-
-    public void setAllChosenCards(AllChosenCards acc){
-        if (! isThisMultiPlayer) throw new UnsupportedOperationException("There is no reason to use this method in singleplayer, the boardcontroller automatically set all robot's cards.");
-        ArrayList<ArrayList<ICard>> cards = acc.getOtherChoices();
-        for (int i = 0; i < cards.size(); i++) {
-            if (robots.get(i) == playerControlledRobot
-                    && ! playerControlledRobot.getNthChosenCard(0).equals(cards.get(i).get(0)))
-                    throw new IllegalArgumentException("Are you sure these are the correct cards in the correct order?" +
-                            " if I send cards to the server, and get cards back, the cards for my robot should all be the same. But they are not.");
-            robots.get(i).setChosenCards(cards.get(i));
-        }
     }
 
     @Override
@@ -323,11 +292,39 @@ public class GameScreen implements Screen {
         gameBoard.simulate();
         updateRobotPositions();
         updateLivesAndHP();
+
+        if(isThisMultiPlayer && ! amITheHost){
+            ArrayList<ICard> cardsToChooseFrom = gui.getClient().getCardsToChoseFrom();
+            if(cardsToChooseFrom != null){
+                playerControlledRobot.setAvailableCards(cardsToChooseFrom);
+                clearCards();
+                renderCards();
+            }
+            TreeMap<Robot, ArrayList<ICard>> allChosenCards = gui.getClient().getALLChosenCards();
+            if(allChosenCards != null) {
+                for(Robot bot : robots){
+                    if(bot.equals(playerControlledRobot)) {
+                        if(! allChosenCards.get(bot).equals(bot.getChosenCards())){
+                            throw new SanityCheck.UnequalSimulationException("Are you sure these are the correct cards in the correct order?\n" +
+                                    "if I send cards to the server, and get cards back, the cards for my robot should all be the same. But they are not.");
+                        }
+                    }
+                    bot.setChosenCards(allChosenCards.get(bot));
+                    gameBoard.playersAreReady();
+                }
+            }
+
+        }
+
+        else if (isThisMultiPlayer && amITheHost) {
+
+
+        }
+
         /**for (Robot bot : gameBoard.getRecentlyDeceasedRobots()){
             gui.showPopUp(bot.getName() + " fucking died, lmao", stage);
             // TODO 06.04.2021: Spillet krasjer når denne blir kalt her
         }**/
-        finishedCheck();
 
         //Dette sørger for at kortene kun blir tegnet én gang per runde. Bedre kjøretid, yay
         if(gameBoard.isWaitingForPlayers()){
@@ -339,15 +336,19 @@ public class GameScreen implements Screen {
         else hasDrawnCardsYet = false;
     }
 
+
     private void finishedCheck(){
-        if(winningbot !=null){
-            if(playerControlledRobot == winningbot){
+        //Sjekker om en spiller har vunnet og hvilken screen som skal vises.
+        Robot winner = gameBoard.hasWon();
+        if(winner != null){
+            if(playerControlledRobot.equals(winner)){
                 gui.setScreen(new WinScreen(gui));
             }
             else{
                 gui.setScreen(new GameOverScreen(gui));
             }
         }
+
         if(playerControlledRobot.getLives() <= 0){
             gui.setScreen(new GameOverScreen(gui));
         }
@@ -374,6 +375,7 @@ public class GameScreen implements Screen {
             }
             else playerLayer.setCell(pos.getX(), gameBoard.getHeight() - pos.getY() - 1, new TiledMapTileLayer.Cell());
         }
+        finishedCheck();
     }
     private void clearCards(){
         availableTable.clear();
@@ -426,19 +428,7 @@ public class GameScreen implements Screen {
     public void resume() { }
     @Override
     public void hide() { }
-	
-	/**
-	 * Maybe an alternative for showPopUp()
-	 * prints message at the top of GUI
-	 * @param msg meldingen som skal vises
-	 */
-	public void printMessage(String msg) {batch.begin();
-		batch.setProjectionMatrix(camera.combined);
-		font.setColor(Color.RED);
-		font.draw(batch, msg, WIDTH,  HEIGHT*310);
-		font.getData().setScale(5, 5);
-		batch.end();
-	}
+
 
 	private class CardListener extends ClickListener{
 	    private final int index;

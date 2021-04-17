@@ -13,6 +13,7 @@ import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Client;
 
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.TreeMap;
@@ -27,24 +28,11 @@ public class NetworkClient {
 
     //Pre-game meldinger
     private GameInfo setup;
-    private boolean design;
-    private boolean botName;
-    Robot clientRobot;
-    private int chosenDesign;
-    private String chosenName;
 
-
-    public void setChosenDesign(int chosenDesign) {
-        this.chosenDesign = chosenDesign;
-    }
-
-    public void setChosenName(String chosenName) {
-        this.chosenName = chosenName;
-    }
 
     //In-game meldinger
     private ArrayList<ICard> cardsToChoseFrom = new ArrayList<>();
-    private TreeMap<Robot,IMessage> AllChooseRobotCards = new TreeMap<>();
+    private TreeMap<Robot,ArrayList<ICard>> AllChoseRobotCards = new TreeMap<>();
 
     //pre-game melding
     //Denne forteller oss om det går fint å sette opp en robot
@@ -77,33 +65,26 @@ public class NetworkClient {
         return setup;
     }
 
-    /**
-     * @return true hvis navnet er valgt
-     */
-    public boolean isBotName() {
-        return botName;
-    }
-
-    /**
-     * @return true hvis designet er tatt
-     */
-    public boolean isDesign() {
-        return design;
-    }
 
 
     /**
      * @return Henter robotene og kortene hver robot valgte
      */
-    public TreeMap<Robot, IMessage> getChooseCards() {
-        return AllChooseRobotCards;
+    public TreeMap<Robot, ArrayList<ICard>> getALLChosenCards() {
+        if (AllChoseRobotCards == null) return null;
+        TreeMap<Robot, ArrayList<ICard>> ret = new TreeMap<>();
+        AllChoseRobotCards = null;
+        return ret;
     }
 
     /**
      * @return De utdelte kortene som roboten kan velge mellom
      */
     public ArrayList<ICard> getCardsToChoseFrom() {
-        return cardsToChoseFrom;
+        if(cardsToChoseFrom == null) return null;
+        ArrayList<ICard> ret = new ArrayList(cardsToChoseFrom);
+        cardsToChoseFrom = null;
+        return ret;
     }
 
     /**
@@ -146,7 +127,7 @@ public class NetworkClient {
 
                 //Alle de valgte kortene fra hver robot
                 else if(object instanceof AllChosenCardsFromAllRobots){
-                    AllChooseRobotCards = ((AllChosenCardsFromAllRobots) object).getAllDesicions();
+                    AllChoseRobotCards = ((AllChosenCardsFromAllRobots) object).getAllDesicions();
                 }
 
                 //Kortene som klienten kan velge mellom

@@ -24,10 +24,11 @@ public class WaitingForHostScreen extends SimpleScreen{
     }
 
     @Override
-    public void render(float v){
-        super.render(v);
-        if (gui.getClient().getSetup() != null){
-            gui.setScreen(new GameScreen(gui.getClient().getSetup(), true, false, gui));
+    public void render(float i) {
+
+        if(gui.getClient().getSetup() != null){
+            gui.setScreen(new GameScreen(gui.getClient().getSetup(),true,false,gui));
         }
+        super.render(i);
     }
 }

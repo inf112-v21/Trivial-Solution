@@ -109,6 +109,7 @@ public class LobbyScreen extends SimpleScreen {
             listOfPlayers.add(name);
         }
 
+
         super.render(v);
     }
 }

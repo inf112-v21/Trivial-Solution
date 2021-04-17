@@ -66,15 +66,11 @@ public class NetworkServer extends Listener {
      * @return- true hvis alle er klare til å starte spillet, false ellers.
      */
     public boolean areAllClientsReady(){
-       // System.out.println("klare klienter: " + numberOfReadyClients);
-       // System.out.println("Konneksjoner: " + numberOfConnections);
         return numberOfReadyClients == numberOfConnections;
-
     }
 
     public void distributeCards(){
         for(Connection con : connectionsAndRobots.keySet()){
-            int numCards = connectionsAndRobots.get(con).getAvailableCardSlots();
             sendToClient(con, new DistributedCards(connectionsAndRobots.get(con).getAvailableCards()));
         }
         numberOfReadyClients = 0;
@@ -109,9 +105,9 @@ public class NetworkServer extends Listener {
      * @param bot - roboten. Denne må være host
      * @param cards - kortene roboten har valgt
      */
-    public void setHostsChosenCards(Robot bot,ArrayList<ICard> cards){
+    public void setHostsChosenCards(Robot bot){
         if (!hostRobot.equals(bot)) throw new SanityCheck.UnequalSimulationException("Roboten er ikke host");
-        robotActions.put(bot,cards);
+        robotActions.put(bot,bot.getChosenCards());
         numberOfSetsOfCardsReceived++;
     }
 
@@ -208,7 +204,7 @@ public class NetworkServer extends Listener {
                     Robot thisRobotsAction = connectionsAndRobots.get(connection);
                     robotActions.put(thisRobotsAction, cards.getChosenCards());
                     numberOfSetsOfCardsReceived++;
-                    connectionsAndRobots.get(connection).setChosenCards(cards.getChosenCards());
+                    thisRobotsAction.setChosenCards(cards.getChosenCards());
                 }
 
 

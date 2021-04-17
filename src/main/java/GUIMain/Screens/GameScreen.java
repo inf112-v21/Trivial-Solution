@@ -237,13 +237,13 @@ public class GameScreen implements Screen {
                         // TODO: 31.03.2021 Her skal klienten sende en ChooseCArds til serveren
                         // Vi må sjekke at dette virker
                         gui.getClient().sendToServer(new ChosenCards(playerControlledRobot.getChosenCards()));
+                        availableTable.clear();
                     }
 
                     else{
                         // TODO: 31.03.2021 Hva skal skje når hosten selv er ferdig med å velge kort?
-                        // TODO: 17.04.2021 Refactor etterpå.
-                        //Vi mp sjekke at dette virker
-                        gui.getServer().setHostsChosenCards(playerControlledRobot,playerControlledRobot.getChosenCards());
+                        gui.getServer().setHostsChosenCards(playerControlledRobot);
+                        availableTable.clear();
                     }
                 }
             }
@@ -295,55 +295,60 @@ public class GameScreen implements Screen {
         updateRobotPositions();
         updateLivesAndHP();
 
-        if(isThisMultiPlayer && ! amITheHost){
 
-            //Gir serveren beskjed 2 ting
-            // 1. At spillet har startet opp og at vi kan motta kort
-            // 2. Om at simuleringen er ferdig, altså at ci kan starte neste runde.
-            if(isWaitingForCards){
-                gui.getClient().sendToServer(ConfirmationMessage.GAME_WAS_STARTED_AND_CLIENT_IS_READY_TO_RECEIVE_CARDS);
-                isWaitingForCards = false;
-            }
+        if(isThisMultiPlayer ) {
+            if (!amITheHost) { //Klienten
 
-            ArrayList<ICard> cardsToChoseFrom = gui.getClient().getCardsToChoseFrom();
-            if(cardsToChoseFrom != null){
-                System.out.println("Kortene som kan velges: " + cardsToChoseFrom);
+                //Gir serveren beskjed 2 ting
+                // 1. At spillet har startet opp og at vi kan motta kort
+                // 2. Om at simuleringen er ferdig, altså at ci kan starte neste runde.
+                if (isWaitingForCards) {
+                    gui.getClient().sendToServer(ConfirmationMessage.GAME_WAS_STARTED_AND_CLIENT_IS_READY_TO_RECEIVE_CARDS);
+                    isWaitingForCards = false;
+                }
+
+                ArrayList<ICard> cardsToChoseFrom = gui.getClient().getCardsToChoseFrom();
+                if (cardsToChoseFrom != null) {
+                    System.out.println("Kortene som kan velges: " + cardsToChoseFrom);
                     playerControlledRobot.setAvailableCards(cardsToChoseFrom);
-                    clearCards();
+
+
                     renderCards();
 
-            }
-            TreeMap<Robot, ArrayList<ICard>> allChosenCards = gui.getClient().getAllChosenCards();
-            if(allChosenCards != null) {
-
-                //Lopper igjennom alle robotene for å matche de valgte kortene til hver robot,
-                //slik at klienten kan simulere de tatte valgene.
-                for(Robot bot : robots){
-                    if(bot.equals(playerControlledRobot)) {
-                        if(! allChosenCards.get(bot).equals(bot.getChosenCards())){
-                            throw new SanityCheck.UnequalSimulationException("Are you sure these are the correct cards in the correct order?\n" +
-                                    "if I send cards to the server, and get cards back, the cards for my robot should all be the same. But they are not.");
-                        }
-                    }
-                    bot.setChosenCards(allChosenCards.get(bot));
-                    gameBoard.playersAreReady();
-
-                    //Sørger for å gi serveren beskjed om at simuleringen er ferdig nå
-                    isWaitingForCards = true;
                 }
+                TreeMap<Robot, ArrayList<ICard>> allChosenCards = gui.getClient().getAllChosenCards();
+                if (allChosenCards != null) {
+
+                    //Lopper igjennom alle robotene for å matche de valgte kortene til hver robot,
+                    //slik at klienten kan simulere de tatte valgene.
+                    for (Robot bot : robots) {
+                        if (bot.equals(playerControlledRobot)) {
+                            if (!allChosenCards.get(bot).equals(bot.getChosenCards())) {
+                                throw new SanityCheck.UnequalSimulationException("Are you sure these are the correct cards in the correct order?\n" +
+                                        "if I send cards to the server, and get cards back, the cards for my robot should all be the same. But they are not.");
+                            }
+                        }
+                        bot.setChosenCards(allChosenCards.get(bot));
+                        gameBoard.playersAreReady();
+
+                        //Sørger for å gi serveren beskjed om at simuleringen er ferdig nå
+                        isWaitingForCards = true;
+                    }
+                }
+
             }
 
-        }
+            //Dette er hosten sin kode
+            else {
 
-        else if (isThisMultiPlayer && amITheHost) {
-
-            if(gui.getServer().areAllClientsReady()){
-                gui.getServer().distributeCards();
-                System.out.println("BRUH");
-            }
-            if (gui.getServer().haveAllClientSentTheirChosenCards()){
-                gui.getServer().sendAllChosenCardsToEveryone();
-                gameBoard.playersAreReady();
+                if (gui.getServer().areAllClientsReady()) {
+                    gui.getServer().distributeCards();
+                    System.out.println("BRUH");
+                }
+                if (gui.getServer().haveAllClientSentTheirChosenCards()) {
+                    gui.getServer().sendAllChosenCardsToEveryone();
+                    gameBoard.playersAreReady();
+                }
             }
         }
 
@@ -352,14 +357,17 @@ public class GameScreen implements Screen {
             // TODO 06.04.2021: Spillet krasjer når denne blir kalt her
         }**/
 
-        //Dette sørger for at kortene kun blir tegnet én gang per runde. Bedre kjøretid, yay
-        if(gameBoard.isWaitingForPlayers()){
-            if (hasDrawnCardsYet) return;
-            clearCards();
-            renderCards();
-            hasDrawnCardsYet = true;
+        //Dette er for singelplayer
+        else {
+
+            //Dette sørger for at kortene kun blir tegnet én gang per runde. Bedre kjøretid, yay
+            if (gameBoard.isWaitingForPlayers()) {
+                if (hasDrawnCardsYet) return;
+                clearCards();
+                renderCards();
+                hasDrawnCardsYet = true;
+            } else hasDrawnCardsYet = false;
         }
-        else hasDrawnCardsYet = false;
     }
 
 

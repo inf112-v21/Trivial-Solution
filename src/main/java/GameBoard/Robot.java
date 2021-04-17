@@ -36,11 +36,12 @@ public class Robot implements Serializable, Comparable<Robot> {
 
 	private int design = -1;
 	private final String name;
-	private TextureRegion image;
 	private int direction = INITIAL_DIRECTION;
 	private Position respawnPoint;
 	private final boolean isControlledByAI;
 	private boolean powerDown;
+
+	private static TextureRegion[][] textures;
 
 	private ArrayList<Flag> flagsVisited = new ArrayList<>();
 	private ArrayList<ICard> availableCards = new ArrayList<>(); //alle kortene som ble utdelt
@@ -53,8 +54,6 @@ public class Robot implements Serializable, Comparable<Robot> {
 		this.name = name;
 		this.isControlledByAI = isControlledByAI;
 		powerDown = false;
-
-		//this.image = new TextureRegion(new Texture("Robotdesigns/robots.png")).split(GameScreen.CELL_SIZE, GameScreen.CELL_SIZE)[0][design];
 	}
 
 
@@ -119,10 +118,8 @@ public class Robot implements Serializable, Comparable<Robot> {
 
 	public TextureRegion getImage() {
 	    if (design  == -1) throw new IllegalStateException("This robot has no image. If it should have one, please use the other Robot constructor instead.");
-	    if (image  == null){
-			image = new TextureRegion(new Texture("Robotdesigns/robots.png")).split(GameScreen.CELL_SIZE, GameScreen.CELL_SIZE)[0][design];
-		}
-		return image;
+	    if (textures == null) textures = new TextureRegion(new Texture("Robotdesigns/robots.png")).split(GameScreen.CELL_SIZE, GameScreen.CELL_SIZE);
+		return textures[0][design];
 	}
 
 	public boolean isControlledByAI(){return isControlledByAI; }

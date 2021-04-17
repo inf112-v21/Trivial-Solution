@@ -28,7 +28,6 @@ public class NetworkClient {
     //Pre-game meldinger
     private GameInfo setup;
 
-
     //In-game meldinger
     private ArrayList<ICard> cardsToChoseFrom;
     private TreeMap<Robot,ArrayList<ICard>> allChoseRobotCards;

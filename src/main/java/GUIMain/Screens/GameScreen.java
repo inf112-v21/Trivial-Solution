@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.TreeMap;
 
 import NetworkMultiplayer.Messages.InGameMessages.ChosenCards;
+import NetworkMultiplayer.Messages.InGameMessages.ConfirmationMessage;
 import NetworkMultiplayer.Messages.InGameMessages.SanityCheck;
 import NetworkMultiplayer.Messages.PreGameMessages.GameInfo;
 import com.badlogic.gdx.Gdx;
@@ -67,6 +68,7 @@ public class GameScreen implements Screen {
     private Label label;
     private final boolean isThisMultiPlayer;
     private final boolean amITheHost;
+    private boolean simulate = false;
 
     private float timeSinceLastUpdate = -1; //Denne holder styr på hvor lenge det er siden forrige gang brettet ble tegnet.
     private boolean hasDrawnCardsYet = false;
@@ -76,6 +78,8 @@ public class GameScreen implements Screen {
 
     private final Label.LabelStyle style;
     public static int fontsize = 30;
+
+    private boolean isWaitingForCards = true;
 
 
     public GameScreen(GameInfo gameInfo, boolean isThisMultiPlayer, boolean amITheHost, GUI gui){
@@ -293,11 +297,21 @@ public class GameScreen implements Screen {
 
         if(isThisMultiPlayer && ! amITheHost){
 
+            //Gir serveren beskjed 2 ting
+            // 1. At spillet har startet opp og at vi kan motta kort
+            // 2. Om at simuleringen er ferdig, altså at ci kan starte neste runde.
+            if(isWaitingForCards){
+                gui.getClient().sendToServer(ConfirmationMessage.GAME_WAS_STARTED_AND_CLIENT_IS_READY_TO_RECEIVE_CARDS);
+                isWaitingForCards = false;
+            }
+
             ArrayList<ICard> cardsToChooseFrom = gui.getClient().getCardsToChoseFrom();
             if(cardsToChooseFrom != null){
-                playerControlledRobot.setAvailableCards(cardsToChooseFrom);
-                clearCards();
-                renderCards();
+
+                    playerControlledRobot.setAvailableCards(cardsToChooseFrom);
+                    clearCards();
+                    renderCards();
+
             }
             TreeMap<Robot, ArrayList<ICard>> allChosenCards = gui.getClient().getAllChosenCards();
             if(allChosenCards != null) {
@@ -314,8 +328,8 @@ public class GameScreen implements Screen {
                     bot.setChosenCards(allChosenCards.get(bot));
                     gameBoard.playersAreReady();
 
-                    //Sørger for å gi serveren beskjed om at simuleringen er ferdig
-
+                    //Sørger for å gi serveren beskjed om at simuleringen er ferdig nå
+                    isWaitingForCards = true;
                 }
             }
 
@@ -325,6 +339,7 @@ public class GameScreen implements Screen {
 
             if(gui.getServer().areAllClientsReady()){
                 gui.getServer().distributeCards();
+                System.out.println("BRUH");
             }
             if (gui.getServer().haveAllClientSentTheirChosenCards()){
                 gui.getServer().sendAllChosenCardsToEveryone();

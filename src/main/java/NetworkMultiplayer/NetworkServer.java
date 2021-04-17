@@ -7,6 +7,7 @@ import NetworkMultiplayer.Messages.PreGameMessages.GameInfo;
 import NetworkMultiplayer.Messages.PreGameMessages.SetupRobotNameDesign;
 import NetworkMultiplayer.Messages.IMessage;
 import NetworkMultiplayer.Messages.PreGameMessages.RobotInfo;
+import com.badlogic.gdx.math.Interpolation;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Server;
@@ -65,11 +66,15 @@ public class NetworkServer extends Listener {
      * @return- true hvis alle er klare til å starte spillet, false ellers.
      */
     public boolean areAllClientsReady(){
+       // System.out.println("klare klienter: " + numberOfReadyClients);
+       // System.out.println("Konneksjoner: " + numberOfConnections);
         return numberOfReadyClients == numberOfConnections;
+
     }
 
     public void distributeCards(){
         for(Connection con : connectionsAndRobots.keySet()){
+            int numCards = connectionsAndRobots.get(con).getAvailableCardSlots();
             sendToClient(con, new DistributedCards(connectionsAndRobots.get(con).getAvailableCards()));
         }
         numberOfReadyClients = 0;
@@ -81,7 +86,7 @@ public class NetworkServer extends Listener {
      * @return true hvis alle har sendt, false ellers.
      */
     public boolean haveAllClientSentTheirChosenCards(){
-        return numberOfSetsOfCardsReceived == numberOfConnections;
+        return numberOfSetsOfCardsReceived == numberOfConnections+1;
 
     }
 
@@ -107,6 +112,7 @@ public class NetworkServer extends Listener {
     public void setHostsChosenCards(Robot bot,ArrayList<ICard> cards){
         if (!hostRobot.equals(bot)) throw new SanityCheck.UnequalSimulationException("Roboten er ikke host");
         robotActions.put(bot,cards);
+        numberOfSetsOfCardsReceived++;
     }
 
 
@@ -182,12 +188,12 @@ public class NetworkServer extends Listener {
                     switch (message) {
                         case CONNECTION_WAS_SUCCESSFUL:
                             System.out.println("Woho!");
+                            return;
 
-                        case SIMULATION_IS_OVER:
-                            simulationIsOver = true;
 
                         case GAME_WAS_STARTED_AND_CLIENT_IS_READY_TO_RECEIVE_CARDS:
                             numberOfReadyClients++;
+                            return;
                     }
 
                 }
@@ -201,7 +207,8 @@ public class NetworkServer extends Listener {
                     //over nettverket.
                     Robot thisRobotsAction = connectionsAndRobots.get(connection);
                     robotActions.put(thisRobotsAction, cards.getChosenCards());
-
+                    numberOfSetsOfCardsReceived++;
+                    connectionsAndRobots.get(connection).setChosenCards(cards.getChosenCards());
                 }
 
 

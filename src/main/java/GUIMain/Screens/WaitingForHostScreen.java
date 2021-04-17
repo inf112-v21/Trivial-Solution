@@ -28,7 +28,6 @@ public class WaitingForHostScreen extends SimpleScreen{
     public void render(float i) {
 
         if(gui.getClient().getSetup() != null){
-            gui.getClient().sendToServer(ConfirmationMessage.GAME_WAS_STARTED_AND_CLIENT_IS_READY_TO_RECEIVE_CARDS);
             gui.setScreen(new GameScreen(gui.getClient().getSetup(),true,false,gui));
 
         }

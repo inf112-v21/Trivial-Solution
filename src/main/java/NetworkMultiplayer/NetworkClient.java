@@ -69,6 +69,7 @@ public class NetworkClient {
      * @return Henter robotene og kortene hver robot valgte
      */
     public TreeMap<Robot, ArrayList<ICard>> getAllChosenCards() {
+        System.out.println("Kortene er: " + allChoseRobotCards);
         if (allChoseRobotCards == null) return null;
         TreeMap<Robot, ArrayList<ICard>> ret = new TreeMap<>(allChoseRobotCards);
         allChoseRobotCards = null;
@@ -79,6 +80,7 @@ public class NetworkClient {
      * @return De utdelte kortene som roboten kan velge mellom
      */
     public ArrayList<ICard> getCardsToChoseFrom() {
+        System.out.println("Kortene som kan velges: " + cardsToChoseFrom);
         if(cardsToChoseFrom == null) return null;
         ArrayList<ICard> ret = new ArrayList(cardsToChoseFrom);
         cardsToChoseFrom = null;
@@ -117,7 +119,7 @@ public class NetworkClient {
                         case TEST_MESSAGE:
                             System.out.println("Client received message. Now sending Message to server");
                             sendToServer(ConfirmationMessage.CONNECTION_WAS_SUCCESSFUL);
-
+                            return;
                     }
 
                 }

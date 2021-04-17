@@ -16,7 +16,7 @@ public class AllChosenCardsFromAllRobots implements IMessage, Serializable {
      */
 
     final private TreeMap<Robot,ArrayList<ICard>> allDesicions;
-    AllChosenCardsFromAllRobots(TreeMap<Robot,ArrayList<ICard>> allDesicions){
+    public AllChosenCardsFromAllRobots(TreeMap<Robot,ArrayList<ICard>> allDesicions){
         this.allDesicions = allDesicions;
     }
 

@@ -13,7 +13,6 @@ import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Client;
 
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.TreeMap;
@@ -31,8 +30,8 @@ public class NetworkClient {
 
 
     //In-game meldinger
-    private ArrayList<ICard> cardsToChoseFrom = new ArrayList<>();
-    private TreeMap<Robot,ArrayList<ICard>> AllChoseRobotCards = new TreeMap<>();
+    private ArrayList<ICard> cardsToChoseFrom;
+    private TreeMap<Robot,ArrayList<ICard>> allChoseRobotCards;
 
     //pre-game melding
     //Denne forteller oss om det går fint å sette opp en robot
@@ -70,10 +69,10 @@ public class NetworkClient {
     /**
      * @return Henter robotene og kortene hver robot valgte
      */
-    public TreeMap<Robot, ArrayList<ICard>> getALLChosenCards() {
-        if (AllChoseRobotCards == null) return null;
-        TreeMap<Robot, ArrayList<ICard>> ret = new TreeMap<>();
-        AllChoseRobotCards = null;
+    public TreeMap<Robot, ArrayList<ICard>> getAllChosenCards() {
+        if (allChoseRobotCards == null) return null;
+        TreeMap<Robot, ArrayList<ICard>> ret = new TreeMap<>(allChoseRobotCards);
+        allChoseRobotCards = null;
         return ret;
     }
 
@@ -127,7 +126,7 @@ public class NetworkClient {
 
                 //Alle de valgte kortene fra hver robot
                 else if(object instanceof AllChosenCardsFromAllRobots){
-                    AllChoseRobotCards = ((AllChosenCardsFromAllRobots) object).getAllDesicions();
+                    allChoseRobotCards = ((AllChosenCardsFromAllRobots) object).getAllDesicions();
                 }
 
                 //Kortene som klienten kan velge mellom

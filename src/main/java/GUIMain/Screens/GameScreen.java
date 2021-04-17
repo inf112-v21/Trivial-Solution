@@ -10,16 +10,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.TreeMap;
 
-import NetworkMultiplayer.Messages.InGameMessages.AllChosenCards;
 import NetworkMultiplayer.Messages.InGameMessages.ChosenCards;
 import NetworkMultiplayer.Messages.InGameMessages.SanityCheck;
 import NetworkMultiplayer.Messages.PreGameMessages.GameInfo;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
@@ -300,7 +297,7 @@ public class GameScreen implements Screen {
                 clearCards();
                 renderCards();
             }
-            TreeMap<Robot, ArrayList<ICard>> allChosenCards = gui.getClient().getALLChosenCards();
+            TreeMap<Robot, ArrayList<ICard>> allChosenCards = gui.getClient().getAllChosenCards();
             if(allChosenCards != null) {
                 for(Robot bot : robots){
                     if(bot.equals(playerControlledRobot)) {

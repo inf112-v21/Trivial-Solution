@@ -259,6 +259,7 @@ public class NetworkServer extends Listener {
      * @param m - meldingen vi vil sende
      */
     public void sendToClient(Connection con, IMessage m){
+        System.out.println("Sent message " + m.getClass());
         server.sendToTCP(con.getID(),m);
     }
 
@@ -292,7 +293,9 @@ public class NetworkServer extends Listener {
      * @param mapname
      */
     public GameInfo startTheGame(String mapname){
-        List<Robot> robots = Collections.unmodifiableList(new ArrayList<>(robotActions.keySet()));
+        List<Robot> robottttts = new ArrayList<>(robotActions.keySet());
+        Collections.shuffle(robottttts);
+        List<Robot> robots = Collections.unmodifiableList(robottttts);
         for (Connection con : connectionsAndRobots.keySet()){
             sendToClient(con, new GameInfo(robots, mapname, robots.indexOf(connectionsAndRobots.get(con))));
         }

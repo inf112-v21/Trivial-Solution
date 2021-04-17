@@ -21,7 +21,6 @@ public class ProgramCard implements ICard {
      */
 
     public ProgramCard(int dist, int rotation, int priority) {
-        if (textures.isEmpty()) createTextures();
         this.distance = dist;
         this.rotation = rotation;
         this.priority = priority;
@@ -61,6 +60,7 @@ public class ProgramCard implements ICard {
 
     @Override
     public Texture getCardImage(){
+        if (textures.isEmpty()) createTextures();
         Texture ret = textures.get(new Triplet<>(distance, rotation, priority));
         if (ret == null) throw new NullPointerException("Could not find a suitable image for this card!");
         return ret;

@@ -76,7 +76,7 @@ public class SanityCheckTests {
         bård.spawnRobot(bot1);
 
         SanityCheck check1 = bård.getSanityCheck();
-        bård.performMove(new ProgramCard(1, 0, 1, null), bot1);
+        bård.performMove(new ProgramCard(1, 0, 1), bot1);
         SanityCheck check2 = bård.getSanityCheck();
 
         try{

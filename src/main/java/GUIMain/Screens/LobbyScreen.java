@@ -108,9 +108,6 @@ public class LobbyScreen extends SimpleScreen {
             playerlisttable.add(name).row();
             listOfPlayers.add(name);
         }
-        // TODO: 14.04.2021 Sjekk om serveren har mottatt hostens navn og design, så det kan legges i listen
-        // TODO: 14.04.2021 Sjekk resten av serverens tilkoblede roboter, og legg dem til i listOfPlayers
-        // TODO: 14.04.2021 Legg til en sjekk for om spillet er klart for å begynne, og bytt deretter til GameScreen.
 
         super.render(v);
     }

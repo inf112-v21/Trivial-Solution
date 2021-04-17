@@ -5,7 +5,9 @@ import GameBoard.Robot;
 import NetworkMultiplayer.Messages.InGameMessages.ChosenRobot;
 import NetworkMultiplayer.Messages.PreGameMessages.RobotInfo;
 import NetworkMultiplayer.Messages.PreGameMessages.SetupRobotNameDesignMessage;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 
@@ -59,6 +61,7 @@ public class CreateRobotScreen extends SimpleScreen{
     public void render(float i) {
         super.render(i);
         SetupRobotNameDesignMessage msg = gui.getClient().getState();
+        gui.getClient().resetState();
         if (msg == null) return;
         switch (msg) {
             case UNAVAILABLE_DESIGN:
@@ -70,10 +73,6 @@ public class CreateRobotScreen extends SimpleScreen{
             case ROBOT_DESIGN_AND_NAME_ARE_OKEY:
                 gui.setScreen(new WaitingForHostScreen(gui));
                 return;
-
-            //case ROBOT_DESIGN_AND_NAME_ARE_OKEY:
-            //    Robot newBot = new Robot(textField.getText(), design,false);
-            //    gui.getClient().sendToServer(new ChosenRobot(newBot));
         }
     }
 }

@@ -21,7 +21,7 @@ public class AITests {
 
     @BeforeEach
     public void setUp(){
-        deck = new Deck(false);
+        deck = new Deck();
         bot = new Robot("Nebuchadnezzar", true);
     }
 
@@ -80,7 +80,7 @@ public class AITests {
 
     private void resetState(){
         bot = new Robot("Nebuchadnezzar", true);
-        deck = new Deck(false);
+        deck = new Deck();
     }
 
     private void drawRandomCards(){

@@ -2,19 +2,14 @@ package NetworkMultiplayer;
 
 import GameBoard.Cards.ICard;
 import GameBoard.Robot;
-import NetworkMultiplayer.Messages.InGameMessages.AllChosenCards;
-import NetworkMultiplayer.Messages.InGameMessages.ChosenRobot;
-import NetworkMultiplayer.Messages.InGameMessages.SanityCheck;
+import NetworkMultiplayer.Messages.InGameMessages.*;
 import NetworkMultiplayer.Messages.PreGameMessages.GameInfo;
-import NetworkMultiplayer.Messages.PreGameMessages.SetupRobotNameDesignMessage;
-import NetworkMultiplayer.Messages.ConfirmationMessages;
-import NetworkMultiplayer.Messages.InGameMessages.ChosenCards;
+import NetworkMultiplayer.Messages.PreGameMessages.SetupRobotNameDesign;
 import NetworkMultiplayer.Messages.IMessage;
 import NetworkMultiplayer.Messages.PreGameMessages.RobotInfo;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Server;
-import org.javatuples.Pair;
 
 import java.io.IOException;
 import java.util.*;
@@ -39,6 +34,9 @@ public class NetworkServer extends Listener {
     //antall mottate kortset
     private int numberOfSetsOfCardsReceived = 0;
 
+    //antall klienter som er klare til å begynne
+    private int numberOfReadyClients = 0;
+
     //Mappinger som sjekker at vi har alt på plass
     private HashMap<Connection, Robot> connectionsAndRobots = new HashMap<>();
 
@@ -62,22 +60,43 @@ public class NetworkServer extends Listener {
     boolean simulationIsOver;
 
     /**
-     * Setter antall set av kost vi har fått fra klientene lik 0
-     * Vi må gjøre dette hver gang vi sender ut alle valgte kortset til klientene
+     * Metode som sjekker at alle klientene er klare til å begynne spillet.
+     * Denne metoden setter deretter
+     * @return- true hvis alle er klare til å starte spillet, false ellers.
      */
-    public void resetNumberOfSetsOfCardsReceived() {
-        this.numberOfSetsOfCardsReceived = 0;
+    public boolean areAllClientsReady(){
+        return numberOfReadyClients == numberOfConnections;
+    }
+
+    public void distributeCards(){
+        for(Connection con : connectionsAndRobots.keySet()){
+            sendToClient(con, new DistributedCards(connectionsAndRobots.get(con).getAvailableCards()));
+        }
+        numberOfReadyClients = 0;
     }
 
     /**
-     * Brukes for å sjekke at serveren har mottat alle kortsettene fra
-     * alle klientene som spiller spillet. Brukes med
-     *
-     * @return antall klienter som har valgt kortene sine
+     * Sjekker om alle klientene har sendt kortene sine
+     * til serveren/hosten
+     * @return true hvis alle har sendt, false ellers.
      */
-    public int getNumberOfCardsReceived() {
-        return numberOfSetsOfCardsReceived;
+    public boolean haveAllClientSentTheirChosenCards(){
+        return numberOfSetsOfCardsReceived == numberOfConnections;
+
     }
+
+
+    /**
+     * Sender alle kortene alle valgte til hver klient
+     * slik at de kan begynne simuleringen
+     */
+    public void sendAllChosenCardsToEveryone(){
+        for(Connection con : connectionsAndRobots.keySet()){
+            sendToClient(con, new AllChosenCardsFromAllRobots(robotActions));
+        }
+        numberOfSetsOfCardsReceived = 0;
+    }
+
 
     /**
      * Brukes til å oppdattere kortene hostens robot valgte.
@@ -158,14 +177,17 @@ public class NetworkServer extends Listener {
             public void received(Connection connection, Object object) {
                 System.out.println("Received " + object.getClass());
 
-                if (object instanceof ConfirmationMessages) {
-                    ConfirmationMessages message = ((ConfirmationMessages) object);
+                if (object instanceof ConfirmationMessage) {
+                    ConfirmationMessage message = ((ConfirmationMessage) object);
                     switch (message) {
                         case CONNECTION_WAS_SUCCESSFUL:
                             System.out.println("Woho!");
 
                         case SIMULATION_IS_OVER:
                             simulationIsOver = true;
+
+                        case GAME_WAS_STARTED_AND_CLIENT_IS_READY_TO_RECEIVE_CARDS:
+                            numberOfReadyClients++;
                     }
 
                 }
@@ -197,11 +219,11 @@ public class NetworkServer extends Listener {
 
                             System.out.println(bot);
                             if (registeredBot.getDesign() == chosenDesign) {
-                                sendToClient(connection, SetupRobotNameDesignMessage.UNAVAILABLE_DESIGN);
+                                sendToClient(connection, SetupRobotNameDesign.UNAVAILABLE_DESIGN);
                                 return;
                             }
                             if (registeredBot.getName().equals(newRobotName)) {
-                                sendToClient(connection, SetupRobotNameDesignMessage.UNAVAILABLE_NAME);
+                                sendToClient(connection, SetupRobotNameDesign.UNAVAILABLE_NAME);
                                 return;
                             }
 
@@ -211,7 +233,7 @@ public class NetworkServer extends Listener {
                     Robot newbot = new Robot(newRobotName, chosenDesign, false);
                     connectionsAndRobots.put(connection, newbot);
                     robotActions.put(newbot, null);
-                    sendToClient(connection, SetupRobotNameDesignMessage.ROBOT_DESIGN_AND_NAME_ARE_OKEY);
+                    sendToClient(connection, SetupRobotNameDesign.ROBOT_DESIGN_AND_NAME_ARE_OKEY);
                 }
 
 
@@ -234,12 +256,12 @@ public class NetworkServer extends Listener {
         });
     }
 
-    public SetupRobotNameDesignMessage setHostRobot(RobotInfo info){
-        if (robotActions.keySet().stream().map(Robot::getDesign).collect(Collectors.toList()).contains(info.getBotDesignNr())) return SetupRobotNameDesignMessage.UNAVAILABLE_DESIGN;
-        if (robotActions.keySet().stream().map(Robot::getName  ).collect(Collectors.toList()).contains(info.getBotName()    )) return SetupRobotNameDesignMessage.UNAVAILABLE_NAME;
+    public SetupRobotNameDesign setHostRobot(RobotInfo info){
+        if (robotActions.keySet().stream().map(Robot::getDesign).collect(Collectors.toList()).contains(info.getBotDesignNr())) return SetupRobotNameDesign.UNAVAILABLE_DESIGN;
+        if (robotActions.keySet().stream().map(Robot::getName  ).collect(Collectors.toList()).contains(info.getBotName()    )) return SetupRobotNameDesign.UNAVAILABLE_NAME;
         hostRobot = new Robot(info.getBotName(), info.getBotDesignNr(), false);
         robotActions.put(hostRobot, null);
-        return SetupRobotNameDesignMessage.ROBOT_DESIGN_AND_NAME_ARE_OKEY;
+        return SetupRobotNameDesign.ROBOT_DESIGN_AND_NAME_ARE_OKEY;
     }
 
 

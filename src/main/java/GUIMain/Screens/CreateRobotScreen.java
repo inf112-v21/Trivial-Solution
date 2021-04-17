@@ -1,10 +1,8 @@
 package GUIMain.Screens;
 
 import GUIMain.GUI;
-import GameBoard.Robot;
-import NetworkMultiplayer.Messages.InGameMessages.ChosenRobot;
 import NetworkMultiplayer.Messages.PreGameMessages.RobotInfo;
-import NetworkMultiplayer.Messages.PreGameMessages.SetupRobotNameDesignMessage;
+import NetworkMultiplayer.Messages.PreGameMessages.SetupRobotNameDesign;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -60,7 +58,7 @@ public class CreateRobotScreen extends SimpleScreen{
     @Override
     public void render(float i) {
         super.render(i);
-        SetupRobotNameDesignMessage msg = gui.getClient().getState();
+        SetupRobotNameDesign msg = gui.getClient().getState();
         gui.getClient().resetState();
         if (msg == null) return;
         switch (msg) {

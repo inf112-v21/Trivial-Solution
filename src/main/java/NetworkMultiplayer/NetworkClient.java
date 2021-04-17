@@ -3,8 +3,8 @@ package NetworkMultiplayer;
 import GameBoard.Cards.ICard;
 import GameBoard.Robot;
 import NetworkMultiplayer.Messages.InGameMessages.AllChosenCardsFromAllRobots;
-import NetworkMultiplayer.Messages.PreGameMessages.SetupRobotNameDesignMessage;
-import NetworkMultiplayer.Messages.ConfirmationMessages;
+import NetworkMultiplayer.Messages.PreGameMessages.SetupRobotNameDesign;
+import NetworkMultiplayer.Messages.InGameMessages.ConfirmationMessage;
 import NetworkMultiplayer.Messages.InGameMessages.DistributedCards;
 import NetworkMultiplayer.Messages.PreGameMessages.GameInfo;
 import NetworkMultiplayer.Messages.IMessage;
@@ -34,10 +34,10 @@ public class NetworkClient {
 
     //pre-game melding
     //Denne forteller oss om det går fint å sette opp en robot
-    private SetupRobotNameDesignMessage state;
+    private SetupRobotNameDesign state;
 
     public void resetState(){ state = null; }
-    public SetupRobotNameDesignMessage getState() {
+    public SetupRobotNameDesign getState() {
         return state;
     }
 
@@ -94,30 +94,29 @@ public class NetworkClient {
         client.addListener(new Listener() {
             public void received (Connection connection, Object object) {
 
-                if(object instanceof SetupRobotNameDesignMessage){
-                    SetupRobotNameDesignMessage message = ((SetupRobotNameDesignMessage) object);
+                if(object instanceof SetupRobotNameDesign){
+                    SetupRobotNameDesign message = ((SetupRobotNameDesign) object);
                     switch(message){
                         case UNAVAILABLE_DESIGN:
-                            state = SetupRobotNameDesignMessage.UNAVAILABLE_DESIGN;
+                            state = SetupRobotNameDesign.UNAVAILABLE_DESIGN;
                             return;
                         case UNAVAILABLE_NAME:
-                            state = SetupRobotNameDesignMessage.UNAVAILABLE_NAME;
+                            state = SetupRobotNameDesign.UNAVAILABLE_NAME;
                             return;
                         case ROBOT_DESIGN_AND_NAME_ARE_OKEY:
-                            state = SetupRobotNameDesignMessage.ROBOT_DESIGN_AND_NAME_ARE_OKEY;
+                            state = SetupRobotNameDesign.ROBOT_DESIGN_AND_NAME_ARE_OKEY;
                             return;
                     }
                 }
 
-                else if(object instanceof ConfirmationMessages){
-                    ConfirmationMessages message = ((ConfirmationMessages) object);
+                else if(object instanceof ConfirmationMessage){
+                    ConfirmationMessage message = ((ConfirmationMessage) object);
                     switch(message){
 
                         //Brukes kun for testing.
                         case TEST_MESSAGE:
                             System.out.println("Client received message. Now sending Message to server");
-                            sendToServer(ConfirmationMessages.CONNECTION_WAS_SUCCESSFUL);
-
+                            sendToServer(ConfirmationMessage.CONNECTION_WAS_SUCCESSFUL);
 
                     }
 
@@ -147,7 +146,7 @@ public class NetworkClient {
 
             @Override
             public void connected(Connection connection){
-                sendToServer(ConfirmationMessages.CONNECTION_WAS_SUCCESSFUL);
+                sendToServer(ConfirmationMessage.CONNECTION_WAS_SUCCESSFUL);
             }
         });
 

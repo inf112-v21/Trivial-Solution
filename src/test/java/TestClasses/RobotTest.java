@@ -20,7 +20,7 @@ public class RobotTest {
     @BeforeEach
     public void reset(){
         bot = new Robot("Nebuchadnezzar", false);
-        deck = new Deck(false);
+        deck = new Deck();
     }
 
     @Test
@@ -53,7 +53,7 @@ public class RobotTest {
     @Test
     public void canOnlyChooseAvailableCards(){
         try{
-            bot.chooseCard(new ProgramCard(69, 0, 420, null)); //Dette kortet er antagelig ikke i listen
+            bot.chooseCard(new ProgramCard(69, 0, 420)); //Dette kortet er antagelig ikke i listen
             fail();
         }catch (IllegalArgumentException e){
             //Yay

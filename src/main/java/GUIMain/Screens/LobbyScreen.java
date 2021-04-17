@@ -3,7 +3,7 @@ package GUIMain.Screens;
 import GUIMain.GUI;
 import GameBoard.Robot;
 import NetworkMultiplayer.Messages.PreGameMessages.GameInfo;
-import NetworkMultiplayer.Messages.PreGameMessages.SetupRobotNameDesignMessage;
+import NetworkMultiplayer.Messages.PreGameMessages.SetupRobotNameDesign;
 import NetworkMultiplayer.Messages.PreGameMessages.RobotInfo;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -67,7 +67,7 @@ public class LobbyScreen extends SimpleScreen {
                     gui.showPopUp("Please choose a nickname for you robot!", stage);
                     return;
                 }
-                SetupRobotNameDesignMessage msg = gui.getServer().setHostRobot(new RobotInfo(robotname.getText(), design));
+                SetupRobotNameDesign msg = gui.getServer().setHostRobot(new RobotInfo(robotname.getText(), design));
                 switch (msg) {
                     case ROBOT_DESIGN_AND_NAME_ARE_OKEY:
                         chooserobottable.clear();

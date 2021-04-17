@@ -237,6 +237,7 @@ public class GameScreen implements Screen {
 
                     else{
                         // TODO: 31.03.2021 Hva skal skje når hosten selv er ferdig med å velge kort?
+                        // TODO: 17.04.2021 Refactor etterpå.
                         //Vi mp sjekke at dette virker
                         gui.getServer().setHostsChosenCards(playerControlledRobot,playerControlledRobot.getChosenCards());
                     }
@@ -291,6 +292,7 @@ public class GameScreen implements Screen {
         updateLivesAndHP();
 
         if(isThisMultiPlayer && ! amITheHost){
+
             ArrayList<ICard> cardsToChooseFrom = gui.getClient().getCardsToChoseFrom();
             if(cardsToChooseFrom != null){
                 playerControlledRobot.setAvailableCards(cardsToChooseFrom);
@@ -299,6 +301,9 @@ public class GameScreen implements Screen {
             }
             TreeMap<Robot, ArrayList<ICard>> allChosenCards = gui.getClient().getAllChosenCards();
             if(allChosenCards != null) {
+
+                //Lopper igjennom alle robotene for å matche de valgte kortene til hver robot,
+                //slik at klienten kan simulere de tatte valgene.
                 for(Robot bot : robots){
                     if(bot.equals(playerControlledRobot)) {
                         if(! allChosenCards.get(bot).equals(bot.getChosenCards())){
@@ -308,6 +313,9 @@ public class GameScreen implements Screen {
                     }
                     bot.setChosenCards(allChosenCards.get(bot));
                     gameBoard.playersAreReady();
+
+                    //Sørger for å gi serveren beskjed om at simuleringen er ferdig
+
                 }
             }
 
@@ -315,7 +323,13 @@ public class GameScreen implements Screen {
 
         else if (isThisMultiPlayer && amITheHost) {
 
-
+            if(gui.getServer().areAllClientsReady()){
+                gui.getServer().distributeCards();
+            }
+            if (gui.getServer().haveAllClientSentTheirChosenCards()){
+                gui.getServer().sendAllChosenCardsToEveryone();
+                gameBoard.playersAreReady();
+            }
         }
 
         /**for (Robot bot : gameBoard.getRecentlyDeceasedRobots()){

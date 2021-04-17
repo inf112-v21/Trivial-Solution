@@ -1,6 +1,7 @@
 package GUIMain.Screens;
 
 import GUIMain.GUI;
+import NetworkMultiplayer.Messages.InGameMessages.ConfirmationMessage;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -27,7 +28,9 @@ public class WaitingForHostScreen extends SimpleScreen{
     public void render(float i) {
 
         if(gui.getClient().getSetup() != null){
+            gui.getClient().sendToServer(ConfirmationMessage.GAME_WAS_STARTED_AND_CLIENT_IS_READY_TO_RECEIVE_CARDS);
             gui.setScreen(new GameScreen(gui.getClient().getSetup(),true,false,gui));
+
         }
         super.render(i);
     }

@@ -6,6 +6,7 @@ import GameBoard.Cards.Deck;
 import GameBoard.Cards.ProgramCard;
 import GameBoard.Components.Flag;
 import GameBoard.Components.IComponent;
+import NetworkMultiplayer.Messages.InGameMessages.SanityCheck;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -135,6 +136,8 @@ public class BoardController {
         }
         return null;
     }
+
+    public SanityCheck getSanityCheck(){ return board.getSanityCheck(); }
 
     public TreeSet<Position> getDirtyLocations(){ return board.getDirtyLocations(); }
    

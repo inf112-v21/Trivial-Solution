@@ -33,6 +33,8 @@ public class NetworkServer extends Listener {
     //Mappinger som sjekker at vi har alt på plass
     private HashMap<Connection, Robot> connectionsAndRobots = new HashMap<>();
 
+    private HashMap<Connection, SanityCheck> conTocheck = new HashMap<>();
+
     //Valgene de ulike klientene/robotenes tar.
     private TreeMap<Robot,ArrayList<ProgramCard>> robotActions = new TreeMap<>();
 
@@ -45,9 +47,6 @@ public class NetworkServer extends Listener {
     //Portene som data sendes imellom. Valgfrie porter kan velges.
     final static int DEFAULT_UDP_PORT = 54777;
     final static int DEFAULT_TCP_PORT = 54555;
-
-    //Brukes for å sjekke at alt er riktig
-    SanityCheck checkAllIsRight;
 
     /**
      * Starter game-hosten vår aka. serveren i nettverket. Bør kalles når spillet starter
@@ -78,10 +77,23 @@ public class NetworkServer extends Listener {
     }
 
     public void distributeCards(){
+
         for(Connection con : connectionsAndRobots.keySet()){
             sendToClient(con, new DistributedCards(connectionsAndRobots.get(con).getAvailableCards()));
         }
         numberOfReadyClients = 0;
+    }
+
+    private void assertEqualGameStates(SanityCheck vibeCheck){
+        for (Connection con : conTocheck.keySet()){
+            SanityCheck clientCheck = conTocheck.get(con);
+            if (clientCheck == null){
+                System.err.println("Client: " + con + " didn't send a SanityCheck this round.");
+                continue;
+            }
+            vibeCheck.assertEqualSimulation(clientCheck);
+            conTocheck.put(con, null);
+        }
     }
 
     /**
@@ -94,6 +106,11 @@ public class NetworkServer extends Listener {
 
     }
 
+
+    public void sendAllChosenCardsToEveryone(SanityCheck vibeCheck){
+        assertEqualGameStates(vibeCheck);
+        sendAllChosenCardsToEveryone();
+    }
 
     /**
      * Sender alle kortene alle valgte til hver klient
@@ -227,7 +244,7 @@ public class NetworkServer extends Listener {
 
                 //Test (sanity check)
                 if (object instanceof SanityCheck) {
-                    checkAllIsRight = (SanityCheck) object;
+                    conTocheck.put(connection, (SanityCheck) object);
                 }
             }
 
@@ -245,8 +262,8 @@ public class NetworkServer extends Listener {
     }
 
     public SetupRobotNameDesign setHostRobot(RobotInfo info){
-        if (robotActions.keySet().stream().map(Robot::getDesign).collect(Collectors.toList()).contains(info.getBotDesignNr())) return SetupRobotNameDesign.UNAVAILABLE_DESIGN;
-        if (robotActions.keySet().stream().map(Robot::getName  ).collect(Collectors.toList()).contains(info.getBotName()    )) return SetupRobotNameDesign.UNAVAILABLE_NAME;
+        if (robotActions.keySet().stream().anyMatch(r -> r.getDesign() == info.getBotDesignNr())) return SetupRobotNameDesign.UNAVAILABLE_DESIGN;
+        if (robotActions.keySet().stream().anyMatch(r -> r.getName().equals(info.getBotName())) ) return SetupRobotNameDesign.UNAVAILABLE_DESIGN;
         hostRobot = new Robot(info.getBotName(), info.getBotDesignNr(), false);
         robotActions.put(hostRobot, null);
         return SetupRobotNameDesign.ROBOT_DESIGN_AND_NAME_ARE_OKEY;

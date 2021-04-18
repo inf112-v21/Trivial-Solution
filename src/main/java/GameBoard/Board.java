@@ -456,6 +456,6 @@ public class Board {
         for (Robot bot : botPositions.keySet()){
             positionCopy.put(bot.copy(), botPositions.get(bot));
         }
-        return new SanityCheck(midcopy, forgrid, positionCopy);
+        return new SanityCheck(positionCopy);
     }
 }

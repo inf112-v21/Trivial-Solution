@@ -12,7 +12,7 @@ import java.util.TreeMap;
 
 import NetworkMultiplayer.Messages.InGameMessages.ChosenCards;
 import NetworkMultiplayer.Messages.InGameMessages.ConfirmationMessage;
-import NetworkMultiplayer.Messages.InGameMessages.SanityCheck;
+import NetworkMultiplayer.Messages.InGameMessages.SanityCheck.UnequalSimulationException;
 import NetworkMultiplayer.Messages.PreGameMessages.GameInfo;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
@@ -238,7 +238,7 @@ public class GameScreen extends SimpleScreen {
                         gameBoard.playersAreReady();
                     }
                     else if (!amITheHost){
-                        // Vi må sjekke at dette virker
+                        gui.getClient().sendToServer(gameBoard.getSanityCheck());
                         gui.getClient().sendToServer(new ChosenCards(playerControlledRobot.getChosenCards()));
                     }
                     else{
@@ -299,7 +299,9 @@ public class GameScreen extends SimpleScreen {
          // TODO 06.04.2021: Spillet krasjer når denne blir kalt her
          }**/
 
-        if(isThisMultiPlayer ) updateMultiplayerProperties();
+        if(isThisMultiPlayer ){
+            updateMultiplayerProperties();
+        }
         else{
             updateCardsOnScreen();
         }
@@ -325,7 +327,7 @@ public class GameScreen extends SimpleScreen {
                 for (Robot bot : robots) {
                     if (bot.equals(playerControlledRobot)) {
                         if (!allChosenCards.get(bot).equals(bot.getChosenCards())) {
-                            throw new SanityCheck.UnequalSimulationException("Are you sure these are the correct cards in the correct order?\n" +
+                            throw new UnequalSimulationException("Are you sure these are the correct cards in the correct order?\n" +
                                     "if I send cards to the server, and get cards back, the cards for my robot should all be the same. But they are not.");
                         }
                     }
@@ -348,7 +350,7 @@ public class GameScreen extends SimpleScreen {
                 updateCardsOnScreen();
             }
             if (gui.getServer().haveAllClientSentTheirChosenCards()) {
-                gui.getServer().sendAllChosenCardsToEveryone();
+                gui.getServer().sendAllChosenCardsToEveryone(gameBoard.getSanityCheck());
                 gameBoard.playersAreReady();
             }
             updateCardsOnScreen();

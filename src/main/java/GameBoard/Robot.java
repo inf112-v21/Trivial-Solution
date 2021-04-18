@@ -176,7 +176,7 @@ public class Robot implements Serializable, Comparable<Robot> {
 	public int getNumberOfChosenCards(){ return chosenCards.size(); }
 
 	public boolean isPowerDownAnnounced(){ return powerDown; }
-	public void togglePowerDown(){ powerDown = !powerDown; }
+	public void setPowerDown(boolean b){ powerDown = b; }
 
     public String getName() { return name; }
 

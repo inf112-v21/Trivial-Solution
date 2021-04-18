@@ -163,7 +163,7 @@ class BoardControllerTest {
     public void togglingPowerDownHealsRobotAtTheEndOfTheRound(){
         robot1.applyDamage(robot1.getHP() - 1);
         robot2.applyDamage(robot2.getHP() - 1);
-        robot1.togglePowerDown(); //Kun robot1 er i powerdown
+        robot1.setPowerDown(true); //Kun robot1 er i powerdown
 
         simulateRound();
 

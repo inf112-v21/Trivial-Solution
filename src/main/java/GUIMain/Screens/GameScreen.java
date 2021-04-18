@@ -205,17 +205,22 @@ public class GameScreen implements Screen {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 if (optionsCheck){
-                    playerControlledRobot.togglePowerDown();
+                    playerControlledRobot.setPowerDown(true);
                     playerControlledRobot.resetAllCards();
-
+                    availableTable.clear();
+                    chosenCards.clear();
+                    chosenTable.clear();
+                    ready.setVisible(false);
+                    clear.setVisible(false);
+                    powerDown.setVisible(false);
                     if ( ! isThisMultiPlayer) {
                         gameBoard.playersAreReady(); //Om det er singleplayer kan vi bare starte.
                     }
                     else if( ! amITheHost){
-                        // TODO: 31.03.2021 Her skal klienten sende en ChosenCards til serveren
+                        gui.getClient().sendToServer(new ChosenCards(new ArrayList<>()));
                     }
                     else{
-                        // TODO: 31.03.2021 Hva skal skje når hosten selv er ferdig med å velge kort? Ingenting? Idk, man
+                        gui.getServer().setHostsChosenCards();
                     }
                 }
             }
@@ -226,23 +231,19 @@ public class GameScreen implements Screen {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 if(optionsCheck){
+                    ready.setVisible(false);
+                    clear.setVisible(false);
+                    powerDown.setVisible(false);
+                    availableTable.clear();
                     if( !isThisMultiPlayer) {
                         gameBoard.playersAreReady();
                     }
-
                     else if (!amITheHost){
                         // Vi må sjekke at dette virker
                         gui.getClient().sendToServer(new ChosenCards(playerControlledRobot.getChosenCards()));
-                        availableTable.clear();
-                        // TODO: 18.04.2021 Må settes til true senere
-                        ready.setVisible(false);
                     }
-
                     else{
                         gui.getServer().setHostsChosenCards();
-                        availableTable.clear();
-                        // TODO: 18.04.2021 Må settes til true senere
-                        ready.setVisible(false);
                     }
                 }
             }
@@ -314,6 +315,8 @@ public class GameScreen implements Screen {
                     chosenCards.clear();
                     renderCards();
                     ready.setVisible(true);
+                    clear.setVisible(true);
+                    powerDown.setVisible(true);
 
                 }
                 TreeMap<Robot, ArrayList<ICard>> allChosenCards = gui.getClient().getAllChosenCards();
@@ -329,11 +332,11 @@ public class GameScreen implements Screen {
                             }
                         }
                         bot.setChosenCards(allChosenCards.get(bot));
-                        gameBoard.playersAreReady();
-
-                        //Sørger for å gi serveren beskjed om at simuleringen er ferdig nå
-                        isWaitingForCards = true;
+                        if (allChosenCards.get(bot).isEmpty()) bot.setPowerDown(true);
                     }
+                    gameBoard.playersAreReady();
+                    //Sørger for å gi serveren beskjed om at simuleringen er ferdig nå
+                    isWaitingForCards = true;
                 }
 
             }
@@ -343,6 +346,8 @@ public class GameScreen implements Screen {
 
                 if (gui.getServer().areAllClientsReady() && gameBoard.isWaitingForPlayers()) {
                     ready.setVisible(true);
+                    powerDown.setVisible(true);
+                    clear.setVisible(true);
                     gui.getServer().distributeCards();
                 }
                 if (gui.getServer().haveAllClientSentTheirChosenCards()) {

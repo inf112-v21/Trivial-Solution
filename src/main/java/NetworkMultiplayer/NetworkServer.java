@@ -201,6 +201,7 @@ public class NetworkServer extends Listener {
                     robotActions.put(thisRobotsAction, cards.getChosenCards());
                     numberOfSetsOfCardsReceived++;
                     thisRobotsAction.setChosenCards(cards.getChosenCards());
+                    if (cards.getChosenCards().isEmpty()) thisRobotsAction.setPowerDown(true);
                 }
 
 

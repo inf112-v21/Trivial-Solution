@@ -113,6 +113,5 @@ public class OptionScreen extends SimpleScreen {
                 gui.setScreen(new MenuScreen(gui));
             }
         });
-
     }
 }

@@ -28,9 +28,6 @@ public class LobbyScreen extends SimpleScreen {
     public static int fontsize = 25;
 
 
-
-
-
     public LobbyScreen(GUI gui) {
         super(gui);
     }

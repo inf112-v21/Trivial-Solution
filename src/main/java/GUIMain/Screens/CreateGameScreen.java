@@ -37,7 +37,7 @@ public class CreateGameScreen extends SimpleScreen {
         parameter.borderWidth = 3f;
         parameter.color = WHITE;
         parameter.borderColor = BLACK;
-        style.font = generator.generateFont(parameter);;
+        style.font = generator.generateFont(parameter);
         Label title = new Label("Create Game",style);
         table.add(title).spaceBottom(80);
         table.row();

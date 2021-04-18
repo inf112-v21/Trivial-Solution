@@ -17,8 +17,7 @@ import static com.badlogic.gdx.graphics.Color.WHITE;
 
 public class LobbyScreen extends SimpleScreen {
 
-    private TreeSet<String> listOfPlayers = new TreeSet<>();
-    private Table table;
+    private final TreeSet<String> listOfPlayers = new TreeSet<>();
     private TextField robotname;
     private Table chooserobottable;
     private Table playerlisttable;
@@ -35,7 +34,7 @@ public class LobbyScreen extends SimpleScreen {
     @Override
     public void show() {
         super.show();
-        table = new Table();
+        Table table = new Table();
         table.setBounds(0,0,Gdx.graphics.getWidth(),Gdx.graphics.getHeight());
 
         parameter.borderWidth = 3f;

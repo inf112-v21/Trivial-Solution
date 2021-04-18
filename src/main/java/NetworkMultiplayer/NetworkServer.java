@@ -101,13 +101,9 @@ public class NetworkServer extends Listener {
 
     /**
      * Brukes til å oppdattere kortene hostens robot valgte.
-     *
-     * @param bot - roboten. Denne må være host
-     * @param cards - kortene roboten har valgt
      */
-    public void setHostsChosenCards(Robot bot){
-        if (!hostRobot.equals(bot)) throw new SanityCheck.UnequalSimulationException("Roboten er ikke host");
-        robotActions.put(bot,bot.getChosenCards());
+    public void setHostsChosenCards(){
+        robotActions.put(hostRobot,hostRobot.getChosenCards());
         numberOfSetsOfCardsReceived++;
     }
 

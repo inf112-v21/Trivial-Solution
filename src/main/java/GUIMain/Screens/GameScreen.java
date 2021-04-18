@@ -68,7 +68,6 @@ public class GameScreen implements Screen {
     private Label label;
     private final boolean isThisMultiPlayer;
     private final boolean amITheHost;
-    private boolean simulate = false;
 
     private float timeSinceLastUpdate = -1; //Denne holder styr på hvor lenge det er siden forrige gang brettet ble tegnet.
     private boolean hasDrawnCardsYet = false;
@@ -194,10 +193,8 @@ public class GameScreen implements Screen {
             }
         });
 
-        optionsTable.add(resume).size(150f,50f).spaceBottom(10);
-        optionsTable.row();
-        optionsTable.add(menu).size(150f,50f).spaceBottom(10);
-        optionsTable.row();
+        optionsTable.add(resume).size(150f,50f).spaceBottom(10).row();
+        optionsTable.add(menu).size(150f,50f).spaceBottom(10).row();
         optionsTable.add(quit).size(150f,50f).spaceBottom(10);
     }
 
@@ -242,7 +239,7 @@ public class GameScreen implements Screen {
                     }
 
                     else{
-                        gui.getServer().setHostsChosenCards(playerControlledRobot);
+                        gui.getServer().setHostsChosenCards();
                         availableTable.clear();
                         // TODO: 18.04.2021 Må settes til true senere
                         ready.setVisible(false);
@@ -313,9 +310,10 @@ public class GameScreen implements Screen {
                 if (cardsToChoseFrom != null) {
                     System.out.println("Kortene som kan velges: " + cardsToChoseFrom);
                     playerControlledRobot.setAvailableCards(cardsToChoseFrom);
-
-
+                    chosenTable.clear();
+                    chosenCards.clear();
                     renderCards();
+                    ready.setVisible(true);
 
                 }
                 TreeMap<Robot, ArrayList<ICard>> allChosenCards = gui.getClient().getAllChosenCards();
@@ -344,8 +342,8 @@ public class GameScreen implements Screen {
             else {
 
                 if (gui.getServer().areAllClientsReady() && gameBoard.isWaitingForPlayers()) {
+                    ready.setVisible(true);
                     gui.getServer().distributeCards();
-                    System.out.println("BRUH");
                 }
                 if (gui.getServer().haveAllClientSentTheirChosenCards()) {
                     gui.getServer().sendAllChosenCardsToEveryone();

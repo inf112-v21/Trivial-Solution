@@ -71,6 +71,7 @@ public class OptionScreen extends SimpleScreen {
             public void changed(ChangeEvent changeEvent, Actor actor) {
                 Gdx.graphics.setFullscreenMode(Gdx.graphics.getDisplayMode());
                 GameScreen.fontsize = 30;
+                LobbyScreen.fontsize = 25;
             }
         });
         windowed.addListener(new ChangeListener() {
@@ -83,6 +84,7 @@ public class OptionScreen extends SimpleScreen {
                     Gdx.graphics.setWindowedMode((int) (width-(width/scale)), (int) (height-(height/scale)));
                     ((Lwjgl3Graphics)Gdx.graphics).getWindow().setPosition((int)(width/(2*scale)),(int)(height/(2*scale)));
                     GameScreen.fontsize = 22;
+                    LobbyScreen.fontsize = 20;
                 }
             }
         });

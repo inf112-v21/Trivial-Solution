@@ -84,6 +84,7 @@ public class OptionScreen extends SimpleScreen {
                 }
             }
         });
+
         slow.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent changeEvent, Actor actor) {

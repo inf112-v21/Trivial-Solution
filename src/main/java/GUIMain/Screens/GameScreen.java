@@ -234,16 +234,18 @@ public class GameScreen implements Screen {
                     }
 
                     else if (!amITheHost){
-                        // TODO: 31.03.2021 Her skal klienten sende en ChooseCArds til serveren
                         // Vi må sjekke at dette virker
                         gui.getClient().sendToServer(new ChosenCards(playerControlledRobot.getChosenCards()));
                         availableTable.clear();
+                        // TODO: 18.04.2021 Må settes til true senere
+                        ready.setVisible(false);
                     }
 
                     else{
-                        // TODO: 31.03.2021 Hva skal skje når hosten selv er ferdig med å velge kort?
                         gui.getServer().setHostsChosenCards(playerControlledRobot);
                         availableTable.clear();
+                        // TODO: 18.04.2021 Må settes til true senere
+                        ready.setVisible(false);
                     }
                 }
             }
@@ -341,7 +343,7 @@ public class GameScreen implements Screen {
             //Dette er hosten sin kode
             else {
 
-                if (gui.getServer().areAllClientsReady()) {
+                if (gui.getServer().areAllClientsReady() && gameBoard.isWaitingForPlayers()) {
                     gui.getServer().distributeCards();
                     System.out.println("BRUH");
                 }
@@ -349,6 +351,8 @@ public class GameScreen implements Screen {
                     gui.getServer().sendAllChosenCardsToEveryone();
                     gameBoard.playersAreReady();
                 }
+
+                updateCardsOnScreen();
             }
         }
 
@@ -361,13 +365,17 @@ public class GameScreen implements Screen {
         else {
 
             //Dette sørger for at kortene kun blir tegnet én gang per runde. Bedre kjøretid, yay
-            if (gameBoard.isWaitingForPlayers()) {
-                if (hasDrawnCardsYet) return;
-                clearCards();
-                renderCards();
-                hasDrawnCardsYet = true;
-            } else hasDrawnCardsYet = false;
+            updateCardsOnScreen();
         }
+    }
+
+    private void updateCardsOnScreen(){
+        if (gameBoard.isWaitingForPlayers()) {
+            if (hasDrawnCardsYet) return;
+            clearCards();
+            renderCards();
+            hasDrawnCardsYet = true;
+        } else hasDrawnCardsYet = false;
     }
 
 

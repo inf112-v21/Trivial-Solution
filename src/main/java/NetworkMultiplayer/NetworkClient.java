@@ -46,7 +46,7 @@ public class NetworkClient {
         client = new Client();
 
         //start klienten --> åpner opp en tråd for at den skal kunne sende og motta meldinger over nettverket.
-        new Thread(client).start();
+        client.start();
 
         //Registrer klienten i nettverket
         LanNetwork.register(client);

@@ -26,7 +26,7 @@ public class MultiplayerGUITest {
     }
 
     //Her har du 3 identiske mainmetoder, slik at vi kan kjøre programmet paralellt.
-    static class Host{ public static void main(String[] args) { run(); }}
+    static class Host   { public static void main(String[] args) { run(); }}
     static class Client1{ public static void main(String[] args) { run(); }}
     static class Client2{ public static void main(String[] args) { run(); }}
 }

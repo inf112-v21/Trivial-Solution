@@ -2,7 +2,7 @@ package GameBoard.Cards;
 
 import com.badlogic.gdx.graphics.Texture;
 
-public class ProgramCard implements ICard{
+public class ProgramCard implements ICard {
     private final int distance;
     private final int rotation;
     private final int priority;

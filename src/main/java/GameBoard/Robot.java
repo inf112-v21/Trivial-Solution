@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Vi implementerer Serializable for at Kryonet skal kunne
@@ -28,6 +29,7 @@ public class Robot implements Serializable, Comparable<Robot> {
     public static final int RESPAWN_HANDICAP = 2;
     public static final int TAU = 4;
     public static final int INITIAL_DIRECTION = 0;
+    public static final int NUMBER_OF_DESIGNS = 8;
 
     private int lives = INITIAL_LIVES;
 	private int hp = INITIAL_HP;
@@ -65,6 +67,10 @@ public class Robot implements Serializable, Comparable<Robot> {
 	}
 	public int getHP() {
 		return hp;
+	}
+
+	public int getDesign() {
+		return design;
 	}
 
 	public void repairRobot(int repairPoints){hp = Math.min(INITIAL_HP, hp + repairPoints); }
@@ -172,13 +178,11 @@ public class Robot implements Serializable, Comparable<Robot> {
     public int getAvailableCardSlots(){ return Math.min(hp, MAX_AVAILABLE_CARDS); }
     public int getChosenCardSlots(){ return Math.min(hp, BoardController.PHASES_PER_ROUND); }
 
-    public static ArrayList<Robot> getDefaultRobots(int n){
-        if (n < 0 || n > 8) throw new IllegalArgumentException("Expecteded >0 and <9 robots, but was " + n);
+    public static ArrayList<Robot> getDefaultRobots(int numberOfRobots, int playersDesign){
+        if (numberOfRobots < 0 || numberOfRobots > 8) throw new IllegalArgumentException("Expecteded >0 and <9 robots, but was " + numberOfRobots);
         //Denne her kunne vært en statisk feltvariabel, men da kan vi ikke kjøre tester som bruker roboter uten at denne blir ærklert,
         // og om GUI-en ikke har startet opp ennå får vi da feil når vi laster inn bildene.
         final Robot[] defaultRobots = {
-                // TODO: 29.03.2021 Nå er det hardkodet at spilleren alltid får design 3, og at ingen robot får design 3.
-                // TODO: 29.03.2021 Finn heller en måte slik at spilleren kan velge selv, og at robotene likevel får nye unike designs hver gang.
                 new Robot("Nebuchadnezzar", 0, true),
                 new Robot("Alexstrasza", 1, true),
                 new Robot("Gilgamesh", 2, true),
@@ -186,13 +190,13 @@ public class Robot implements Serializable, Comparable<Robot> {
                 new Robot("Andromeda", 4, true),
                 new Robot("Hephaistion", 5, true),
                 new Robot("Styxifus", 6, true),
-                //new Robot("Prometheus", 3, true)
+                new Robot("Prometheus", 3, true)
         };
-        List<Robot> ret = Arrays.asList(defaultRobots);
+        List<Robot> ret = Arrays.stream(defaultRobots).filter(i -> i.getDesign() != playersDesign).collect(Collectors.toList());
         Collections.shuffle(ret);
-        for (int i = 0; i < n; i++) defaultRobots[i].resetState();
+        for (int i = 0; i < numberOfRobots; i++) defaultRobots[i].resetState();
 
-        return new ArrayList<>(ret.subList(0, n));
+        return new ArrayList<>(ret.subList(0, numberOfRobots));
     }
 
 

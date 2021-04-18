@@ -1,8 +1,6 @@
 package GUIMain;
 
-import GUIMain.Screens.LobbyScreen;
 import GUIMain.Screens.MenuScreen;
-        import NetworkMultiplayer.Messages.ConfirmationMessages;
         import NetworkMultiplayer.NetworkClient;
         import NetworkMultiplayer.NetworkServer;
         import com.badlogic.gdx.Game;
@@ -23,20 +21,20 @@ public class GUI extends Game {
     private NetworkServer server;
     private NetworkClient client;
 
+    public NetworkServer getServer() {
+        return server;
+    }
+
+    public NetworkClient getClient() {
+        return client;
+    }
+
     /**
      * Standard GUI. Bruk denne.
      */
     public GUI(){
         super();
         currentScreen = new MenuScreen(this);
-    }
-
-    /**
-     * GUI kun for testing. Hopper umiddelbart til initialScreen etter konstruktøren er ferdig.
-     */
-    public GUI(Screen initialScreen){
-        super();
-        currentScreen = initialScreen;
     }
 
     @Override
@@ -67,10 +65,6 @@ public class GUI extends Game {
             //Connect to client
             client.connect(hostIpadress.getHostName());
 
-            if (client.isConnected()) {
-                client.sendToServer(ConfirmationMessages.CONNECTION_WAS_SUCCESSFUL);
-                setScreen(new LobbyScreen(this));
-            }
         }catch (NullPointerException ex){
             Stage stage = new Stage();
             Gdx.input.setInputProcessor(stage);

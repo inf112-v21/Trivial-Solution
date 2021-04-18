@@ -15,13 +15,6 @@ import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
-
-//Kortene er i deck
-//Hva må jeg sende:
-// 1. spiller posisjonene frem og tilbake
-// 2. kort fra server til client (kan slettes etterpå, går det an)
-// 3.
-
 public class NetworkServer extends Listener {
 
 
@@ -55,9 +48,6 @@ public class NetworkServer extends Listener {
 
     //Brukes for å sjekke at alt er riktig
     SanityCheck checkAllIsRight;
-
-    //Gi serveren beskjed om å dele ut kort
-    boolean simulationIsOver;
 
     /**
      * Metode som sjekker at alle klientene er klare til å begynne spillet.

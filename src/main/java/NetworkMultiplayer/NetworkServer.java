@@ -50,6 +50,25 @@ public class NetworkServer extends Listener {
     SanityCheck checkAllIsRight;
 
     /**
+     * Starter game-hosten vår aka. serveren i nettverket. Bør kalles når spillet starter
+     */
+    public NetworkServer(){
+
+        server = new Server();
+
+        //Starter en ny tråd som gjør det mulig å sende og motta informasjon fra et nettverk
+        server.start();
+
+        //Bind serveren til port
+        bind();
+
+        addListeners();
+
+        //Registrer serveren i nettverket
+        LanNetwork.register(server);
+    }
+
+    /**
      * Metode som sjekker at alle klientene er klare til å begynne spillet.
      * Denne metoden setter deretter
      * @return- true hvis alle er klare til å starte spillet, false ellers.
@@ -114,26 +133,6 @@ public class NetworkServer extends Listener {
         return connectionsAndRobots;
     }
 
-
-    /**
-     * Starter game-hosten vår aka. serveren i nettverket. Bør kalles når spillet starter
-     */
-    public NetworkServer(){
-
-        server = new Server();
-
-        //Starter en ny tråd som gjør det mulig å sende og motta informasjon fra et nettverk
-        new Thread(server).start();
-
-        //Bind serveren til port
-        bind();
-
-        addListeners();
-
-        //Registrer serveren i nettverket
-        LanNetwork.register(server);
-
-    }
 
     /**
      * Binder serveren til UDP og TCP port slik at vi veit hvilken

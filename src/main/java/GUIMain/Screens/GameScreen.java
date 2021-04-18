@@ -38,7 +38,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import static com.badlogic.gdx.graphics.Color.BLACK;
 import static com.badlogic.gdx.graphics.Color.WHITE;
 
-public class GameScreen implements Screen {
+public class GameScreen extends SimpleScreen {
 
     public static float TIME_DELTA = 0.6f;
     public static final int CELL_SIZE = 300;
@@ -51,11 +51,10 @@ public class GameScreen implements Screen {
     private final int WIDTH;
 	private BoardController gameBoard;
 	private final List<Robot> robots;
-	private final GUI gui;
 	private Stage stage;
 	private Table availableTable;
 	private Table chosenTable;
-    private final ArrayList<Texture> chosenCards = new ArrayList<>();
+    protected final ArrayList<Integer> chosenIndices = new ArrayList<>();
     private Table optionsTable;
     private Table buttonTable;
 	protected Robot playerControlledRobot;
@@ -82,7 +81,7 @@ public class GameScreen implements Screen {
 
 
     public GameScreen(GameInfo gameInfo, boolean isThisMultiPlayer, boolean amITheHost, GUI gui){
-        this.gui = gui;
+        super(gui);
         this.mapName = gameInfo.getMapName();
         this.robots = gameInfo.getRobots();
         this.isThisMultiPlayer = isThisMultiPlayer;
@@ -208,7 +207,7 @@ public class GameScreen implements Screen {
                     playerControlledRobot.setPowerDown(true);
                     playerControlledRobot.resetAllCards();
                     availableTable.clear();
-                    chosenCards.clear();
+                    chosenIndices.clear();
                     chosenTable.clear();
                     ready.setVisible(false);
                     clear.setVisible(false);
@@ -301,70 +300,59 @@ public class GameScreen implements Screen {
          }**/
 
         if(isThisMultiPlayer ) updateMultiplayerProperties();
-        //Dette er for singelplayer
-        else updateCardsOnScreen();
+        else{
+            updateCardsOnScreen();
+        }
     }
 
     private void updateMultiplayerProperties(){
-            if (!amITheHost) { //Klienten
-                //Gir serveren beskjed 2 ting
-                // 1. At spillet har startet opp og at vi kan motta kort
-                // 2. Om at simuleringen er ferdig, altså at ci kan starte neste runde.
-                if (isWaitingForCards) {
-                    gui.getClient().sendToServer(ConfirmationMessage.GAME_WAS_STARTED_AND_CLIENT_IS_READY_TO_RECEIVE_CARDS);
-                    isWaitingForCards = false;
-                }
-
-                ArrayList<ProgramCard> cardsToChoseFrom = gui.getClient().getCardsToChoseFrom();
-                if (cardsToChoseFrom != null) {
-                    System.out.println("Kortene som kan velges: " + cardsToChoseFrom);
-                    playerControlledRobot.setAvailableCards(cardsToChoseFrom);
-                    chosenTable.clear();
-                    chosenCards.clear();
-                    renderCards();
-                    ready.setVisible(true);
-                    clear.setVisible(true);
-                    powerDown.setVisible(true);
-
-                }
-                TreeMap<Robot, ArrayList<ProgramCard>> allChosenCards = gui.getClient().getAllChosenCards();
-                if (allChosenCards != null) {
-
-                    //Lopper igjennom alle robotene for å matche de valgte kortene til hver robot,
-                    //slik at klienten kan simulere de tatte valgene.
-                    for (Robot bot : robots) {
-                        if (bot.equals(playerControlledRobot)) {
-                            if (!allChosenCards.get(bot).equals(bot.getChosenCards())) {
-                                throw new SanityCheck.UnequalSimulationException("Are you sure these are the correct cards in the correct order?\n" +
-                                        "if I send cards to the server, and get cards back, the cards for my robot should all be the same. But they are not.");
-                            }
-                        }
-                        bot.setChosenCards(allChosenCards.get(bot));
-                        if (allChosenCards.get(bot).isEmpty()) bot.setPowerDown(true);
-                    }
-                    gameBoard.playersAreReady();
-                    //Sørger for å gi serveren beskjed om at simuleringen er ferdig nå
-                    isWaitingForCards = true;
-                }
-
+        if (!amITheHost) {
+            if (isWaitingForCards) {
+                gui.getClient().sendToServer(ConfirmationMessage.GAME_WAS_STARTED_AND_CLIENT_IS_READY_TO_RECEIVE_CARDS);
+                isWaitingForCards = false;
             }
-
-            //Dette er hosten sin kode
-            else {
-
-                if (gui.getServer().areAllClientsReady() && gameBoard.isWaitingForPlayers()) {
-                    ready.setVisible(true);
-                    powerDown.setVisible(true);
-                    clear.setVisible(true);
-                    gui.getServer().distributeCards();
-                }
-                if (gui.getServer().haveAllClientSentTheirChosenCards()) {
-                    gui.getServer().sendAllChosenCardsToEveryone();
-                    gameBoard.playersAreReady();
-                }
-
+            ArrayList<ProgramCard> cardsToChoseFrom = gui.getClient().getCardsToChoseFrom();
+            if (cardsToChoseFrom != null) {
+                playerControlledRobot.setAvailableCards(cardsToChoseFrom);
+                hasDrawnCardsYet = false;
                 updateCardsOnScreen();
             }
+            TreeMap<Robot, ArrayList<ProgramCard>> allChosenCards = gui.getClient().getAllChosenCards();
+            if (allChosenCards != null) {
+
+                //Lopper igjennom alle robotene for å matche de valgte kortene til hver robot,
+                //slik at klienten kan simulere de tatte valgene.
+                for (Robot bot : robots) {
+                    if (bot.equals(playerControlledRobot)) {
+                        if (!allChosenCards.get(bot).equals(bot.getChosenCards())) {
+                            throw new SanityCheck.UnequalSimulationException("Are you sure these are the correct cards in the correct order?\n" +
+                                    "if I send cards to the server, and get cards back, the cards for my robot should all be the same. But they are not.");
+                        }
+                    }
+                    bot.setChosenCards(allChosenCards.get(bot));
+                    if (allChosenCards.get(bot).isEmpty()) bot.setPowerDown(true);
+                }
+                gameBoard.playersAreReady();
+                //Sørger for å gi serveren beskjed om at simuleringen er ferdig nå
+                isWaitingForCards = true;
+            }
+
+        }
+
+        //Dette er hosten sin kode
+        else {
+
+            if (gui.getServer().areAllClientsReady() && gameBoard.isWaitingForPlayers()) {
+                gui.getServer().distributeCards();
+                hasDrawnCardsYet = false;
+                updateCardsOnScreen();
+            }
+            if (gui.getServer().haveAllClientSentTheirChosenCards()) {
+                gui.getServer().sendAllChosenCardsToEveryone();
+                gameBoard.playersAreReady();
+            }
+            updateCardsOnScreen();
+        }
     }
 
     private void updateCardsOnScreen(){
@@ -373,6 +361,9 @@ public class GameScreen implements Screen {
             clearCards();
             renderCards();
             hasDrawnCardsYet = true;
+            ready.setVisible(true);
+            powerDown.setVisible(true);
+            clear.setVisible(true);
         } else hasDrawnCardsYet = false;
     }
 
@@ -420,7 +411,7 @@ public class GameScreen implements Screen {
     private void clearCards(){
         availableTable.clear();
         chosenTable.clear();
-        chosenCards.clear();
+        chosenIndices.clear();
     }
 
     private void renderCards(){
@@ -430,22 +421,17 @@ public class GameScreen implements Screen {
         availableTable.setBounds((2*Gdx.graphics.getWidth())/3f,(Gdx.graphics.getHeight()/5f*(5-yScale)),Gdx.graphics.getWidth()/3f,Gdx.graphics.getHeight()-(Gdx.graphics.getHeight()/5f*(5-yScale)));
         for (int i = 0; i < playerControlledRobot.getAvailableCards().size(); i++) {
             ProgramCard card = playerControlledRobot.getAvailableCards().get(i);
-            Image img = new Image(card.getCardImage());
-            img.addListener(new CardListener(i));
 
-            if(!chosenCards.contains(card.getCardImage()))
+            if (chosenIndices.contains(i)){
+                availableTable.add(new Image()).size(Gdx.graphics.getWidth()/6f,Gdx.graphics.getHeight()/5f);
+            }else{
+                Image img = new Image(card.getCardImage());
+                img.addListener(new CardListener(i));
                 availableTable.add(img).size(Gdx.graphics.getWidth()/6f,Gdx.graphics.getHeight()/5f);
-            else{
-                Image emptyImg = new Image();
-                availableTable.add(emptyImg).size(Gdx.graphics.getWidth()/6f,Gdx.graphics.getHeight()/5f);
             }
 
-            
-            if(odd){
-                availableTable.row();
-                odd = false;
-            }
-            else odd = true;
+            if(odd) availableTable.row();
+            odd = ! odd;
 
         }
         renderer.getBatch().end();
@@ -462,14 +448,6 @@ public class GameScreen implements Screen {
         renderer.setView(camera);
     }
 
-    @Override
-    public void pause() { }
-    @Override
-    public void resume() { }
-    @Override
-    public void hide() { }
-
-
 	private class CardListener extends ClickListener{
 	    private final int index;
 	    public CardListener(int i){ super(); index = i; }
@@ -479,7 +457,6 @@ public class GameScreen implements Screen {
 	        if(optionsCheck){
                 if (playerControlledRobot.getNumberOfChosenCards() >= Math.min(BoardController.PHASES_PER_ROUND, playerControlledRobot.getHP())) return;
                 ProgramCard card = playerControlledRobot.getAvailableCards().get(index);
-                chosenCards.add(card.getCardImage());
 
                 if (!playerControlledRobot.chooseCard(card)) return;
                 chosenTable.setBounds((Gdx.graphics.getWidth())/2f,
@@ -490,6 +467,7 @@ public class GameScreen implements Screen {
                 chosenTable.row();
 
                 availableTable.clear();
+                chosenIndices.add(index);
                 renderCards();
             }
         }

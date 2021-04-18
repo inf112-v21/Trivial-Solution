@@ -1,6 +1,6 @@
 package GameBoard;
 
-import GameBoard.Cards.ICard;
+import GameBoard.Cards.ProgramCard;
 import GameBoard.Components.*;
 import NetworkMultiplayer.Messages.InGameMessages.SanityCheck;
 import com.badlogic.gdx.maps.tiled.TiledMap;
@@ -85,7 +85,7 @@ public class Board {
      * @param card Bevegelseskortet
      * @param bot Roboten som skal flyttes
      */
-    public void performMove(ICard card, Robot bot){
+    public void performMove(ProgramCard card, Robot bot){
         if (bot == null) throw new NullPointerException("The bot is null.");
         if (robotsWaitingToBeRespawned.contains(bot)) return; //Botten kan ikke flytte, den er død
         if ( ! botPositions.containsKey(bot)) throw new IllegalArgumentException("The bot is not on the board.");

@@ -1,7 +1,6 @@
 package TestClasses;
 
 import GameBoard.Cards.Deck;
-import GameBoard.Cards.ICard;
 import GameBoard.Cards.ProgramCard;
 import GameBoard.Robot;
 import org.junit.jupiter.api.BeforeEach;
@@ -25,7 +24,7 @@ public class RobotTest {
 
     @Test
     public void robotCrashesWhenGivenMoreCardsThanItCanHold(){
-        ArrayList<ICard> cards = new ArrayList<>();
+        ArrayList<ProgramCard> cards = new ArrayList<>();
         for (int i = 0; i < Robot.MAX_AVAILABLE_CARDS + 1; i++) {
             cards.add(deck.drawCard());
         }
@@ -69,7 +68,7 @@ public class RobotTest {
     }
 
     private void setAvailableCards(){
-        ArrayList<ICard> cards = new ArrayList<>();
+        ArrayList<ProgramCard> cards = new ArrayList<>();
         for (int i = 0; i < Robot.MAX_AVAILABLE_CARDS; i++) cards.add(deck.drawCard());
         bot.setAvailableCards(cards);
     }

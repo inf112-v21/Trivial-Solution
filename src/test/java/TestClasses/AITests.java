@@ -4,7 +4,7 @@ import AIs.AI;
 import AIs.Randbot;
 import GameBoard.BoardController;
 import GameBoard.Cards.Deck;
-import GameBoard.Cards.ICard;
+import GameBoard.Cards.ProgramCard;
 import GameBoard.Robot;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -84,7 +84,7 @@ public class AITests {
     }
 
     private void drawRandomCards(){
-        ArrayList<ICard> availableCards = new ArrayList<>();
+        ArrayList<ProgramCard> availableCards = new ArrayList<>();
         for (int i = 0; i < bot.getAvailableCardSlots(); i++) {
             availableCards.add(deck.drawCard());
         }

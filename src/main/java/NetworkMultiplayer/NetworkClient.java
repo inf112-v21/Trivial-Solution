@@ -1,6 +1,6 @@
 package NetworkMultiplayer;
 
-import GameBoard.Cards.ICard;
+import GameBoard.Cards.ProgramCard;
 import GameBoard.Robot;
 import NetworkMultiplayer.Messages.InGameMessages.AllChosenCardsFromAllRobots;
 import NetworkMultiplayer.Messages.PreGameMessages.SetupRobotNameDesign;
@@ -29,8 +29,8 @@ public class NetworkClient {
     private GameInfo setup;
 
     //In-game meldinger
-    private ArrayList<ICard> cardsToChoseFrom;
-    private TreeMap<Robot,ArrayList<ICard>> allChoseRobotCards;
+    private ArrayList<ProgramCard> cardsToChoseFrom;
+    private TreeMap<Robot,ArrayList<ProgramCard>> allChoseRobotCards;
 
     //pre-game melding
     //Denne forteller oss om det går fint å sette opp en robot
@@ -68,9 +68,9 @@ public class NetworkClient {
     /**
      * @return Henter robotene og kortene hver robot valgte
      */
-    public TreeMap<Robot, ArrayList<ICard>> getAllChosenCards() {
+    public TreeMap<Robot, ArrayList<ProgramCard>> getAllChosenCards() {
         if (allChoseRobotCards == null) return null;
-        TreeMap<Robot, ArrayList<ICard>> ret = new TreeMap<>(allChoseRobotCards);
+        TreeMap<Robot, ArrayList<ProgramCard>> ret = new TreeMap<>(allChoseRobotCards);
         allChoseRobotCards = null;
         return ret;
     }
@@ -78,10 +78,10 @@ public class NetworkClient {
     /**
      * @return De utdelte kortene som roboten kan velge mellom
      */
-    public ArrayList<ICard> getCardsToChoseFrom() {
+    public ArrayList<ProgramCard> getCardsToChoseFrom() {
 
         if(cardsToChoseFrom == null) return null;
-        ArrayList<ICard> ret = new ArrayList(cardsToChoseFrom);
+        ArrayList<ProgramCard> ret = new ArrayList(cardsToChoseFrom);
         cardsToChoseFrom = null;
         return ret;
     }

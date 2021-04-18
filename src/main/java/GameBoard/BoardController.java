@@ -2,18 +2,15 @@ package GameBoard;
 
 import AIs.AI;
 import AIs.Randbot;
-import GUIMain.Screens.GameScreen;
 import GameBoard.Cards.Deck;
-import GameBoard.Cards.ICard;
+import GameBoard.Cards.ProgramCard;
 import GameBoard.Components.Flag;
 import GameBoard.Components.IComponent;
 
-import javax.management.timer.Timer;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.TreeSet;
-import java.util.concurrent.TimeUnit;
 
 
 public class BoardController {
@@ -72,7 +69,7 @@ public class BoardController {
 
     private void moveNextRobot(){
         Robot botToMove = aliveRobots.get(currentMove);
-        ICard card = botToMove.getNthChosenCard(currentPhase);
+        ProgramCard card = botToMove.getNthChosenCard(currentPhase);
         if (botToMove.hasRemainingLives() && card != null){
             board.performMove(card, botToMove);
         }
@@ -84,9 +81,9 @@ public class BoardController {
     private void startRound(){
         deck.shuffleDeck();
         for (Robot bot : aliveRobots){
-            ArrayList<ICard> cardlist = new ArrayList<>();
+            ArrayList<ProgramCard> cardlist = new ArrayList<>();
             for (int amount=0; amount<bot.getAvailableCardSlots(); amount++){
-                ICard card = deck.drawCard();
+                ProgramCard card = deck.drawCard();
                 cardlist.add(card);
             }
             bot.setAvailableCards(cardlist);

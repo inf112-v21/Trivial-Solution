@@ -1,5 +1,5 @@
 package NetworkMultiplayer.Messages.InGameMessages;
-import GameBoard.Cards.ICard;
+import GameBoard.Cards.ProgramCard;
 import NetworkMultiplayer.Messages.IMessage;
 
 import java.io.Serializable;
@@ -12,9 +12,9 @@ import java.util.ArrayList;
  * Vi har det som to klasser for å unngå feil og misforståelser.
  */
 public class DistributedCards implements IMessage, Serializable {
-    private final ArrayList<ICard> cards;
-    public DistributedCards(ArrayList<ICard> cards){
+    private final ArrayList<ProgramCard> cards;
+    public DistributedCards(ArrayList<ProgramCard> cards){
         this.cards = cards;
     }
-    public ArrayList<ICard> getChosenCards(){ return cards; }
+    public ArrayList<ProgramCard> getChosenCards(){ return cards; }
 }

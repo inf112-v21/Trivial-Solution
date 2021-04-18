@@ -1,7 +1,7 @@
 package NetworkMultiplayer;
 
 
-import GameBoard.Cards.ICard;
+import GameBoard.Cards.ProgramCard;
 import GameBoard.Components.Flag;
 import GameBoard.Position;
 import GameBoard.Robot;
@@ -42,7 +42,7 @@ public class LanNetwork {
         kryo.register(IMessage.class);
         kryo.register(RobotInfo.class, new JavaSerializer());
         kryo.register(ConfirmationMessage.class);
-        kryo.register(ICard.class, new JavaSerializer());
+        kryo.register(ProgramCard.class, new JavaSerializer());
         kryo.register(AllChosenCardsFromAllRobots.class, new JavaSerializer());
         kryo.register(SetupRobotNameDesign.class);
         kryo.register(String.class, new JavaSerializer());

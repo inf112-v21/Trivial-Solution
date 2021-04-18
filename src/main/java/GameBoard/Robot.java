@@ -1,7 +1,7 @@
 package GameBoard;
 
 import GUIMain.Screens.GameScreen;
-import GameBoard.Cards.ICard;
+import GameBoard.Cards.ProgramCard;
 import GameBoard.Components.Flag;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -44,8 +44,8 @@ public class Robot implements Serializable, Comparable<Robot> {
 	private static TextureRegion[][] textures;
 
 	private ArrayList<Flag> flagsVisited = new ArrayList<>();
-	private ArrayList<ICard> availableCards = new ArrayList<>(); //alle kortene som ble utdelt
-	private final ArrayList<ICard> chosenCards = new ArrayList<>(BoardController.PHASES_PER_ROUND); //De valgte kortene, rekkefølgen er samme som den spilleren valgte dem
+	private ArrayList<ProgramCard> availableCards = new ArrayList<>(); //alle kortene som ble utdelt
+	private final ArrayList<ProgramCard> chosenCards = new ArrayList<>(BoardController.PHASES_PER_ROUND); //De valgte kortene, rekkefølgen er samme som den spilleren valgte dem
 
 
 
@@ -132,44 +132,44 @@ public class Robot implements Serializable, Comparable<Robot> {
     }
 
     /** Setter listen over kort roboten kan velge mellom. */
-	public void setAvailableCards(ArrayList<ICard> cards){
+	public void setAvailableCards(ArrayList<ProgramCard> cards){
 	    if (cards.size() > getAvailableCardSlots()) throw new IllegalArgumentException("Cannot hold more than " + getAvailableCardSlots() + " atm, but was given " + cards.size());
 	    availableCards = new ArrayList<>(cards);
 	}
 
-	public void setChosenCards(ArrayList<ICard> chosen){
+	public void setChosenCards(ArrayList<ProgramCard> chosen){
 	    //if ( ! chosenCards.isEmpty()) throw new IllegalStateException("My list of chosen cards are non-empty, and yet I got a new set of cards");
 	    chosenCards.clear();
 		chosenCards.addAll(chosen);
 	}
 
     /** Valgt kort nummer n. */
-    public ICard getNthChosenCard(int n){
+    public ProgramCard getNthChosenCard(int n){
         if (n >= chosenCards.size()) return null;
         return chosenCards.get(n);
     }
 
-    public ArrayList<ICard> getChosenCards(){ return chosenCards; }
+    public ArrayList<ProgramCard> getChosenCards(){ return chosenCards; }
 
 	public void resetAllCards(){ availableCards.clear(); chosenCards.clear(); }
 	public void resetChosenCards(){ chosenCards.clear(); }
 
     /** En kopi av listen over tilgjengelige kort. */
-	public ArrayList<ICard> getAvailableCards(){ return new ArrayList<>(availableCards); }
+	public ArrayList<ProgramCard> getAvailableCards(){ return new ArrayList<>(availableCards); }
 
 	/**
 	 * Denne metoden legger til et og et kort i rekkefølge i registeret utifra hva spilleren velger.
 	 * @param chosenCard kortet som ble valgt
      * @return true om kortet ble satt, false ellers
 	 */
-	public boolean chooseCard(ICard chosenCard){
+	public boolean chooseCard(ProgramCard chosenCard){
 	    if (! availableCards.contains(chosenCard)) throw new IllegalArgumentException("This card isn't in the list of available cards for som reason");
 	    if (chosenCards.size() >= getChosenCardSlots()) throw new IllegalStateException("I already have the maximum number of cards!");
 		chosenCards.add(chosenCard);
 		return true;
 	}
 
-	public void unchooseCard(ICard unchosenCard){
+	public void unchooseCard(ProgramCard unchosenCard){
 	    if (! chosenCards.contains(unchosenCard)) throw new IllegalArgumentException("This card wasn't chosen, so I cannot unchoose it.");
 	    chosenCards.remove(unchosenCard); }
 

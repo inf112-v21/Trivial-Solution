@@ -1,8 +1,8 @@
 package GUIMain.Screens;
 
-import GameBoard.Cards.ICard;
 import GUIMain.GUI;
 import GameBoard.BoardController;
+import GameBoard.Cards.ProgramCard;
 import GameBoard.Position;
 import GameBoard.Robot;
 
@@ -315,7 +315,7 @@ public class GameScreen implements Screen {
                     isWaitingForCards = false;
                 }
 
-                ArrayList<ICard> cardsToChoseFrom = gui.getClient().getCardsToChoseFrom();
+                ArrayList<ProgramCard> cardsToChoseFrom = gui.getClient().getCardsToChoseFrom();
                 if (cardsToChoseFrom != null) {
                     System.out.println("Kortene som kan velges: " + cardsToChoseFrom);
                     playerControlledRobot.setAvailableCards(cardsToChoseFrom);
@@ -327,7 +327,7 @@ public class GameScreen implements Screen {
                     powerDown.setVisible(true);
 
                 }
-                TreeMap<Robot, ArrayList<ICard>> allChosenCards = gui.getClient().getAllChosenCards();
+                TreeMap<Robot, ArrayList<ProgramCard>> allChosenCards = gui.getClient().getAllChosenCards();
                 if (allChosenCards != null) {
 
                     //Lopper igjennom alle robotene for å matche de valgte kortene til hver robot,
@@ -429,7 +429,7 @@ public class GameScreen implements Screen {
         int yScale = (playerControlledRobot.getAvailableCards().size()+1)/2;
         availableTable.setBounds((2*Gdx.graphics.getWidth())/3f,(Gdx.graphics.getHeight()/5f*(5-yScale)),Gdx.graphics.getWidth()/3f,Gdx.graphics.getHeight()-(Gdx.graphics.getHeight()/5f*(5-yScale)));
         for (int i = 0; i < playerControlledRobot.getAvailableCards().size(); i++) {
-            ICard card = playerControlledRobot.getAvailableCards().get(i);
+            ProgramCard card = playerControlledRobot.getAvailableCards().get(i);
             Image img = new Image(card.getCardImage());
             img.addListener(new CardListener(i));
 
@@ -478,7 +478,7 @@ public class GameScreen implements Screen {
         public void clicked(InputEvent event, float x, float y) {
 	        if(optionsCheck){
                 if (playerControlledRobot.getNumberOfChosenCards() >= Math.min(BoardController.PHASES_PER_ROUND, playerControlledRobot.getHP())) return;
-                ICard card = playerControlledRobot.getAvailableCards().get(index);
+                ProgramCard card = playerControlledRobot.getAvailableCards().get(index);
                 chosenCards.add(card.getCardImage());
 
                 if (!playerControlledRobot.chooseCard(card)) return;

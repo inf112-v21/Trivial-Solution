@@ -1,13 +1,12 @@
 package NetworkMultiplayer;
 
-import GameBoard.Cards.ICard;
+import GameBoard.Cards.ProgramCard;
 import GameBoard.Robot;
 import NetworkMultiplayer.Messages.InGameMessages.*;
 import NetworkMultiplayer.Messages.PreGameMessages.GameInfo;
 import NetworkMultiplayer.Messages.PreGameMessages.SetupRobotNameDesign;
 import NetworkMultiplayer.Messages.IMessage;
 import NetworkMultiplayer.Messages.PreGameMessages.RobotInfo;
-import com.badlogic.gdx.math.Interpolation;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Server;
@@ -42,7 +41,7 @@ public class NetworkServer extends Listener {
     private HashMap<Connection, Robot> connectionsAndRobots = new HashMap<>();
 
     //Valgene de ulike klientene/robotenes tar.
-    private TreeMap<Robot,ArrayList<ICard>> robotActions = new TreeMap<>();
+    private TreeMap<Robot,ArrayList<ProgramCard>> robotActions = new TreeMap<>();
 
 
 
@@ -112,7 +111,7 @@ public class NetworkServer extends Listener {
     /**
      * @return - HashMap med robotene mappet til hvilke kort de valgte
      */
-    public TreeMap<Robot, ArrayList<ICard>> getRobotActions() {
+    public TreeMap<Robot, ArrayList<ProgramCard>> getRobotActions() {
         return robotActions;
     }
 

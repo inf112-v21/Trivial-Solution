@@ -4,9 +4,10 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import org.javatuples.Triplet;
 
+import java.io.Serializable;
 import java.util.TreeMap;
 
-public class ProgramCard implements ICard {
+public class ProgramCard implements Serializable {
     private final int distance;
     private final int rotation;
     private final int priority;
@@ -43,22 +44,18 @@ public class ProgramCard implements ICard {
         textures.put(new Triplet<>(3, 0, 170), new Texture(Gdx.files.internal("Cards/1 Red HULK X90/170 MOVE3 1Red 3.png")));
     }
 
-    @Override
     public int getDistance() {
         return distance;
     }
 
-    @Override
     public int getRotation() {
         return rotation;
     }
 
-    @Override
     public int priority() {
         return priority;
     }
 
-    @Override
     public Texture getCardImage(){
         if (textures.isEmpty()) createTextures();
         Texture ret = textures.get(new Triplet<>(distance, rotation, priority));

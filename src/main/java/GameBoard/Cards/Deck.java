@@ -1,13 +1,10 @@
 package GameBoard.Cards;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Texture;
-
 import java.util.ArrayList;
 import java.util.Collections;
 
 public class Deck {
-    private final ArrayList<ICard> cards = new ArrayList<>();
+    private final ArrayList<ProgramCard> cards = new ArrayList<>();
     private int counter = 0;
     public static final int DECK_SIZE = 84;
 
@@ -56,9 +53,9 @@ public class Deck {
      * Trekker et kort. Spillerene trenger IKKE å levere det tilbake igjen etterpå.
      * @return ICard, kortet du trakk
      */
-    public ICard drawCard() {
+    public ProgramCard drawCard() {
         if (isEmpty()) throw new IllegalStateException("Cannot draw more cards than there are in the deck!");
-        ICard drawn = cards.get(counter);
+        ProgramCard drawn = cards.get(counter);
         counter++;
         return drawn ;
     }

@@ -3,7 +3,6 @@ package GUIMain.Screens;
 import GUIMain.GUI;
 import GameBoard.Robot;
 import NetworkMultiplayer.Messages.PreGameMessages.GameInfo;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
@@ -22,7 +21,6 @@ public class CreateGameScreen extends SimpleScreen {
     private SelectBox<Integer> numberOfRobots;
     private SelectBox<String> choosemapbox;
     private TextField textField;
-    private ShapeRenderer sr;
 
     public CreateGameScreen(GUI gui){
         super(gui);
@@ -44,24 +42,33 @@ public class CreateGameScreen extends SimpleScreen {
         table.add(title).spaceBottom(80);
         table.row();
 
-        parameter.size = 14;
+        parameter.size = 25;
         style.font = generator.generateFont(parameter);
         Label numberplayerlabel = new Label("Number of players: ", style);
         temp.add(numberplayerlabel).spaceBottom(50);
+        Label chooseMapLabel = new Label("Choose map: ", style);
+        Label yourName = new Label("Your robot's name: ", style);
+        style.font = generator.generateFont(parameter);
+        Label choosedesign = new Label("Choose robot:", style);
 
         numberOfRobots = new SelectBox<>(gui.getSkin());
         numberOfRobots.setItems(2, 3, 4, 5, 6, 7, 8);
-        temp.add(numberOfRobots).spaceBottom(50f);
+        parameter.size = 20;
+        parameter.borderWidth = 1f;
+        parameter.color = BLACK;
+        parameter.borderColor = WHITE;
+        temp.add(numberOfRobots).spaceBottom(50);
+        numberOfRobots.getStyle().listStyle.font = generator.generateFont(parameter);
+        numberOfRobots.getStyle().font = generator.generateFont(parameter);
         temp.row();
-
-        Label yourName = new Label("Your robot's name: ", style);
         temp.add(yourName).spaceBottom(50);
 
         textField = new TextField("", gui.getSkin());
-        temp.add(textField).spaceBottom(40f);
+        textField.setHeight(parameter.size);
+        textField.getStyle().font = generator.generateFont(parameter);
+        textField.getStyle().messageFont = generator.generateFont(parameter);
+        temp.add(textField).spaceBottom(50f).height(parameter.size*3.5f);
         temp.row();
-
-        Label chooseMapLabel = new Label("Choose map: ", style);
         temp.add(chooseMapLabel).spaceBottom(50);
 
         choosemapbox = new SelectBox<>(gui.getSkin());
@@ -94,9 +101,6 @@ public class CreateGameScreen extends SimpleScreen {
         temp.padBottom(50);
         table.add(temp);
         table.row();
-
-        Label choosedesign = new Label("Choose robot:", gui.getSkin());
-        choosedesign.setFontScale(2f);
         table.add(choosedesign);
         table.row();
 

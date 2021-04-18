@@ -295,10 +295,18 @@ public class GameScreen implements Screen {
         updateRobotPositions();
         updateLivesAndHP();
 
+        /**for (Robot bot : gameBoard.getRecentlyDeceasedRobots()){
+         gui.showPopUp(bot.getName() + " fucking died, lmao", stage);
+         // TODO 06.04.2021: Spillet krasjer når denne blir kalt her
+         }**/
 
-        if(isThisMultiPlayer ) {
+        if(isThisMultiPlayer ) updateMultiplayerProperties();
+        //Dette er for singelplayer
+        else updateCardsOnScreen();
+    }
+
+    private void updateMultiplayerProperties(){
             if (!amITheHost) { //Klienten
-
                 //Gir serveren beskjed 2 ting
                 // 1. At spillet har startet opp og at vi kan motta kort
                 // 2. Om at simuleringen er ferdig, altså at ci kan starte neste runde.
@@ -357,19 +365,6 @@ public class GameScreen implements Screen {
 
                 updateCardsOnScreen();
             }
-        }
-
-        /**for (Robot bot : gameBoard.getRecentlyDeceasedRobots()){
-            gui.showPopUp(bot.getName() + " fucking died, lmao", stage);
-            // TODO 06.04.2021: Spillet krasjer når denne blir kalt her
-        }**/
-
-        //Dette er for singelplayer
-        else {
-
-            //Dette sørger for at kortene kun blir tegnet én gang per runde. Bedre kjøretid, yay
-            updateCardsOnScreen();
-        }
     }
 
     private void updateCardsOnScreen(){

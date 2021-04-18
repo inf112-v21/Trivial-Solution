@@ -15,7 +15,6 @@ public class SinglePlayerLoadingScreen extends SimpleScreen {
     private final boolean isThisMultiPlayer;
     private final boolean amITheHost;
     private boolean hasbeensetup = false;
-    private static Sprite backgroundSprite;
 
     public SinglePlayerLoadingScreen(GameInfo gameInfo, boolean isThisMultiPlayer, boolean amITheHost, GUI gui){
         super(gui);

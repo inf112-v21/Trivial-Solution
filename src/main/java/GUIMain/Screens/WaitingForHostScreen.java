@@ -1,7 +1,6 @@
 package GUIMain.Screens;
 
 import GUIMain.GUI;
-import NetworkMultiplayer.Messages.InGameMessages.ConfirmationMessage;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -28,8 +27,8 @@ public class WaitingForHostScreen extends SimpleScreen{
     public void render(float i) {
 
         if(gui.getClient().getSetup() != null){
-            gui.setScreen(new GameScreen(gui.getClient().getSetup(),true,false,gui));
-
+            gui.setScreen(new LoadingScreen(gui.getClient().getSetup(), true, false, gui));
+            //gui.setScreen(new GameScreen(gui.getClient().getSetup(),true,false,gui));
         }
         super.render(i);
     }

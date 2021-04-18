@@ -106,7 +106,8 @@ public class LobbyScreen extends SimpleScreen {
                             @Override
                             public void changed(ChangeEvent changeEvent, Actor actor) {
                                 GameInfo info = gui.getServer().startTheGame(CreateGameScreen.MAP_LOCATION + "/" + map.getSelected() + ".tmx");
-                                gui.setScreen(new GameScreen(info, true, true, gui));
+                                gui.setScreen(new LoadingScreen(info, true, true, gui));
+                                //gui.setScreen(new GameScreen(info, true, true, gui));
                             }
                         });
                         buttonTable.add(butt);

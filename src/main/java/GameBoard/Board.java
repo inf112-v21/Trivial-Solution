@@ -372,13 +372,7 @@ public class Board {
 
         if(!ignoreFirst)
             findCorrespondingLaser(x, y, dir, isDoubleLaser);
-
-        //TODO: 14.04.2021 Litt bugs her når laserne tegnes opp, tegnes ikka alltid korrekt.
-        // Tror dette har noe med sammenhengen av når laserne blir tegnet og robotene flytter seg
-        //TODO: 15.04 crossingLasers vises ikke
-        //TODO: Bug: siden alle vegger er en celle, blir ikke laserstrålene tegnet opp i noen av rutene,
-        // noe som kan se litt rart ut
-
+        
         int nextX = x + directionToX(dir);
         int nextY = y + directionToY(dir);
 

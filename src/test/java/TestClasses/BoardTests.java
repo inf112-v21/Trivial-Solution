@@ -752,14 +752,4 @@ public class BoardTests {
 
         assertTrue(bård.getDirtyLocations().contains(new Position(2, 0)));
     }
-    @Test
-    public void lasersGetDrawnOnCorrectLcoationsWhenThereAreNoRobotsOnTheMap(){
-
-    }
-    @Test
-    public void lasersGetDrawnOnCorrectLocationsWhenThereAreRobotsInTheirWay(){
-
-    }
-
-
 }

@@ -64,7 +64,7 @@ public class MenuScreen extends SimpleScreen {
         quit.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent changeEvent, Actor actor) {
-                System.exit(0);
+                Gdx.app.exit();
             }
         });
 

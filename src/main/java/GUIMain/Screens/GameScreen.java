@@ -193,7 +193,7 @@ public class GameScreen implements Screen {
         quit.addListener(new ChangeListener(){
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                System.exit(0);
+                Gdx.app.exit();
             }
         });
 

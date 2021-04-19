@@ -1,0 +1,19 @@
+
+Møte Referat (09.04.2021)
+
+Møte handler om å videre utvikle multiplayer delen av prosjektet
+
+Alle i gruppen er innkalt.
+Alle i gruppen er tilstede
+Møtetid og sted: 10:15 - 12:00, sem3
+
+Saker som skal diskuteres:
+ - multiplayer
+
+Hva vi har gjort:
+ - kom godt i gang med server-client implementasjon til multiplayer
+ - faktorerte litt på GUI
+ - begynte på nye issues fra project broad
+
+Hva vi skal jobbe videre med:
+	- issues på project broad

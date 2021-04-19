@@ -19,7 +19,7 @@ import java.util.TreeMap;
 
 public class NetworkClient {
 
-    final private Client client;
+    private Client client = null;
 
     //Porter som meldinger blir sendt til
     final static int DEFAULT_UDP_PORT = 54777;
@@ -36,10 +36,8 @@ public class NetworkClient {
     //Denne forteller oss om det går fint å sette opp en robot
     private SetupRobotNameDesign state;
 
-    public void resetState(){ state = null; }
-    public SetupRobotNameDesign getState() {
-        return state;
-    }
+    private boolean youGotDisconnected = false;
+
 
     public NetworkClient() {
 
@@ -87,6 +85,28 @@ public class NetworkClient {
     }
 
     /**
+     * Her re-setter vi staten til null slik at vi kan sjekke om robot designen eller
+     * navnet blir unike. State blir satt tilbake til en av SetupRobotNameDesign
+     */
+    public void resetState(){ state = null; }
+
+    /**
+     *
+     * @return hvilken state design og navnet er i nå
+     */
+    public SetupRobotNameDesign getState() {
+        return state;
+    }
+
+    /**
+     * Dette skal displayes som en popUp
+     * @return - streng som sier at du ble diconnected.
+     */
+    public boolean getYouGotDisconnected() {
+        return youGotDisconnected;
+    }
+
+    /**
      * Metode som skaper listeners
      * Disse håndterer mottate packer/Messages som kommer fra
      * serveren til klienten vår
@@ -116,8 +136,10 @@ public class NetworkClient {
 
                         //Brukes kun for testing.
                         case TEST_MESSAGE:
-                            System.out.println("Client received message. Now sending Message to server");
-                            sendToServer(ConfirmationMessage.CONNECTION_WAS_SUCCESSFUL);
+                            System.out.println("Client received message. All good!");
+                            //sendToServer(ConfirmationMessage.TEST_MESSAGE);
+                            //client.close();
+                            //disconnectFromServer();
                             return;
                     }
 
@@ -149,6 +171,13 @@ public class NetworkClient {
             public void connected(Connection connection){
                 sendToServer(ConfirmationMessage.CONNECTION_WAS_SUCCESSFUL);
             }
+
+            @Override
+            public void disconnected(Connection connection) {
+                System.out.println("Client was disconnected" + client.getID());
+            }
+
+
         });
 
     }
@@ -165,7 +194,7 @@ public class NetworkClient {
         boolean connectionEstablished = true;
         try {
             //connecter til hosten
-            client.connect(9999999, ipAdress, DEFAULT_TCP_PORT, DEFAULT_UDP_PORT);
+            client.connect(10000, ipAdress, DEFAULT_TCP_PORT, DEFAULT_UDP_PORT);
 
         } catch (IllegalStateException e) {
             System.out.println(e.toString() + ": Connect ble kalt fra konneksjonens update thread");
@@ -207,5 +236,17 @@ public class NetworkClient {
     public void sendToServer(IMessage m){
         client.sendTCP(m);
     }
+
+    /**
+     * Disconnecter fra serveren og stopper network threaden.
+     * Når networkthreaden er stoppet kan vi reconnecte på nytt etterpå.
+     */
+    public void disconnectAndStopClientThread(){
+        client.stop();
+    }
+
+    /**
+     * 
+     */
 
 }

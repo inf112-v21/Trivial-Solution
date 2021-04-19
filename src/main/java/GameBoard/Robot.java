@@ -63,6 +63,7 @@ public class Robot implements Serializable, Comparable<Robot> {
         powerDown = false;
     }
 
+    public void setLives() { lives = 0;}
 	public int getLives() {
 		return lives;
 	}
@@ -75,7 +76,7 @@ public class Robot implements Serializable, Comparable<Robot> {
 	}
 
 	public void repairRobot(int repairPoints){hp = Math.min(INITIAL_HP, hp + repairPoints); }
-	public void applyDamage(int dmg) { hp -= dmg; }
+	public void applyDamage(int dmg) {hp -= dmg;}
 	public void takeLife(){ lives--; }
 
 	public boolean isDestroyed() {

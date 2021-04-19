@@ -1,6 +1,8 @@
 package GUIMain.Screens;
 
 import GUIMain.GUI;
+import GUIMain.Screens.EndOfGameScreens.GameOverScreen;
+import GUIMain.Screens.EndOfGameScreens.WinScreen;
 import GameBoard.BoardController;
 import GameBoard.Cards.ProgramCard;
 import GameBoard.Position;
@@ -15,7 +17,6 @@ import NetworkMultiplayer.Messages.InGameMessages.ConfirmationMessage;
 import NetworkMultiplayer.Messages.InGameMessages.SanityCheck.UnequalSimulationException;
 import NetworkMultiplayer.Messages.PreGameMessages.GameInfo;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -181,6 +182,13 @@ public class GameScreen extends SimpleScreen {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 optionsCheck = false;
+
+                //Hvis det er mulitplayer så må vi håndtere disconnections.
+                //Metoden disconnectServerOrClient ser til at den diconnectede
+                //enheten forsvinner.
+                // TODO: 19.04.2021 Fiks disconnections
+                if (isThisMultiPlayer) return;
+
                 gui.setScreen(new MenuScreen(gui));
             }
         });
@@ -374,8 +382,14 @@ public class GameScreen extends SimpleScreen {
         //Sjekker om en spiller har vunnet og hvilken screen som skal vises.
         Robot winner = gameBoard.hasWon();
         if(winner != null){
+
+            //Hvis multiplayer spillet er ferdig så stenger vi serveren og
+            //frakobler klientene.
+            if(isThisMultiPlayer && amITheHost) gui.getServer().stopServerAndDisconnectAllClients();
+
             if(playerControlledRobot.equals(winner)){
                 gui.setScreen(new WinScreen(gui));
+
             }
             else{
                 gui.setScreen(new GameOverScreen(gui));

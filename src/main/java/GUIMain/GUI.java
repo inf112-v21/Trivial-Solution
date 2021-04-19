@@ -55,21 +55,23 @@ public class GUI extends Game {
         server = new NetworkServer();
     }
 
-    public void startClient(){
-        try {
-            client = new NetworkClient();
+    public void startClient(){ client = new NetworkClient();}
 
-            //Finner Ip-addressen til hosten.
-            InetAddress hostIpadress = client.findServer();
+    public void tryToConnectClientToServer(){
+        //Finner Ip-addressen til hosten.
+        InetAddress hostIpadress = client.findServer();
 
-            //Connect to client
+        if(hostIpadress != null) {
+            //Prøver å koble til hosten/serveren
             client.connect(hostIpadress.getHostName());
+        }
+        else{
+            //Dreper threaden
+            client.disconnectAndStopClientThread();
 
-        }catch (NullPointerException ex){
-            Stage stage = new Stage();
-            Gdx.input.setInputProcessor(stage);
-            showPopUp("Couldn't find any online servers :(", stage);
-            setScreen(new MenuScreen(this));
+            //Her setter vi klienten til null, slik at vi kan starte en ny klient
+            //neste gang en spiller klicker join.
+            client = null;
         }
     }
 

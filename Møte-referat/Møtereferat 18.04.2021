@@ -1,0 +1,12 @@
+Møtereferat 18.04.2021
+
+Uformelt møte på discord, der vi jobbet med det siste som gjenstår av multiplayer.
+Til stede: Steinar, Dusan, Samuel
+
+Hva vi har gjort:
+Vi har fått til den generelle gameloopen i multiplayer! Yay!
+Det er fortsatt et par bugs som gjenstår, men ting begynner å komme på plass.
+
+
+Hva vi skal jobbe videre med:
+- Bugfiksing i multiplayer, gui for lasere og en CreditsScreen.

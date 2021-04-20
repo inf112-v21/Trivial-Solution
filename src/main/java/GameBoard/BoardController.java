@@ -148,7 +148,9 @@ public class BoardController {
         /** Obs obs! Sorterer slik at høyeste prioritet kommer først. */
         public int compare(Robot o1, Robot o2) {
             try{
-                return o2.getAvailableCards().get(phase).priority() - o1.getAvailableCards().get(phase).priority();
+                int diff = o2.getAvailableCards().get(phase).priority() - o1.getAvailableCards().get(phase).priority();
+                if (diff == 0) return o2.getName().compareTo(o1.getName());
+                else return diff;
             }catch (IndexOutOfBoundsException ex){
                 return 0;
             }

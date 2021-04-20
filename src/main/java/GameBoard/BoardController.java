@@ -135,7 +135,7 @@ public class BoardController {
     public TreeSet<Position> getDirtyLocations(){ return board.getDirtyLocations(); }
    
     private static class BotComparator implements Comparator<Robot> {
-        final int phase;
+        private final int phase;
         public BotComparator(int phase){ this.phase = phase; }
 
         /** Obs obs! Sorterer slik at høyeste prioritet kommer først. */

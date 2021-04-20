@@ -1,7 +1,17 @@
 package GameBoard;
 
 import GameBoard.Cards.ICard;
-import GameBoard.Components.*;
+import GameBoard.Components.ComponentFactory;
+import GameBoard.Components.Flag;
+import GameBoard.Components.IComponent;
+import GameBoard.Components.Laser;
+import GameBoard.Components.SpawnPoint;
+import GameBoard.Components.ConveyorBelt;
+import GameBoard.Components.Gear;
+import GameBoard.Components.Wrench;
+import GameBoard.Components.CheckPoint;
+import GameBoard.Components.Hole;
+import GameBoard.Components.Wall;
 import NetworkMultiplayer.Messages.InGameMessages.SanityCheck;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;

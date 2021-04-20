@@ -2,11 +2,14 @@ package GUIMain.Screens;
 
 import GUIMain.GUI;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.scenes.scene2d.*;
-import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 
-import static com.badlogic.gdx.graphics.Color.*;
+import static com.badlogic.gdx.graphics.Color.BLACK;
+import static com.badlogic.gdx.graphics.Color.WHITE;
 
 public class MenuScreen extends SimpleScreen {
 
@@ -34,8 +37,8 @@ public class MenuScreen extends SimpleScreen {
         tabell.row();
         parameter.size = 36;
         style.font = generator.generateFont(parameter);
-        Label undertitle = new Label("A Trivial Solution", style);
-        tabell.add(undertitle).spaceBottom(40);
+        Label underTitle = new Label("A Trivial Solution", style);
+        tabell.add(underTitle).spaceBottom(40);
         tabell.row();
 
         singleplayer = new TextButton("Singleplayer", gui.getSkin());
@@ -64,7 +67,7 @@ public class MenuScreen extends SimpleScreen {
         quit.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent changeEvent, Actor actor) {
-                System.exit(0);
+                Gdx.app.exit();
             }
         });
 

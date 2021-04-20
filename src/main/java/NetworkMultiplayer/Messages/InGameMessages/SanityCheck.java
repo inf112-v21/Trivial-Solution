@@ -34,7 +34,7 @@ public class SanityCheck implements IMessage {
                     throw new UnequalSimulationException("Found differing components in the forground-grid in position (" + x + ", " + y + "), "
                     + "expected a " + this.forgrid[y][x] + ", but was " + o.forgrid[y][x] + ".");
             }
-        };
+        }
         ArrayList<Robot> robots1 = new ArrayList<>(this.botPositions.keySet());
         ArrayList<Robot> robots2 = new ArrayList<>(o.botPositions.keySet());
 

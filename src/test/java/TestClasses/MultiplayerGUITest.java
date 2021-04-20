@@ -1,11 +1,8 @@
 package TestClasses;
 
 import GUIMain.GUI;
-import GUIMain.Main;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
-import org.lwjgl.system.CallbackI;
-
 
 /**
  * En test for å se at serveren og klientene virker sammen med gui.

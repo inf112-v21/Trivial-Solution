@@ -8,6 +8,7 @@ import GameBoard.Robot;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.TreeMap;
 import java.util.TreeSet;
 
 import NetworkMultiplayer.Messages.InGameMessages.AllChosenCards;
@@ -40,10 +41,11 @@ import static com.badlogic.gdx.graphics.Color.WHITE;
 
 public class GameScreen implements Screen {
 
-    public static float TIME_DELTA = 1.5f;
+    public static float TIME_DELTA = 0.6f;
     public static final int CELL_SIZE = 300;
+    private double timeSinceLastBlink = -1;
+    private static final float BLINK_DELTA = 0.1f;
     public static boolean shouldLasersBeDrawn = false;
-    private boolean lasersHaveBeenRendered = false;
     public static boolean roundFinished;
     private final TreeSet<Position> previousLaserPositions = new TreeSet<>();
 
@@ -85,6 +87,9 @@ public class GameScreen implements Screen {
 
     private final Label.LabelStyle style;
     public static int fontsize = 30;
+
+    private TreeSet<Position> damagedPositions = new TreeSet<>();
+    private int blinkturns = 0;
 
 
     public GameScreen(GameInfo gameInfo, boolean isThisMultiPlayer, boolean amITheHost, GUI gui){
@@ -323,18 +328,31 @@ public class GameScreen implements Screen {
         backgroundSprite.draw(spriteBatch);
         spriteBatch.end();
         timeSinceLastUpdate += v;
+        timeSinceLastBlink += v;
         renderer.render();
         stage.draw();
 
+        //Får roboter til å blinke
+        if (timeSinceLastBlink > BLINK_DELTA && blinkturns != 0){
+            makeDamagedRobotsBlink();
+            timeSinceLastBlink = 0;
+        }
         if(timeSinceLastUpdate < TIME_DELTA) return;
         timeSinceLastUpdate = 0;
         gameBoard.simulate();
-        if(!roundFinished)
+
+        //Tegning av lasere på slutten av en fase, og gir signal om at skadede roboter skal blinke
+        removeLasers();
+        if (gameBoard.isThePhaseOver()){
             drawLasers();
+            blinkturns = 6;
+            damagedPositions = gameBoard.getDamagedPositions();
+        }
+
         updateRobotPositions();
         updateLivesAndHP();
-        //TODO: 15.04 Få robotene til å blinke
         finishedCheck();
+
         //Dette sørger for at kortene kun blir tegnet én gang per runde. Bedre kjøretid, yay
         if(gameBoard.isWaitingForPlayers()){
             if (hasDrawnCardsYet) return;
@@ -367,23 +385,36 @@ public class GameScreen implements Screen {
             gui.setScreen(new WinScreen(gui));
         }
     }
-    private void drawLasers(){
-        if(!shouldLasersBeDrawn) return;
-        shouldLasersBeDrawn = false;
-        if(lasersHaveBeenRendered) {
-            for (Position pos : previousLaserPositions) {
-                laserLayer.setCell(pos.getX(), gameBoard.getHeight() - pos.getY() - 1, new TiledMapTileLayer.Cell());
-            }
-            previousLaserPositions.clear();
-            lasersHaveBeenRendered = false;
-        }else {
-            for (Position pos : gameBoard.getLaserLocations().keySet()){
-                laserLayer.setCell(pos.getX(), gameBoard.getHeight() - pos.getY() - 1, gameBoard.getLaserLocations().get(pos));
-                previousLaserPositions.add(pos);
-            }
-            lasersHaveBeenRendered = true;
-            }
 
+    private void makeDamagedRobotsBlink(){
+        if (blinkturns % 2 == 0){
+            for (Position pos : damagedPositions){
+                playerLayer.setCell(pos.getX(), gameBoard.getHeight() - pos.getY() - 1, new TiledMapTileLayer.Cell());
+            }
+        }
+        else{
+            for (Position pos : damagedPositions){
+                TiledMapTileLayer.Cell cell = new TiledMapTileLayer.Cell();
+                cell.setTile(new StaticTiledMapTile(new Sprite(gameBoard.getRobotAt(pos.getX(), pos.getY()).getImage())));
+                playerLayer.setCell(pos.getX(), gameBoard.getHeight()- pos.getY()-1, cell);
+            }
+        }
+        blinkturns--;
+    }
+
+    private void drawLasers(){
+        TreeMap<Position, TiledMapTileLayer.Cell> t = gameBoard.getLaserLocations();
+        previousLaserPositions.addAll(t.keySet());
+        for (Position pos : t.keySet()){
+            laserLayer.setCell(pos.getX(), gameBoard.getHeight()-pos.getY()-1, t.get(pos));
+        }
+    }
+
+    private void removeLasers(){
+        for (Position pos : previousLaserPositions){
+            laserLayer.setCell(pos.getX(), gameBoard.getHeight()-pos.getY()-1, new TiledMapTileLayer.Cell());
+        }
+        previousLaserPositions.clear();
     }
 
     private void updateRobotPositions(){

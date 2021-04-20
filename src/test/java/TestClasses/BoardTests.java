@@ -752,4 +752,30 @@ public class BoardTests {
 
         assertTrue(bård.getDirtyLocations().contains(new Position(2, 0)));
     }
+
+    @Test
+    public void robotsGettingHitByLaserAddsThemToTheSet(){
+        bård.placeRobotAt(6, 4, robot1); //I skuddlinjen
+        bård.placeRobotAt(5, 4, robot2); //Bak en vegg
+        bård.placeRobotAt(9, 5, robot3); //Langt unna, men fortsatt i skuddlinjen
+        bård.placeRobotAt(3, 9, robot4); //Langt vekke, utenfor skuddlinjen
+
+        bård.endPhase();
+        TreeSet<Position> locs = bård.getRecentlyDamagedPositions();
+
+        assertTrue(locs.contains(new Position(6, 4)));
+        assertFalse(locs.contains(new Position(5, 4)));
+        assertTrue(locs.contains(new Position(9, 5)));
+        assertFalse(locs.contains(new Position(3, 9)));
+    }
+
+    @Test
+    public void damagedLocationSetGetResetEverytime(){
+        bård.placeRobotAt(6, 4, robot1);
+
+        bård.endPhase();
+
+        assertTrue(bård.getRecentlyDamagedPositions().contains(new Position(6, 4)));
+        assertFalse(bård.getRecentlyDamagedPositions().contains(new Position(6, 4)));
+    }
 }

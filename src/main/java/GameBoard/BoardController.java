@@ -7,10 +7,7 @@ import GameBoard.Cards.Deck;
 import GameBoard.Cards.ICard;
 import GameBoard.Components.Flag;
 import GameBoard.Components.IComponent;
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
-import com.badlogic.gdx.scenes.scene2d.ui.Cell;
-import org.lwjgl.system.CallbackI;
 
 import java.util.*;
 
@@ -28,6 +25,7 @@ public class BoardController {
     private int currentPhase = 0;
     private int currentMove  = 0;
     private boolean waitingForPlayers;
+    private boolean phaseOver = false;
 
     public BoardController(List<Robot> robots, String mapName, boolean amITheHost){
         this.amITheHost = amITheHost;
@@ -57,6 +55,7 @@ public class BoardController {
             currentMove = 0;
             currentPhase++;
             board.endPhase();
+            phaseOver = true;
         }
         if (currentPhase == PHASES_PER_ROUND){
             GameScreen.roundFinished = true;
@@ -65,6 +64,13 @@ public class BoardController {
             waitingForPlayers = true;
             if (amITheHost) startRound(); //Deler ut kort, om vi er host eller i singleplayer.
         }
+    }
+    public boolean isThePhaseOver(){
+        if (phaseOver){
+            phaseOver = false;
+            return true;
+        }
+        return false;
     }
 
     private void moveNextRobot(){
@@ -137,6 +143,7 @@ public class BoardController {
 
     public TreeSet<Position> getDirtyLocations(){ return board.getDirtyLocations(); }
     public TreeMap<Position, TiledMapTileLayer.Cell> getLaserLocations() { return board.getLaserLocations();}
+    public TreeSet<Position> getDamagedPositions(){return board.getRecentlyDamagedPositions(); }
 
     private static class BotComparator implements Comparator<Robot> {
         final int phase;

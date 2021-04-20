@@ -38,6 +38,8 @@ public class Board {
     private final LinkedList<Position> availableSpawnPoints = new LinkedList<>();
     private final LinkedList<Robot> robotsWaitingToBeRespawned = new LinkedList<>();
 
+    private final TreeSet<Robot> recentlyDamagedRobots = new TreeSet<>();
+
     //Antall flagg i spillet.
     private final ArrayList<Flag> flagWinningFormation = new ArrayList<>();
 
@@ -366,6 +368,7 @@ public class Board {
     private void fireOneLaser(int x, int y, int dir, boolean isDoubleLaser, boolean ignoreFirst){
         if(!ignoreFirst && botgrid[y][x] != null){
             botgrid[y][x].applyDamage(isDoubleLaser ? 2 : 1);
+            recentlyDamagedRobots.add(botgrid[y][x]);
             return;
         }
         if(forgrid[y][x] instanceof Wall && !((Wall) forgrid[y][x]).canLeaveInDirection(dir)) return;
@@ -431,6 +434,13 @@ public class Board {
     public TreeSet<Position> getDirtyLocations(){
         TreeSet<Position> ret = new TreeSet<>(dirtyLocations);
         dirtyLocations.clear();
+        return ret;
+    }
+
+    public TreeSet<Position> getRecentlyDamagedPositions(){
+        TreeSet<Position> ret = new TreeSet<>();
+        for (Robot bot : recentlyDamagedRobots) ret.add(botPositions.get(bot));
+        recentlyDamagedRobots.clear();
         return ret;
     }
 

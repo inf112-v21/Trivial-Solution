@@ -6,7 +6,11 @@ import NetworkMultiplayer.Messages.PreGameMessages.GameInfo;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
-import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.SelectBox;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextField;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 
 import java.io.File;
@@ -21,7 +25,7 @@ public class CreateGameScreen extends SimpleScreen {
 
     private static final String MAP_LOCATION = "assets/maps";
     private SelectBox<Integer> numberOfRobots;
-    private SelectBox<String> choosemapbox;
+    private SelectBox<String> chooseMapBox;
     private TextField textField;
 
     public CreateGameScreen(GUI gui){
@@ -64,9 +68,9 @@ public class CreateGameScreen extends SimpleScreen {
         Label chooseMapLabel = new Label("Choose map: ", style);
         temp.add(chooseMapLabel).spaceBottom(50);
 
-        choosemapbox = new SelectBox<>(gui.getSkin());
-        choosemapbox.setItems(getMapNames());
-        temp.add(choosemapbox).spaceBottom(50);
+        chooseMapBox = new SelectBox<>(gui.getSkin());
+        chooseMapBox.setItems(getMapNames());
+        temp.add(chooseMapBox).spaceBottom(50);
         TextButton start = new TextButton("Start game", gui.getSkin());
         start.addListener(new InputListener(){
             @Override
@@ -77,7 +81,7 @@ public class CreateGameScreen extends SimpleScreen {
                 }
                 ArrayList<Robot> robots = Robot.getDefaultRobots(numberOfRobots.getSelected()-1, design); // -1, siden spilleren inngår i disse robotene
                 robots.add(new Robot(textField.getText(), design, false));
-                String map = MAP_LOCATION + "/" + choosemapbox.getSelected() + ".tmx";
+                String map = MAP_LOCATION + "/" + chooseMapBox.getSelected() + ".tmx";
                 gui.setScreen(new SinglePlayerLoadingScreen(new GameInfo(Collections.unmodifiableList(robots), map, numberOfRobots.getSelected()-1), false, true, gui));
 
                 return true;

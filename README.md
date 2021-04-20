@@ -15,10 +15,7 @@ Prosjektet vil da bygges, kompileres og kjøres i din valgte IDE. For å få pro
 5) Når du er ferdig med å velge kan du klikke på "Ready", og se spillet simulere runden. Gå tilbake til punkt 3.
 
 Noen kritiske bugs/mangler:
-- Det er ikke mulig å se hvor mange liv roboten har, annet enn å telle antall kort du får utdelt hver runde.
-- Hitboksene til knappene in-game er litt wacky, f. eks om du sikter på "Ready" vil du treffe og klikke "Power Down" istedet. Om du alltid sikter én knapp lavere enn det du egentlig vil, vil du treffe. (Beklager dette.)
-
-
-
+-   Det er ikke mulig å se hvor mange liv roboten har, annet enn å telle antall kort du får utdelt hver runde.
+-   Hitboksene til knappene in-game er litt wacky, f. eks om du sikter på "Ready" vil du treffe og klikke "Power Down" istedet. Om du alltid sikter én knapp lavere enn det du egentlig vil, vil du treffe. (Beklager dette.)
 
 Lykke til!

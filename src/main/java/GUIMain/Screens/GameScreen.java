@@ -28,7 +28,10 @@ import com.badlogic.gdx.maps.tiled.tiles.StaticTiledMapTile;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.FitViewport;
@@ -323,10 +326,10 @@ public class GameScreen implements Screen {
         gameBoard.simulate();
         updateRobotPositions();
         updateLivesAndHP();
-        /**for (Robot bot : gameBoard.getRecentlyDeceasedRobots()){
+        /*for (Robot bot : gameBoard.getRecentlyDeceasedRobots()){
             gui.showPopUp(bot.getName() + " fucking died, lmao", stage);
             // TODO 06.04.2021: Spillet krasjer når denne blir kalt her
-        }**/
+        }*/
         finishedCheck();
 
         //Dette sørger for at kortene kun blir tegnet én gang per runde. Bedre kjøretid, yay

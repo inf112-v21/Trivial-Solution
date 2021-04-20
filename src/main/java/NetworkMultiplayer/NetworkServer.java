@@ -45,7 +45,7 @@ public class NetworkServer extends Listener {
     SanityCheck checkAllIsRight;
 
     //Gi serveren beskjed om å dele ut kort
-    boolean simulationIsOver;
+    private boolean simulationIsOver;
 
 
 

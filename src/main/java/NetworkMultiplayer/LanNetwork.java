@@ -3,10 +3,12 @@ package NetworkMultiplayer;
 
 import GameBoard.Cards.ICard;
 import GameBoard.Robot;
-import NetworkMultiplayer.Messages.*;
+import NetworkMultiplayer.Messages.ConfirmationMessages;
+import NetworkMultiplayer.Messages.IMessage;
 import NetworkMultiplayer.Messages.InGameMessages.AllChosenCardsFromAllRobots;
 import NetworkMultiplayer.Messages.InGameMessages.ChosenCards;
 import NetworkMultiplayer.Messages.InGameMessages.DistributedCards;
+import NetworkMultiplayer.Messages.MinorErrorMessage;
 import NetworkMultiplayer.Messages.PreGameMessages.GameInfo;
 import NetworkMultiplayer.Messages.PreGameMessages.RobotInfo;
 import com.esotericsoftware.kryo.Kryo;

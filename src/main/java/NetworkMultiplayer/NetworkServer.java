@@ -1,7 +1,9 @@
 package NetworkMultiplayer;
 
+
 import GameBoard.Cards.ProgramCard;
 import GameBoard.Robot;
+import NetworkMultiplayer.Messages.ClientDisconnected;
 import NetworkMultiplayer.Messages.InGameMessages.*;
 import NetworkMultiplayer.Messages.PreGameMessages.GameInfo;
 import NetworkMultiplayer.Messages.PreGameMessages.SetupRobotNameDesign;
@@ -31,14 +33,15 @@ public class NetworkServer extends Listener {
     private int numberOfReadyClients = 0;
 
     //Mappinger som sjekker at vi har alt på plass
-    private HashMap<Connection, Robot> connectionsAndRobots = new HashMap<>();
+    private final HashMap<Connection, Robot> connectionsAndRobots = new HashMap<>();
 
     private HashMap<Connection, SanityCheck> conTocheck = new HashMap<>();
 
     //Valgene de ulike klientene/robotenes tar.
-    private TreeMap<Robot,ArrayList<ProgramCard>> robotActions = new TreeMap<>();
+    private final TreeMap<Robot,ArrayList<ProgramCard>> robotActions = new TreeMap<>();
 
-
+    //Antall roboter som har blirr diconnected
+    private final HashSet<Robot> disconnections = new HashSet<>();
 
     private Robot hostRobot;
 
@@ -76,6 +79,11 @@ public class NetworkServer extends Listener {
         return numberOfReadyClients == numberOfConnections;
     }
 
+    /**
+     * Deler ut kortene til alle klientene, samtidig så setter vi
+     * antall klienter som er klare til null, siden ingen
+     * av de har valgt kort enda.
+     */
     public void distributeCards(){
 
         for(Connection con : connectionsAndRobots.keySet()){
@@ -132,7 +140,13 @@ public class NetworkServer extends Listener {
         numberOfSetsOfCardsReceived++;
     }
 
-
+    /**
+     *
+     * @return - HashSet med klienter som har blitt disconnected fra spillet.
+     */
+    public HashSet<Robot> getDisconnections() {
+        return disconnections;
+    }
 
     /**
      * @return - HashMap med robotene mappet til hvilke kort de valgte
@@ -177,6 +191,7 @@ public class NetworkServer extends Listener {
         server.addListener(new Listener() {
 
             //Kalles når vi mottar ting i nettverket
+            @Override
             public void received(Connection connection, Object object) {
                 System.out.println("Received " + object.getClass());
 
@@ -185,12 +200,18 @@ public class NetworkServer extends Listener {
                     switch (message) {
                         case CONNECTION_WAS_SUCCESSFUL:
                             System.out.println("Woho!");
+                            sendToClient(connection,ConfirmationMessage.TEST_MESSAGE);
                             return;
 
 
                         case GAME_WAS_STARTED_AND_CLIENT_IS_READY_TO_RECEIVE_CARDS:
                             numberOfReadyClients++;
                             return;
+
+                        case TEST_MESSAGE:
+                            System.out.println("Everything works!");
+                            return;
+
                     }
 
                 }
@@ -206,7 +227,6 @@ public class NetworkServer extends Listener {
                     robotActions.put(thisRobotsAction, cards.getChosenCards());
                     numberOfSetsOfCardsReceived++;
                     thisRobotsAction.setChosenCards(cards.getChosenCards());
-                    if (cards.getChosenCards().isEmpty()) thisRobotsAction.setPowerDown(true);
                 }
 
 
@@ -249,13 +269,21 @@ public class NetworkServer extends Listener {
             }
 
             //Kalles når vi oppretter en konneksjon med en klient
+            @Override
             public void connected(Connection connection) {
                 System.out.println("Server connected to client " + connection.getID());
                 numberOfConnections++;
                 System.out.println(connection);
 
-                //Vi registrer kommunikasjonslinken (connection). Robot opprettes senere da.
+                //Vi registrer kommunikasjonslinken (connection). Robot opprettes senere etter at RobotInfo er godkjent
                 connectionsAndRobots.put(connection, null);
+
+            }
+
+            //Kalles når en klient disconnect'er fra serveren.
+            @Override
+            public void disconnected(Connection con){
+                System.out.println("Everything was diconnected");
 
             }
         });
@@ -272,15 +300,7 @@ public class NetworkServer extends Listener {
 
 
     /**
-     * @return antall klienter serveren er connectet til. Brukes for
-     * å sjekke at alle klientene har sendt en melding
-     */
-    public int getNumberOfConnections(){ return numberOfConnections;}
-
-
-
-    /**
-     *Sender en melding fra serveren til en klient
+     *Sender en melding fra serveren til en spesfikk klient
      *
      * @param con - konneksjonen (representerer klienten som skal få meldingen)
      * @param m - meldingen vi vil sende
@@ -291,7 +311,9 @@ public class NetworkServer extends Listener {
     }
 
 
-
+    public int getNumberOfConnections(){
+        return numberOfConnections;
+    }
 
     /**
      * Sender data til alle klientene via TCP
@@ -302,17 +324,15 @@ public class NetworkServer extends Listener {
 
 
     /**
-     *  stenger nettverk konneksjonen og stopper nettverk tråden
+     *  Stenger nettverket, altså serveren.
+     *  Samtidig så disconnecter den alle klientene
+     *  Den gjør dette uten å stenge mhoved programmet
+     *  men stenger bare mulitplayerdelen. Deretter
+     *  kan man gå tilbake til Main Menu og starte spillet
+     *  på nytt.
      */
-    public void stopServer(){ server.stop();}
+    public void stopServerAndDisconnectAllClients(){ server.stop();}
 
-
-    /**
-     *For avsluttning
-     *
-     *
-     */
-    public void deleteServer() throws IOException { server.dispose();}
 
      /**
      * WIP

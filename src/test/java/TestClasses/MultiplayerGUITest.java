@@ -5,6 +5,9 @@ import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
 
 
+
+//Dette ble testet manuellt
+
 /**
  * En test for å se at serveren og klientene virker sammen med gui.
  * Får å sjekke at det virker så kjører du host klassen først.

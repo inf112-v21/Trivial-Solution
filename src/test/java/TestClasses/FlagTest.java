@@ -9,8 +9,7 @@ import org.junit.jupiter.api.Test;
 import java.util.ArrayList;
 import java.util.Collections;
 
-
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * Her tester vi om Flag-comparatoren vil sortere flaggene i riktig rekkefølge
@@ -22,7 +21,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class FlagTest {
 
     private final static ArrayList<Flag> winCondition = new ArrayList<>();
-    private ArrayList<Flag> ourFlagArray = new ArrayList<>();
+    private final ArrayList<Flag> ourFlagArray = new ArrayList<>();
 
     //Disse simulerer flaggene i spillet.
     private final static Flag f1 = new Flag(55);

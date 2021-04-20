@@ -3,7 +3,9 @@ package GUIMain.Screens;
 import GUIMain.GUI;
 import GameBoard.Robot;
 import NetworkMultiplayer.Messages.PreGameMessages.GameInfo;
-import com.badlogic.gdx.scenes.scene2d.*;
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 
@@ -37,7 +39,7 @@ public class CreateGameScreen extends SimpleScreen {
         parameter.borderWidth = 3f;
         parameter.color = WHITE;
         parameter.borderColor = BLACK;
-        style.font = generator.generateFont(parameter);;
+        style.font = generator.generateFont(parameter);
         Label title = new Label("Create Game",style);
         table.add(title).spaceBottom(80);
         table.row();
@@ -95,9 +97,9 @@ public class CreateGameScreen extends SimpleScreen {
 
         parameter.size = 12;
         style.font = generator.generateFont(parameter);
-        Label choosedesign = new Label("Choose robot:", style);
-        choosedesign.setFontScale(2f);
-        table.add(choosedesign);
+        Label chooseDesign = new Label("Choose robot:", style);
+        chooseDesign.setFontScale(2f);
+        table.add(chooseDesign);
         table.row();
 
         showRobotDesigns();
@@ -114,10 +116,10 @@ public class CreateGameScreen extends SimpleScreen {
 
     public static String[] getMapNames(){
         File f = new File(MAP_LOCATION);
-        String[] maplist = Arrays.stream(f.list()).filter(n -> !n.equals("TestMap.tmx")).toArray(String[]::new);
-        for (int i = 0; i < maplist.length; i++) {
-            maplist[i] = maplist[i].substring(0, maplist[i].length()-4);
+        String[] mapList = Arrays.stream(f.list()).filter(n -> !n.equals("TestMap.tmx")).toArray(String[]::new);
+        for (int i = 0; i < mapList.length; i++) {
+            mapList[i] = mapList[i].substring(0, mapList[i].length()-4);
         }
-        return maplist;
+        return mapList;
     }
 }

@@ -32,16 +32,14 @@ public class NetworkServer extends Listener {
     private int numberOfConnections = 0;
 
     //Mappinger som sjekker at vi har alt på plass
-    private HashMap<Connection, Robot> connectionsAndRobots = new HashMap<>();
+    private final HashMap<Connection, Robot> connectionsAndRobots = new HashMap<>();
 
     //Valgene de ulike klientene/robotenes tar.
-    private TreeMap<Robot,IMessage> robotActions = new TreeMap<>();
-
-    private Robot hostRobot;
+    private final TreeMap<Robot,IMessage> robotActions = new TreeMap<>();
 
     //Portene som data sendes imellom. Valgfrie porter kan velges.
-    final static int DEFAULT_UDP_PORT = 54777;
-    final static int DEFAULT_TCP_PORT = 54555;
+    private final static int DEFAULT_UDP_PORT = 54777;
+    private final static int DEFAULT_TCP_PORT = 54555;
 
     //Brukes for å sjekke at alt er riktig
     SanityCheck checkAllIsRight;
@@ -188,7 +186,7 @@ public class NetworkServer extends Listener {
     public MinorErrorMessage setHostRobot(RobotInfo info){
         if (robotActions.keySet().stream().map(Robot::getDesign).collect(Collectors.toList()).contains(info.getBotDesignNr())) return MinorErrorMessage.UNAVAILABLE_DESIGN;
         if (robotActions.keySet().stream().map(Robot::getName).collect(Collectors.toList()).contains(info.getBotName())) return MinorErrorMessage.UNAVAILABLE_NAME;
-        hostRobot = new Robot(info.getBotName(), info.getBotDesignNr(), false);
+        Robot hostRobot = new Robot(info.getBotName(), info.getBotDesignNr(), false);
         robotActions.put(hostRobot, null);
         return null;
     }

@@ -15,7 +15,6 @@ import com.esotericsoftware.kryonet.Client;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.TreeMap;
 
 public class NetworkClient {

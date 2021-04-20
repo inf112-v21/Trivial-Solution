@@ -13,15 +13,10 @@ import java.util.TreeSet;
 
 public class LobbyScreen extends SimpleScreen {
 
-    private TreeSet<String> listOfPlayers = new TreeSet<>();
-    private Table table;
-    private TextField robotname;
-    private Table chooserobottable;
-    private Table playerlisttable;
-
-
-
-
+    private final TreeSet<String> listOfPlayers = new TreeSet<>();
+    private TextField robotName;
+    private Table chooseRobotTable;
+    private Table playerListTable;
 
     public LobbyScreen(GUI gui) {
         super(gui);
@@ -30,13 +25,13 @@ public class LobbyScreen extends SimpleScreen {
     @Override
     public void show() {
         super.show();
-        table = new Table();
+        Table table = new Table();
         table.setBounds(0,0,Gdx.graphics.getWidth(),Gdx.graphics.getHeight());
 
         Label title = new Label("Lobby", gui.getSkin());
         table.add(title).row();
         Table settingtable = new Table(gui.getSkin());
-        playerlisttable = new Table(gui.getSkin());
+        playerListTable = new Table(gui.getSkin());
 
         settingtable.add(new Label("Choose map: ", gui.getSkin()));
         SelectBox<String> map = new SelectBox<>(gui.getSkin());
@@ -44,30 +39,30 @@ public class LobbyScreen extends SimpleScreen {
         settingtable.add(map).row();
         table.add(settingtable).row();
 
-        playerlisttable = new Table(gui.getSkin());
-        playerlisttable.add(new Label("Currently connected players: ", gui.getSkin())).row();
-        table.add(playerlisttable).row();
+        playerListTable = new Table(gui.getSkin());
+        playerListTable.add(new Label("Currently connected players: ", gui.getSkin())).row();
+        table.add(playerListTable).row();
 
-        chooserobottable = new Table(gui.getSkin());
-        chooserobottable.add(new Label("Choose nickname: ", gui.getSkin()));
-        robotname = new TextField("", gui.getSkin());
-        chooserobottable.add(robotname).row();
+        chooseRobotTable = new Table(gui.getSkin());
+        chooseRobotTable.add(new Label("Choose nickname: ", gui.getSkin()));
+        robotName = new TextField("", gui.getSkin());
+        chooseRobotTable.add(robotName).row();
 
-        chooserobottable.add(new Label("Choose robot: ", gui.getSkin())).row();
+        chooseRobotTable.add(new Label("Choose robot: ", gui.getSkin())).row();
         showRobotDesigns();
-        chooserobottable.add(designTable).row();
+        chooseRobotTable.add(designTable).row();
 
         TextButton confirm = new TextButton("Confirm robot", gui.getSkin());
         confirm.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent changeEvent, Actor actor) {
-                if (robotname.getText().equals("")){
+                if (robotName.getText().equals("")){
                     gui.showPopUp("Please choose a nickname for you robot!", stage);
                     return;
                 }
-                MinorErrorMessage msg = gui.getServer().setHostRobot(new RobotInfo(robotname.getText(), design));
+                MinorErrorMessage msg = gui.getServer().setHostRobot(new RobotInfo(robotName.getText(), design));
                 if (msg == null){
-                    chooserobottable.clear();
+                    chooseRobotTable.clear();
                 }
                 else {
                     switch (msg) {
@@ -79,8 +74,8 @@ public class LobbyScreen extends SimpleScreen {
                 }
             }
         });
-        chooserobottable.add(confirm);
-        table.add(chooserobottable);
+        chooseRobotTable.add(confirm);
+        table.add(chooseRobotTable);
 
         stage.addActor(table);
     }
@@ -94,7 +89,7 @@ public class LobbyScreen extends SimpleScreen {
         for (Robot bot : gui.getServer().getRobotActions().keySet()){
             String name = bot.getName();
             if (listOfPlayers.contains(name)) continue;
-            playerlisttable.add(name).row();
+            playerListTable.add(name).row();
             listOfPlayers.add(name);
         }
         // TODO: 14.04.2021 Sjekk om serveren har mottatt hostens navn og design, så det kan legges i listen

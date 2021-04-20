@@ -391,10 +391,12 @@ public class Board {
     private void setLaserLocations(int ID, int x, int y, boolean isDoubleLaser) {
         for(Position pos : laserLocations.keySet()){
             if(pos.getX() == x && pos.getY() == y){
+                if(laserLocations.get(pos).getTile().getId() == ID) return;
                 if(isDoubleLaser) ID = 101;
                 else ID = 40;
             }
         }
+
         LaserBeam laser = allLaserBeams.get(ID);
         TiledMapTileLayer.Cell cell = new TiledMapTileLayer.Cell();
         cell.setTile(new StaticTiledMapTile(new Sprite(laser.getImage())));

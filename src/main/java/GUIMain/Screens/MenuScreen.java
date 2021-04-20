@@ -45,6 +45,7 @@ public class MenuScreen extends SimpleScreen {
         multiplayer = new TextButton("Multiplayer", gui.getSkin());
         options = new TextButton("Options", gui.getSkin());
         quit = new TextButton("Quit", gui.getSkin());
+        TextButton credits = new TextButton("Credits",gui.getSkin());
 
         singleplayer.addListener(new ChangeListener() {
             @Override
@@ -64,6 +65,12 @@ public class MenuScreen extends SimpleScreen {
                 gui.setScreen(new OptionScreen(gui));
             }
         });
+        credits.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent changeEvent, Actor actor) {
+                gui.setScreen(new CreditsScreen(gui));
+            }
+        });
         quit.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent changeEvent, Actor actor) {
@@ -71,12 +78,10 @@ public class MenuScreen extends SimpleScreen {
             }
         });
 
-        tabell.add(singleplayer).size(300f,80f).spaceBottom(20);
-        tabell.row();
-        tabell.add(multiplayer).size(300f,80f).spaceBottom(20);
-        tabell.row();
-        tabell.add(options).size(300f,80f).spaceBottom(20);
-        tabell.row();
+        tabell.add(singleplayer).size(300f,80f).spaceBottom(20).row();
+        tabell.add(multiplayer).size(300f,80f).spaceBottom(20).row();
+        tabell.add(options).size(300f,80f).spaceBottom(20).row();
+        tabell.add(credits).size(300f,80f).spaceBottom(20).row();
         tabell.add(quit).size(300f,80f).spaceBottom(20);
 
         stage.addActor(tabell);

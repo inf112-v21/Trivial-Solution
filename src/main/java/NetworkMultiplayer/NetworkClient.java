@@ -22,8 +22,8 @@ public class NetworkClient {
     private Client client = null;
 
     //Porter som meldinger blir sendt til
-    final static int DEFAULT_UDP_PORT = 54777;
-    final static int DEFAULT_TCP_PORT = 54555;
+    private final static int DEFAULT_UDP_PORT = 54777;
+    private final static int DEFAULT_TCP_PORT = 54555;
 
     //Pre-game meldinger
     private GameInfo setup;

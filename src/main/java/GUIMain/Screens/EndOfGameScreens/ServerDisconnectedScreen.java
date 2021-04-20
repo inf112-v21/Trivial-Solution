@@ -1,7 +1,7 @@
 package GUIMain.Screens.EndOfGameScreens;
 
 import GUIMain.GUI;
-import GUIMain.Screens.SimpleScreen;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 
 public class ServerDisconnectedScreen extends LastScreen {
@@ -12,6 +12,7 @@ public class ServerDisconnectedScreen extends LastScreen {
 
     @Override
     public Texture chooseTexture() {
-        return null;
+
+        return new Texture(Gdx.files.internal("Background Images/EndOfGame/Serverdc.png"));
     }
 }

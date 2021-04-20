@@ -17,6 +17,6 @@ public class GameOverScreen extends LastScreen {
 
     @Override
     public Texture chooseTexture(){
-        return new Texture(Gdx.files.internal("Background Images/Gameover.png"));
+        return new Texture(Gdx.files.internal("Background Images/EndOfGame/Gameover.png"));
     }
 }

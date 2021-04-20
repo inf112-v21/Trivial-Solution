@@ -54,8 +54,8 @@ public abstract class LastScreen extends SimpleScreen {
     }
 
     /**
-     * Abstrakt metode som blir implementert i subklassene
-     * @return - Den riktige graffiken
+     * Abstrakt metode som blir overskrevet i subklassene
+     * @return - Den riktige grafikken
      */
     public abstract Texture chooseTexture();
 }

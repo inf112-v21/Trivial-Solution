@@ -105,6 +105,19 @@ public class NetworkServer extends Listener {
     }
 
     /**
+     * Resetter all informasjon om det tidligere spillet slik at serveren ikke husker
+     * det. Da kan den samme enheten hente være host flere ganger.
+     * Bruk etter at spillet er ferdig.
+     */
+    public void resetAllGameData(){
+        connectionsAndRobots.clear();
+        robotActions.clear();
+        numberOfConnections = 0;
+        numberOfSetsOfCardsReceived = 0;
+        numberOfReadyClients = 0;
+    }
+
+    /**
      * Sjekker om alle klientene har sendt kortene sine
      * til serveren/hosten
      * @return true hvis alle har sendt, false ellers.

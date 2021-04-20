@@ -394,8 +394,10 @@ public class GameScreen implements Screen {
         }
         else{
             for (Position pos : damagedPositions){
+                Robot bot = gameBoard.getRobotAt(pos.getX(), pos.getY());
                 TiledMapTileLayer.Cell cell = new TiledMapTileLayer.Cell();
-                cell.setTile(new StaticTiledMapTile(new Sprite(gameBoard.getRobotAt(pos.getX(), pos.getY()).getImage())));
+                cell.setTile(new StaticTiledMapTile(new Sprite(bot.getImage())));
+                cell.setRotation(Robot.TAU - bot.getDirection());
                 playerLayer.setCell(pos.getX(), gameBoard.getHeight()- pos.getY()-1, cell);
             }
         }

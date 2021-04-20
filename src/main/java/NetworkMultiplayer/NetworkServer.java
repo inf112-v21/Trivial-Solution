@@ -112,6 +112,7 @@ public class NetworkServer extends Listener {
     public void resetAllGameData(){
         connectionsAndRobots.clear();
         robotActions.clear();
+        hostRobot = null;
         numberOfConnections = 0;
         numberOfSetsOfCardsReceived = 0;
         numberOfReadyClients = 0;
@@ -295,8 +296,18 @@ public class NetworkServer extends Listener {
 
             //Kalles når en klient disconnect'er fra serveren.
             @Override
-            public void disconnected(Connection con){
-                System.out.println("Everything was diconnected");
+            public void disconnected(Connection connection){
+
+                //Fjerner roboten
+                Robot removeThisRobot = connectionsAndRobots.remove(connection);
+                removeThisRobot.killRobot();
+                robotActions.remove(removeThisRobot);
+
+                //Oppdatterer connecitons
+                numberOfConnections--;
+
+                //Gir beskjed til alle klientene om at de kan slette denne roboten.
+                sendMessageToAllClients(new ClientDisconnected(removeThisRobot));
 
             }
         });
@@ -355,11 +366,10 @@ public class NetworkServer extends Listener {
     public GameInfo startTheGame(String mapname){
         List<Robot> robottttts = new ArrayList<>(robotActions.keySet());
         Collections.shuffle(robottttts);
-        List<Robot> robots = Collections.unmodifiableList(robottttts);
         for (Connection con : connectionsAndRobots.keySet()){
-            sendToClient(con, new GameInfo(robots, mapname, robots.indexOf(connectionsAndRobots.get(con))));
+            sendToClient(con, new GameInfo(robottttts, mapname, robottttts.indexOf(connectionsAndRobots.get(con))));
         }
-        return new GameInfo(robots, mapname, robots.indexOf(hostRobot));
+        return new GameInfo(robottttts, mapname, robottttts.indexOf(hostRobot));
     }
 
 

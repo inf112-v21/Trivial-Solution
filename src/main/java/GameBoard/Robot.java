@@ -63,7 +63,7 @@ public class Robot implements Serializable, Comparable<Robot> {
         powerDown = false;
     }
 
-    public void setLives() { lives = 0;}
+    public void killRobot() { lives = 0;}
 	public int getLives() {
 		return lives;
 	}

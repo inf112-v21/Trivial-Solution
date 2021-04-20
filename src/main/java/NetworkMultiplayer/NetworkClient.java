@@ -2,6 +2,7 @@ package NetworkMultiplayer;
 
 import GameBoard.Cards.ProgramCard;
 import GameBoard.Robot;
+import NetworkMultiplayer.Messages.ClientDisconnected;
 import NetworkMultiplayer.Messages.InGameMessages.AllChosenCardsFromAllRobots;
 import NetworkMultiplayer.Messages.PreGameMessages.SetupRobotNameDesign;
 import NetworkMultiplayer.Messages.InGameMessages.ConfirmationMessage;
@@ -31,12 +32,15 @@ public class NetworkClient {
     //In-game meldinger
     private ArrayList<ProgramCard> cardsToChoseFrom;
     private TreeMap<Robot,ArrayList<ProgramCard>> allChoseRobotCards;
+    private ConfirmationMessage serverIsDown;
 
     //pre-game melding
     //Denne forteller oss om det går fint å sette opp en robot
     private SetupRobotNameDesign state;
 
-    private boolean youGotDisconnected = false;
+    public Robot disconnectedRobot;
+
+
 
 
     public NetworkClient() {
@@ -44,13 +48,31 @@ public class NetworkClient {
         client = new Client();
 
         //start klienten --> åpner opp en tråd for at den skal kunne sende og motta meldinger over nettverket.
-        client.start();
+        new Thread(client).start();
 
         //Registrer klienten i nettverket
         LanNetwork.register(client);
 
         addListeners();
 
+    }
+
+    public ConfirmationMessage getServerIsDown() {
+        if(serverIsDown == null) return null;
+        ConfirmationMessage dummy = serverIsDown;
+        serverIsDown = null;
+        return dummy;
+    }
+
+    /**
+     * @return - Roboten til klienten som ble disconnected. Denne roboten må fjernes
+     * fra spillet
+     */
+    public Robot getDisconnectedRobot() {
+        if(disconnectedRobot == null) return null;
+        Robot reserve = disconnectedRobot;
+        disconnectedRobot = null;
+        return reserve;
     }
 
     /**
@@ -79,7 +101,7 @@ public class NetworkClient {
     public ArrayList<ProgramCard> getCardsToChoseFrom() {
 
         if(cardsToChoseFrom == null) return null;
-        ArrayList<ProgramCard> ret = new ArrayList(cardsToChoseFrom);
+        ArrayList<ProgramCard> ret = new ArrayList<>(cardsToChoseFrom);
         cardsToChoseFrom = null;
         return ret;
     }
@@ -98,13 +120,6 @@ public class NetworkClient {
         return state;
     }
 
-    /**
-     * Dette skal displayes som en popUp
-     * @return - streng som sier at du ble diconnected.
-     */
-    public boolean getYouGotDisconnected() {
-        return youGotDisconnected;
-    }
 
     /**
      * Metode som skaper listeners
@@ -137,9 +152,10 @@ public class NetworkClient {
                         //Brukes kun for testing.
                         case TEST_MESSAGE:
                             System.out.println("Client received message. All good!");
-                            //sendToServer(ConfirmationMessage.TEST_MESSAGE);
-                            //client.close();
-                            //disconnectFromServer();
+                            return;
+
+                        case SERVER_CHOOSE_TO_DISCONNECTED:
+                            serverIsDown = ConfirmationMessage.SERVER_CHOOSE_TO_DISCONNECTED;
                             return;
                     }
 
@@ -160,6 +176,11 @@ public class NetworkClient {
                     setup = (GameInfo) object;
                 }
 
+                //Her sletter vi roboten som ble disconnected.
+                else if (object instanceof ClientDisconnected){
+                    disconnectedRobot = ((ClientDisconnected) object).getDisconnectedBot();
+                }
+
                 else{
                     System.out.println("Received unidenitified message: " + object.getClass());
                 }
@@ -167,11 +188,13 @@ public class NetworkClient {
 
             }
 
+            //Det som skjer når en konnkesjon blir etablert
             @Override
             public void connected(Connection connection){
                 sendToServer(ConfirmationMessage.CONNECTION_WAS_SUCCESSFUL);
             }
 
+            //Det som skjer når en klient disconnecter
             @Override
             public void disconnected(Connection connection) {
                 System.out.println("Client was disconnected" + client.getID());
@@ -186,8 +209,8 @@ public class NetworkClient {
     /**
      * Vi må konnektere oss til serveren etterhvert. TCP fikser dette med en handshake runde først.
      * Den etablerer konneksjonen før den faktiskt sender packer frem og tilbake
-     * @param ipAdress
-     * @return
+     * @param ipAdress - Ip-adressen til hosten som en streng
+     * @return - true hvis konneksjonen ble etablert, false ellers.
      */
     public boolean connect(String ipAdress) {
         System.out.println(ipAdress);

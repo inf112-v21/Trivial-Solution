@@ -21,13 +21,7 @@ public class GUI extends Game {
     private NetworkServer server;
     private NetworkClient client;
 
-    public NetworkServer getServer() {
-        return server;
-    }
 
-    public NetworkClient getClient() {
-        return client;
-    }
 
     /**
      * Standard GUI. Bruk denne.
@@ -57,6 +51,17 @@ public class GUI extends Game {
 
     public void startClient(){ client = new NetworkClient();}
 
+    public NetworkServer getServer() {
+        return server;
+    }
+    public void reSetServer(){server = null;}
+
+    public NetworkClient getClient() {
+        return client;
+    }
+    public void reSetClient(){client = null;}
+
+
     public void tryToConnectClientToServer(){
         //Finner Ip-addressen til hosten.
         InetAddress hostIpadress = client.findServer();
@@ -71,7 +76,7 @@ public class GUI extends Game {
 
             //Her setter vi klienten til null, slik at vi kan starte en ny klient
             //neste gang en spiller klicker join.
-            client = null;
+            reSetClient();
         }
     }
 

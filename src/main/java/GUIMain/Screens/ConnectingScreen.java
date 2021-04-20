@@ -48,7 +48,7 @@ public class ConnectingScreen extends SimpleScreen{
             Stage stage = new Stage();
             Gdx.input.setInputProcessor(stage);
 
-            // TODO: 19.04.2021 Pop-up vises ikke 
+            // TODO: 19.04.2021 Pop-up vises ikke, Lage Could Not Find Server. PLease try again.
             gui.showPopUp("Couldn't find any online servers :(", stage);
 
             gui.setScreen(new MenuScreen(gui));

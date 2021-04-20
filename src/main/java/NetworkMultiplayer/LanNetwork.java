@@ -50,8 +50,5 @@ public class LanNetwork {
         kryo.register(Position.class, new JavaSerializer());
         kryo.register(Flag.class,new JavaSerializer());
         kryo.register(SanityCheck.class, new JavaSerializer());
-        kryo.register(IComponent.class, new JavaSerializer());
-
-
     }
 }

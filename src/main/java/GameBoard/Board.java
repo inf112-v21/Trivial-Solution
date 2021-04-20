@@ -163,7 +163,6 @@ public class Board {
         if (foundFlag.equals(flagWinningFormation.get(0)) && visited.isEmpty()){
             return true;
         }
-
         return false;
     }
 
@@ -444,14 +443,6 @@ public class Board {
     public ArrayList<Flag> getWinningCombo() { return flagWinningFormation;}
 
     public SanityCheck getSanityCheck(){
-        IComponent[][] midcopy = new IComponent[HEIGHT][WIDTH];
-        IComponent[][] forcopy = new IComponent[HEIGHT][WIDTH];
-        for (int y = 0; y < HEIGHT; y++) {
-            for (int x = 0; x < WIDTH; x++) {
-                midcopy[y][x] = midgrid[y][x]; //Trenger ikke å lage en kopi av komponentene, siden alle er immutable uansett.
-                forcopy[y][x] = forgrid[y][x];
-            }
-        }
         TreeMap<Robot, Position> positionCopy = new TreeMap<>();
         for (Robot bot : botPositions.keySet()){
             positionCopy.put(bot.copy(), botPositions.get(bot));

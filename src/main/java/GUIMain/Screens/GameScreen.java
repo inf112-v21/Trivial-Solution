@@ -447,7 +447,8 @@ public class GameScreen extends SimpleScreen {
 
                 //Hvis alle spillerne har sendt kortene sine kan vi begynne simuleringen
                 if (host.haveAllClientSentTheirChosenCards()) {
-                    host.sendAllChosenCardsToEveryone(gameBoard.getSanityCheck());
+                    if (GUI.DEVELOPER_MODE) host.sendAllChosenCardsToEveryone(gameBoard.getSanityCheck());
+                    else host.sendAllChosenCardsToEveryone();
                     gameBoard.playersAreReady();
                 }
 

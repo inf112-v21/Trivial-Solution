@@ -31,7 +31,6 @@ public class BoardController {
     private boolean waitingForPlayers;
     private boolean phaseOver = false;
 
-
     public BoardController(List<Robot> robots, String mapName, boolean amITheHost){
         this.amITheHost = amITheHost;
         board = new Board(mapName);
@@ -50,7 +49,9 @@ public class BoardController {
     public void simulate(){
         if (waitingForPlayers) return;
 
-        if (currentMove == 0) aliveRobots.sort(new BotComparator(currentPhase));
+        if (currentMove == 0){
+            aliveRobots.sort(new BotComparator(currentPhase));
+        }
         moveNextRobot();
         currentMove++;
 
@@ -160,7 +161,7 @@ public class BoardController {
         /** Obs obs! Sorterer slik at høyeste prioritet kommer først. */
         public int compare(Robot o1, Robot o2) {
             try{
-                int diff = o2.getAvailableCards().get(phase).priority() - o1.getAvailableCards().get(phase).priority();
+                int diff = o2.getChosenCards().get(phase).priority() - o1.getChosenCards().get(phase).priority();
                 if (diff == 0) return o2.getName().compareTo(o1.getName());
                 else return diff;
             }catch (IndexOutOfBoundsException ex){

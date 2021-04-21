@@ -10,9 +10,11 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.scenes.scene2d.ui.Cell;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeAll;
+import org.lwjgl.system.CallbackI;
 
 import java.util.TreeSet;
 
@@ -777,5 +779,27 @@ public class BoardTests {
 
         assertTrue(bård.getRecentlyDamagedPositions().contains(new Position(6, 4)));
         assertFalse(bård.getRecentlyDamagedPositions().contains(new Position(6, 4)));
+    }
+    @Test
+    public void crossingLasersGetDrawnCorrectly(){
+        //x = 6, y = 6 skal være en crossing Laser
+
+        bård.firstRoundFinished = true;
+        bård.endPhase();
+        System.out.println(bård.getLaserLocations());
+
+        //Position p = new Position(5,5);
+        //assertEquals( 40,bård.getLaserLocations().get(p).getTile().getId());
+
+    }
+
+    @Test
+    public void horizontalLasersThatHitDontMakeACrossingLaser(){
+
+    }
+
+    @Test
+    public void lasersDoNotGetDrawnOnTopOfRobots(){
+
     }
 }

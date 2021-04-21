@@ -19,7 +19,7 @@ public class Board {
     private int HEIGHT;
     private int WIDTH;
 
-    private boolean firstRoundFinished = false;
+    public static boolean firstRoundFinished = false;
 
     //Grids. Disse må initialiseres i readFromTMX().
     //Merk at vi ikke har noe grid for bakgrunnen,

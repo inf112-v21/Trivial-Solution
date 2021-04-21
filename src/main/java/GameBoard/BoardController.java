@@ -7,6 +7,7 @@ import GameBoard.Cards.ProgramCard;
 import GameBoard.Components.Flag;
 import GameBoard.Components.IComponent;
 import NetworkMultiplayer.Messages.InGameMessages.SanityCheck;
+import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -27,6 +28,7 @@ public class BoardController {
     private int currentPhase = 0;
     private int currentMove  = 0;
     private boolean waitingForPlayers;
+    private boolean phaseOver = false;
 
 
     public BoardController(List<Robot> robots, String mapName, boolean amITheHost){
@@ -55,8 +57,8 @@ public class BoardController {
             currentMove = 0;
             currentPhase++;
             board.endPhase();
+            phaseOver = true;
         }
-
         if (currentPhase == PHASES_PER_ROUND){
             endRound();
             currentPhase = 0;
@@ -66,6 +68,13 @@ public class BoardController {
 
         hasWon();
 
+    }
+    public boolean isThePhaseOver(){
+        if (phaseOver){
+            phaseOver = false;
+            return true;
+        }
+        return false;
     }
 
     private void moveNextRobot(){
@@ -140,7 +149,9 @@ public class BoardController {
     public SanityCheck getSanityCheck(){ return board.getSanityCheck(); }
 
     public TreeSet<Position> getDirtyLocations(){ return board.getDirtyLocations(); }
-   
+    public TreeMap<Position, TiledMapTileLayer.Cell> getLaserLocations() { return board.getLaserLocations();}
+    public TreeSet<Position> getDamagedPositions(){return board.getRecentlyDamagedPositions(); }
+
     private static class BotComparator implements Comparator<Robot> {
         private final int phase;
         public BotComparator(int phase){ this.phase = phase; }

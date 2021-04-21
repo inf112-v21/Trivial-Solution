@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.4" tiledversion="1.4.3" orientation="orthogonal" renderorder="right-down" width="14" height="14" tilewidth="300" tileheight="300" infinite="0" nextlayerid="5" nextobjectid="1">
+<map version="1.4" tiledversion="1.4.3" orientation="orthogonal" renderorder="right-down" width="14" height="14" tilewidth="300" tileheight="300" infinite="0" nextlayerid="7" nextobjectid="1">
  <tileset firstgid="1" source="../mapassets/tiles.tsx"/>
- <layer id="1" name="Background" width="14" height="14">
+ <layer id="1" name="Background" width="14" height="14" locked="1">
   <data encoding="csv">
 5,5,5,5,5,5,5,5,5,5,5,5,5,5,
 5,5,5,5,5,5,5,5,5,5,5,5,5,5,
@@ -19,7 +19,7 @@
 5,5,5,5,5,5,5,5,5,5,5,5,5,5
 </data>
  </layer>
- <layer id="2" name="Middleground" width="14" height="14">
+ <layer id="2" name="Middleground" width="14" height="14" locked="1">
   <data encoding="csv">
 48,48,48,52,14,48,105,107,48,48,48,48,48,48,
 48,48,48,48,48,48,116,108,48,48,48,48,48,48,
@@ -37,7 +37,7 @@
 48,113,114,114,115,48,113,115,48,48,48,48,48,48
 </data>
  </layer>
- <layer id="3" name="Foreground" width="14" height="14">
+ <layer id="3" name="Foreground" width="14" height="14" locked="1">
   <data encoding="csv">
 48,48,48,48,48,48,48,48,48,132,48,48,131,48,
 48,55,0,0,30,0,0,0,48,48,71,48,48,48,
@@ -55,7 +55,25 @@
 63,119,0,0,0,0,0,0,0,121,0,0,122,0
 </data>
  </layer>
- <layer id="4" name="Robot" width="14" height="14">
+ <layer id="5" name="Laserlayer" width="14" height="14" visible="0" locked="1">
+  <data encoding="csv">
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0
+</data>
+ </layer>
+ <layer id="4" name="Robot" width="14" height="14" locked="1">
   <data encoding="csv">
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -67,6 +85,24 @@
 0,0,0,0,0,0,0,0,0,119,119,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,119,0,0,
 0,0,0,0,0,0,0,0,0,0,0,119,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0
+</data>
+ </layer>
+ <layer id="6" name="emptyLaserLayer" width="14" height="14" visible="0" locked="1">
+  <data encoding="csv">
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,

@@ -12,6 +12,7 @@ import GameBoard.Robot;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.TreeMap;
+import java.util.TreeSet;
 
 import NetworkMultiplayer.Messages.ClientDisconnected;
 import NetworkMultiplayer.Messages.InGameMessages.ChosenCards;
@@ -46,8 +47,14 @@ public class GameScreen extends SimpleScreen {
 
     public static float TIME_DELTA = 0.6f;
     public static final int CELL_SIZE = 300;
+    private double timeSinceLastBlink = -1;
+    private static final float BLINK_DELTA = 0.1f;
+    public static boolean shouldLasersBeDrawn = false;
+    public static boolean roundFinished;
+    private final TreeSet<Position> previousLaserPositions = new TreeSet<>();
 
     private final TiledMapTileLayer playerLayer;
+    private final TiledMapTileLayer laserLayer;
     private final OrthogonalTiledMapRenderer renderer;
     private final OrthographicCamera camera;
     private final String mapName;
@@ -83,6 +90,9 @@ public class GameScreen extends SimpleScreen {
 
     private boolean isWaitingForCards = true;
 
+    private TreeSet<Position> damagedPositions = new TreeSet<>();
+    private int blinkturns = 0;
+
 
     public GameScreen(GameInfo gameInfo, boolean isThisMultiPlayer, boolean amITheHost, GUI gui){
         super(gui);
@@ -102,6 +112,8 @@ public class GameScreen extends SimpleScreen {
         largeView.update(WIDTH*2, HEIGHT,true);
 
         playerLayer = (TiledMapTileLayer) map.getLayers().get("Robot");
+        laserLayer = (TiledMapTileLayer) map.getLayers().get("emptyLaserLayer");
+
         camera = (OrthographicCamera) largeView.getCamera();
         camera.update();
 
@@ -196,7 +208,7 @@ public class GameScreen extends SimpleScreen {
             public void changed(ChangeEvent event, Actor actor) {
                 //Hvis noen velger å disconnete så må vi håndtere det
                 if(isThisMultiPlayer) ServerOrClientChoseToDisconnect();
-                System.exit(0);
+                Gdx.app.exit();
             }
         });
 
@@ -309,19 +321,33 @@ public class GameScreen extends SimpleScreen {
         backgroundSprite.draw(spriteBatch);
         spriteBatch.end();
         timeSinceLastUpdate += v;
+        timeSinceLastBlink += v;
         renderer.render();
         stage.draw();
 
+        //Får roboter til å blinke
+        if (timeSinceLastBlink > BLINK_DELTA && blinkturns != 0){
+            makeDamagedRobotsBlink();
+            timeSinceLastBlink = 0;
+            return;
+        }
         if(timeSinceLastUpdate < TIME_DELTA) return;
         timeSinceLastUpdate = 0;
+
+        //Tegning av lasere på slutten av en fase, og gir signal om at skadede roboter skal blinke
+        removeLasers();
+        if (gameBoard.isThePhaseOver()){
+            drawLasers();
+            blinkturns = 6;
+            damagedPositions = gameBoard.getDamagedPositions();
+            return;
+        }
+
         gameBoard.simulate();
+
         updateRobotPositions();
         updateLivesAndHP();
-
-        /**for (Robot bot : gameBoard.getRecentlyDeceasedRobots()){
-         gui.showPopUp(bot.getName() + " fucking died, lmao", stage);
-         // TODO 06.04.2021: Spillet krasjer når denne blir kalt her
-         }**/
+        finishedCheck();
 
         if(isThisMultiPlayer ){
             updateMultiplayerProperties();
@@ -329,6 +355,18 @@ public class GameScreen extends SimpleScreen {
         else{
             updateCardsOnScreen();
         }
+    }
+
+    private void updateCardsOnScreen(){
+        if (gameBoard.isWaitingForPlayers()) {
+            if (hasDrawnCardsYet) return;
+            clearCards();
+            renderCards();
+            hasDrawnCardsYet = true;
+            ready.setVisible(true);
+            powerDown.setVisible(true);
+            clear.setVisible(true);
+        } else hasDrawnCardsYet = false;
     }
 
     private void updateMultiplayerProperties(){
@@ -416,29 +454,16 @@ public class GameScreen extends SimpleScreen {
                     host.stopServerAndDisconnectAllClients();
                     host.resetAllGameData();
                     gui.setScreen( new ServerDisconnectedScreen(gui));
-                    // TODO: 21.04.2021 Lag en "All Clients disconnected" screen og en "Could not find host screen" 
+                    // TODO: 21.04.2021 Lag en "All Clients disconnected" screen og en "Could not find host screen"
                 }
 
                 updateCardsOnScreen();
             }
 
         } catch (NullPointerException e){
-        gui.setScreen(new MenuScreen(gui));
+            gui.setScreen(new MenuScreen(gui));
         }
     }
-
-    private void updateCardsOnScreen(){
-        if (gameBoard.isWaitingForPlayers()) {
-            if (hasDrawnCardsYet) return;
-            clearCards();
-            renderCards();
-            hasDrawnCardsYet = true;
-            ready.setVisible(true);
-            powerDown.setVisible(true);
-            clear.setVisible(true);
-        } else hasDrawnCardsYet = false;
-    }
-
 
     private void finishedCheck(){
         //Sjekker om en spiller har vunnet og hvilken screen som skal vises.
@@ -482,6 +507,41 @@ public class GameScreen extends SimpleScreen {
             gui.setScreen(new WinScreen(gui));
         }
     }
+
+    private void makeDamagedRobotsBlink(){
+        if (blinkturns % 2 == 0){
+            for (Position pos : damagedPositions){
+                playerLayer.setCell(pos.getX(), gameBoard.getHeight() - pos.getY() - 1, new TiledMapTileLayer.Cell());
+            }
+        }
+        else{
+            for (Position pos : damagedPositions){
+                Robot bot = gameBoard.getRobotAt(pos.getX(), pos.getY());
+                if (bot == null) continue; //Dette skjer om roboten døde, da skal den ikke tegnes
+                TiledMapTileLayer.Cell cell = new TiledMapTileLayer.Cell();
+                cell.setTile(new StaticTiledMapTile(new Sprite(bot.getImage())));
+                cell.setRotation(Robot.TAU - bot.getDirection());
+                playerLayer.setCell(pos.getX(), gameBoard.getHeight()- pos.getY()-1, cell);
+            }
+        }
+        blinkturns--;
+    }
+
+    private void drawLasers(){
+        TreeMap<Position, TiledMapTileLayer.Cell> t = gameBoard.getLaserLocations();
+        previousLaserPositions.addAll(t.keySet());
+        for (Position pos : t.keySet()){
+            laserLayer.setCell(pos.getX(), gameBoard.getHeight()-pos.getY()-1, t.get(pos));
+        }
+    }
+
+    private void removeLasers(){
+        for (Position pos : previousLaserPositions){
+            laserLayer.setCell(pos.getX(), gameBoard.getHeight()-pos.getY()-1, new TiledMapTileLayer.Cell());
+        }
+        previousLaserPositions.clear();
+    }
+
     private void updateRobotPositions(){
         for (Position pos : gameBoard.getDirtyLocations()){
             Robot bot = gameBoard.getRobotAt(pos.getX(), pos.getY());

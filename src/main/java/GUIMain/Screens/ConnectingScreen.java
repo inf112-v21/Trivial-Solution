@@ -19,8 +19,9 @@ public class ConnectingScreen extends SimpleScreen{
     public void show(){
         super.show();
         Table table = new Table();
-        Label title = new Label("Connecting...", gui.getSkin());
-        title.setFontScale(3f);
+        parameter.size = Gdx.graphics.getHeight()/19;
+        style.font = generator.generateFont(parameter);
+        Label title = new Label("Connecting...", style);
         table.add(title).spaceBottom(200);
         table.setBounds(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         stage.addActor(table);

@@ -59,7 +59,7 @@ public class GameScreen extends SimpleScreen {
 	private Stage stage;
 	private final Viewport smallView;
     private final Label.LabelStyle style;
-    public static int fontsize = 30;
+    public static int fontsize = Gdx.graphics.getHeight()/36;
     private static Sprite backgroundSprite;
     private SpriteBatch spriteBatch;
 

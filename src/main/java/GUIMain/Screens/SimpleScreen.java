@@ -38,7 +38,7 @@ public abstract class SimpleScreen implements Screen {
     public void show() {
         generator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/ObliviousFont.ttf"));
         parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
-        parameter.size = 48;
+        parameter.size = Gdx.graphics.getHeight()/23;
         style = new Label.LabelStyle();
         view = new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         stage = new Stage(view);

@@ -2,6 +2,7 @@ package GUIMain.Screens;
 
 import GUIMain.GUI;
 import NetworkMultiplayer.Messages.PreGameMessages.GameInfo;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -26,7 +27,7 @@ public class LoadingScreen extends SimpleScreen {
     @Override
     public void show() {
         super.show();
-        parameter.size = 58;
+        parameter.size = Gdx.graphics.getHeight()/19;
         parameter.borderWidth = 3f;
         parameter.color = WHITE;
         parameter.borderColor = BLACK;

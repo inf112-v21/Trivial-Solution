@@ -27,7 +27,7 @@ public class MenuScreen extends SimpleScreen {
         super.show();
         Table tabell = new Table();
         tabell.setBounds(0,0,Gdx.graphics.getWidth(),Gdx.graphics.getHeight());
-        parameter.size = 58;
+        parameter.size = Gdx.graphics.getHeight()/19;
         parameter.borderWidth = 3f;
         parameter.color = WHITE;
         parameter.borderColor = BLACK;
@@ -35,7 +35,7 @@ public class MenuScreen extends SimpleScreen {
         Label title = new Label("Robo-Rally",style);
         tabell.add(title).spaceBottom(20);
         tabell.row();
-        parameter.size = 36;
+        parameter.size = Gdx.graphics.getHeight()/30;
         style.font = generator.generateFont(parameter);
         Label underTitle = new Label("A Trivial Solution", style);
         tabell.add(underTitle).spaceBottom(40);

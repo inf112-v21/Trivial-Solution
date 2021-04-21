@@ -86,7 +86,7 @@ public class GameScreen extends SimpleScreen {
     private SpriteBatch spriteBatch;
 
     private final Label.LabelStyle style;
-    public static int fontsize = 30;
+    private int fontsize = Gdx.graphics.getHeight()/36;
 
     private boolean isWaitingForCards = true;
 

@@ -298,16 +298,21 @@ public class NetworkServer extends Listener {
             @Override
             public void disconnected(Connection connection){
 
-                //Fjerner roboten
-                Robot removeThisRobot = connectionsAndRobots.remove(connection);
-                removeThisRobot.killRobot();
-                robotActions.remove(removeThisRobot);
+                if(!connectionsAndRobots.isEmpty()) {
 
-                //Oppdatterer connecitons
-                numberOfConnections--;
+                    //Fjerner roboten
+                    Robot removeThisRobot = connectionsAndRobots.remove(connection);
+                    removeThisRobot.killRobot();
+                    robotActions.remove(removeThisRobot);
 
-                //Gir beskjed til alle klientene om at de kan slette denne roboten.
-                sendMessageToAllClients(new ClientDisconnected(removeThisRobot));
+                    //Oppdatterer connecitons
+                    numberOfConnections--;
+
+                    //Gir beskjed til alle klientene om at de kan slette denne roboten.
+                    for (Connection con : connectionsAndRobots.keySet()) {
+                        sendToClient(con, new ClientDisconnected(removeThisRobot));
+                    }
+                }
 
             }
         });
@@ -339,9 +344,9 @@ public class NetworkServer extends Listener {
         return numberOfConnections;
     }
 
-    /**
+    /*
      * Sender data til alle klientene via TCP
-     */
+     *
     public void sendMessageToAllClients(IMessage m){
 
         if(numberOfConnections > 1) {
@@ -351,7 +356,7 @@ public class NetworkServer extends Listener {
             Connection con = (Connection)connectionsAndRobots.keySet().toArray()[0];
             sendToClient(con,m);
         }
-    }
+    }*/
 
 
     /**

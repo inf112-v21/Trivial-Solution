@@ -11,6 +11,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.esotericsoftware.kryonet.Connection;
 
 import java.util.TreeSet;
 
@@ -26,6 +27,7 @@ public class LobbyScreen extends SimpleScreen {
     private Table buttonTable;
     private Table botDesign;
     private SelectBox<String> map;
+    private boolean serverWasInitialized = false;
 
 
     public LobbyScreen(GUI gui) {
@@ -106,24 +108,25 @@ public class LobbyScreen extends SimpleScreen {
                         botDesign.clear();
                         buttonTable.clear();
                         TextButton butt = new TextButton("Start game", gui.getSkin());
+                        TextButton butt2 = new TextButton("Menu", gui.getSkin());
                         buttonTable.add(butt).spaceBottom(25).row();;
-                        buttonTable.add(mainMenu);
+                        buttonTable.add(butt2);
                         butt.addListener(new ChangeListener() {
                             @Override
                             public void changed(ChangeEvent changeEvent, Actor actor) {
 
                                 if(host.getNumberOfConnections() > 0){
                                 GameInfo info = host.startTheGame(CreateGameScreen.MAP_LOCATION + "/" + map.getSelected() + ".tmx");
+                                serverWasInitialized = false;
                                 gui.setScreen(new LoadingScreen(info, true, true, gui));
                                 } else {
                                     gui.showPopUp("You cannot play multiplayer without friends, you friendless fuck", stage);
                                     return;
                                 }
-
-
                             }
                         });
-                        returnToMainMenu(mainMenu);
+
+                        returnToMainMenu(butt2);
                         return;
 
                     case UNAVAILABLE_DESIGN:
@@ -154,22 +157,23 @@ public class LobbyScreen extends SimpleScreen {
             @Override
             public void changed(ChangeEvent changeEvent, Actor actor) {
 
-                if(gui.getServer() != null){
+                if(serverWasInitialized) {
                     listOfPlayers.clear();
                     playerlisttable.clear();
 
                     NetworkServer host = gui.getServer();
-
-                    host.sendMessageToAllClients(ConfirmationMessage.SERVER_CHOOSE_TO_DISCONNECTED);
+                    if (!host.getConnectionsAndRobots().isEmpty()){
+                        for (Connection con : host.getConnectionsAndRobots().keySet()) {
+                            host.sendToClient(con, ConfirmationMessage.SERVER_CHOOSE_TO_DISCONNECTED);
+                        }
+                    }
                     host.resetAllGameData();
                     host.stopServerAndDisconnectAllClients();
 
                     gui.reSetServer();
+                    serverWasInitialized = false;
                     gui.setScreen(new MenuScreen(gui));
                 }
-
-
-
             }
         });
     }
@@ -178,6 +182,7 @@ public class LobbyScreen extends SimpleScreen {
     public void render(float v) {
         if (gui.getServer() == null){
             gui.startServer();
+            serverWasInitialized = true;
             return;
         }
         for (Robot bot : gui.getServer().getRobotActions().keySet()){

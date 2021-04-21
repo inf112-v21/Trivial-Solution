@@ -39,6 +39,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.esotericsoftware.kryonet.Connection;
 
 import static com.badlogic.gdx.graphics.Color.BLACK;
 import static com.badlogic.gdx.graphics.Color.WHITE;
@@ -226,16 +227,24 @@ public class GameScreen extends SimpleScreen {
     }
 
     /**
-     * Denne metode blir kalt når enten serveren eller klienten valgte å disconnecte.
+     * Denne metode blir kalt når enten serveren eller klienten valgte å disconnecte
+     * i løpet av spillet. Den skal terminere alle typer tilkoblinger og resete
+     * enheten avhengig om det er en klient eller en server.
      */
     private void ServerOrClientChoseToDisconnect(){
         if (amITheHost){
             NetworkServer theHost = gui.getServer();
-            theHost.sendMessageToAllClients(ConfirmationMessage.SERVER_CHOOSE_TO_DISCONNECTED);
-            theHost.stopServerAndDisconnectAllClients();
+            if(!theHost.getConnectionsAndRobots().isEmpty()){
+                for(Connection con : theHost.getConnectionsAndRobots().keySet()){
+                    theHost.sendToClient(con,ConfirmationMessage.SERVER_CHOOSE_TO_DISCONNECTED);
+                }
+            }
             theHost.resetAllGameData();
+            theHost.stopServerAndDisconnectAllClients();
             gui.reSetServer();
         } else {
+            //Vi burde ikke trenge å sende noen info til serveren om det
+            //Siden det skal bli plukket opp av serverens disconnected metode.
             gui.getClient().disconnectAndStopClientThread();
             gui.reSetClient();
         }
@@ -390,6 +399,7 @@ public class GameScreen extends SimpleScreen {
                         if(bot.equals(possibleDisconnectedRobot)){
                             bot.killRobot();
                             robots.remove(possibleDisconnectedRobot);
+                            gui.showPopUp("Robot: " + bot.getName() + " died", stage);
                         }
                     }
                 }
@@ -458,6 +468,7 @@ public class GameScreen extends SimpleScreen {
                 if(host.getNumberOfConnections() == 0){
                     host.stopServerAndDisconnectAllClients();
                     host.resetAllGameData();
+                    gui.reSetServer();
                     gui.setScreen( new AllClientsDisconnectedScreen(gui));
                 }
 

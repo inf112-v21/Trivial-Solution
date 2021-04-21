@@ -10,8 +10,6 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import org.lwjgl.opengl.GL20;
 
 public class CreditsScreen extends SimpleScreen {
-    private int titlesize = Gdx.graphics.getHeight()/26;
-    private int fontsize = Gdx.graphics.getHeight()/46;
 
 
     public CreditsScreen(GUI gui){
@@ -21,7 +19,7 @@ public class CreditsScreen extends SimpleScreen {
     @Override
     public void show() {
         super.show();
-        parameter.size = titlesize;
+        parameter.size = Gdx.graphics.getHeight()/27;
         parameter.borderWidth = 2f;
         style.font = generator.generateFont(parameter);
         Table table = new Table();
@@ -32,8 +30,8 @@ public class CreditsScreen extends SimpleScreen {
         Table left = new Table();
         Table right = new Table();
         Table thanks = new Table();
-        parameter.size = fontsize;
-        parameter.borderWidth = 2f;
+        parameter.size = Gdx.graphics.getHeight()/47;
+        parameter.borderWidth = 1f;
         style.font = generator.generateFont(parameter);
         String[] titlesLeft = new String[]{
                 "Production Manager: Steinar Simonnes",

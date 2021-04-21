@@ -24,7 +24,6 @@ public class LobbyScreen extends SimpleScreen {
     private Table buttonTable;
     private Table botDesign;
     private SelectBox<String> map;
-    private int fontsize = Gdx.graphics.getHeight()/44;
 
 
     public LobbyScreen(GUI gui) {
@@ -51,7 +50,7 @@ public class LobbyScreen extends SimpleScreen {
         Label choosenick = new Label("Choose nickname: ", style);
         Label choosebot = new Label("Choose robot: ", style);
         settingtable.add(new Label("Choose map: ", style));
-        parameter.size = fontsize;
+        parameter.size = Gdx.graphics.getHeight()/44;
         style.font = generator.generateFont(parameter);
         Label players = new Label("Currently connected players: ", style);
 

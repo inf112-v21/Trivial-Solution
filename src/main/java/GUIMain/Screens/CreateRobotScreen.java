@@ -6,7 +6,6 @@ import NetworkMultiplayer.Messages.PreGameMessages.SetupRobotNameDesign;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 
@@ -33,7 +32,7 @@ public class CreateRobotScreen extends SimpleScreen{
         nametable.add(chooseName);
         parameter.color = Color.BLACK;
         parameter.size = Gdx.graphics.getHeight()/54;
-        parameter.borderWidth = 0f;
+        parameter.borderWidth = 1f;
         textField = new TextField("", gui.getSkin());
         textField.getStyle().font = generator.generateFont(parameter);
         textField.getStyle().messageFont = generator.generateFont(parameter);

@@ -59,7 +59,6 @@ public class GameScreen extends SimpleScreen {
 	private Stage stage;
 	private final Viewport smallView;
     private final Label.LabelStyle style;
-    public static int fontsize = Gdx.graphics.getHeight()/36;
     private static Sprite backgroundSprite;
     private SpriteBatch spriteBatch;
 
@@ -130,8 +129,8 @@ public class GameScreen extends SimpleScreen {
         FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/ObliviousFont.ttf"));
         FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
         style = new Label.LabelStyle();
-        parameter.size = fontsize;
-        parameter.borderWidth = 3f;
+        parameter.size = Gdx.graphics.getHeight()/36;
+        parameter.borderWidth = 2f;
         parameter.color = WHITE;
         parameter.borderColor = BLACK;
         style.font = generator.generateFont(parameter);

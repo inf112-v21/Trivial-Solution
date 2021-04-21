@@ -122,7 +122,7 @@ public class CreditsScreen extends SimpleScreen {
                 gui.setScreen(new MenuScreen(gui));
             }
         });
-        table.add(menu).size(300f,80f).spaceBottom(20).spaceBottom(25f);
+        table.add(menu).size(Gdx.graphics.getWidth()/7f,Gdx.graphics.getHeight()/22f).spaceBottom(Gdx.graphics.getHeight()/44f);
 
         stage.addActor(table);
     }

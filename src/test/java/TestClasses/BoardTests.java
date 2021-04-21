@@ -9,6 +9,7 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
+import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.scenes.scene2d.ui.Cell;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -762,16 +763,16 @@ public class BoardTests {
     public void robotsGettingHitByLaserAddsThemToTheSet(){
         bård.placeRobotAt(6, 4, robot1); //I skuddlinjen
         bård.placeRobotAt(5, 4, robot2); //Bak en vegg
-        bård.placeRobotAt(9, 5, robot3); //Langt unna, men fortsatt i skuddlinjen
-        bård.placeRobotAt(3, 9, robot4); //Langt vekke, utenfor skuddlinjen
+        bård.placeRobotAt(2, 6, robot3); //Langt unna, men fortsatt i skuddlinjen
+        bård.placeRobotAt(4, 9, robot4); //Langt vekke, utenfor skuddlinjen
 
         bård.endPhase();
         TreeSet<Position> locs = bård.getRecentlyDamagedPositions();
 
         assertTrue(locs.contains(new Position(6, 4)));
         assertFalse(locs.contains(new Position(5, 4)));
-        assertTrue(locs.contains(new Position(9, 5)));
-        assertFalse(locs.contains(new Position(3, 9)));
+        assertTrue(locs.contains(new Position(2, 6)));
+        assertFalse(locs.contains(new Position(4, 9)));
     }
 
     @Test
@@ -789,29 +790,37 @@ public class BoardTests {
         bård.firstRoundFinished = true;
         bård.endPhase();
 
-        assertEquals(24, bård.getLaserLocations().size());
+        assertEquals(20, bård.getLaserLocations().size());
     }
 
     @Test
-    public void crossingLasersGetDrawnCorrectly(){
-        //x = 5, y = 6 skal være en crossing Laser
-
+    public void correctAmountOfCrossingLasersOnBoard(){
         bård.firstRoundFinished = true;
         bård.endPhase();
-        System.out.println(bård.getLaserLocations());
 
-        for(Position p : bård.getLaserLocations().keySet()){
-            if(p.getX() == 0 && p.getY() == 5){
-                //assertEquals( 40,);
-                break;
-            }
-        }
+        int numberOfCrossingLasers = 0;
+        for(Position p : bård.laserCollisions.keySet())
+            if(bård.laserCollisions.get(p) == 40 || bård.laserCollisions.get(p) == 101) numberOfCrossingLasers++;
 
+        assertEquals(2,numberOfCrossingLasers);
     }
 
     @Test
     public void horizontalLasersThatHitDontMakeACrossingLaser(){
+        bård.firstRoundFinished = true;
+        bård.endPhase();
 
+        int i = 0;
+        for(Position p : bård.laserCollisions.keySet()){
+            if(p.getX() == 2 && p.getY() == 5 && bård.laserCollisions.get(p) == 39)
+                i++;
+            if(p.getX() == 4 && p.getY() == 5 && bård.laserCollisions.get(p) == 39)
+                i++;
+            if(p.getX() == 5 && p.getY() == 5 && bård.laserCollisions.get(p) == 39)
+                i++;
+        }
+
+        assertEquals(3,i);
     }
 
     @Test

@@ -22,6 +22,7 @@ public class BoardController {
     private final Board board;
     private final AI ai = new Randbot();
     private final boolean amITheHost;
+    public ArrayList<Integer> lasere;
     private int currentPhase = 0;
     private int currentMove  = 0;
     private boolean waitingForPlayers;
@@ -31,6 +32,7 @@ public class BoardController {
     public BoardController(List<Robot> robots, String mapName, boolean amITheHost){
         this.amITheHost = amITheHost;
         board = new Board(mapName);
+        lasere = board.lasere;
         aliveRobots = new ArrayList<>(robots);
         flagWinningFormation.addAll(board.getWinningCombo());
         for(Robot bot : robots) board.spawnRobot(bot);

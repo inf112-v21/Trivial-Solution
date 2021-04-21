@@ -10,6 +10,8 @@ import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.tiles.StaticTiledMapTile;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Tree;
+import org.lwjgl.system.CallbackI;
 
 import java.util.*;
 import java.util.function.ToIntFunction;
@@ -34,6 +36,7 @@ public class Board {
     private final HashMap<Position, TiledMapTileLayer.Cell> laserLocations = new HashMap<>();
     // Liste over alle typene laserBeams:
     private final HashMap<Integer, LaserBeam> allLaserBeams = new HashMap<>();
+    public final TreeMap<Position, Integer> laserCollisions = new TreeMap<>();
 
     private final LinkedList<Position> availableSpawnPoints = new LinkedList<>();
     private final LinkedList<Robot> robotsWaitingToBeRespawned = new LinkedList<>();
@@ -350,6 +353,7 @@ public class Board {
      * Avfyrer alle lasere. inkludert de skutt av robotene.
      */
     private void fireAllLasers(){
+        laserCollisions.clear();
         if(firstRoundFinished)
             laserLocations.clear();
         for(Laser laser : laserPositions.keySet()){
@@ -400,19 +404,23 @@ public class Board {
      * @param x x-posisjon
      * @param y y-posisjon
      */
+    public final ArrayList<Integer> lasere = new ArrayList<>();
     private void setLaserLocations(int ID, int x, int y, boolean isDoubleLaser) {
-        for(Position pos : laserLocations.keySet()){
+
+        for(Position pos : laserCollisions.keySet()){
             if(pos.getX() == x && pos.getY() == y){
-                if(laserLocations.get(pos).getTile().getId() == ID) return;
+                if(laserCollisions.get(pos) == ID) return;
                 if(isDoubleLaser) ID = 101;
                 else ID = 40;
             }
         }
+        lasere.add(ID);
 
         LaserBeam laser = allLaserBeams.get(ID);
         TiledMapTileLayer.Cell cell = new TiledMapTileLayer.Cell();
         cell.setTile(new StaticTiledMapTile(new Sprite(laser.getImage())));
         laserLocations.put(new Position(x,y), cell);
+        laserCollisions.put(new Position(x,y),ID);
     }
 
     /**

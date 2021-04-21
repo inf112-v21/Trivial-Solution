@@ -533,6 +533,8 @@ public class GameScreen extends SimpleScreen {
         for (Position pos : t.keySet()){
             laserLayer.setCell(pos.getX(), gameBoard.getHeight()-pos.getY()-1, t.get(pos));
         }
+        System.out.println(gameBoard.lasere);
+        gameBoard.lasere.clear();
     }
 
     private void removeLasers(){

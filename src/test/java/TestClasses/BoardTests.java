@@ -790,7 +790,7 @@ public class BoardTests {
         bård.firstRoundFinished = true;
         bård.endPhase();
 
-        assertEquals(20, bård.getLaserLocations().size());
+        assertEquals(21, bård.getDoubleLaserLocations().size()+bård.getSingleLaserLocations().size());
     }
 
     @Test
@@ -799,10 +799,12 @@ public class BoardTests {
         bård.endPhase();
 
         int numberOfCrossingLasers = 0;
-        for(Position p : bård.laserCollisions.keySet())
-            if(bård.laserCollisions.get(p) == 40 || bård.laserCollisions.get(p) == 101) numberOfCrossingLasers++;
+        for(Position p : bård.doubleLaserCollisions.keySet())
+            if(bård.doubleLaserCollisions.get(p) == 40 || bård.doubleLaserCollisions.get(p) == 101) numberOfCrossingLasers++;
+        for(Position p : bård.singleLaserCollisions.keySet())
+            if(bård.singleLaserCollisions.get(p) == 40 || bård.singleLaserCollisions.get(p) == 101) numberOfCrossingLasers++;
 
-        assertEquals(2,numberOfCrossingLasers);
+        assertEquals(1,numberOfCrossingLasers);
     }
 
     @Test
@@ -811,12 +813,12 @@ public class BoardTests {
         bård.endPhase();
 
         int i = 0;
-        for(Position p : bård.laserCollisions.keySet()){
-            if(p.getX() == 2 && p.getY() == 5 && bård.laserCollisions.get(p) == 39)
+        for(Position p : bård.singleLaserCollisions.keySet()){
+            if(p.getX() == 2 && p.getY() == 5 && bård.singleLaserCollisions.get(p) == 39)
                 i++;
-            if(p.getX() == 4 && p.getY() == 5 && bård.laserCollisions.get(p) == 39)
+            if(p.getX() == 4 && p.getY() == 5 && bård.singleLaserCollisions.get(p) == 39)
                 i++;
-            if(p.getX() == 5 && p.getY() == 5 && bård.laserCollisions.get(p) == 39)
+            if(p.getX() == 5 && p.getY() == 5 && bård.singleLaserCollisions.get(p) == 39)
                 i++;
         }
 

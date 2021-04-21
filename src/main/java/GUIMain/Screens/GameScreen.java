@@ -49,12 +49,12 @@ public class GameScreen extends SimpleScreen {
     public static final int CELL_SIZE = 300;
     private double timeSinceLastBlink = -1;
     private static final float BLINK_DELTA = 0.1f;
-    public static boolean shouldLasersBeDrawn = false;
-    public static boolean roundFinished;
-    private final TreeSet<Position> previousLaserPositions = new TreeSet<>();
+    private final TreeSet<Position> previousDoubleLaserPositions = new TreeSet<>();
+    private final TreeSet<Position> previousSingleLaserPositions = new TreeSet<>();
 
     private final TiledMapTileLayer playerLayer;
-    private final TiledMapTileLayer laserLayer;
+    private final TiledMapTileLayer doubleLaserLayer;
+    private final TiledMapTileLayer singleLaserLayer;
     private final OrthogonalTiledMapRenderer renderer;
     private final OrthographicCamera camera;
     private final String mapName;
@@ -112,7 +112,8 @@ public class GameScreen extends SimpleScreen {
         largeView.update(WIDTH*2, HEIGHT,true);
 
         playerLayer = (TiledMapTileLayer) map.getLayers().get("Robot");
-        laserLayer = (TiledMapTileLayer) map.getLayers().get("emptyLaserLayer");
+        doubleLaserLayer = (TiledMapTileLayer) map.getLayers().get("doubleLaserLayer");
+        singleLaserLayer = (TiledMapTileLayer) map.getLayers().get("singleLaserLayer");
 
         camera = (OrthographicCamera) largeView.getCamera();
         camera.update();
@@ -528,20 +529,27 @@ public class GameScreen extends SimpleScreen {
     }
 
     private void drawLasers(){
-        TreeMap<Position, TiledMapTileLayer.Cell> t = gameBoard.getLaserLocations();
-        previousLaserPositions.addAll(t.keySet());
+        TreeMap<Position, TiledMapTileLayer.Cell> t = gameBoard.getDoubleLaserLocations();
+        previousDoubleLaserPositions.addAll(t.keySet());
         for (Position pos : t.keySet()){
-            laserLayer.setCell(pos.getX(), gameBoard.getHeight()-pos.getY()-1, t.get(pos));
+            doubleLaserLayer.setCell(pos.getX(), gameBoard.getHeight()-pos.getY()-1, t.get(pos));
         }
-        System.out.println(gameBoard.lasere);
-        gameBoard.lasere.clear();
+        TreeMap<Position, TiledMapTileLayer.Cell> ti = gameBoard.getSingleLaserLocations();
+        previousSingleLaserPositions.addAll(ti.keySet());
+        for (Position pos : ti.keySet()){
+            singleLaserLayer.setCell(pos.getX(), gameBoard.getHeight()-pos.getY()-1, ti.get(pos));
+        }
     }
 
     private void removeLasers(){
-        for (Position pos : previousLaserPositions){
-            laserLayer.setCell(pos.getX(), gameBoard.getHeight()-pos.getY()-1, new TiledMapTileLayer.Cell());
+        for (Position pos : previousSingleLaserPositions){
+            singleLaserLayer.setCell(pos.getX(), gameBoard.getHeight()-pos.getY()-1, new TiledMapTileLayer.Cell());
         }
-        previousLaserPositions.clear();
+        previousSingleLaserPositions.clear();
+        for (Position pos : previousDoubleLaserPositions){
+            doubleLaserLayer.setCell(pos.getX(), gameBoard.getHeight()-pos.getY()-1, new TiledMapTileLayer.Cell());
+        }
+        previousDoubleLaserPositions.clear();
     }
 
     private void updateRobotPositions(){

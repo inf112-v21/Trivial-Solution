@@ -148,7 +148,8 @@ public class BoardController {
     public SanityCheck getSanityCheck(){ return board.getSanityCheck(); }
 
     public TreeSet<Position> getDirtyLocations(){ return board.getDirtyLocations(); }
-    public TreeMap<Position, TiledMapTileLayer.Cell> getLaserLocations() { return board.getLaserLocations();}
+    public TreeMap<Position, TiledMapTileLayer.Cell> getDoubleLaserLocations() { return board.getDoubleLaserLocations();}
+    public TreeMap<Position, TiledMapTileLayer.Cell> getSingleLaserLocations() { return board.getSingleLaserLocations();}
     public TreeSet<Position> getDamagedPositions(){return board.getRecentlyDamagedPositions(); }
 
     private static class BotComparator implements Comparator<Robot> {

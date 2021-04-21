@@ -336,6 +336,7 @@ public class GameScreen implements Screen {
         if (timeSinceLastBlink > BLINK_DELTA && blinkturns != 0){
             makeDamagedRobotsBlink();
             timeSinceLastBlink = 0;
+            return;
         }
         if(timeSinceLastUpdate < TIME_DELTA) return;
         timeSinceLastUpdate = 0;
@@ -395,6 +396,7 @@ public class GameScreen implements Screen {
         else{
             for (Position pos : damagedPositions){
                 Robot bot = gameBoard.getRobotAt(pos.getX(), pos.getY());
+                if (bot == null) continue; //Dette skjer om roboten døde, da skal den ikke tegnes
                 TiledMapTileLayer.Cell cell = new TiledMapTileLayer.Cell();
                 cell.setTile(new StaticTiledMapTile(new Sprite(bot.getImage())));
                 cell.setRotation(Robot.TAU - bot.getDirection());

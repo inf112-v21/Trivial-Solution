@@ -104,7 +104,7 @@ public class Robot implements Serializable, Comparable<Robot> {
 	public ArrayList<Flag> getVisitedFlags(){ return flagsVisited;}
 
 	public Position getRespawnPoint(){
-	    if(respawnPoint == null) throw new NullPointerException("This robot has no spawnpoint, " +
+	    if(respawnPoint == null) throw new UnsupportedOperationException("This robot has no spawnpoint, " +
                 "make sure you spawn it with board.spawnRobot() and not board.placeRobot() " +
                 "if you want it to have a spawnpoint.");
 	    return respawnPoint;
@@ -169,10 +169,6 @@ public class Robot implements Serializable, Comparable<Robot> {
 		chosenCards.add(chosenCard);
 		return true;
 	}
-
-	public void unchooseCard(ProgramCard unchosenCard){
-	    if (! chosenCards.contains(unchosenCard)) throw new IllegalArgumentException("This card wasn't chosen, so I cannot unchoose it.");
-	    chosenCards.remove(unchosenCard); }
 
 	public int getNumberOfChosenCards(){ return chosenCards.size(); }
 

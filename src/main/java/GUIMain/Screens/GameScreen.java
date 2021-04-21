@@ -414,11 +414,9 @@ public class GameScreen extends SimpleScreen {
                     //Lopper igjennom alle robotene for å matche de valgte kortene til hver robot,
                     //slik at klienten kan simulere de tatte valgene.
                     for (Robot bot : robots) {
-                        if (bot.equals(playerControlledRobot)) {
-                            if (!allChosenCards.get(bot).equals(bot.getChosenCards())) {
-                                throw new UnequalSimulationException("Are you sure these are the correct cards in the correct order?\n" +
-                                        "if I send cards to the server, and get cards back, the cards for my robot should all be the same. But they are not.");
-                            }
+                        if (bot.equals(playerControlledRobot) && ! allChosenCards.get(bot).equals(bot.getChosenCards())) {
+                            throw new UnequalSimulationException("Are you sure these are the correct cards in the correct order?\n" +
+                                    "if I send cards to the server, and get cards back, the cards for my robot should all be the same. But they are not.");
                         }
                         bot.setChosenCards(allChosenCards.get(bot));
                         if (allChosenCards.get(bot).isEmpty()) bot.setPowerDown(true);

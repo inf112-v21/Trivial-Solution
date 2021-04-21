@@ -120,7 +120,7 @@ public class Board {
      * @param bot Roboten som skal flyttes
      */
     public void performMove(ProgramCard card, Robot bot){
-        if (bot == null) throw new NullPointerException("The bot is null.");
+        if (bot == null) throw new IllegalArgumentException("The bot is null.");
         if (robotsWaitingToBeRespawned.contains(bot)) return; //Botten kan ikke flytte, den er død
         if ( ! botPositions.containsKey(bot)) throw new IllegalArgumentException("The bot is not on the board.");
         if(card.getRotation() != 0){
@@ -148,20 +148,10 @@ public class Board {
     private void pickUpFlags() {
         for (Robot bot : botPositions.keySet()) {
             Position pos = botPositions.get(bot);
-
-            int posY = pos.getY();
-            int posX = pos.getX();
-
-            //Ingen grunn å sjekke om roboten står på et flagg hvis alle flag er hentet.
-            if(bot.getVisitedFlags().size() < flagWinningFormation.size()) {
-
-                if (forgrid[posY][posX] instanceof Flag) {
-                    Flag newFlag = (Flag) forgrid[posY][posX];
-
-                    if (robotCanPickUpFlag(bot, newFlag)) {
-                        bot.addToFlagsVisited(newFlag);
-                    }
-                }
+            IComponent comp = forgrid[pos.getY()][pos.getX()];
+            if(bot.getVisitedFlags().size() < flagWinningFormation.size() && comp instanceof Flag) {
+                Flag flag = (Flag) comp;
+                if (robotCanPickUpFlag(bot, flag)) bot.addToFlagsVisited(flag);
             }
         }
     }
@@ -192,10 +182,7 @@ public class Board {
         }
 
         //Hvis inget flagg er registrert så sjekker vi om roboten landet på det første flagget
-        if (foundFlag.equals(flagWinningFormation.get(0)) && visited.isEmpty()){
-            return true;
-        }
-        return false;
+        return foundFlag.equals(flagWinningFormation.get(0)) && visited.isEmpty();
     }
 
     /**
@@ -330,7 +317,7 @@ public class Board {
         if (N_Moves <= 0) return true;
 
         Robot bot = botgrid[fromY][fromX];
-        if (bot == null) throw new NullPointerException("There is no bot at (" + fromX + ", " + fromY + ").");
+        if (bot == null) throw new IllegalArgumentException("There is no bot at (" + fromX + ", " + fromY + ").");
 
         int toX = fromX + directionToX(dir);
         int toY = fromY + directionToY(dir);

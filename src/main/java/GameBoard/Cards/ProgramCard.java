@@ -59,7 +59,7 @@ public class ProgramCard implements Serializable {
     public Texture getCardImage(){
         if (textures.isEmpty()) createTextures();
         Texture ret = textures.get(new Triplet<>(distance, rotation, priority));
-        if (ret == null) throw new NullPointerException("Could not find a suitable image for this card!");
+        if (ret == null) throw new UnsupportedOperationException("Could not find a suitable image for this card!");
         return ret;
     }
 

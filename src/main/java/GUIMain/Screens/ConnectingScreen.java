@@ -20,6 +20,7 @@ public class ConnectingScreen extends SimpleScreen{
         super.show();
         Table table = new Table();
         parameter.size = Gdx.graphics.getHeight()/19;
+        parameter.borderWidth = 2f;
         style.font = generator.generateFont(parameter);
         Label title = new Label("Connecting...", style);
         table.add(title).spaceBottom(200);

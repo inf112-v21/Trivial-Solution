@@ -33,6 +33,7 @@ public class CreateRobotScreen extends SimpleScreen{
         nametable.add(chooseName);
         parameter.color = Color.BLACK;
         parameter.size = Gdx.graphics.getHeight()/54;
+        parameter.borderWidth = 0f;
         textField = new TextField("", gui.getSkin());
         textField.getStyle().font = generator.generateFont(parameter);
         textField.getStyle().messageFont = generator.generateFont(parameter);

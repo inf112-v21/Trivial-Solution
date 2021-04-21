@@ -1,6 +1,0 @@
-Møtetid: 14:15 - +16:00
-tilstede: alle minus sander
-
-I dag fokuserte vi mest på multiplayer og hvordan vi skulle sette opp server-klient arkitekt for multiplayer.
- - Vi har blant annet blitt enig om at den som start spillet
-   kan velge mellom enten å bli host eller joiner 

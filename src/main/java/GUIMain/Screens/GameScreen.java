@@ -340,7 +340,6 @@ public class GameScreen implements Screen {
         }
         if(timeSinceLastUpdate < TIME_DELTA) return;
         timeSinceLastUpdate = 0;
-        gameBoard.simulate();
 
         //Tegning av lasere på slutten av en fase, og gir signal om at skadede roboter skal blinke
         removeLasers();
@@ -348,7 +347,10 @@ public class GameScreen implements Screen {
             drawLasers();
             blinkturns = 6;
             damagedPositions = gameBoard.getDamagedPositions();
+            return;
         }
+
+        gameBoard.simulate();
 
         updateRobotPositions();
         updateLivesAndHP();

@@ -380,11 +380,11 @@ public class Board {
             recentlyDamagedRobots.add(botgrid[y][x]);
             return;
         }
-        if(forgrid[y][x] instanceof Wall && !((Wall) forgrid[y][x]).canLeaveInDirection(dir)) return;
-
         if(!ignoreFirst)
             findCorrespondingLaser(x, y, dir, isDoubleLaser);
-        
+
+        if(forgrid[y][x] instanceof Wall && !((Wall) forgrid[y][x]).canLeaveInDirection(dir)) return;
+
         int nextX = x + directionToX(dir);
         int nextY = y + directionToY(dir);
 

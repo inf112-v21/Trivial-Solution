@@ -9,6 +9,7 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
+import com.badlogic.gdx.scenes.scene2d.ui.Cell;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeAll;
@@ -782,16 +783,29 @@ public class BoardTests {
         assertTrue(bård.getRecentlyDamagedPositions().contains(new Position(6, 4)));
         assertFalse(bård.getRecentlyDamagedPositions().contains(new Position(6, 4)));
     }
+
+    @Test
+    public void allLaserBeamsGetDrawn(){
+        bård.firstRoundFinished = true;
+        bård.endPhase();
+
+        assertEquals(24, bård.getLaserLocations().size());
+    }
+
     @Test
     public void crossingLasersGetDrawnCorrectly(){
-        //x = 6, y = 6 skal være en crossing Laser
+        //x = 5, y = 6 skal være en crossing Laser
 
         bård.firstRoundFinished = true;
         bård.endPhase();
         System.out.println(bård.getLaserLocations());
 
-        //Position p = new Position(5,5);
-        //assertEquals( 40,bård.getLaserLocations().get(p).getTile().getId());
+        for(Position p : bård.getLaserLocations().keySet()){
+            if(p.getX() == 0 && p.getY() == 5){
+                //assertEquals( 40,);
+                break;
+            }
+        }
 
     }
 

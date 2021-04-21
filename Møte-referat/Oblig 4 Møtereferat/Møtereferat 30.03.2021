@@ -1,6 +1,16 @@
-Møtetid: 14:15 - +16:00
-tilstede: alle minus sander
+Møtereferat 30.03.2021
 
-I dag fokuserte vi mest på multiplayer og hvordan vi skulle sette opp server-klient arkitekt for multiplayer.
- - Vi har blant annet blitt enig om at den som start spillet
-   kan velge mellom enten å bli host eller joiner 
+Møte handler om å sette opp Server-Client aktivitet
+
+Alle i gruppen er innkalt.
+Alle i gruppen er tilstede ved møte alle utenom Sander.
+Møtetid og sted: 14-16+, Sem1
+
+Saker som skal diskuteres:
+Hva som skal sendes til client og når, hva serveren må ha tilbake av infomasjon og når
+
+Hva vi har gjort:
+- Start av multiplayer
+
+Hva vi skal jobbe videre med:
+- Bli ferdig med Multiplayer

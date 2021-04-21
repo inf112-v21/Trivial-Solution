@@ -3,6 +3,7 @@ package GUIMain.Screens;
 import GUIMain.GUI;
 import NetworkMultiplayer.Messages.PreGameMessages.RobotInfo;
 import NetworkMultiplayer.Messages.PreGameMessages.SetupRobotNameDesign;
+import NetworkMultiplayer.NetworkClient;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -64,8 +65,14 @@ public class CreateRobotScreen extends SimpleScreen{
     @Override
     public void render(float i) {
         super.render(i);
-        SetupRobotNameDesign msg = gui.getClient().getState();
-        gui.getClient().resetState();
+        NetworkClient client = gui.getClient();
+
+        if(client.getServerIsDown() != null){
+            gui.didServerChooseToDisconnectThenTerminateClient();
+        }
+
+        SetupRobotNameDesign msg = client.getState();
+        client.resetState();
         if (msg == null) return;
         switch (msg) {
             case UNAVAILABLE_DESIGN:

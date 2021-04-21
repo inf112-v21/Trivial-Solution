@@ -32,6 +32,9 @@ public class WaitingForHostScreen extends SimpleScreen{
             gui.setScreen(new LoadingScreen(gui.getClient().getSetup(), true, false, gui));
             //gui.setScreen(new GameScreen(gui.getClient().getSetup(),true,false,gui));
         }
+        if(gui.getClient().getServerIsDown() != null){
+            gui.didServerChooseToDisconnectThenTerminateClient();
+        }
         super.render(i);
     }
 }

@@ -1,6 +1,7 @@
 package GUIMain.Screens;
 
 import GUIMain.GUI;
+import GUIMain.Screens.EndOfGameScreens.AllClientsDisconnectedScreen;
 import GUIMain.Screens.EndOfGameScreens.GameOverScreen;
 import GUIMain.Screens.EndOfGameScreens.ServerDisconnectedScreen;
 import GUIMain.Screens.EndOfGameScreens.WinScreen;
@@ -428,9 +429,7 @@ public class GameScreen extends SimpleScreen {
 
                 //Her sjekker vi om hosten valgte å disconnecte selv. Da gir vi beskjed til klienten om det
                 if(gui.getClient().getServerIsDown() != null){
-                    gui.getClient().disconnectAndStopClientThread();
-                    gui.setScreen(new ServerDisconnectedScreen(gui));
-                    gui.reSetClient();
+                    gui.didServerChooseToDisconnectThenTerminateClient();
                 }
 
             }
@@ -458,8 +457,7 @@ public class GameScreen extends SimpleScreen {
                 if(host.getNumberOfConnections() == 0){
                     host.stopServerAndDisconnectAllClients();
                     host.resetAllGameData();
-                    gui.setScreen( new ServerDisconnectedScreen(gui));
-                    // TODO: 21.04.2021 Lag en "All Clients disconnected" screen og en "Could not find host screen"
+                    gui.setScreen( new AllClientsDisconnectedScreen(gui));
                 }
 
                 updateCardsOnScreen();

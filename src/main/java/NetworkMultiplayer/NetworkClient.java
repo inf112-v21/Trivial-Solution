@@ -48,7 +48,7 @@ public class NetworkClient {
         client = new Client();
 
         //start klienten --> åpner opp en tråd for at den skal kunne sende og motta meldinger over nettverket.
-        new Thread(client).start();
+        client.start();
 
         //Registrer klienten i nettverket
         LanNetwork.register(client);
@@ -156,6 +156,7 @@ public class NetworkClient {
 
                         case SERVER_CHOOSE_TO_DISCONNECTED:
                             serverIsDown = ConfirmationMessage.SERVER_CHOOSE_TO_DISCONNECTED;
+                            System.out.println("Den skulle skifte til serverDisconnected screen");
                             return;
                     }
 

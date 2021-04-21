@@ -343,7 +343,14 @@ public class NetworkServer extends Listener {
      * Sender data til alle klientene via TCP
      */
     public void sendMessageToAllClients(IMessage m){
+
+        if(numberOfConnections > 1) {
             server.sendToAllTCP(m);
+        }
+        else {
+            Connection con = (Connection)connectionsAndRobots.keySet().toArray()[0];
+            sendToClient(con,m);
+        }
     }
 
 
@@ -355,7 +362,7 @@ public class NetworkServer extends Listener {
      *  kan man gå tilbake til Main Menu og starte spillet
      *  på nytt.
      */
-    public void stopServerAndDisconnectAllClients(){ server.stop();}
+    public void stopServerAndDisconnectAllClients(){server.stop();}
 
 
      /**

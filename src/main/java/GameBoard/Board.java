@@ -1,6 +1,6 @@
 package GameBoard;
 
-import GameBoard.Cards.ICard;
+import GameBoard.Cards.ProgramCard;
 import GameBoard.Components.*;
 import NetworkMultiplayer.Messages.InGameMessages.SanityCheck;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -106,7 +106,7 @@ public class Board {
      * @param card Bevegelseskortet
      * @param bot Roboten som skal flyttes
      */
-    public void performMove(ICard card, Robot bot){
+    public void performMove(ProgramCard card, Robot bot){
         if (bot == null) throw new NullPointerException("The bot is null.");
         if (robotsWaitingToBeRespawned.contains(bot)) return; //Botten kan ikke flytte, den er død
         if ( ! botPositions.containsKey(bot)) throw new IllegalArgumentException("The bot is not on the board.");
@@ -139,11 +139,15 @@ public class Board {
             int posY = pos.getY();
             int posX = pos.getX();
 
-            if (forgrid[posY][posX] instanceof Flag) {
-                Flag newFlag = (Flag) forgrid[posY][posX];
+            //Ingen grunn å sjekke om roboten står på et flagg hvis alle flag er hentet.
+            if(bot.getVisitedFlags().size() < flagWinningFormation.size()) {
 
-                if (robotCanPickUpFlag(bot, newFlag)) {
-                    bot.addToFlagsVisited(newFlag);
+                if (forgrid[posY][posX] instanceof Flag) {
+                    Flag newFlag = (Flag) forgrid[posY][posX];
+
+                    if (robotCanPickUpFlag(bot, newFlag)) {
+                        bot.addToFlagsVisited(newFlag);
+                    }
                 }
             }
         }
@@ -169,11 +173,16 @@ public class Board {
             int nextFlag = flagWinningFormation.indexOf(lastVisitedFlag) + 1;
 
             //Hvis neste flagg som skal registreres er det flagget roboten fant så kan vi registrere det.
-            return foundFlag.equals(flagWinningFormation.get(nextFlag));
+            if(foundFlag.equals(flagWinningFormation.get(nextFlag)) && !visited.contains(foundFlag)){
+                return true;
+            }
         }
 
         //Hvis inget flagg er registrert så sjekker vi om roboten landet på det første flagget
-        return foundFlag.equals(flagWinningFormation.get(0));
+        if (foundFlag.equals(flagWinningFormation.get(0)) && visited.isEmpty()){
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -513,19 +522,11 @@ public class Board {
     public ArrayList<Flag> getWinningCombo() { return flagWinningFormation;}
 
     public SanityCheck getSanityCheck(){
-        IComponent[][] midcopy = new IComponent[HEIGHT][WIDTH];
-        IComponent[][] forcopy = new IComponent[HEIGHT][WIDTH];
-        for (int y = 0; y < HEIGHT; y++) {
-            for (int x = 0; x < WIDTH; x++) {
-                midcopy[y][x] = midgrid[y][x]; //Trenger ikke å lage en kopi av komponentene, siden alle er immutable uansett.
-                forcopy[y][x] = forgrid[y][x];
-            }
-        }
         TreeMap<Robot, Position> positionCopy = new TreeMap<>();
         for (Robot bot : botPositions.keySet()){
             positionCopy.put(bot.copy(), botPositions.get(bot));
         }
-        return new SanityCheck(midcopy, forgrid, positionCopy);
+        return new SanityCheck(positionCopy);
     }
 
 }

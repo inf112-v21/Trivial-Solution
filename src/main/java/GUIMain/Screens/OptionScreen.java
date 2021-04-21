@@ -3,15 +3,16 @@ package GUIMain.Screens;
 import GUIMain.GUI;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Graphics;
-import com.badlogic.gdx.scenes.scene2d.*;
-import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 
 import static com.badlogic.gdx.graphics.Color.BLACK;
 import static com.badlogic.gdx.graphics.Color.WHITE;
 
 public class OptionScreen extends SimpleScreen {
-    private boolean window;
 
     public OptionScreen(GUI gui){
         super(gui);
@@ -54,7 +55,6 @@ public class OptionScreen extends SimpleScreen {
         speed.add(fast).size(200f,50f);
         screenMode.add(fullscreen).size(300f,50f);
         screenMode.add(windowed).size(300f,50f);
-        window = false;
         tabell.add(speed).spaceBottom(10f);
         tabell.row();
         tabell.add(deltaInfo).spaceBottom(40f);
@@ -69,25 +69,30 @@ public class OptionScreen extends SimpleScreen {
         fullscreen.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent changeEvent, Actor actor) {
-                window = false;
                 Gdx.graphics.setFullscreenMode(Gdx.graphics.getDisplayMode());
                 GameScreen.fontsize = 30;
+                LobbyScreen.fontsize = 25;
+                CreditsScreen.titlesize = 44;
+                CreditsScreen.fontsize = 24;
             }
         });
         windowed.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent changeEvent, Actor actor) {
-                if(!window){
+                if(Gdx.graphics.isFullscreen()){
                     float height = Gdx.graphics.getHeight();
                     float width = Gdx.graphics.getWidth();
                     int scale = 4;
                     Gdx.graphics.setWindowedMode((int) (width-(width/scale)), (int) (height-(height/scale)));
                     ((Lwjgl3Graphics)Gdx.graphics).getWindow().setPosition((int)(width/(2*scale)),(int)(height/(2*scale)));
                     GameScreen.fontsize = 22;
-                    window = true;
+                    LobbyScreen.fontsize = 20;
+                    CreditsScreen.titlesize = 36;
+                    CreditsScreen.fontsize = 16;
                 }
             }
         });
+
         slow.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent changeEvent, Actor actor) {
@@ -112,6 +117,5 @@ public class OptionScreen extends SimpleScreen {
                 gui.setScreen(new MenuScreen(gui));
             }
         });
-
     }
 }

@@ -1,6 +1,8 @@
 package GameBoard.Components;
 
-public abstract class SimpleComponent implements IComponent {
+import java.io.Serializable;
+
+public abstract class SimpleComponent implements IComponent, Serializable {
 
     /**
      * Hver enkelt rute på skjermen har et tilsvarende objekt i backend.

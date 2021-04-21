@@ -1,11 +1,12 @@
 package TestClasses;
 
 import GUIMain.GUI;
-import GUIMain.Main;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
-import org.lwjgl.system.CallbackI;
 
+
+
+//Dette ble testet manuellt
 
 /**
  * En test for å se at serveren og klientene virker sammen med gui.
@@ -18,28 +19,19 @@ import org.lwjgl.system.CallbackI;
  */
 public class MultiplayerGUITest {
 
-    static class Host{
-        public static void main(String[] args) {
-            Lwjgl3ApplicationConfiguration cfg = new Lwjgl3ApplicationConfiguration();
-            cfg.setTitle("Robo-Rally");
-            cfg.setAutoIconify(true);
-            cfg.setResizable(false);
+    protected static void run(){
+        Lwjgl3ApplicationConfiguration cfg = new Lwjgl3ApplicationConfiguration();
+        cfg.setTitle("Robo-Rally");
+        cfg.setAutoIconify(true);
+        cfg.setResizable(false);
 
-            new Lwjgl3Application(new GUI(), cfg);
-        }
+        new Lwjgl3Application(new GUI(), cfg);
     }
 
-    static class Client1{
-        public static void main(String[] args) {
-            Lwjgl3ApplicationConfiguration cfg = new Lwjgl3ApplicationConfiguration();
-            cfg.setTitle("Robo-Rally");
-            cfg.setAutoIconify(true);
-            cfg.setResizable(false);
-
-            new Lwjgl3Application(new GUI(), cfg);
-        }
-    }
-
+    //Her har du 3 identiske mainmetoder, slik at vi kan kjøre programmet paralellt.
+    static class Host   { public static void main(String[] args) { run(); }}
+    static class Client1{ public static void main(String[] args) { run(); }}
+    static class Client2{ public static void main(String[] args) { run(); }}
 }
 
 

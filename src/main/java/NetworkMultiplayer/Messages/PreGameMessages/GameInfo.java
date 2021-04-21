@@ -22,12 +22,6 @@ public class GameInfo implements IMessage,Serializable {
 
 
     public GameInfo(List<Robot> robots, String mapName, int thisPlayersBotIndex){
-        try{
-            robots.add(null);
-            throw new IllegalArgumentException("Please make sure you give me an unmodifyable list of robots");
-        }catch (UnsupportedOperationException e){
-            //Om vi får en exception er alt bra.
-        }
         this.robots = robots;
         this.mapName = mapName;
         this.thisPlayersBotIndex = thisPlayersBotIndex;

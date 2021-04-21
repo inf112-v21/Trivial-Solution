@@ -2,6 +2,7 @@ package GUIMain.Screens;
 
 import GUIMain.GUI;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 
@@ -35,10 +36,22 @@ public class ConnectingScreen extends SimpleScreen{
         }
         if (gui.getClient() == null){
             gui.startClient();
+            gui.tryToConnectClientToServer();
         }
+        try {
+            //Hvis klienten er null så er vi åpenbart ikke tilkoblet
+            if (gui.getClient().isConnected()) {
+                gui.setScreen(new CreateRobotScreen(gui));
+            }
+        } catch (NullPointerException e){
+            //Da sender vi spilleren tilbake til menyscreenen
+            Stage stage = new Stage();
+            Gdx.input.setInputProcessor(stage);
 
-        if(gui.getClient().isConnected()){
-            gui.setScreen(new CreateRobotScreen(gui));
+            // TODO: 19.04.2021 Pop-up vises ikke, Lage Could Not Find Server. PLease try again.
+            gui.showPopUp("Couldn't find any online servers :(", stage);
+
+            gui.setScreen(new MenuScreen(gui));
         }
     }
 }

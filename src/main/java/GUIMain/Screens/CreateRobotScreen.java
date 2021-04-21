@@ -2,7 +2,10 @@ package GUIMain.Screens;
 
 import GUIMain.GUI;
 import NetworkMultiplayer.Messages.PreGameMessages.RobotInfo;
+import NetworkMultiplayer.Messages.PreGameMessages.SetupRobotNameDesign;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 
@@ -39,11 +42,35 @@ public class CreateRobotScreen extends SimpleScreen{
         confirm.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent changeEvent, Actor actor) {
-                gui.getClient().sendToServer(new RobotInfo(textField.getText(), design));
+                if (textField.getText().equals("")){
+                    gui.showPopUp("Please choose a nickname for you robot!", stage);
+                    return;
+                }
+                gui.getClient().sendToServer(new RobotInfo(textField.getText(),design));
             }
+
         });
         table.add(confirm);
         table.setFillParent(true);
         stage.addActor(table);
+    }
+
+    @Override
+    public void render(float i) {
+        super.render(i);
+        SetupRobotNameDesign msg = gui.getClient().getState();
+        gui.getClient().resetState();
+        if (msg == null) return;
+        switch (msg) {
+            case UNAVAILABLE_DESIGN:
+                gui.showPopUp("That robot has already been taken, please choose another one", stage);
+                return;
+            case UNAVAILABLE_NAME:
+                gui.showPopUp("That name has already been taken, please be more original", stage);
+                return;
+            case ROBOT_DESIGN_AND_NAME_ARE_OKEY:
+                gui.setScreen(new WaitingForHostScreen(gui));
+                return;
+        }
     }
 }

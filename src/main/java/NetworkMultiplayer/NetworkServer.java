@@ -1,10 +1,12 @@
 package NetworkMultiplayer;
 
+
+import GameBoard.Cards.ProgramCard;
 import GameBoard.Robot;
-import NetworkMultiplayer.Messages.InGameMessages.SanityCheck;
-import NetworkMultiplayer.Messages.MinorErrorMessage;
-import NetworkMultiplayer.Messages.ConfirmationMessages;
-import NetworkMultiplayer.Messages.InGameMessages.ChosenCards;
+import NetworkMultiplayer.Messages.ClientDisconnected;
+import NetworkMultiplayer.Messages.InGameMessages.*;
+import NetworkMultiplayer.Messages.PreGameMessages.GameInfo;
+import NetworkMultiplayer.Messages.PreGameMessages.SetupRobotNameDesign;
 import NetworkMultiplayer.Messages.IMessage;
 import NetworkMultiplayer.Messages.PreGameMessages.RobotInfo;
 import com.esotericsoftware.kryonet.Connection;
@@ -15,13 +17,6 @@ import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
-
-//Kortene er i deck
-//Hva må jeg sende:
-// 1. spiller posisjonene frem og tilbake
-// 2. kort fra server til client (kan slettes etterpå, går det an)
-// 3.
-
 public class NetworkServer extends Listener {
 
 
@@ -31,30 +26,146 @@ public class NetworkServer extends Listener {
     //antall tilkoblinger
     private int numberOfConnections = 0;
 
+    //antall mottate kortset
+    private int numberOfSetsOfCardsReceived = 0;
+
+    //antall klienter som er klare til å begynne
+    private int numberOfReadyClients = 0;
+
     //Mappinger som sjekker at vi har alt på plass
-    private HashMap<Connection, Robot> connectionsAndRobots = new HashMap<>();
+    private final HashMap<Connection, Robot> connectionsAndRobots = new HashMap<>();
+
+    private HashMap<Connection, SanityCheck> conTocheck = new HashMap<>();
 
     //Valgene de ulike klientene/robotenes tar.
-    private TreeMap<Robot,IMessage> robotActions = new TreeMap<>();
+    private final TreeMap<Robot,ArrayList<ProgramCard>> robotActions = new TreeMap<>();
+
+    //Antall roboter som har blirr diconnected
+    private final HashSet<Robot> disconnections = new HashSet<>();
 
     private Robot hostRobot;
+
+
 
     //Portene som data sendes imellom. Valgfrie porter kan velges.
     final static int DEFAULT_UDP_PORT = 54777;
     final static int DEFAULT_TCP_PORT = 54555;
 
-    //Brukes for å sjekke at alt er riktig
-    SanityCheck checkAllIsRight;
+    /**
+     * Starter game-hosten vår aka. serveren i nettverket. Bør kalles når spillet starter
+     */
+    public NetworkServer(){
 
-    //Gi serveren beskjed om å dele ut kort
-    boolean simulationIsOver;
+        server = new Server();
+
+        //Starter en ny tråd som gjør det mulig å sende og motta informasjon fra et nettverk
+        server.start();
+
+        //Bind serveren til port
+        bind();
+
+        addListeners();
+
+        //Registrer serveren i nettverket
+        LanNetwork.register(server);
+    }
+
+    /**
+     * Metode som sjekker at alle klientene er klare til å begynne spillet.
+     * Denne metoden setter deretter
+     * @return- true hvis alle er klare til å starte spillet, false ellers.
+     */
+    public boolean areAllClientsReady(){
+        return numberOfReadyClients == numberOfConnections;
+    }
+
+    /**
+     * Deler ut kortene til alle klientene, samtidig så setter vi
+     * antall klienter som er klare til null, siden ingen
+     * av de har valgt kort enda.
+     */
+    public void distributeCards(){
+
+        for(Connection con : connectionsAndRobots.keySet()){
+            sendToClient(con, new DistributedCards(connectionsAndRobots.get(con).getAvailableCards()));
+        }
+        numberOfReadyClients = 0;
+    }
+
+    private void assertEqualGameStates(SanityCheck vibeCheck){
+        for (Connection con : conTocheck.keySet()){
+            SanityCheck clientCheck = conTocheck.get(con);
+            if (clientCheck == null){
+                System.err.println("Client: " + con + " didn't send a SanityCheck this round.");
+                continue;
+            }
+            vibeCheck.assertEqualSimulation(clientCheck);
+            conTocheck.put(con, null);
+        }
+    }
+
+    /**
+     * Resetter all informasjon om det tidligere spillet slik at serveren ikke husker
+     * det. Da kan den samme enheten hente være host flere ganger.
+     * Bruk etter at spillet er ferdig.
+     */
+    public void resetAllGameData(){
+        connectionsAndRobots.clear();
+        robotActions.clear();
+        hostRobot = null;
+        numberOfConnections = 0;
+        numberOfSetsOfCardsReceived = 0;
+        numberOfReadyClients = 0;
+    }
+
+    /**
+     * Sjekker om alle klientene har sendt kortene sine
+     * til serveren/hosten
+     * @return true hvis alle har sendt, false ellers.
+     */
+    public boolean haveAllClientSentTheirChosenCards(){
+        return numberOfSetsOfCardsReceived == numberOfConnections+1;
+
+    }
 
 
+    public void sendAllChosenCardsToEveryone(SanityCheck vibeCheck){
+        assertEqualGameStates(vibeCheck);
+        sendAllChosenCardsToEveryone();
+    }
+
+    /**
+     * Sender alle kortene alle valgte til hver klient
+     * slik at de kan begynne simuleringen
+     */
+    public void sendAllChosenCardsToEveryone(){
+        for(Connection con : connectionsAndRobots.keySet()){
+            sendToClient(con, new AllChosenCardsFromAllRobots(robotActions));
+        }
+        numberOfSetsOfCardsReceived = 0;
+    }
+
+
+    /**
+     * Brukes til å oppdattere kortene hostens robot valgte.
+     */
+    public void setHostsChosenCards(){
+        robotActions.put(hostRobot,hostRobot.getChosenCards());
+        numberOfSetsOfCardsReceived++;
+    }
+
+    /**
+     *
+     * @return - HashSet med klienter som har blitt disconnected fra spillet.
+     */
+    public HashSet<Robot> getDisconnections() {
+        return disconnections;
+    }
 
     /**
      * @return - HashMap med robotene mappet til hvilke kort de valgte
      */
-    public TreeMap<Robot, IMessage> getRobotActions() {
+    public TreeMap<Robot, ArrayList<ProgramCard>> getRobotActions() {
         return robotActions;
     }
 
@@ -67,26 +178,6 @@ public class NetworkServer extends Listener {
         return connectionsAndRobots;
     }
 
-
-    /**
-     * Starter game-hosten vår aka. serveren i nettverket. Bør kalles når spillet starter
-     */
-    public NetworkServer(){
-
-        server = new Server();
-
-        //Starter en ny tråd som gjør det mulig å sende og motta informasjon fra et nettverk
-        new Thread(server).start();
-
-        //Bind serveren til port
-        bind();
-
-        addListeners();
-
-        //Registrer serveren i nettverket
-        LanNetwork.register(server);
-
-    }
 
     /**
      * Binder serveren til UDP og TCP port slik at vi veit hvilken
@@ -114,17 +205,27 @@ public class NetworkServer extends Listener {
         server.addListener(new Listener() {
 
             //Kalles når vi mottar ting i nettverket
+            @Override
             public void received(Connection connection, Object object) {
                 System.out.println("Received " + object.getClass());
 
-                if (object instanceof ConfirmationMessages) {
-                    ConfirmationMessages message = ((ConfirmationMessages) object);
+                if (object instanceof ConfirmationMessage) {
+                    ConfirmationMessage message = ((ConfirmationMessage) object);
                     switch (message) {
                         case CONNECTION_WAS_SUCCESSFUL:
                             System.out.println("Woho!");
+                            sendToClient(connection,ConfirmationMessage.TEST_MESSAGE);
+                            return;
 
-                        case SIMULATION_IS_OVER:
-                            simulationIsOver = true;
+
+                        case GAME_WAS_STARTED_AND_CLIENT_IS_READY_TO_RECEIVE_CARDS:
+                            numberOfReadyClients++;
+                            return;
+
+                        case TEST_MESSAGE:
+                            System.out.println("Everything works!");
+                            return;
+
                     }
 
                 }
@@ -137,8 +238,9 @@ public class NetworkServer extends Listener {
                     //Nå er de lagret i robotActions som vi kan sende med en gang
                     //over nettverket.
                     Robot thisRobotsAction = connectionsAndRobots.get(connection);
-                    robotActions.put(thisRobotsAction, cards);
-
+                    robotActions.put(thisRobotsAction, cards.getChosenCards());
+                    numberOfSetsOfCardsReceived++;
+                    thisRobotsAction.setChosenCards(cards.getChosenCards());
                 }
 
 
@@ -150,71 +252,92 @@ public class NetworkServer extends Listener {
                     String newRobotName = bot.getBotName();
                     int chosenDesign = bot.getBotDesignNr();
 
-                    for (Robot registeredBot : robotActions.keySet()) {
-                        if (registeredBot.getDesign() == chosenDesign) {
-                            sendToClient(connection, MinorErrorMessage.UNAVAILABLE_DESIGN);
-                            return;
-                        }
-                        if (registeredBot.getName().equals(newRobotName)) {
-                            sendToClient(connection, MinorErrorMessage.UNAVAILABLE_NAME);
-                            return;
-                        }
 
+                    if(!robotActions.isEmpty()) {
+                        for (Robot registeredBot : robotActions.keySet()) {
+
+                            System.out.println(bot);
+                            if (registeredBot.getDesign() == chosenDesign) {
+                                sendToClient(connection, SetupRobotNameDesign.UNAVAILABLE_DESIGN);
+                                return;
+                            }
+                            if (registeredBot.getName().equals(newRobotName)) {
+                                sendToClient(connection, SetupRobotNameDesign.UNAVAILABLE_NAME);
+                                return;
+                            }
+
+                        }
                     }
-                    //Hvis alt er greit så legger vi til roboten.
-                    Robot newBot = new Robot(newRobotName, chosenDesign, false);
-                    connectionsAndRobots.put(connection, newBot);
-                    robotActions.put(newBot, null);
+
+                    Robot newbot = new Robot(newRobotName, chosenDesign, false);
+                    connectionsAndRobots.put(connection, newbot);
+                    robotActions.put(newbot, null);
+                    sendToClient(connection, SetupRobotNameDesign.ROBOT_DESIGN_AND_NAME_ARE_OKEY);
                 }
+
 
                 //Test (sanity check)
                 if (object instanceof SanityCheck) {
-                    checkAllIsRight = (SanityCheck) object;
+                    conTocheck.put(connection, (SanityCheck) object);
                 }
             }
 
             //Kalles når vi oppretter en konneksjon med en klient
+            @Override
             public void connected(Connection connection) {
                 System.out.println("Server connected to client " + connection.getID());
                 numberOfConnections++;
+                System.out.println(connection);
 
-                //Vi registrer kommunikasjonslinken (connection). Robot opprettes senere da.
+                //Vi registrer kommunikasjonslinken (connection). Robot opprettes senere etter at RobotInfo er godkjent
                 connectionsAndRobots.put(connection, null);
+
+            }
+
+            //Kalles når en klient disconnect'er fra serveren.
+            @Override
+            public void disconnected(Connection connection){
+
+                //Fjerner roboten
+                Robot removeThisRobot = connectionsAndRobots.remove(connection);
+                removeThisRobot.killRobot();
+                robotActions.remove(removeThisRobot);
+
+                //Oppdatterer connecitons
+                numberOfConnections--;
+
+                //Gir beskjed til alle klientene om at de kan slette denne roboten.
+                sendMessageToAllClients(new ClientDisconnected(removeThisRobot));
 
             }
         });
     }
 
-    public MinorErrorMessage setHostRobot(RobotInfo info){
-        if (robotActions.keySet().stream().map(Robot::getDesign).collect(Collectors.toList()).contains(info.getBotDesignNr())) return MinorErrorMessage.UNAVAILABLE_DESIGN;
-        if (robotActions.keySet().stream().map(Robot::getName).collect(Collectors.toList()).contains(info.getBotName())) return MinorErrorMessage.UNAVAILABLE_NAME;
+    public SetupRobotNameDesign setHostRobot(RobotInfo info){
+        if (robotActions.keySet().stream().anyMatch(r -> r.getDesign() == info.getBotDesignNr())) return SetupRobotNameDesign.UNAVAILABLE_DESIGN;
+        if (robotActions.keySet().stream().anyMatch(r -> r.getName().equals(info.getBotName())) ) return SetupRobotNameDesign.UNAVAILABLE_DESIGN;
         hostRobot = new Robot(info.getBotName(), info.getBotDesignNr(), false);
         robotActions.put(hostRobot, null);
-        return null;
+        return SetupRobotNameDesign.ROBOT_DESIGN_AND_NAME_ARE_OKEY;
     }
 
 
 
     /**
-     * @return antall klienter serveren er connectet til. Brukes for
-     * å sjekke at alle klientene har sendt en melding
-     */
-    public int getNumberOfConnections(){ return numberOfConnections;}
-
-
-
-    /**
-     *Sender en melding fra serveren til en klient
+     *Sender en melding fra serveren til en spesfikk klient
      *
      * @param con - konneksjonen (representerer klienten som skal få meldingen)
      * @param m - meldingen vi vil sende
      */
     public void sendToClient(Connection con, IMessage m){
+        System.out.println("Sent message " + m.getClass());
         server.sendToTCP(con.getID(),m);
     }
 
 
-
+    public int getNumberOfConnections(){
+        return numberOfConnections;
+    }
 
     /**
      * Sender data til alle klientene via TCP
@@ -225,32 +348,29 @@ public class NetworkServer extends Listener {
 
 
     /**
-     *  stenger nettverk konneksjonen og stopper nettverk tråden
+     *  Stenger nettverket, altså serveren.
+     *  Samtidig så disconnecter den alle klientene
+     *  Den gjør dette uten å stenge mhoved programmet
+     *  men stenger bare mulitplayerdelen. Deretter
+     *  kan man gå tilbake til Main Menu og starte spillet
+     *  på nytt.
      */
-    public void stopServer(){ server.stop();}
+    public void stopServerAndDisconnectAllClients(){ server.stop();}
 
 
-    /**
-     *For avsluttning
-     *
-     *
-     */
-    public void deleteServer() throws IOException { server.dispose();}
-
-
-    /**
+     /**
      * WIP
      * Starter opp spillet for alle.
-     * TODO Sørg for at serveren selv også får starte opp spillet.
      * @param mapname
-
-    public void startTheGame(String mapname){
-        List<Robot> bots = Collections.unmodifiableList(new ArrayList<>(clientRobots.values()));
-        for (Connection con : connectedClients.keySet()){
-            int index = bots.indexOf(clientRobots.get(con));
-            sendToClient(con, new GameInfo(bots, mapname, index));
+     */
+    public GameInfo startTheGame(String mapname){
+        List<Robot> robottttts = new ArrayList<>(robotActions.keySet());
+        Collections.shuffle(robottttts);
+        for (Connection con : connectionsAndRobots.keySet()){
+            sendToClient(con, new GameInfo(robottttts, mapname, robottttts.indexOf(connectionsAndRobots.get(con))));
         }
+        return new GameInfo(robottttts, mapname, robottttts.indexOf(hostRobot));
     }
-    */
+
 
 }

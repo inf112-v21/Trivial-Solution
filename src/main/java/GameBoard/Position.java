@@ -1,6 +1,8 @@
 package GameBoard;
 
-public class Position implements Comparable<Position>{
+import java.io.Serializable;
+
+public class Position implements Serializable, Comparable<Position>{
     /**
      * En veldig enkel klasse for å representere en posisjon på brettet.
      */

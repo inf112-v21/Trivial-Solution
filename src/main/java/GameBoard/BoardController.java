@@ -2,14 +2,17 @@ package GameBoard;
 
 import AIs.AI;
 import AIs.Randbot;
-import GUIMain.Screens.GameScreen;
 import GameBoard.Cards.Deck;
-import GameBoard.Cards.ICard;
+import GameBoard.Cards.ProgramCard;
 import GameBoard.Components.Flag;
 import GameBoard.Components.IComponent;
+import NetworkMultiplayer.Messages.InGameMessages.SanityCheck;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.TreeSet;
 
 
 public class BoardController {
@@ -26,6 +29,7 @@ public class BoardController {
     private int currentMove  = 0;
     private boolean waitingForPlayers;
     private boolean phaseOver = false;
+
 
     public BoardController(List<Robot> robots, String mapName, boolean amITheHost){
         this.amITheHost = amITheHost;
@@ -44,10 +48,8 @@ public class BoardController {
      */
     public void simulate(){
         if (waitingForPlayers) return;
-        else GameScreen.roundFinished = false;
 
         if (currentMove == 0) aliveRobots.sort(new BotComparator(currentPhase));
-
         moveNextRobot();
         currentMove++;
 
@@ -58,12 +60,14 @@ public class BoardController {
             phaseOver = true;
         }
         if (currentPhase == PHASES_PER_ROUND){
-            GameScreen.roundFinished = true;
             endRound();
             currentPhase = 0;
             waitingForPlayers = true;
             if (amITheHost) startRound(); //Deler ut kort, om vi er host eller i singleplayer.
         }
+
+        hasWon();
+
     }
     public boolean isThePhaseOver(){
         if (phaseOver){
@@ -75,7 +79,7 @@ public class BoardController {
 
     private void moveNextRobot(){
         Robot botToMove = aliveRobots.get(currentMove);
-        ICard card = botToMove.getNthChosenCard(currentPhase);
+        ProgramCard card = botToMove.getNthChosenCard(currentPhase);
         if (botToMove.hasRemainingLives() && card != null){
             board.performMove(card, botToMove);
         }
@@ -87,9 +91,9 @@ public class BoardController {
     private void startRound(){
         deck.shuffleDeck();
         for (Robot bot : aliveRobots){
-            ArrayList<ICard> cardlist = new ArrayList<>();
+            ArrayList<ProgramCard> cardlist = new ArrayList<>();
             for (int amount=0; amount<bot.getAvailableCardSlots(); amount++){
-                ICard card = deck.drawCard();
+                ProgramCard card = deck.drawCard();
                 cardlist.add(card);
             }
             bot.setAvailableCards(cardlist);
@@ -100,11 +104,13 @@ public class BoardController {
     }
 
     private void endRound(){
-        for (Robot bot : aliveRobots) bot.resetAllCards();
         removeDeceasedRobots();
-        for (Robot bot : aliveRobots) if (bot.isPowerDownAnnounced()) {
-            bot.repairRobot(Robot.INITIAL_HP); //Healer roboten fullt.
-            bot.togglePowerDown();
+        for (Robot bot : aliveRobots){
+            bot.resetAllCards();
+            if (bot.isPowerDownAnnounced()) {
+                bot.repairRobot(Robot.INITIAL_HP); //Healer roboten fullt.
+                bot.setPowerDown(false);
+            }
         }
     }
 
@@ -134,25 +140,28 @@ public class BoardController {
     public Robot hasWon() {
         for (Robot bot : aliveRobots) {
             if (bot.getVisitedFlags().equals(flagWinningFormation)) {
-                GameScreen.winningBot = bot;
                 return bot;
             }
         }
         return null;
     }
 
+    public SanityCheck getSanityCheck(){ return board.getSanityCheck(); }
+
     public TreeSet<Position> getDirtyLocations(){ return board.getDirtyLocations(); }
     public TreeMap<Position, TiledMapTileLayer.Cell> getLaserLocations() { return board.getLaserLocations();}
     public TreeSet<Position> getDamagedPositions(){return board.getRecentlyDamagedPositions(); }
 
     private static class BotComparator implements Comparator<Robot> {
-        final int phase;
+        private final int phase;
         public BotComparator(int phase){ this.phase = phase; }
 
         /** Obs obs! Sorterer slik at høyeste prioritet kommer først. */
         public int compare(Robot o1, Robot o2) {
             try{
-                return o2.getAvailableCards().get(phase).priority() - o1.getAvailableCards().get(phase).priority();
+                int diff = o2.getAvailableCards().get(phase).priority() - o1.getAvailableCards().get(phase).priority();
+                if (diff == 0) return o2.getName().compareTo(o1.getName());
+                else return diff;
             }catch (IndexOutOfBoundsException ex){
                 return 0;
             }

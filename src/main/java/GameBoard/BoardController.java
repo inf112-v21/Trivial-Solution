@@ -49,7 +49,9 @@ public class BoardController {
     public void simulate(){
         if (waitingForPlayers) return;
 
-        if (currentMove == 0) aliveRobots.sort(new BotComparator(currentPhase));
+        if (currentMove == 0){
+            aliveRobots.sort(new BotComparator(currentPhase));
+        }
         moveNextRobot();
         currentMove++;
 

@@ -4,6 +4,7 @@ import GUIMain.GUI;
 import NetworkMultiplayer.Messages.PreGameMessages.RobotInfo;
 import NetworkMultiplayer.Messages.PreGameMessages.SetupRobotNameDesign;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
@@ -24,15 +25,20 @@ public class CreateRobotScreen extends SimpleScreen{
         Table table = new Table();
 
         Table nametable = new Table();
-        Label chooseName = new Label("Choose nickname: ", gui.getSkin());
-        chooseName.setFontScale(2f);
+        parameter.size = Gdx.graphics.getHeight()/44;
+        parameter.borderWidth = 2f;
+        style.font = generator.generateFont(parameter);
+        Label chooseName = new Label("Choose nickname: ", style);
+        Label chooseRobot = new Label("Choose robot: ", style);
         nametable.add(chooseName);
+        parameter.color = Color.BLACK;
+        parameter.size = Gdx.graphics.getHeight()/54;
         textField = new TextField("", gui.getSkin());
+        textField.getStyle().font = generator.generateFont(parameter);
+        textField.getStyle().messageFont = generator.generateFont(parameter);
         nametable.add(textField).row();
         table.add(nametable).row();
 
-        Label chooseRobot = new Label("Choose robot: ", gui.getSkin());
-        chooseRobot.setFontScale(2f);
         table.add(chooseRobot).row();
 
         showRobotDesigns();

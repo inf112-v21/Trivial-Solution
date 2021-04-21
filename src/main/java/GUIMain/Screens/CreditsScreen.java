@@ -10,8 +10,8 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import org.lwjgl.opengl.GL20;
 
 public class CreditsScreen extends SimpleScreen {
-    private int titlesize = Gdx.graphics.getHeight()/25;
-    private int fontsize = Gdx.graphics.getHeight()/45;
+    private int titlesize = Gdx.graphics.getHeight()/26;
+    private int fontsize = Gdx.graphics.getHeight()/46;
 
 
     public CreditsScreen(GUI gui){
@@ -22,7 +22,7 @@ public class CreditsScreen extends SimpleScreen {
     public void show() {
         super.show();
         parameter.size = titlesize;
-        parameter.borderWidth = 3f;
+        parameter.borderWidth = 2f;
         style.font = generator.generateFont(parameter);
         Table table = new Table();
         table.setBounds(0,0,Gdx.graphics.getWidth(), Gdx.graphics.getHeight());

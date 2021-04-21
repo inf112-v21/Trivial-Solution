@@ -14,7 +14,6 @@ import java.util.List;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
-import NetworkMultiplayer.Messages.ClientDisconnected;
 import NetworkMultiplayer.Messages.InGameMessages.ChosenCards;
 import NetworkMultiplayer.Messages.InGameMessages.ConfirmationMessage;
 import NetworkMultiplayer.Messages.InGameMessages.SanityCheck.UnequalSimulationException;
@@ -45,53 +44,62 @@ import static com.badlogic.gdx.graphics.Color.WHITE;
 
 public class GameScreen extends SimpleScreen {
 
+    //Sørger for at spillet blir sakket ned, og at ikke alt blir simulert på én frame.
+    //Lavere TIME_DELTA betyr kjappere runder.
     public static float TIME_DELTA = 0.6f;
-    public static final int CELL_SIZE = 300;
-    private double timeSinceLastBlink = -1;
-    private static final float BLINK_DELTA = 0.1f;
-    public static boolean shouldLasersBeDrawn = false;
-    public static boolean roundFinished;
-    private final TreeSet<Position> previousLaserPositions = new TreeSet<>();
+    private float timeSinceLastUpdate = -1;
 
+    public static final int CELL_SIZE = 300;
+
+    //Layers, bakgrunn, stage og stil.
     private final TiledMapTileLayer playerLayer;
     private final TiledMapTileLayer laserLayer;
     private final OrthogonalTiledMapRenderer renderer;
     private final OrthographicCamera camera;
-    private final String mapName;
-    private final int HEIGHT;
-    private final int WIDTH;
-	private BoardController gameBoard;
-	private final List<Robot> robots;
 	private Stage stage;
-	private Table availableTable;
-	private Table chosenTable;
+	private final Viewport smallView;
+    private final Label.LabelStyle style;
+    public static int fontsize = Gdx.graphics.getHeight()/36;
+    private static Sprite backgroundSprite;
+    private SpriteBatch spriteBatch;
+
+    //Viser antall liv og hp spilleren har
+    private Label label;
+
+    //Kobling til backend
+    private final String mapName;
+    private BoardController gameBoard;
+    private final List<Robot> robots;
+    protected Robot playerControlledRobot;
+
+    //Tabeller og variabler for å tegne kort
+    private Table availableTable;
+    private Table chosenTable;
     protected final ArrayList<Integer> chosenIndices = new ArrayList<>();
+    private boolean hasDrawnCardsYet = false;
+
+    //Knapper, og tabeller som holder styr på knapper
     private Table optionsTable;
     private Table buttonTable;
-	protected Robot playerControlledRobot;
     protected TextButton powerDown;
     protected TextButton ready;
     protected TextButton clear;
     protected TextButton options;
     private boolean optionsCheck = true;
-	private final Viewport smallView;
-    private Label label;
+
+    //Multiplayer-relatert
     private final boolean isThisMultiPlayer;
     private final boolean amITheHost;
-
-    private float timeSinceLastUpdate = -1; //Denne holder styr på hvor lenge det er siden forrige gang brettet ble tegnet.
-    private boolean hasDrawnCardsYet = false;
-
-    private static Sprite backgroundSprite;
-    private SpriteBatch spriteBatch;
-
-    private final Label.LabelStyle style;
-    private int fontsize = Gdx.graphics.getHeight()/36;
-
     private boolean isWaitingForCards = true;
 
+    //Variabel for å huske hvor laserne ble tegnet, så de kan slettes igjen effektivt
+    private final TreeSet<Position> previousLaserPositions = new TreeSet<>();
+
+    //Feltvariabler for å få roboter til å blinke
     private TreeSet<Position> damagedPositions = new TreeSet<>();
     private int blinkturns = 0;
+    private double timeSinceLastBlink = -1;
+    private static final float BLINK_DELTA = 0.1f;
 
 
     public GameScreen(GameInfo gameInfo, boolean isThisMultiPlayer, boolean amITheHost, GUI gui){
@@ -104,12 +112,12 @@ public class GameScreen extends SimpleScreen {
 
         TiledMapTileLayer backgroundLayer = (TiledMapTileLayer) map.getLayers().get("Background");
 
-        HEIGHT = backgroundLayer.getHeight()*CELL_SIZE;
-        WIDTH = backgroundLayer.getWidth()*CELL_SIZE;
+        final int height = backgroundLayer.getHeight() * CELL_SIZE;
+        final int width = backgroundLayer.getWidth() * CELL_SIZE;
 
         smallView = new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        Viewport largeView = new FitViewport(WIDTH * 2, HEIGHT);
-        largeView.update(WIDTH*2, HEIGHT,true);
+        Viewport largeView = new FitViewport(width * 2, height);
+        largeView.update(width *2, height,true);
 
         playerLayer = (TiledMapTileLayer) map.getLayers().get("Robot");
         laserLayer = (TiledMapTileLayer) map.getLayers().get("emptyLaserLayer");

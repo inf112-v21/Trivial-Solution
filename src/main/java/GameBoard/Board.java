@@ -1,17 +1,30 @@
 package GameBoard;
 
 import GameBoard.Cards.ProgramCard;
-import GameBoard.Components.*;
+import GameBoard.Components.Flag;
+import GameBoard.Components.ConveyorBelt;
+import GameBoard.Components.IComponent;
+import GameBoard.Components.Laser;
+import GameBoard.Components.LaserBeam;
+import GameBoard.Components.ComponentFactory;
+import GameBoard.Components.SpawnPoint;
+import GameBoard.Components.Wrench;
+import GameBoard.Components.Gear;
+import GameBoard.Components.Wall;
+import GameBoard.Components.CheckPoint;
+import GameBoard.Components.Hole;
 import NetworkMultiplayer.Messages.InGameMessages.SanityCheck;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.maps.tiled.TiledMap;
-import com.badlogic.gdx.maps.tiled.TiledMapTile;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.tiles.StaticTiledMapTile;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.TreeMap;
+import java.util.TreeSet;
+import java.util.Comparator;
+import java.util.LinkedList;
 import java.util.function.ToIntFunction;
 
 public class Board {
@@ -31,9 +44,9 @@ public class Board {
     private final TreeMap<Robot, Position> botPositions = new TreeMap<>();
     private final TreeMap<Laser, Position> laserPositions = new TreeMap<>(Comparator.comparingInt((ToIntFunction<Object>) Object::hashCode));
     private final TreeSet<Position> dirtyLocations = new TreeSet<>();
-    private final HashMap<Position, TiledMapTileLayer.Cell> laserLocations = new HashMap<>();
+    private final TreeMap<Position, TiledMapTileLayer.Cell> laserLocations = new TreeMap<>();
     // Liste over alle typene laserBeams:
-    private final HashMap<Integer, LaserBeam> allLaserBeams = new HashMap<>();
+    private final TreeMap<Integer, LaserBeam> allLaserBeams = new TreeMap<>();
 
     private final LinkedList<Position> availableSpawnPoints = new LinkedList<>();
     private final LinkedList<Robot> robotsWaitingToBeRespawned = new LinkedList<>();
@@ -455,10 +468,7 @@ public class Board {
         return ret;
     }
 
-    public TreeMap<Position, TiledMapTileLayer.Cell> getLaserLocations() {
-        TreeMap<Position, TiledMapTileLayer.Cell> ret = new TreeMap<>(laserLocations);
-        return ret;
-    }
+    public TreeMap<Position, TiledMapTileLayer.Cell> getLaserLocations() { return new TreeMap<>(laserLocations); }
 
     private void botFellOff(Robot bot){
         bot.takeLife();

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.4" tiledversion="1.4.3" orientation="orthogonal" renderorder="right-down" width="12" height="12" tilewidth="300" tileheight="300" infinite="0" nextlayerid="7" nextobjectid="1">
+<map version="1.4" tiledversion="1.4.3" orientation="orthogonal" renderorder="right-down" width="12" height="12" tilewidth="300" tileheight="300" infinite="0" nextlayerid="8" nextobjectid="1">
  <tileset firstgid="1" source="../mapassets/tiles.tsx"/>
  <layer id="1" name="Background" width="12" height="12" locked="1">
   <data encoding="csv">
@@ -35,34 +35,18 @@
  </layer>
  <layer id="3" name="Foreground" width="12" height="12" locked="1">
   <data encoding="csv">
-0,0,45,130,0,0,0,0,129,0,0,0,
+0,0,45,130,48,0,0,0,129,48,0,0,
 63,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,29,29,0,0,0,0,46,
 131,0,0,0,0,0,0,0,0,0,0,124,
 0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,23,0,23,0,0,30,0,30,0,0,
 0,0,23,0,23,0,0,30,55,30,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,48,
 132,0,0,0,0,0,0,0,0,0,0,123,
 38,0,0,0,0,31,31,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,121,0,0,0,0,122,37,0,0
-</data>
- </layer>
- <layer id="5" name="Laserlayer" width="12" height="12" visible="0" locked="1">
-  <data encoding="csv">
-0,0,47,0,0,0,0,0,0,47,0,0,
-0,0,47,0,0,0,0,0,0,47,0,0,
-39,39,40,39,39,39,39,39,39,40,39,39,
-0,0,47,0,0,0,0,0,0,47,0,0,
-0,0,47,0,0,0,0,0,0,47,0,0,
-0,0,47,0,0,0,0,0,0,47,0,0,
-0,0,47,0,0,0,0,0,0,47,0,0,
-0,0,47,0,0,0,0,0,0,47,0,0,
-0,0,47,0,0,0,0,0,0,47,0,0,
-39,39,40,39,39,39,39,39,39,40,39,39,
-0,0,47,0,0,0,0,0,0,47,0,0,
-0,0,47,0,0,0,0,0,0,47,0,0
+0,0,56,121,0,0,0,0,122,37,0,0
 </data>
  </layer>
  <layer id="4" name="Robot" width="12" height="12" locked="1">
@@ -81,7 +65,23 @@
 0,0,0,0,0,0,0,0,0,0,0,0
 </data>
  </layer>
- <layer id="6" name="emptyLaserLayer" width="12" height="12" locked="1">
+ <layer id="7" name="doubleLaserLayer" width="12" height="12">
+  <data encoding="csv">
+0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0
+</data>
+ </layer>
+ <layer id="6" name="singleLaserLayer" width="12" height="12" locked="1">
   <data encoding="csv">
 0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,

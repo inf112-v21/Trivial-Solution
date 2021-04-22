@@ -3,7 +3,6 @@ package NetworkMultiplayer;
 
 import GameBoard.Cards.ProgramCard;
 import GameBoard.Components.Flag;
-import GameBoard.Components.IComponent;
 import GameBoard.Position;
 import GameBoard.Robot;
 import NetworkMultiplayer.Messages.ClientDisconnected;

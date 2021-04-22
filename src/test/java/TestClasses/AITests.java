@@ -2,7 +2,6 @@ package TestClasses;
 
 import AIs.AI;
 import AIs.Randbot;
-import AIs.Ultron;
 import GameBoard.Board;
 import GameBoard.BoardController;
 import GameBoard.Cards.Deck;
@@ -17,11 +16,9 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.lwjgl.system.CallbackI;
 
 import java.util.ArrayList;
 
-import static org.junit.Assert.fail;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 

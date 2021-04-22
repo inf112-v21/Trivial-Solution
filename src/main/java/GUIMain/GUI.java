@@ -1,17 +1,17 @@
 package GUIMain;
 
 import GUIMain.Screens.MenuScreen;
-        import NetworkMultiplayer.NetworkClient;
-        import NetworkMultiplayer.NetworkServer;
-        import com.badlogic.gdx.Game;
-        import com.badlogic.gdx.Gdx;
-        import com.badlogic.gdx.Screen;
-        import com.badlogic.gdx.graphics.GL30;
-        import com.badlogic.gdx.scenes.scene2d.Stage;
-        import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
-        import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+    import NetworkMultiplayer.NetworkClient;
+    import NetworkMultiplayer.NetworkServer;
+    import com.badlogic.gdx.Game;
+    import com.badlogic.gdx.Gdx;
+    import com.badlogic.gdx.Screen;
+    import com.badlogic.gdx.graphics.GL30;
+    import com.badlogic.gdx.scenes.scene2d.Stage;
+    import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
+    import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
-        import java.net.InetAddress;
+    import java.net.InetAddress;
 
 public class GUI extends Game {
 

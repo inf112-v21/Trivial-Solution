@@ -205,6 +205,8 @@ public class GameScreen extends SimpleScreen {
 
                 //Hvis noen velger å disconnete så må vi håndtere det
                 if(isThisMultiPlayer) ServerOrClientChoseToDisconnect();
+                gui.setScreen(new MenuScreen(gui));
+
             }
         });
         TextButton quit = new TextButton("Quit", gui.getSkin());

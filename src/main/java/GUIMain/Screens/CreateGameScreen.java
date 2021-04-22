@@ -4,14 +4,21 @@ import GUIMain.GUI;
 import GameBoard.Robot;
 import NetworkMultiplayer.Messages.PreGameMessages.GameInfo;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.scenes.scene2d.*;
-import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
+import com.badlogic.gdx.scenes.scene2d.ui.SelectBox;
+import com.badlogic.gdx.scenes.scene2d.ui.TextField;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Objects;
 
 import static com.badlogic.gdx.graphics.Color.BLACK;
 import static com.badlogic.gdx.graphics.Color.WHITE;
@@ -85,6 +92,7 @@ public class CreateGameScreen extends SimpleScreen {
                 }
                 ArrayList<Robot> robots = Robot.getDefaultRobots(numberOfRobots.getSelected()-1, design); // -1, siden spilleren inngår i disse robotene
                 robots.add(new Robot(textField.getText(), design, false));
+                Collections.shuffle(robots);
                 String map = MAP_LOCATION + "/" + choosemapbox.getSelected() + ".tmx";
                 gui.setScreen(new LoadingScreen(new GameInfo(Collections.unmodifiableList(robots), map, numberOfRobots.getSelected()-1), false, true, gui));
 
@@ -119,7 +127,7 @@ public class CreateGameScreen extends SimpleScreen {
 
     public static String[] getMapNames(){
         File f = new File(MAP_LOCATION);
-        String[] maplist = Arrays.stream(f.list()).filter(n -> !n.equals("TestMap.tmx")).toArray(String[]::new);
+        String[] maplist = Arrays.stream(Objects.requireNonNull(f.list())).filter(n -> !n.equals("TestMap.tmx") && !n.equals("TestMapFlags.tmx")).toArray(String[]::new);
         for (int i = 0; i < maplist.length; i++) {
             maplist[i] = maplist[i].substring(0, maplist[i].length()-4);
         }

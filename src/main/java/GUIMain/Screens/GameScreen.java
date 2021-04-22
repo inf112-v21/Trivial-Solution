@@ -6,6 +6,7 @@ import GUIMain.Screens.EndOfGameScreens.ServerDisconnectedScreen;
 import GUIMain.Screens.EndOfGameScreens.WinScreen;
 import GameBoard.BoardController;
 import GameBoard.Cards.ProgramCard;
+import GameBoard.Components.LaserBeam;
 import GameBoard.Position;
 import GameBoard.Robot;
 
@@ -14,7 +15,6 @@ import java.util.List;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
-import NetworkMultiplayer.Messages.ClientDisconnected;
 import NetworkMultiplayer.Messages.InGameMessages.ChosenCards;
 import NetworkMultiplayer.Messages.InGameMessages.ConfirmationMessage;
 import NetworkMultiplayer.Messages.InGameMessages.SanityCheck.UnequalSimulationException;
@@ -529,15 +529,19 @@ public class GameScreen extends SimpleScreen {
     }
 
     private void drawLasers(){
-        TreeMap<Position, TiledMapTileLayer.Cell> t = gameBoard.getDoubleLaserLocations();
+        TreeMap<Position, LaserBeam> t = gameBoard.getDoubleLaserLocations();
         previousDoubleLaserPositions.addAll(t.keySet());
         for (Position pos : t.keySet()){
-            doubleLaserLayer.setCell(pos.getX(), gameBoard.getHeight()-pos.getY()-1, t.get(pos));
+            TiledMapTileLayer.Cell cell = new TiledMapTileLayer.Cell();
+            cell.setTile(new StaticTiledMapTile(new Sprite(t.get(pos).getImage())));
+            doubleLaserLayer.setCell(pos.getX(), gameBoard.getHeight()-pos.getY()-1, cell);
         }
-        TreeMap<Position, TiledMapTileLayer.Cell> ti = gameBoard.getSingleLaserLocations();
+        TreeMap<Position, LaserBeam> ti = gameBoard.getSingleLaserLocations();
         previousSingleLaserPositions.addAll(ti.keySet());
         for (Position pos : ti.keySet()){
-            singleLaserLayer.setCell(pos.getX(), gameBoard.getHeight()-pos.getY()-1, ti.get(pos));
+            TiledMapTileLayer.Cell cell1 = new TiledMapTileLayer.Cell();
+            cell1.setTile(new StaticTiledMapTile(new Sprite(ti.get(pos).getImage())));
+            singleLaserLayer.setCell(pos.getX(), gameBoard.getHeight()-pos.getY()-1, cell1);
         }
     }
 

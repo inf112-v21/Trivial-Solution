@@ -3,15 +3,9 @@ package GameBoard;
 import GameBoard.Cards.ProgramCard;
 import GameBoard.Components.*;
 import NetworkMultiplayer.Messages.InGameMessages.SanityCheck;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.maps.tiled.TiledMap;
-import com.badlogic.gdx.maps.tiled.TiledMapTile;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
-import com.badlogic.gdx.maps.tiled.tiles.StaticTiledMapTile;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.ui.Tree;
-import org.lwjgl.system.CallbackI;
 
 import java.util.*;
 import java.util.function.ToIntFunction;
@@ -34,12 +28,10 @@ public class Board {
     private final TreeMap<Laser, Position> laserPositions = new TreeMap<>(Comparator.comparingInt((ToIntFunction<Object>) Object::hashCode));
     private final TreeSet<Position> dirtyLocations = new TreeSet<>();
     //splitter laserlayersene:
-    private final HashMap<Position, TiledMapTileLayer.Cell> doubleLaserLocations = new HashMap<>();
-    private final HashMap<Position, TiledMapTileLayer.Cell> singleLaserLocations = new HashMap<>();
+    private final HashMap<Position, LaserBeam> doubleLaserLocations = new HashMap<>();
+    private final HashMap<Position, LaserBeam> singleLaserLocations = new HashMap<>();
     // Liste over alle typene laserBeams:
     private final HashMap<Integer, LaserBeam> allLaserBeams = new HashMap<>();
-    public final TreeMap<Position, Integer> doubleLaserCollisions = new TreeMap<>();
-    public final TreeMap<Position, Integer> singleLaserCollisions = new TreeMap<>();
 
     private final LinkedList<Position> availableSpawnPoints = new LinkedList<>();
     private final LinkedList<Robot> robotsWaitingToBeRespawned = new LinkedList<>();
@@ -356,8 +348,6 @@ public class Board {
      * Avfyrer alle lasere. inkludert de skutt av robotene.
      */
     private void fireAllLasers(){
-        singleLaserCollisions.clear();
-        doubleLaserCollisions.clear();
         if(firstRoundFinished) {
             doubleLaserLocations.clear();
             singleLaserLocations.clear();
@@ -410,13 +400,16 @@ public class Board {
      * @param x x-posisjon
      * @param y y-posisjon
      */
-    public final ArrayList<Integer> lasere = new ArrayList<>();
     private void setLaserLocations(int ID, int x, int y, boolean isDoubleLaser) {
+        //Her ligger problemet! <3 kos deg
+
+        /*
         if(!isDoubleLaser){
             for(Position pos : singleLaserCollisions.keySet()){
                 if(pos.getX() == x && pos.getY() == y){
                     if(singleLaserCollisions.get(pos) == ID) return;
                     ID = 40;
+                    break;
                 }
             }
         }else{
@@ -424,30 +417,26 @@ public class Board {
                 if(pos.getX() == x && pos.getY() == y){
                     if(doubleLaserCollisions.get(pos) == ID) return;
                     ID = 101;
+                    break;
                 }
             }
         }
-
-
-        lasere.add(ID);
+        */
 
         LaserBeam laser = allLaserBeams.get(ID);
-        TiledMapTileLayer.Cell cell = new TiledMapTileLayer.Cell();
-        cell.setTile(new StaticTiledMapTile(new Sprite(laser.getImage())));
         switch(ID){
             case 39:
             case 40:
             case 47:
-                singleLaserLocations.put(new Position(x,y), cell);
-                singleLaserCollisions.put(new Position(x,y), ID);
+                singleLaserLocations.put(new Position(x,y), laser);
                 break;
             case 102:
             case 103:
             case 101:
-                doubleLaserLocations.put(new Position(x,y), cell);
-                doubleLaserCollisions.put(new Position(x,y), ID);
+                doubleLaserLocations.put(new Position(x,y), laser);
                 break;
         }
+
     }
 
     /**
@@ -490,12 +479,12 @@ public class Board {
         return ret;
     }
 
-    public TreeMap<Position, TiledMapTileLayer.Cell> getDoubleLaserLocations() {
-        TreeMap<Position, TiledMapTileLayer.Cell> ret = new TreeMap<>(doubleLaserLocations);
+    public TreeMap<Position, LaserBeam> getDoubleLaserLocations() {
+        TreeMap<Position, LaserBeam> ret = new TreeMap<>(doubleLaserLocations);
         return ret;
     }
-    public TreeMap<Position, TiledMapTileLayer.Cell> getSingleLaserLocations() {
-        TreeMap<Position, TiledMapTileLayer.Cell> ret = new TreeMap<>(singleLaserLocations);
+    public TreeMap<Position, LaserBeam> getSingleLaserLocations() {
+        TreeMap<Position, LaserBeam> ret = new TreeMap<>(singleLaserLocations);
         return ret;
     }
 

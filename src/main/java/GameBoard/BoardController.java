@@ -6,8 +6,8 @@ import GameBoard.Cards.Deck;
 import GameBoard.Cards.ProgramCard;
 import GameBoard.Components.Flag;
 import GameBoard.Components.IComponent;
+import GameBoard.Components.LaserBeam;
 import NetworkMultiplayer.Messages.InGameMessages.SanityCheck;
-import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 
 import java.util.*;
 
@@ -22,7 +22,6 @@ public class BoardController {
     private final Board board;
     private final AI ai = new Randbot();
     private final boolean amITheHost;
-    public ArrayList<Integer> lasere;
     private int currentPhase = 0;
     private int currentMove  = 0;
     private boolean waitingForPlayers;
@@ -32,7 +31,6 @@ public class BoardController {
     public BoardController(List<Robot> robots, String mapName, boolean amITheHost){
         this.amITheHost = amITheHost;
         board = new Board(mapName);
-        lasere = board.lasere;
         aliveRobots = new ArrayList<>(robots);
         flagWinningFormation.addAll(board.getWinningCombo());
         for(Robot bot : robots) board.spawnRobot(bot);
@@ -148,8 +146,8 @@ public class BoardController {
     public SanityCheck getSanityCheck(){ return board.getSanityCheck(); }
 
     public TreeSet<Position> getDirtyLocations(){ return board.getDirtyLocations(); }
-    public TreeMap<Position, TiledMapTileLayer.Cell> getDoubleLaserLocations() { return board.getDoubleLaserLocations();}
-    public TreeMap<Position, TiledMapTileLayer.Cell> getSingleLaserLocations() { return board.getSingleLaserLocations();}
+    public TreeMap<Position, LaserBeam> getDoubleLaserLocations() { return board.getDoubleLaserLocations();}
+    public TreeMap<Position, LaserBeam> getSingleLaserLocations() { return board.getSingleLaserLocations();}
     public TreeSet<Position> getDamagedPositions(){return board.getRecentlyDamagedPositions(); }
 
     private static class BotComparator implements Comparator<Robot> {

@@ -9,8 +9,6 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
-import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
-import com.badlogic.gdx.scenes.scene2d.ui.Cell;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeAll;
@@ -45,10 +43,9 @@ public class BoardTests {
     /**
      * Denne sjiten her må kjøres før Libgdx-biblioteket klarer å lese noen tmx-filer.
      * Om vi ikke gjør dette før en test, kan vi ikke opprette en new Board uten å få en NullPointerException.
-     *
      */
     @BeforeAll
-    public static void setUp(){
+    public static void setUp() {
         Lwjgl3ApplicationConfiguration cfg = new Lwjgl3ApplicationConfiguration();
         new Lwjgl3Application(new Game() {
             @Override
@@ -62,7 +59,7 @@ public class BoardTests {
      * Resetter alle posisjonene på brettet, slik at alle testene har det samme utgangspunktet.
      */
     @BeforeEach
-    public void resetState(){
+    public void resetState() {
         bård = new Board(defaultMapName);
         robot1 = new Robot("Nebuchadnezzar", false);
         robot2 = new Robot("Alexstrasza", false);
@@ -71,13 +68,13 @@ public class BoardTests {
         robot5 = new Robot("Andromeda", false);
 
         //Flaggene med de tilhørende posisjonene i griden. posY og PosX Kan ses i tmxfilen.
-        Flag1 = (Flag) bård.getForgridAt(3,3);
-        Flag2 = (Flag) bård.getForgridAt( 5,6);
-        Flag3 = (Flag) bård.getForgridAt(6,2);
+        Flag1 = (Flag) bård.getForgridAt(3, 3);
+        Flag2 = (Flag) bård.getForgridAt(5, 6);
+        Flag3 = (Flag) bård.getForgridAt(6, 2);
     }
 
     @Test
-    public void canPlaceRobot(){
+    public void canPlaceRobot() {
         assertNull(bård.getRobotAt(0, 0));
 
         bård.placeRobotAt(0, 0, robot1);
@@ -86,7 +83,7 @@ public class BoardTests {
     }
 
     @Test
-    public void canTurnTheRobotAroundWithRotationCard(){
+    public void canTurnTheRobotAroundWithRotationCard() {
         bård.placeRobotAt(0, 0, robot1);
         int direction = robot1.getDirection();
 
@@ -96,7 +93,7 @@ public class BoardTests {
     }
 
     @Test
-    public void canMoveTheRobotWithMoveCard(){
+    public void canMoveTheRobotWithMoveCard() {
         bård.placeRobotAt(0, 0, robot1);
         robot1.setDirection(1);
 
@@ -107,7 +104,7 @@ public class BoardTests {
     }
 
     @Test
-    public void canMoveRobotBackwards(){
+    public void canMoveRobotBackwards() {
         bård.spawnRobot(robot1);
         robot1.setDirection(0);
 
@@ -118,7 +115,7 @@ public class BoardTests {
     }
 
     @Test
-    public void cannotMoveIntoWallTileIfItFacesThatDirection(){
+    public void cannotMoveIntoWallTileIfItFacesThatDirection() {
         bård.placeRobotAt(1, 3, robot1);
         robot1.setDirection(1);
 
@@ -133,7 +130,7 @@ public class BoardTests {
     }
 
     @Test
-    public void canMoveRobotMultipleTilesIfUnobstructed(){
+    public void canMoveRobotMultipleTilesIfUnobstructed() {
         bård.placeRobotAt(0, 0, robot1);
         robot1.setDirection(1);
 
@@ -146,7 +143,7 @@ public class BoardTests {
     }
 
     @Test
-    public void botMovesOnlyPartlyIfObstructedMidway(){
+    public void botMovesOnlyPartlyIfObstructedMidway() {
         bård.placeRobotAt(4, 3, robot1);
         robot1.setDirection(3);
 
@@ -160,7 +157,7 @@ public class BoardTests {
     }
 
     @Test
-    public void cannotMoveFromWallTileIfItFacesThatDirection(){
+    public void cannotMoveFromWallTileIfItFacesThatDirection() {
         bård.placeRobotAt(2, 3, robot1);
         robot1.setDirection(3);
 
@@ -174,7 +171,7 @@ public class BoardTests {
     }
 
     @Test
-    public void movingIntoAnotherBotPushesBoth(){
+    public void movingIntoAnotherBotPushesBoth() {
         bård.placeRobotAt(0, 0, robot1);
         bård.placeRobotAt(1, 0, robot2);
         robot1.setDirection(1);
@@ -187,7 +184,7 @@ public class BoardTests {
     }
 
     @Test
-    public void canPushOtherBotTwoSteps(){
+    public void canPushOtherBotTwoSteps() {
         bård.placeRobotAt(0, 0, robot1);
         bård.placeRobotAt(1, 0, robot2);
         robot1.setDirection(1);
@@ -201,7 +198,7 @@ public class BoardTests {
     }
 
     @Test
-    public void pushingBotIntoWallStopsBoth(){
+    public void pushingBotIntoWallStopsBoth() {
         bård.placeRobotAt(0, 3, robot1);
         bård.placeRobotAt(1, 3, robot2);
         robot1.setDirection(1);
@@ -215,7 +212,7 @@ public class BoardTests {
     }
 
     @Test
-    public void pushingBotTowardsWallStopsBothButOnlyAfterTheyReachSaidWall(){
+    public void pushingBotTowardsWallStopsBothButOnlyAfterTheyReachSaidWall() {
         bård.placeRobotAt(3, 3, robot2);
         bård.placeRobotAt(4, 3, robot1);
         robot1.setDirection(3);
@@ -229,7 +226,7 @@ public class BoardTests {
     }
 
     @Test
-    public void firingLaserAtRobotDealsDamage(){
+    public void firingLaserAtRobotDealsDamage() {
         int startingDamage = robot1.getHP();
         bård.placeRobotAt(7, 4, robot1);
 
@@ -239,7 +236,7 @@ public class BoardTests {
     }
 
     @Test
-    public void laserFiresInCorrectDirection(){
+    public void laserFiresInCorrectDirection() {
         int startingHP = robot1.getHP();
         bård.placeRobotAt(5, 5, robot1);
 
@@ -249,17 +246,17 @@ public class BoardTests {
     }
 
     @Test
-    public void doubleLaserYieldsDoubleDamage(){
+    public void doubleLaserYieldsDoubleDamage() {
         int startingHP = robot1.getHP();
         bård.placeRobotAt(7, 6, robot1);
 
         bård.endPhase();
 
-        assertEquals(startingHP-2, robot1.getHP());
+        assertEquals(startingHP - 2, robot1.getHP());
     }
 
     @Test
-    public void laserStopsWhenItHitsAWall(){
+    public void laserStopsWhenItHitsAWall() {
         int startingDamage = robot1.getHP();
         bård.placeRobotAt(5, 4, robot1);
 
@@ -269,7 +266,7 @@ public class BoardTests {
     }
 
     @Test
-    public void robotsFireLasersAtEachOther(){
+    public void robotsFireLasersAtEachOther() {
         bård.placeRobotAt(5, 0, robot1);
         bård.placeRobotAt(3, 0, robot2);
         robot1.setDirection(3);
@@ -284,7 +281,7 @@ public class BoardTests {
     }
 
     @Test
-    public void botDoesNotShootItselfLikeADumbass(){
+    public void botDoesNotShootItselfLikeADumbass() {
         bård.placeRobotAt(0, 0, robot1);
         int hp = robot1.getHP();
 
@@ -294,7 +291,7 @@ public class BoardTests {
     }
 
     @Test
-    public void laserStopsWhenItHitsARobot(){
+    public void laserStopsWhenItHitsARobot() {
         bård.placeRobotAt(0, 0, robot1);
         bård.placeRobotAt(0, 2, robot2);
         bård.placeRobotAt(0, 3, robot3);
@@ -311,7 +308,7 @@ public class BoardTests {
     }
 
     @Test
-    public void cannotGoTroughTheWallTheLaserIsMountedOn(){
+    public void cannotGoTroughTheWallTheLaserIsMountedOn() {
         bård.placeRobotAt(7, 4, robot1);
         robot1.setDirection(1);
 
@@ -322,7 +319,7 @@ public class BoardTests {
     }
 
     @Test
-    public void robotsSpawnInCorrectPlacesAndInCorrectOrder(){
+    public void robotsSpawnInCorrectPlacesAndInCorrectOrder() {
         assertNull(bård.getRobotAt(9, 3));
         assertNull(bård.getRobotAt(4, 9));
         assertNull(bård.getRobotAt(0, 4));
@@ -342,22 +339,22 @@ public class BoardTests {
     }
 
     @Test
-    public void spawningMoreRobotsThanTheMapAllowsYieldsError(){
+    public void spawningMoreRobotsThanTheMapAllowsYieldsError() {
         bård.spawnRobot(robot1);
         bård.spawnRobot(robot2);
         bård.spawnRobot(robot3);
         bård.spawnRobot(robot4);
 
-        try{
+        try {
             bård.spawnRobot(robot5);
             fail();
-        } catch (IllegalStateException ex){
+        } catch (IllegalStateException ex) {
             //Yay it worked
         }
     }
 
     @Test
-    public void drivingOffTheMapRemovesOneOfTheRobotsLivesAndReducesMaxHP(){
+    public void drivingOffTheMapRemovesOneOfTheRobotsLivesAndReducesMaxHP() {
         bård.spawnRobot(robot1);
         robot1.setDirection(1);
 
@@ -369,7 +366,7 @@ public class BoardTests {
     }
 
     @Test
-    public void drivingIntoAHoleActsAsJumpingOffTheMap(){
+    public void drivingIntoAHoleActsAsJumpingOffTheMap() {
         bård.spawnRobot(robot1);
         robot1.setDirection(3);
 
@@ -379,12 +376,12 @@ public class BoardTests {
         assertNull(bård.getRobotAt(6, 3));
         assertNull(bård.getRobotAt(7, 3));
         assertNull(bård.getRobotAt(8, 3));
-        assertTrue( !robot1.hasRemainingLives() || robot1 == bård.getRobotAt(9, 3));
-        assertTrue( !robot1.hasRemainingLives() || robot1.getHP() < Robot.INITIAL_HP);
+        assertTrue(!robot1.hasRemainingLives() || robot1 == bård.getRobotAt(9, 3));
+        assertTrue(!robot1.hasRemainingLives() || robot1.getHP() < Robot.INITIAL_HP);
     }
 
     @Test
-    public void whenDestroyedTheRobotRespawnsAtTheCheckPoint(){
+    public void whenDestroyedTheRobotRespawnsAtTheCheckPoint() {
         bård.spawnRobot(robot1);
         robot1.setDirection(2);
 
@@ -397,11 +394,11 @@ public class BoardTests {
         bård.endPhase();
 
         assertNull(bård.getRobotAt(9, 4));
-        assertTrue( !robot1.hasRemainingLives() || robot1.equals(bård.getRobotAt(9, 3)));
+        assertTrue(!robot1.hasRemainingLives() || robot1.equals(bård.getRobotAt(9, 3)));
     }
 
     @Test
-    public void endingPhaseOnCheckPointSetsNewSpawnPoint(){
+    public void endingPhaseOnCheckPointSetsNewSpawnPoint() {
         bård.spawnRobot(robot1);
         robot1.setDirection(2);
         bård.performMove(new ProgramCard(2, 0, 140), robot1);
@@ -418,11 +415,11 @@ public class BoardTests {
         bård.endPhase();
 
         assertNull(bård.getRobotAt(9, 3));
-        assertTrue( !robot1.hasRemainingLives() || robot1.equals(bård.getRobotAt(7, 5)));
+        assertTrue(!robot1.hasRemainingLives() || robot1.equals(bård.getRobotAt(7, 5)));
     }
 
     @Test
-    public void cannotRespawnIfCheckPointIsOccupied(){
+    public void cannotRespawnIfCheckPointIsOccupied() {
         bård.spawnRobot(robot1);
         robot1.setDirection(3);
         bård.performMove(new ProgramCard(2, 0, 140), robot1);
@@ -438,32 +435,36 @@ public class BoardTests {
         bård.endPhase();
 
         //Nå er checkpointet ledig igjen
-        assertTrue( !robot1.hasRemainingLives() || robot1.equals(bård.getRobotAt(9, 3)));
+        assertTrue(!robot1.hasRemainingLives() || robot1.equals(bård.getRobotAt(9, 3)));
     }
 
     @Test
-    public void tryingToMoveNonExistentRobotYieldsError(){
-        try{
+    public void tryingToMoveNonExistentRobotYieldsError() {
+        try {
             bård.performMove(new ProgramCard(1, 0, 90), robot1);
             fail();
-        } catch (IllegalArgumentException ex){
+        } catch (IllegalArgumentException ex) {
             //Yay it worked
         }
     }
 
-    /** Tester at mappet faktisk blir resatt mellom hver test.
-     * Mange av testene plasserer en bot på (0, 0), så dette sjekker at den er null igjen. */
+    /**
+     * Tester at mappet faktisk blir resatt mellom hver test.
+     * Mange av testene plasserer en bot på (0, 0), så dette sjekker at den er null igjen.
+     */
     @Test
-    public void beforeEachActuallyResetsTheBoard(){
+    public void beforeEachActuallyResetsTheBoard() {
         assertNull(bård.getRobotAt(0, 0));
     }
 
     @Test
-    public void setUpActuallyCreatesTheBoardEveryTime(){ assertNotNull(bård); }
+    public void setUpActuallyCreatesTheBoardEveryTime() {
+        assertNotNull(bård);
+    }
 
     @Test
-    public void checkIfRobotCanPickUpFlag1First(){
-        assertTrue(bård.robotCanPickUpFlag(robot1,Flag1));
+    public void checkIfRobotCanPickUpFlag1First() {
+        assertTrue(bård.robotCanPickUpFlag(robot1, Flag1));
     }
 
     @Test
@@ -472,32 +473,32 @@ public class BoardTests {
     }
 
     @Test
-    public void checkIfRobotCanPickUpFlag3First(){
-        assertFalse(bård.robotCanPickUpFlag(robot1,Flag3));
+    public void checkIfRobotCanPickUpFlag3First() {
+        assertFalse(bård.robotCanPickUpFlag(robot1, Flag3));
     }
 
 
     @Test
-    public void checkIfRobotCanPickUpFlag2AfterFlag1(){
+    public void checkIfRobotCanPickUpFlag2AfterFlag1() {
         robot1.addToFlagsVisited(Flag1); //Henter første flagget
-        assertTrue(bård.robotCanPickUpFlag(robot1,Flag2));
+        assertTrue(bård.robotCanPickUpFlag(robot1, Flag2));
     }
 
     @Test
-    public void checkIfRobotCanPickUpFlag3BeforeFlag2WhenFlag1HasBeenPickedUp(){
+    public void checkIfRobotCanPickUpFlag3BeforeFlag2WhenFlag1HasBeenPickedUp() {
         robot1.addToFlagsVisited(Flag1); //Første flagg er hentet
-        assertFalse(bård.robotCanPickUpFlag(robot1,Flag3));
+        assertFalse(bård.robotCanPickUpFlag(robot1, Flag3));
     }
 
     @Test
-    public void checkIfRobotCanPickUpFlag3AfterFlag2AndFlag1(){
+    public void checkIfRobotCanPickUpFlag3AfterFlag2AndFlag1() {
         robot1.addToFlagsVisited(Flag1); //Henter første flagget
         robot1.addToFlagsVisited(Flag2); //Henter andre flagget
-        assertTrue(bård.robotCanPickUpFlag(robot1,Flag3));
+        assertTrue(bård.robotCanPickUpFlag(robot1, Flag3));
     }
 
     @Test
-    public void conveyorBeltsPushesBotsInCorrectDirection(){
+    public void conveyorBeltsPushesBotsInCorrectDirection() {
         bård.placeRobotAt(1, 1, robot1);
         bård.placeRobotAt(1, 5, robot2);
 
@@ -508,7 +509,7 @@ public class BoardTests {
     }
 
     @Test
-    public void blueConveyorBeltsPushTwoSteps(){
+    public void blueConveyorBeltsPushTwoSteps() {
         bård.placeRobotAt(8, 5, robot1);
 
         bård.endPhase();
@@ -517,7 +518,7 @@ public class BoardTests {
     }
 
     @Test
-    public void conveyorBeltPushingRobotIntoHoleKillsSaidRobot(){
+    public void conveyorBeltPushingRobotIntoHoleKillsSaidRobot() {
         bård.spawnRobot(robot1); //Setter spawnpunkt, slik at den har et sted å respawne når den dør
         bård.placeRobotAt(7, 9, robot1);
 
@@ -529,7 +530,7 @@ public class BoardTests {
     }
 
     @Test
-    public void twoRobotsNextToEachOtherOnTheSameConveyorBeltLine(){
+    public void twoRobotsNextToEachOtherOnTheSameConveyorBeltLine() {
         bård.placeRobotAt(1, 6, robot1);
         bård.placeRobotAt(1, 5, robot2);
 
@@ -540,7 +541,7 @@ public class BoardTests {
     }
 
     @Test
-    public void sameAsLastTestButOrderIsFlipped(){
+    public void sameAsLastTestButOrderIsFlipped() {
         bård.placeRobotAt(1, 5, robot1);
         bård.placeRobotAt(1, 6, robot2);
 
@@ -551,7 +552,7 @@ public class BoardTests {
     }
 
     @Test
-    public void threeRobotsOnTheSameConveyorBeltLine(){
+    public void threeRobotsOnTheSameConveyorBeltLine() {
         bård.placeRobotAt(1, 6, robot1);
         bård.placeRobotAt(1, 5, robot2);
         bård.placeRobotAt(1, 4, robot3);
@@ -565,7 +566,7 @@ public class BoardTests {
     }
 
     @Test
-    public void robotOnConveyorBeltPushingRobotInFrontOfTheConveyorBelt(){
+    public void robotOnConveyorBeltPushingRobotInFrontOfTheConveyorBelt() {
         bård.placeRobotAt(2, 9, robot1);
         bård.placeRobotAt(1, 9, robot2);
 
@@ -576,7 +577,7 @@ public class BoardTests {
     }
 
     @Test
-    public void conveyorBeltPushingRobotOffTheMap(){
+    public void conveyorBeltPushingRobotOffTheMap() {
         bård.spawnRobot(robot1); //Setter spawnpunktet
         bård.placeRobotAt(0, 8, robot1);
 
@@ -588,7 +589,7 @@ public class BoardTests {
     }
 
     @Test
-    public void robotOnConveyorBeltPushingARobotThatPushesAnotherRobotOffTheMap(){
+    public void robotOnConveyorBeltPushingARobotThatPushesAnotherRobotOffTheMap() {
         bård.spawnRobot(robot2); //Bare for å sette spawnpunktet
         bård.placeRobotAt(9, 9, robot2);
         bård.placeRobotAt(9, 8, robot1);
@@ -600,7 +601,7 @@ public class BoardTests {
     }
 
     @Test
-    public void conveyorBeltPushingBotCannotPushAnotherBotThroughAWall(){
+    public void conveyorBeltPushingBotCannotPushAnotherBotThroughAWall() {
         bård.placeRobotAt(0, 7, robot1);
         bård.placeRobotAt(0, 6, robot2);
 
@@ -612,7 +613,7 @@ public class BoardTests {
     }
 
     @Test
-    public void conveyorBeltPushingDeadRobotDoesNotCrashTheGame(){
+    public void conveyorBeltPushingDeadRobotDoesNotCrashTheGame() {
         bård.spawnRobot(robot1);
         bård.placeRobotAt(4, 8, robot1);
 
@@ -627,7 +628,7 @@ public class BoardTests {
     }
 
     @Test
-    public void movingRobotOneStepAddsTheNewLocationAndTheOldOneToTheSetOfDirtyLocations(){
+    public void movingRobotOneStepAddsTheNewLocationAndTheOldOneToTheSetOfDirtyLocations() {
         bård.placeRobotAt(0, 0, robot1);
         robot1.setDirection(1);
         bård.getDirtyLocations();
@@ -640,7 +641,7 @@ public class BoardTests {
     }
 
     @Test
-    public void drivingIntoHoleAndDyingMarksCorrectLocationsAsDirty(){
+    public void drivingIntoHoleAndDyingMarksCorrectLocationsAsDirty() {
         bård.spawnRobot(robot1);
         robot1.setDirection(3);
         bård.performMove(new ProgramCard(2, 0, 1), robot1);
@@ -652,11 +653,11 @@ public class BoardTests {
 
         bård.endPhase();
 
-        assertTrue( !robot1.hasRemainingLives() || bård.getDirtyLocations().contains(new Position(9, 3)));
+        assertTrue(!robot1.hasRemainingLives() || bård.getDirtyLocations().contains(new Position(9, 3)));
     }
 
     @Test
-    public void setOfDirtyLocationsGetsResetEachTime(){
+    public void setOfDirtyLocationsGetsResetEachTime() {
         bård.placeRobotAt(0, 0, robot1);
         robot1.setDirection(1);
 
@@ -667,7 +668,7 @@ public class BoardTests {
     }
 
     @Test
-    public void robotPushingAnotherRobotMarksCorrectLocationsAsDirty(){
+    public void robotPushingAnotherRobotMarksCorrectLocationsAsDirty() {
         bård.placeRobotAt(4, 4, robot1);
         bård.placeRobotAt(4, 3, robot2);
         bård.getDirtyLocations();
@@ -684,7 +685,7 @@ public class BoardTests {
     }
 
     @Test
-    public void conveyorBeltPushingRobotAddsDirtyLocations(){
+    public void conveyorBeltPushingRobotAddsDirtyLocations() {
         bård.placeRobotAt(8, 4, robot1);
 
         bård.endPhase();
@@ -696,7 +697,7 @@ public class BoardTests {
     }
 
     @Test
-    public void rotatingARobotMarksLocationAsDirty(){
+    public void rotatingARobotMarksLocationAsDirty() {
         bård.placeRobotAt(0, 0, robot1);
         bård.getDirtyLocations();
 
@@ -706,7 +707,7 @@ public class BoardTests {
     }
 
     @Test
-    public void robotTakingMortalDamageMarksLocationAsDirty(){
+    public void robotTakingMortalDamageMarksLocationAsDirty() {
         bård.spawnRobot(robot1);
         robot1.setDirection(0);
         bård.performMove(new ProgramCard(2, 0, 1), robot1);
@@ -721,17 +722,17 @@ public class BoardTests {
     }
 
     @Test
-    public void gearRotatesTheRobotsTheCorrectDirection(){
-        bård.placeRobotAt(8,0, robot1);
+    public void gearRotatesTheRobotsTheCorrectDirection() {
+        bård.placeRobotAt(8, 0, robot1);
 
         bård.endPhase();
 
-        assertEquals(1, bård.getRobotAt(8,0).getDirection() );
+        assertEquals(1, bård.getRobotAt(8, 0).getDirection());
     }
 
     @Test
-    public void rotatingRobotWithGearMarksLocationDirty(){
-        bård.placeRobotAt(8,0,robot1);
+    public void rotatingRobotWithGearMarksLocationDirty() {
+        bård.placeRobotAt(8, 0, robot1);
         bård.getDirtyLocations();
 
         bård.endPhase();
@@ -740,8 +741,8 @@ public class BoardTests {
     }
 
     @Test
-    public void wrenchGivesRobotOneExtraHP(){
-        bård.placeRobotAt(2,0, robot1);
+    public void wrenchGivesRobotOneExtraHP() {
+        bård.placeRobotAt(2, 0, robot1);
 
         robot1.applyDamage(1);
         bård.endPhase();
@@ -750,8 +751,8 @@ public class BoardTests {
     }
 
     @Test
-    public void whenARobotStepsOnAWrenchTheLocationIsMarkedDirty(){
-        bård.placeRobotAt(2,0,robot1);
+    public void whenARobotStepsOnAWrenchTheLocationIsMarkedDirty() {
+        bård.placeRobotAt(2, 0, robot1);
         bård.getDirtyLocations();
 
         bård.endPhase();
@@ -760,7 +761,7 @@ public class BoardTests {
     }
 
     @Test
-    public void robotsGettingHitByLaserAddsThemToTheSet(){
+    public void robotsGettingHitByLaserAddsThemToTheSet() {
         bård.placeRobotAt(6, 4, robot1); //I skuddlinjen
         bård.placeRobotAt(5, 4, robot2); //Bak en vegg
         bård.placeRobotAt(2, 6, robot3); //Langt unna, men fortsatt i skuddlinjen
@@ -776,7 +777,7 @@ public class BoardTests {
     }
 
     @Test
-    public void damagedLocationSetGetResetEverytime(){
+    public void damagedLocationSetGetResetEverytime() {
         bård.placeRobotAt(6, 4, robot1);
 
         bård.endPhase();
@@ -786,25 +787,25 @@ public class BoardTests {
     }
 
     @Test
-    public void allLaserBeamsGetDrawn(){
+    public void allLaserBeamsGetDrawn() {
         bård.firstRoundFinished = true;
         bård.endPhase();
 
-        assertEquals(21, bård.getDoubleLaserLocations().size()+bård.getSingleLaserLocations().size());
+        assertEquals(24, bård.getDoubleLaserLocations().size() + bård.getSingleLaserLocations().size());
     }
 
     @Test
-    public void correctAmountOfCrossingLasersOnBoard(){
+    public void correctAmountOfCrossingLasersOnBoard() {
         bård.firstRoundFinished = true;
         bård.endPhase();
 
         int numberOfCrossingLasers = 0;
-        for(Position p : bård.doubleLaserCollisions.keySet())
-            if(bård.doubleLaserCollisions.get(p) == 40 || bård.doubleLaserCollisions.get(p) == 101) numberOfCrossingLasers++;
-        for(Position p : bård.singleLaserCollisions.keySet())
-            if(bård.singleLaserCollisions.get(p) == 40 || bård.singleLaserCollisions.get(p) == 101) numberOfCrossingLasers++;
+        for(Position p : bård.getDoubleLaserLocations().keySet())
+            if(bård.getDoubleLaserLocations().get(p).getID() == 40 || bård.getDoubleLaserLocations().get(p).getID() == 101) numberOfCrossingLasers++;
+        for(Position p : bård.getSingleLaserLocations().keySet())
+            if(bård.getSingleLaserLocations().get(p).getID() == 40 || bård.getSingleLaserLocations().get(p).getID() == 101) numberOfCrossingLasers++;
 
-        assertEquals(1,numberOfCrossingLasers);
+        assertEquals(2,numberOfCrossingLasers);
     }
 
     @Test
@@ -813,20 +814,23 @@ public class BoardTests {
         bård.endPhase();
 
         int i = 0;
-        for(Position p : bård.singleLaserCollisions.keySet()){
-            if(p.getX() == 2 && p.getY() == 5 && bård.singleLaserCollisions.get(p) == 39)
+        for(Position p : bård.getSingleLaserLocations().keySet()){
+            if(p.getX() == 2 && p.getY() == 5 && bård.getSingleLaserLocations().get(p).getID() == 39)
                 i++;
-            if(p.getX() == 4 && p.getY() == 5 && bård.singleLaserCollisions.get(p) == 39)
+            if(p.getX() == 3 && p.getY() == 5 && bård.getSingleLaserLocations().get(p).getID() == 39)
                 i++;
-            if(p.getX() == 5 && p.getY() == 5 && bård.singleLaserCollisions.get(p) == 39)
+            if(p.getX() == 4 && p.getY() == 5 && bård.getSingleLaserLocations().get(p).getID() == 39)
+                i++;
+            if(p.getX() == 5 && p.getY() == 5 && bård.getSingleLaserLocations().get(p).getID() == 39)
                 i++;
         }
 
-        assertEquals(3,i);
+        assertEquals(2, i);
     }
 
     @Test
     public void lasersDoNotGetDrawnOnTopOfRobots(){
 
     }
+
 }

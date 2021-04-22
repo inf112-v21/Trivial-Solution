@@ -13,6 +13,7 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -70,7 +71,7 @@ public class AITests {
     }
 
     //@Test
-    //publiFic void testUltronProperties(){testAIProperties(new Ultron());}
+    //public void testUltronProperties(){testAIProperties(new Ultron());}
 
 
     private void AIAddsCardsToRegisterOrTogglesPowerdDown(AI ai){
@@ -117,7 +118,7 @@ public class AITests {
         try{
             SanityCheck.assertEqualSimulation(before, after);
         }catch (SanityCheck.UnequalSimulationException ex){
-            fail();
+            Assertions.fail();
         }
     }
 

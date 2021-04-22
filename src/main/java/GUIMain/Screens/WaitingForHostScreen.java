@@ -16,8 +16,10 @@ public class WaitingForHostScreen extends SimpleScreen{
         super.show();
 
         Table table = new Table();
-        Label title = new Label("Waiting for the host to start the game...", gui.getSkin());
-        title.setFontScale(3f);
+        parameter.size = Gdx.graphics.getHeight()/19;
+        parameter.borderWidth = 2f;
+        style.font = generator.generateFont(parameter);
+        Label title = new Label("Waiting for the host to start the game...", style);
         table.add(title).spaceBottom(200);
         table.setBounds(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         stage.addActor(table);

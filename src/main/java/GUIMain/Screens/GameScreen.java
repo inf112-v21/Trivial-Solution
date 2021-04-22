@@ -45,53 +45,63 @@ import static com.badlogic.gdx.graphics.Color.WHITE;
 
 public class GameScreen extends SimpleScreen {
 
+    //Sørger for at spillet blir sakket ned, og at ikke alt blir simulert på én frame.
+    //Lavere TIME_DELTA betyr kjappere runder.
     public static float TIME_DELTA = 0.6f;
-    public static final int CELL_SIZE = 300;
-    private double timeSinceLastBlink = -1;
-    private static final float BLINK_DELTA = 0.1f;
-    private final TreeSet<Position> previousDoubleLaserPositions = new TreeSet<>();
-    private final TreeSet<Position> previousSingleLaserPositions = new TreeSet<>();
+    private float timeSinceLastUpdate = -1;
 
+    public static final int CELL_SIZE = 300;
+
+    //Layers, bakgrunn, stage og stil.
     private final TiledMapTileLayer playerLayer;
     private final TiledMapTileLayer doubleLaserLayer;
     private final TiledMapTileLayer singleLaserLayer;
     private final OrthogonalTiledMapRenderer renderer;
     private final OrthographicCamera camera;
-    private final String mapName;
-    private final int HEIGHT;
-    private final int WIDTH;
-	private BoardController gameBoard;
-	private final List<Robot> robots;
 	private Stage stage;
-	private Table availableTable;
-	private Table chosenTable;
+	private final Viewport smallView;
+    private final Label.LabelStyle style;
+    private static Sprite backgroundSprite;
+    private SpriteBatch spriteBatch;
+
+    //Viser antall liv og hp spilleren har
+    private Label label;
+
+    //Kobling til backend
+    private final String mapName;
+    private BoardController gameBoard;
+    private final List<Robot> robots;
+    protected Robot playerControlledRobot;
+
+    //Tabeller og variabler for å tegne kort
+    private Table availableTable;
+    private Table chosenTable;
     protected final ArrayList<Integer> chosenIndices = new ArrayList<>();
+    private boolean hasDrawnCardsYet = false;
+
+    //Knapper, og tabeller som holder styr på knapper
     private Table optionsTable;
     private Table buttonTable;
-	protected Robot playerControlledRobot;
     protected TextButton powerDown;
     protected TextButton ready;
     protected TextButton clear;
     protected TextButton options;
     private boolean optionsCheck = true;
-	private final Viewport smallView;
-    private Label label;
+
+    //Multiplayer-relatert
     private final boolean isThisMultiPlayer;
     private final boolean amITheHost;
-
-    private float timeSinceLastUpdate = -1; //Denne holder styr på hvor lenge det er siden forrige gang brettet ble tegnet.
-    private boolean hasDrawnCardsYet = false;
-
-    private static Sprite backgroundSprite;
-    private SpriteBatch spriteBatch;
-
-    private final Label.LabelStyle style;
-    public static int fontsize = 30;
-
     private boolean isWaitingForCards = true;
 
+    //Variabel for å huske hvor laserne ble tegnet, så de kan slettes igjen effektivt
+    private final TreeSet<Position> previousDoubleLaserPositions = new TreeSet<>();
+    private final TreeSet<Position> previousSingleLaserPositions = new TreeSet<>();
+
+    //Feltvariabler for å få roboter til å blinke
     private TreeSet<Position> damagedPositions = new TreeSet<>();
     private int blinkturns = 0;
+    private double timeSinceLastBlink = -1;
+    private static final float BLINK_DELTA = 0.1f;
 
 
     public GameScreen(GameInfo gameInfo, boolean isThisMultiPlayer, boolean amITheHost, GUI gui){
@@ -104,12 +114,12 @@ public class GameScreen extends SimpleScreen {
 
         TiledMapTileLayer backgroundLayer = (TiledMapTileLayer) map.getLayers().get("Background");
 
-        HEIGHT = backgroundLayer.getHeight()*CELL_SIZE;
-        WIDTH = backgroundLayer.getWidth()*CELL_SIZE;
+        final int height = backgroundLayer.getHeight() * CELL_SIZE;
+        final int width = backgroundLayer.getWidth() * CELL_SIZE;
 
         smallView = new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        Viewport largeView = new FitViewport(WIDTH * 2, HEIGHT);
-        largeView.update(WIDTH*2, HEIGHT,true);
+        Viewport largeView = new FitViewport(width * 2, height);
+        largeView.update(width *2, height,true);
 
         playerLayer = (TiledMapTileLayer) map.getLayers().get("Robot");
         doubleLaserLayer = (TiledMapTileLayer) map.getLayers().get("doubleLaserLayer");
@@ -123,8 +133,8 @@ public class GameScreen extends SimpleScreen {
         FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/ObliviousFont.ttf"));
         FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
         style = new Label.LabelStyle();
-        parameter.size = fontsize;
-        parameter.borderWidth = 3f;
+        parameter.size = Gdx.graphics.getHeight()/36;
+        parameter.borderWidth = 2f;
         parameter.color = WHITE;
         parameter.borderColor = BLACK;
         style.font = generator.generateFont(parameter);
@@ -408,11 +418,9 @@ public class GameScreen extends SimpleScreen {
                     //Lopper igjennom alle robotene for å matche de valgte kortene til hver robot,
                     //slik at klienten kan simulere de tatte valgene.
                     for (Robot bot : robots) {
-                        if (bot.equals(playerControlledRobot)) {
-                            if (!allChosenCards.get(bot).equals(bot.getChosenCards())) {
-                                throw new UnequalSimulationException("Are you sure these are the correct cards in the correct order?\n" +
-                                        "if I send cards to the server, and get cards back, the cards for my robot should all be the same. But they are not.");
-                            }
+                        if (bot.equals(playerControlledRobot) && ! allChosenCards.get(bot).equals(bot.getChosenCards())) {
+                            throw new UnequalSimulationException("Are you sure these are the correct cards in the correct order?\n" +
+                                    "if I send cards to the server, and get cards back, the cards for my robot should all be the same. But they are not.");
                         }
                         bot.setChosenCards(allChosenCards.get(bot));
                         if (allChosenCards.get(bot).isEmpty()) bot.setPowerDown(true);
@@ -444,7 +452,8 @@ public class GameScreen extends SimpleScreen {
 
                 //Hvis alle spillerne har sendt kortene sine kan vi begynne simuleringen
                 if (host.haveAllClientSentTheirChosenCards()) {
-                    host.sendAllChosenCardsToEveryone(gameBoard.getSanityCheck());
+                    if (GUI.DEVELOPER_MODE) host.sendAllChosenCardsToEveryone(gameBoard.getSanityCheck());
+                    else host.sendAllChosenCardsToEveryone();
                     gameBoard.playersAreReady();
                 }
 

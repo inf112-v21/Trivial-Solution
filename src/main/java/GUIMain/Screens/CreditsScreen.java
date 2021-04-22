@@ -8,9 +8,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import org.lwjgl.opengl.GL20;
+
 public class CreditsScreen extends SimpleScreen {
-    public static int titlesize = 44;
-    public static int fontsize = 24;
 
 
     public CreditsScreen(GUI gui){
@@ -20,8 +19,8 @@ public class CreditsScreen extends SimpleScreen {
     @Override
     public void show() {
         super.show();
-        parameter.size = titlesize;
-        parameter.borderWidth = 3f;
+        parameter.size = Gdx.graphics.getHeight()/27;
+        parameter.borderWidth = 2f;
         style.font = generator.generateFont(parameter);
         Table table = new Table();
         table.setBounds(0,0,Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
@@ -31,8 +30,8 @@ public class CreditsScreen extends SimpleScreen {
         Table left = new Table();
         Table right = new Table();
         Table thanks = new Table();
-        parameter.size = fontsize;
-        parameter.borderWidth = 2f;
+        parameter.size = Gdx.graphics.getHeight()/47;
+        parameter.borderWidth = 1f;
         style.font = generator.generateFont(parameter);
         String[] titlesLeft = new String[]{
                 "Production Manager: Steinar Simonnes",
@@ -123,7 +122,7 @@ public class CreditsScreen extends SimpleScreen {
                 gui.setScreen(new MenuScreen(gui));
             }
         });
-        table.add(menu).size(300f,80f).spaceBottom(20).spaceBottom(25f);
+        table.add(menu).size(Gdx.graphics.getWidth()/7f,Gdx.graphics.getHeight()/22f).spaceBottom(Gdx.graphics.getHeight()/44f);
 
         stage.addActor(table);
     }

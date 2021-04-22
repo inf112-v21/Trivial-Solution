@@ -1,13 +1,30 @@
 package GameBoard;
 
 import GameBoard.Cards.ProgramCard;
-import GameBoard.Components.*;
+import GameBoard.Components.Flag;
+import GameBoard.Components.ConveyorBelt;
+import GameBoard.Components.IComponent;
+import GameBoard.Components.Laser;
+import GameBoard.Components.LaserBeam;
+import GameBoard.Components.ComponentFactory;
+import GameBoard.Components.SpawnPoint;
+import GameBoard.Components.Wrench;
+import GameBoard.Components.Gear;
+import GameBoard.Components.Wall;
+import GameBoard.Components.CheckPoint;
+import GameBoard.Components.Hole;
 import NetworkMultiplayer.Messages.InGameMessages.SanityCheck;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
+import com.badlogic.gdx.maps.tiled.tiles.StaticTiledMapTile;
+import com.badlogic.gdx.scenes.scene2d.ui.Tree;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.TreeMap;
+import java.util.TreeSet;
+import java.util.Comparator;
+import java.util.LinkedList;
 import java.util.function.ToIntFunction;
 
 public class Board {
@@ -28,10 +45,10 @@ public class Board {
     private final TreeMap<Laser, Position> laserPositions = new TreeMap<>(Comparator.comparingInt((ToIntFunction<Object>) Object::hashCode));
     private final TreeSet<Position> dirtyLocations = new TreeSet<>();
     //splitter laserlayersene:
-    private final HashMap<Position, LaserBeam> doubleLaserLocations = new HashMap<>();
-    private final HashMap<Position, LaserBeam> singleLaserLocations = new HashMap<>();
+    private final TreeMap<Position, LaserBeam> doubleLaserLocations = new TreeMap<>();
+    private final TreeMap<Position, LaserBeam> singleLaserLocations = new TreeMap<>();
     // Liste over alle typene laserBeams:
-    private final HashMap<Integer, LaserBeam> allLaserBeams = new HashMap<>();
+    private final TreeMap<Integer, LaserBeam> allLaserBeams = new TreeMap<>();
 
     private final LinkedList<Position> availableSpawnPoints = new LinkedList<>();
     private final LinkedList<Robot> robotsWaitingToBeRespawned = new LinkedList<>();
@@ -105,7 +122,7 @@ public class Board {
      * @param bot Roboten som skal flyttes
      */
     public void performMove(ProgramCard card, Robot bot){
-        if (bot == null) throw new NullPointerException("The bot is null.");
+        if (bot == null) throw new IllegalArgumentException("The bot is null.");
         if (robotsWaitingToBeRespawned.contains(bot)) return; //Botten kan ikke flytte, den er død
         if ( ! botPositions.containsKey(bot)) throw new IllegalArgumentException("The bot is not on the board.");
         if(card.getRotation() != 0){
@@ -133,20 +150,10 @@ public class Board {
     private void pickUpFlags() {
         for (Robot bot : botPositions.keySet()) {
             Position pos = botPositions.get(bot);
-
-            int posY = pos.getY();
-            int posX = pos.getX();
-
-            //Ingen grunn å sjekke om roboten står på et flagg hvis alle flag er hentet.
-            if(bot.getVisitedFlags().size() < flagWinningFormation.size()) {
-
-                if (forgrid[posY][posX] instanceof Flag) {
-                    Flag newFlag = (Flag) forgrid[posY][posX];
-
-                    if (robotCanPickUpFlag(bot, newFlag)) {
-                        bot.addToFlagsVisited(newFlag);
-                    }
-                }
+            IComponent comp = forgrid[pos.getY()][pos.getX()];
+            if(bot.getVisitedFlags().size() < flagWinningFormation.size() && comp instanceof Flag) {
+                Flag flag = (Flag) comp;
+                if (robotCanPickUpFlag(bot, flag)) bot.addToFlagsVisited(flag);
             }
         }
     }
@@ -177,10 +184,7 @@ public class Board {
         }
 
         //Hvis inget flagg er registrert så sjekker vi om roboten landet på det første flagget
-        if (foundFlag.equals(flagWinningFormation.get(0)) && visited.isEmpty()){
-            return true;
-        }
-        return false;
+        return foundFlag.equals(flagWinningFormation.get(0)) && visited.isEmpty();
     }
 
     /**
@@ -315,7 +319,7 @@ public class Board {
         if (N_Moves <= 0) return true;
 
         Robot bot = botgrid[fromY][fromX];
-        if (bot == null) throw new NullPointerException("There is no bot at (" + fromX + ", " + fromY + ").");
+        if (bot == null) throw new IllegalArgumentException("There is no bot at (" + fromX + ", " + fromY + ").");
 
         int toX = fromX + directionToX(dir);
         int toY = fromY + directionToY(dir);

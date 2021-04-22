@@ -1,11 +1,12 @@
 package AIs;
 
 import java.util.LinkedList;
+
 import java.util.List;
 import GameBoard.Board;
 import GameBoard.Position;
 import GameBoard.Robot;
-import GameBoard.Cards.ICard;
+import GameBoard.Cards.ProgramCard;
 import GameBoard.Components.SimpleComponent;
 
 public class Ultron implements AI {
@@ -133,10 +134,10 @@ public class Ultron implements AI {
 	}
 	
 	
-	private void selectCards(java.util.List<ICard> cards, GameBoard.Position playerPosition) {
+	private void selectCards(java.util.List<ProgramCard> cards, GameBoard.Position playerPosition) {
 		LinkedList<GameBoard.Position> flags = this.allocateFlags();
 		
-		java.util.List<ICard> allCards = new java.util.ArrayList<>();
+		java.util.List<ProgramCard> allCards = new java.util.ArrayList<>();
 		int xDistance = getNearestFlag(playerPosition.getX(), playerPosition.getY(), flags).getX();
 		int yDistance = getNearestFlag(playerPosition.getX(), playerPosition.getY(), flags).getY();
 		LinkedList<Integer> dir = getDirectionToFlag(playerPosition.getX(), playerPosition.getY(), xDistance, yDistance);
@@ -154,7 +155,7 @@ public class Ultron implements AI {
 		}
 		
 		
-		ICard dirCard = filterCard(cards, dir.getFirst());
+		ProgramCard dirCard = filterCard(cards, dir.getFirst());
 		if(dirCard != null) {
 			allCards.add(dirCard);
 		}
@@ -167,9 +168,9 @@ public class Ultron implements AI {
 				diff = Math.abs((yDistance-2)-playerPosition.getY()); 
 				moveY = false;
 			}
-			java.util.List<ICard> STEPS = filterCard(cards, playerPosition, diff);
+			java.util.List<ProgramCard> STEPS = filterCard(cards, playerPosition, diff);
 		
-			for(ICard card: STEPS) {
+			for(ProgramCard card: STEPS) {
 				allCards.add(card);
 			}
 			for(int i = 0; i < robot.getChosenCardSlots(); i++) {
@@ -190,10 +191,10 @@ public class Ultron implements AI {
 	 * @param direc
 	 * @return
 	 */
-	private ICard filterCard(List<ICard> cards, int direc) {
+	private ProgramCard filterCard(List<ProgramCard> cards, int direc) {
 
-		ICard mainCard = null;
-		for(ICard card: cards) {
+		ProgramCard mainCard = null;
+		for(ProgramCard card: cards) {
 		if(card.getRotation() == direc && robot.getDirection() != direc) {
 			if(direc >= 0) {
 				robot.setDirection(direc);
@@ -213,11 +214,11 @@ public class Ultron implements AI {
 	 * @param diff
 	 * @return
 	 */
-	private java.util.List<ICard> filterCard(java.util.List<ICard> card, GameBoard.Position playerPosition, int diff) {
+	private List<ProgramCard> filterCard(java.util.List<ProgramCard> card, GameBoard.Position playerPosition, int diff) {
 		int steps = 0; 
 		
-		java.util.List<ICard> stepCards = new java.util.ArrayList<>();
-		for(ICard cards: card) {
+		java.util.List<ProgramCard> stepCards = new java.util.ArrayList<>();
+		for(ProgramCard cards: card) {
 			int maxDistance = cards.getDistance();
 			if(cards.getRotation() == 0 && cards.getDistance() > 0) {
 				if(steps != diff ) {
@@ -240,6 +241,5 @@ public class Ultron implements AI {
 		}
 		return stepCards;
 	}
-		
 }
 

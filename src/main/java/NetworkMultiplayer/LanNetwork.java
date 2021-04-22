@@ -1,16 +1,17 @@
 package NetworkMultiplayer;
 
 
-import GameBoard.Cards.ICard;
+import GameBoard.Cards.ProgramCard;
+import GameBoard.Components.Flag;
+import GameBoard.Components.IComponent;
+import GameBoard.Position;
 import GameBoard.Robot;
-import NetworkMultiplayer.Messages.ConfirmationMessages;
+import NetworkMultiplayer.Messages.ClientDisconnected;
 import NetworkMultiplayer.Messages.IMessage;
-import NetworkMultiplayer.Messages.InGameMessages.AllChosenCardsFromAllRobots;
-import NetworkMultiplayer.Messages.InGameMessages.ChosenCards;
-import NetworkMultiplayer.Messages.InGameMessages.DistributedCards;
-import NetworkMultiplayer.Messages.MinorErrorMessage;
+import NetworkMultiplayer.Messages.InGameMessages.*;
 import NetworkMultiplayer.Messages.PreGameMessages.GameInfo;
 import NetworkMultiplayer.Messages.PreGameMessages.RobotInfo;
+import NetworkMultiplayer.Messages.PreGameMessages.SetupRobotNameDesign;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.serializers.JavaSerializer;
 import com.esotericsoftware.kryonet.EndPoint;
@@ -42,11 +43,14 @@ public class LanNetwork {
         kryo.register(GameInfo.class, new JavaSerializer());
         kryo.register(IMessage.class);
         kryo.register(RobotInfo.class, new JavaSerializer());
-        kryo.register(ConfirmationMessages.class);
-        kryo.register(ICard.class, new JavaSerializer());
+        kryo.register(ConfirmationMessage.class);
+        kryo.register(ProgramCard.class, new JavaSerializer());
         kryo.register(AllChosenCardsFromAllRobots.class, new JavaSerializer());
-        kryo.register(MinorErrorMessage.class);
-
-
+        kryo.register(SetupRobotNameDesign.class);
+        kryo.register(ClientDisconnected.class, new JavaSerializer());
+        kryo.register(String.class, new JavaSerializer());
+        kryo.register(Position.class, new JavaSerializer());
+        kryo.register(Flag.class,new JavaSerializer());
+        kryo.register(SanityCheck.class, new JavaSerializer());
     }
 }

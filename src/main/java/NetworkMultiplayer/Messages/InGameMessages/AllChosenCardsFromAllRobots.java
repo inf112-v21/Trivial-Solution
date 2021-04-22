@@ -1,9 +1,11 @@
 package NetworkMultiplayer.Messages.InGameMessages;
 
+import GameBoard.Cards.ProgramCard;
 import GameBoard.Robot;
 import NetworkMultiplayer.Messages.IMessage;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.TreeMap;
 
 public class AllChosenCardsFromAllRobots implements IMessage, Serializable {
@@ -13,8 +15,8 @@ public class AllChosenCardsFromAllRobots implements IMessage, Serializable {
      * Robotene skal bli identifisert hos klientene med navn.
      */
 
-    final private TreeMap<Robot,IMessage> allDesicions;
-    AllChosenCardsFromAllRobots(TreeMap<Robot,IMessage> allDesicions){
+    final private TreeMap<Robot,ArrayList<ProgramCard>> allDesicions;
+    public AllChosenCardsFromAllRobots(TreeMap<Robot,ArrayList<ProgramCard>> allDesicions){
         this.allDesicions = allDesicions;
     }
 
@@ -22,7 +24,9 @@ public class AllChosenCardsFromAllRobots implements IMessage, Serializable {
      *
      * @return Hashmap med roboter og deres valgte kort.
      */
-    public TreeMap<Robot, IMessage> getAllDesicions() {
+    public TreeMap<Robot, ArrayList<ProgramCard>> getAllDesicions() {
         return allDesicions;
     }
+
+
 }

@@ -1,7 +1,6 @@
 package TestClasses;
 
 import GameBoard.Cards.Deck;
-import GameBoard.Cards.ICard;
 import GameBoard.Cards.ProgramCard;
 import GameBoard.Robot;
 import org.junit.jupiter.api.BeforeEach;
@@ -22,12 +21,12 @@ public class RobotTest {
     @BeforeEach
     public void reset(){
         bot = new Robot("Nebuchadnezzar", false);
-        deck = new Deck(false);
+        deck = new Deck();
     }
 
     @Test
     public void robotCrashesWhenGivenMoreCardsThanItCanHold(){
-        ArrayList<ICard> cards = new ArrayList<>();
+        ArrayList<ProgramCard> cards = new ArrayList<>();
         for (int i = 0; i < Robot.MAX_AVAILABLE_CARDS + 1; i++) {
             cards.add(deck.drawCard());
         }
@@ -55,7 +54,7 @@ public class RobotTest {
     @Test
     public void canOnlyChooseAvailableCards(){
         try{
-            bot.chooseCard(new ProgramCard(69, 0, 420, null)); //Dette kortet er antagelig ikke i listen
+            bot.chooseCard(new ProgramCard(69, 0, 420)); //Dette kortet er antagelig ikke i listen
             fail();
         }catch (IllegalArgumentException e){
             //Yay
@@ -71,7 +70,7 @@ public class RobotTest {
     }
 
     private void setAvailableCards(){
-        ArrayList<ICard> cards = new ArrayList<>();
+        ArrayList<ProgramCard> cards = new ArrayList<>();
         for (int i = 0; i < Robot.MAX_AVAILABLE_CARDS; i++) cards.add(deck.drawCard());
         bot.setAvailableCards(cards);
     }

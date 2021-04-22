@@ -9,19 +9,18 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
-import com.badlogic.gdx.graphics.Texture;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeAll;
 
 import java.util.TreeSet;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.fail;
 
 public class BoardTests {
@@ -89,7 +88,7 @@ public class BoardTests {
         bård.placeRobotAt(0, 0, robot1);
         int direction = robot1.getDirection();
 
-        bård.performMove(new ProgramCard(0, 1, 30, new Texture(Gdx.files.internal("Cards/1 Red HULK X90/030 ROTATE RIGHT 1Red 3.png"))), robot1);
+        bård.performMove(new ProgramCard(0, 1, 30), robot1);
 
         assertNotEquals(direction, robot1.getDirection());
     }
@@ -99,7 +98,7 @@ public class BoardTests {
         bård.placeRobotAt(0, 0, robot1);
         robot1.setDirection(1);
 
-        bård.performMove(new ProgramCard(1, 0, 90, new Texture(Gdx.files.internal("Cards/1 Red HULK X90/090 MOVE1 1Red 3.png"))), robot1);
+        bård.performMove(new ProgramCard(1, 0, 90), robot1);
 
         assertNull(bård.getRobotAt(0, 0));
         assertEquals(robot1, bård.getRobotAt(1, 0));
@@ -110,7 +109,7 @@ public class BoardTests {
         bård.spawnRobot(robot1);
         robot1.setDirection(0);
 
-        bård.performMove(new ProgramCard(-1, 0, 1, null), robot1);
+        bård.performMove(new ProgramCard(-1, 0, 1), robot1);
 
         assertNull(bård.getRobotAt(9, 3));
         assertEquals(robot1, bård.getRobotAt(9, 4));
@@ -125,7 +124,7 @@ public class BoardTests {
         assertNull(bård.getRobotAt(2, 3));
 
         //Her prøver roboten å gå inn i en vegg. Da skal den ikke flyttes.
-        bård.performMove(new ProgramCard(1, 0, 90, new Texture(Gdx.files.internal("Cards/1 Red HULK X90/090 MOVE1 1Red 3.png"))), robot1);
+        bård.performMove(new ProgramCard(1, 0, 90), robot1);
 
         assertEquals(robot1, bård.getRobotAt(1, 3));
         assertNull(bård.getRobotAt(2, 3));
@@ -136,7 +135,7 @@ public class BoardTests {
         bård.placeRobotAt(0, 0, robot1);
         robot1.setDirection(1);
 
-        bård.performMove(new ProgramCard(3, 0, 170, new Texture(Gdx.files.internal("Cards/1 Red HULK X90/170 MOVE3 1Red 3.png"))), robot1);
+        bård.performMove(new ProgramCard(3, 0, 170), robot1);
 
         assertNull(bård.getRobotAt(0, 0));
         assertNull(bård.getRobotAt(1, 0));
@@ -150,7 +149,7 @@ public class BoardTests {
         robot1.setDirection(3);
 
         //Prøver å gå 3 skritt, skal bli stoppet av en vegg etter 2
-        bård.performMove(new ProgramCard(3, 0, 170, new Texture(Gdx.files.internal("Cards/1 Red HULK X90/170 MOVE3 1Red 3.png"))), robot1);
+        bård.performMove(new ProgramCard(3, 0, 170), robot1);
 
         assertNull(bård.getRobotAt(4, 3));
         assertNull(bård.getRobotAt(3, 3));
@@ -166,7 +165,7 @@ public class BoardTests {
         assertEquals(robot1, bård.getRobotAt(2, 3));
         assertNull(bård.getRobotAt(1, 3));
 
-        bård.performMove(new ProgramCard(1, 0, 90, new Texture(Gdx.files.internal("Cards/1 Red HULK X90/090 MOVE1 1Red 3.png"))), robot1);
+        bård.performMove(new ProgramCard(1, 0, 90), robot1);
 
         assertEquals(robot1, bård.getRobotAt(2, 3));
         assertNull(bård.getRobotAt(1, 3));
@@ -178,7 +177,7 @@ public class BoardTests {
         bård.placeRobotAt(1, 0, robot2);
         robot1.setDirection(1);
 
-        bård.performMove(new ProgramCard(1, 0, 90, new Texture(Gdx.files.internal("Cards/1 Red HULK X90/090 MOVE1 1Red 3.png"))), robot1);
+        bård.performMove(new ProgramCard(1, 0, 90), robot1);
 
         assertNull(bård.getRobotAt(0, 0));
         assertEquals(robot1, bård.getRobotAt(1, 0));
@@ -191,7 +190,7 @@ public class BoardTests {
         bård.placeRobotAt(1, 0, robot2);
         robot1.setDirection(1);
 
-        bård.performMove(new ProgramCard(2, 0, 130, new Texture(Gdx.files.internal("Cards/1 Red HULK X90/130 MOVE1 1Red 3.png"))), robot1);
+        bård.performMove(new ProgramCard(2, 0, 130), robot1);
 
         assertNull(bård.getRobotAt(0, 0));
         assertNull(bård.getRobotAt(1, 0));
@@ -206,7 +205,7 @@ public class BoardTests {
         robot1.setDirection(1);
 
         //Her treffer de veggen umiddelbart.
-        bård.performMove(new ProgramCard(3, 0, 170, new Texture(Gdx.files.internal("Cards/1 Red HULK X90/170 MOVE3 1Red 3.png"))), robot1);
+        bård.performMove(new ProgramCard(3, 0, 170), robot1);
 
         assertEquals(robot1, bård.getRobotAt(0, 3));
         assertEquals(robot2, bård.getRobotAt(1, 3));
@@ -220,7 +219,7 @@ public class BoardTests {
         robot1.setDirection(3);
 
         //Har kan de gå ett skritt før de treffer veggen.
-        bård.performMove(new ProgramCard(3, 0, 170, new Texture(Gdx.files.internal("Cards/1 Red HULK X90/170 MOVE3 1Red 3.png"))), robot1);
+        bård.performMove(new ProgramCard(3, 0, 170), robot1);
 
         assertNull(bård.getRobotAt(4, 3));
         assertEquals(robot1, bård.getRobotAt(3, 3));
@@ -314,7 +313,7 @@ public class BoardTests {
         bård.placeRobotAt(7, 4, robot1);
         robot1.setDirection(1);
 
-        bård.performMove(new ProgramCard(1, 0, 90, new Texture(Gdx.files.internal("Cards/1 Red HULK X90/090 MOVE1 1Red 3.png"))), robot1);
+        bård.performMove(new ProgramCard(1, 0, 90), robot1);
 
         assertEquals(robot1, bård.getRobotAt(7, 4));
         assertNull(bård.getRobotAt(8, 4));
@@ -360,7 +359,7 @@ public class BoardTests {
         bård.spawnRobot(robot1);
         robot1.setDirection(1);
 
-        bård.performMove(new ProgramCard(1, 0, 90, new Texture(Gdx.files.internal("Cards/1 Red HULK X90/090 MOVE1 1Red 3.png"))), robot1);
+        bård.performMove(new ProgramCard(1, 0, 90), robot1);
         bård.endPhase();
 
         assertTrue(robot1.getLives() < Robot.INITIAL_LIVES);
@@ -372,7 +371,7 @@ public class BoardTests {
         bård.spawnRobot(robot1);
         robot1.setDirection(3);
 
-        bård.performMove(new ProgramCard(3, 0, 170, new Texture(Gdx.files.internal("Cards/1 Red HULK X90/170 MOVE3 1Red 3.png"))), robot1);
+        bård.performMove(new ProgramCard(3, 0, 170), robot1);
         bård.endPhase();
 
         assertNull(bård.getRobotAt(6, 3));
@@ -388,11 +387,11 @@ public class BoardTests {
         robot1.setDirection(2);
 
         //Kjører vekk fra checkpointet
-        bård.performMove(new ProgramCard(1, 0, 90, new Texture(Gdx.files.internal("Cards/1 Red HULK X90/090 MOVE1 1Red 3.png"))), robot1);
+        bård.performMove(new ProgramCard(1, 0, 90), robot1);
         robot1.setDirection(1);
 
         //Kjører av brettet
-        bård.performMove(new ProgramCard(1, 0, 90, new Texture(Gdx.files.internal("Cards/1 Red HULK X90/090 MOVE1 1Red 3.png"))), robot1);
+        bård.performMove(new ProgramCard(1, 0, 90), robot1);
         bård.endPhase();
 
         assertNull(bård.getRobotAt(9, 4));
@@ -403,16 +402,16 @@ public class BoardTests {
     public void endingPhaseOnCheckPointSetsNewSpawnPoint(){
         bård.spawnRobot(robot1);
         robot1.setDirection(2);
-        bård.performMove(new ProgramCard(2, 0, 140, new Texture(Gdx.files.internal("Cards/1 Red HULK X90/140 MOVE2 1Red 3.png"))), robot1);
+        bård.performMove(new ProgramCard(2, 0, 140), robot1);
         robot1.setDirection(3);
 
         //Her står botten oppå respawnpointet
-        bård.performMove(new ProgramCard(2, 0, 140, new Texture(Gdx.files.internal("Cards/1 Red HULK X90/140 MOVE2 1Red 3.png"))), robot1);
+        bård.performMove(new ProgramCard(2, 0, 140), robot1);
 
         bård.endPhase();
 
         //Hopper nedi hullet
-        bård.performMove(new ProgramCard(1, 0, 90, new Texture(Gdx.files.internal("Cards/1 Red HULK X90/090 MOVE1 1Red 3.png"))), robot1);
+        bård.performMove(new ProgramCard(1, 0, 90), robot1);
 
         bård.endPhase();
 
@@ -424,16 +423,16 @@ public class BoardTests {
     public void cannotRespawnIfCheckPointIsOccupied(){
         bård.spawnRobot(robot1);
         robot1.setDirection(3);
-        bård.performMove(new ProgramCard(2, 0, 140, new Texture(Gdx.files.internal("Cards/1 Red HULK X90/140 MOVE2 1Red 3.png"))), robot1);
+        bård.performMove(new ProgramCard(2, 0, 140), robot1);
         bård.placeRobotAt(9, 3, robot2);
 
-        bård.performMove(new ProgramCard(1, 0, 90, new Texture(Gdx.files.internal("Cards/1 Red HULK X90/090 MOVE1 1Red 3.png")) ), robot1);
+        bård.performMove(new ProgramCard(1, 0, 90), robot1);
         bård.endPhase();
 
         //Nå er checkpointet okkupert
         assertEquals(robot2, bård.getRobotAt(9, 3));
 
-        bård.performMove(new ProgramCard(1, 0, 90, new Texture(Gdx.files.internal("Cards/1 Red HULK X90/090 MOVE1 1Red 3.png"))), robot2);
+        bård.performMove(new ProgramCard(1, 0, 90), robot2);
         bård.endPhase();
 
         //Nå er checkpointet ledig igjen
@@ -443,7 +442,7 @@ public class BoardTests {
     @Test
     public void tryingToMoveNonExistentRobotYieldsError(){
         try{
-            bård.performMove(new ProgramCard(1, 0, 90, new Texture(Gdx.files.internal("Cards/1 Red HULK X90/090 MOVE1 1Red 3.png"))), robot1);
+            bård.performMove(new ProgramCard(1, 0, 90), robot1);
             fail();
         } catch (IllegalArgumentException ex){
             //Yay it worked
@@ -631,7 +630,7 @@ public class BoardTests {
         robot1.setDirection(1);
         bård.getDirtyLocations();
 
-        bård.performMove(new ProgramCard(1, 0, 1, null), robot1);
+        bård.performMove(new ProgramCard(1, 0, 1), robot1);
 
         TreeSet<Position> dirtyLocations = bård.getDirtyLocations();
         assertTrue(dirtyLocations.contains(new Position(0, 0)));
@@ -642,10 +641,10 @@ public class BoardTests {
     public void drivingIntoHoleAndDyingMarksCorrectLocationsAsDirty(){
         bård.spawnRobot(robot1);
         robot1.setDirection(3);
-        bård.performMove(new ProgramCard(2, 0, 1, null), robot1);
+        bård.performMove(new ProgramCard(2, 0, 1), robot1);
         bård.getDirtyLocations(); //Resetter settet
 
-        bård.performMove(new ProgramCard(1, 0, 1, null), robot1);
+        bård.performMove(new ProgramCard(1, 0, 1), robot1);
 
         assertTrue(bård.getDirtyLocations().contains(new Position(7, 3)));
 
@@ -659,7 +658,7 @@ public class BoardTests {
         bård.placeRobotAt(0, 0, robot1);
         robot1.setDirection(1);
 
-        bård.performMove(new ProgramCard(1, 0, 1, null), robot1);
+        bård.performMove(new ProgramCard(1, 0, 1), robot1);
 
         assertFalse(bård.getDirtyLocations().isEmpty()); //Her bør settet resettes
         assertTrue(bård.getDirtyLocations().isEmpty());
@@ -671,7 +670,7 @@ public class BoardTests {
         bård.placeRobotAt(4, 3, robot2);
         bård.getDirtyLocations();
 
-        bård.performMove(new ProgramCard(3, 0, 1, null), robot1);
+        bård.performMove(new ProgramCard(3, 0, 1), robot1);
         TreeSet<Position> dirtyLocations = bård.getDirtyLocations();
 
         assertTrue(dirtyLocations.contains(new Position(4, 0)));
@@ -699,7 +698,7 @@ public class BoardTests {
         bård.placeRobotAt(0, 0, robot1);
         bård.getDirtyLocations();
 
-        bård.performMove(new ProgramCard(0, 1, 1, null), robot1);
+        bård.performMove(new ProgramCard(0, 1, 1), robot1);
 
         assertTrue(bård.getDirtyLocations().contains(new Position(0, 0)));
     }
@@ -708,7 +707,7 @@ public class BoardTests {
     public void robotTakingMortalDamageMarksLocationAsDirty(){
         bård.spawnRobot(robot1);
         robot1.setDirection(0);
-        bård.performMove(new ProgramCard(2, 0, 1, null), robot1);
+        bård.performMove(new ProgramCard(2, 0, 1), robot1);
         bård.getDirtyLocations(); //Resetter settet
 
         robot1.applyDamage(9001);
@@ -756,5 +755,31 @@ public class BoardTests {
         bård.endPhase();
 
         assertTrue(bård.getDirtyLocations().contains(new Position(2, 0)));
+    }
+
+    @Test
+    public void robotsGettingHitByLaserAddsThemToTheSet(){
+        bård.placeRobotAt(6, 4, robot1); //I skuddlinjen
+        bård.placeRobotAt(5, 4, robot2); //Bak en vegg
+        bård.placeRobotAt(9, 5, robot3); //Langt unna, men fortsatt i skuddlinjen
+        bård.placeRobotAt(3, 9, robot4); //Langt vekke, utenfor skuddlinjen
+
+        bård.endPhase();
+        TreeSet<Position> locs = bård.getRecentlyDamagedPositions();
+
+        assertTrue(locs.contains(new Position(6, 4)));
+        assertFalse(locs.contains(new Position(5, 4)));
+        assertTrue(locs.contains(new Position(9, 5)));
+        assertFalse(locs.contains(new Position(3, 9)));
+    }
+
+    @Test
+    public void damagedLocationSetGetResetEverytime(){
+        bård.placeRobotAt(6, 4, robot1);
+
+        bård.endPhase();
+
+        assertTrue(bård.getRecentlyDamagedPositions().contains(new Position(6, 4)));
+        assertFalse(bård.getRecentlyDamagedPositions().contains(new Position(6, 4)));
     }
 }

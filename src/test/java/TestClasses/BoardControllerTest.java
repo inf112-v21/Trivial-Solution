@@ -1,7 +1,6 @@
 package TestClasses;
 
 import GameBoard.BoardController;
-import GameBoard.Cards.ICard;
 import GameBoard.Cards.ProgramCard;
 import GameBoard.Components.Flag;
 import GameBoard.Robot;
@@ -106,18 +105,18 @@ class BoardControllerTest {
 
     @Test
     public void robotsAreSortedInCorrectOrderEveryPhase(){
-        ArrayList<ICard> nebbie_cards = new ArrayList<>();
-        nebbie_cards.add(new ProgramCard(1, 0, 100, null));
-        nebbie_cards.add(new ProgramCard(1, 0, 10, null));
-        nebbie_cards.add(new ProgramCard(1, 0, 1, null));
+        ArrayList<ProgramCard> nebbie_cards = new ArrayList<>();
+        nebbie_cards.add(new ProgramCard(1, 0, 100));
+        nebbie_cards.add(new ProgramCard(1, 0, 10));
+        nebbie_cards.add(new ProgramCard(1, 0, 1));
         robot1.setAvailableCards(nebbie_cards);
-        for (ICard card : robot1.getAvailableCards()) robot1.chooseCard(card);
+        for (ProgramCard card : robot1.getAvailableCards()) robot1.chooseCard(card);
 
-        ArrayList<ICard> andromeda_cards = new ArrayList<>();
-        andromeda_cards.add(new ProgramCard(0, 1, 50, null));
-        andromeda_cards.add(new ProgramCard(0, 1, 35, null));
+        ArrayList<ProgramCard> andromeda_cards = new ArrayList<>();
+        andromeda_cards.add(new ProgramCard(0, 1, 50));
+        andromeda_cards.add(new ProgramCard(0, 1, 35));
         robot2.setAvailableCards(andromeda_cards);
-        for (ICard card : robot2.getAvailableCards()) robot2.chooseCard(card);
+        for (ProgramCard card : robot2.getAvailableCards()) robot2.chooseCard(card);
 
         boardController.playersAreReady();
 
@@ -141,8 +140,8 @@ class BoardControllerTest {
 
     @Test
     public void boardWaitsForEveryoneToBeReadyBeforeStarting(){
-        ArrayList<ICard> nebbie_cards = new ArrayList<>();
-        nebbie_cards.add(new ProgramCard(1, 0, 1, null));
+        ArrayList<ProgramCard> nebbie_cards = new ArrayList<>();
+        nebbie_cards.add(new ProgramCard(1, 0, 1));
         robot1.setAvailableCards(nebbie_cards);
         robot1.chooseCard(robot1.getAvailableCards().get(0));
 
@@ -166,7 +165,7 @@ class BoardControllerTest {
     public void togglingPowerDownHealsRobotAtTheEndOfTheRound(){
         robot1.applyDamage(robot1.getHP() - 1);
         robot2.applyDamage(robot2.getHP() - 1);
-        robot1.togglePowerDown(); //Kun robot1 er i powerdown
+        robot1.setPowerDown(true); //Kun robot1 er i powerdown
 
         simulateRound();
 

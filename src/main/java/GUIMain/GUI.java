@@ -17,17 +17,16 @@ public class GUI extends Game {
 
     private Skin skin;
     private static final String SKIN_NAME = "assets/comic/skin/comic-ui.json";
+
+    //DEVELOPER_MODE=true mode gjør at SanityCheck blir sendt mellom klienter og server for hver runde,
+    // som potensiellt kræsjer spillet. I tillegg får vi se stacktrace om noe kræsjer.
+    //DEVELOPER_MODE=false gjør at stacktracen fra et kræsj ikke blir vist, spillet bare stoppes.
+    public static final boolean DEVELOPER_MODE = true;
     private Screen currentScreen;
     private NetworkServer server;
     private NetworkClient client;
 
-    public NetworkServer getServer() {
-        return server;
-    }
 
-    public NetworkClient getClient() {
-        return client;
-    }
 
     /**
      * Standard GUI. Bruk denne.
@@ -55,29 +54,61 @@ public class GUI extends Game {
         server = new NetworkServer();
     }
 
-    public void startClient(){
-        try {
-            client = new NetworkClient();
+    public void startClient(){ client = new NetworkClient();}
 
-            //Finner Ip-addressen til hosten.
-            InetAddress hostIpadress = client.findServer();
+    public NetworkServer getServer() {
+        return server;
+    }
+    public void reSetServer(){server = null;}
 
-            //Connect to client
+    public NetworkClient getClient() {
+        return client;
+    }
+    public void reSetClient(){client = null;}
+
+
+    public void tryToConnectClientToServer(){
+        //Finner Ip-addressen til hosten.
+        InetAddress hostIpadress = client.findServer();
+
+        if(hostIpadress != null) {
+            //Prøver å koble til hosten/serveren
             client.connect(hostIpadress.getHostName());
+        }
+        else{
+            //Dreper threaden
+            client.disconnectAndStopClientThread();
 
-        }catch (NullPointerException ex){
-            Stage stage = new Stage();
-            Gdx.input.setInputProcessor(stage);
-            showPopUp("Couldn't find any online servers :(", stage);
-            setScreen(new MenuScreen(this));
+            //Her setter vi klienten til null, slik at vi kan starte en ny klient
+            //neste gang en spiller klicker join.
+            reSetClient();
         }
     }
 
     @Override
     public void render() {
-        Gdx.gl.glClearColor(1, 1, 1, 1);
-        Gdx.gl.glClear(GL30.GL_COLOR_BUFFER_BIT);
-        super.render();
+        if (DEVELOPER_MODE) {
+            Gdx.gl.glClearColor(1, 1, 1, 1);
+            Gdx.gl.glClear(GL30.GL_COLOR_BUFFER_BIT);
+            super.render();
+        }
+        else{
+            try {
+                Gdx.gl.glClearColor(1, 1, 1, 1);
+                Gdx.gl.glClear(GL30.GL_COLOR_BUFFER_BIT);
+                super.render();
+            }catch (Exception ex){
+                //Lukker spillet om vi fikk en run-time error.
+                //Dermed får ikke brukeren se noen stack-trace eller noe sånt.
+                killServerAndClient();
+                Gdx.app.exit();
+            }
+        }
+    }
+
+    private void killServerAndClient(){
+        if (server != null) server.stopServerAndDisconnectAllClients();
+        if (client != null) client.disconnectAndStopClientThread();
     }
     
     public Skin getSkin(){ return skin; }

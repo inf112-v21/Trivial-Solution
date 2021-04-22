@@ -27,7 +27,7 @@ public class MenuScreen extends SimpleScreen {
         super.show();
         Table tabell = new Table();
         tabell.setBounds(0,0,Gdx.graphics.getWidth(),Gdx.graphics.getHeight());
-        parameter.size = 58;
+        parameter.size = Gdx.graphics.getHeight()/19;
         parameter.borderWidth = 3f;
         parameter.color = WHITE;
         parameter.borderColor = BLACK;
@@ -35,7 +35,7 @@ public class MenuScreen extends SimpleScreen {
         Label title = new Label("Robo-Rally",style);
         tabell.add(title).spaceBottom(20);
         tabell.row();
-        parameter.size = 36;
+        parameter.size = Gdx.graphics.getHeight()/30;
         style.font = generator.generateFont(parameter);
         Label underTitle = new Label("A Trivial Solution", style);
         tabell.add(underTitle).spaceBottom(40);
@@ -45,6 +45,7 @@ public class MenuScreen extends SimpleScreen {
         multiplayer = new TextButton("Multiplayer", gui.getSkin());
         options = new TextButton("Options", gui.getSkin());
         quit = new TextButton("Quit", gui.getSkin());
+        TextButton credits = new TextButton("Credits",gui.getSkin());
 
         singleplayer.addListener(new ChangeListener() {
             @Override
@@ -64,6 +65,12 @@ public class MenuScreen extends SimpleScreen {
                 gui.setScreen(new OptionScreen(gui));
             }
         });
+        credits.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent changeEvent, Actor actor) {
+                gui.setScreen(new CreditsScreen(gui));
+            }
+        });
         quit.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent changeEvent, Actor actor) {
@@ -71,12 +78,10 @@ public class MenuScreen extends SimpleScreen {
             }
         });
 
-        tabell.add(singleplayer).size(300f,80f).spaceBottom(20);
-        tabell.row();
-        tabell.add(multiplayer).size(300f,80f).spaceBottom(20);
-        tabell.row();
-        tabell.add(options).size(300f,80f).spaceBottom(20);
-        tabell.row();
+        tabell.add(singleplayer).size(300f,80f).spaceBottom(20).row();
+        tabell.add(multiplayer).size(300f,80f).spaceBottom(20).row();
+        tabell.add(options).size(300f,80f).spaceBottom(20).row();
+        tabell.add(credits).size(300f,80f).spaceBottom(20).row();
         tabell.add(quit).size(300f,80f).spaceBottom(20);
 
         stage.addActor(tabell);

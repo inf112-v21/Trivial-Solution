@@ -1,0 +1,25 @@
+Møtereferat 21.04.2021
+
+Møte handlet om Disconnections i Multiplayer, Laser bugs, finpusse screens
+
+Alle i gruppen er innkalt.
+Alle i gruppen er tilstede.
+Møtetid og sted: 10-14, Sem3
+
+Saker som skal diskuteres:
+-Hvordan implementasjonen av hvordan klienten/serveren skal reagere når noen kobler fra.
+(Dusan blir mest sannsynlig ferdig med det i løpet av dagen).
+-Hvilke Laser patterns vi skal bruke
+-Screen configs.
+
+Hva vi har gjort:
+-Sander: Laser og jobbet litt med dipose() issuen
+-Steinar: Fikset bugen der klient og server skjermen simulerte ulikt
+-Dusan: Disconnection features, slik at man kan gå ut av mulitplayer uten at ting kræsjer.
+-Samuel: CreditScreen og diverse GUI.
+-Ilyas: AI
+
+Hva vi skal jobbe videre med:
+- Bli ferdig med Multiplayer (Disconnections), AI og Laser
+- Vi må også skrive Oblig 4 dokumentet og gikse .exe issuen. Sander tar en litt mer aktiv rolle i .exe issuen
+akkurat nå.

@@ -3,6 +3,7 @@ package GUIMain.Screens;
 import GUIMain.GUI;
 import GameBoard.Robot;
 import NetworkMultiplayer.Messages.PreGameMessages.GameInfo;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
@@ -17,7 +18,7 @@ import static com.badlogic.gdx.graphics.Color.WHITE;
 
 public class CreateGameScreen extends SimpleScreen {
 
-    private static final String MAP_LOCATION = "assets/maps";
+    public static final String MAP_LOCATION = "assets/maps";
     private SelectBox<Integer> numberOfRobots;
     private SelectBox<String> choosemapbox;
     private TextField textField;
@@ -42,7 +43,7 @@ public class CreateGameScreen extends SimpleScreen {
         table.add(title).spaceBottom(80);
         table.row();
 
-        parameter.size = 25;
+        parameter.size = Gdx.graphics.getHeight()/44;
         style.font = generator.generateFont(parameter);
         Label numberplayerlabel = new Label("Number of players: ", style);
         temp.add(numberplayerlabel).spaceBottom(50);
@@ -53,7 +54,7 @@ public class CreateGameScreen extends SimpleScreen {
 
         numberOfRobots = new SelectBox<>(gui.getSkin());
         numberOfRobots.setItems(2, 3, 4, 5, 6, 7, 8);
-        parameter.size = 20;
+        parameter.size = Gdx.graphics.getHeight()/54;
         parameter.borderWidth = 1f;
         parameter.color = BLACK;
         parameter.borderColor = WHITE;
@@ -85,7 +86,7 @@ public class CreateGameScreen extends SimpleScreen {
                 ArrayList<Robot> robots = Robot.getDefaultRobots(numberOfRobots.getSelected()-1, design); // -1, siden spilleren inngår i disse robotene
                 robots.add(new Robot(textField.getText(), design, false));
                 String map = MAP_LOCATION + "/" + choosemapbox.getSelected() + ".tmx";
-                gui.setScreen(new SinglePlayerLoadingScreen(new GameInfo(Collections.unmodifiableList(robots), map, numberOfRobots.getSelected()-1), false, true, gui));
+                gui.setScreen(new LoadingScreen(new GameInfo(Collections.unmodifiableList(robots), map, numberOfRobots.getSelected()-1), false, true, gui));
 
                 return true;
             }

@@ -1,29 +1,38 @@
 package GameBoard;
 
-import GameBoard.Cards.ICard;
-import GameBoard.Components.ComponentFactory;
+import GameBoard.Cards.ProgramCard;
 import GameBoard.Components.Flag;
+import GameBoard.Components.ConveyorBelt;
 import GameBoard.Components.IComponent;
 import GameBoard.Components.Laser;
+import GameBoard.Components.LaserBeam;
+import GameBoard.Components.ComponentFactory;
 import GameBoard.Components.SpawnPoint;
-import GameBoard.Components.ConveyorBelt;
-import GameBoard.Components.Gear;
 import GameBoard.Components.Wrench;
+import GameBoard.Components.Gear;
+import GameBoard.Components.Wall;
 import GameBoard.Components.CheckPoint;
 import GameBoard.Components.Hole;
-import GameBoard.Components.Wall;
 import NetworkMultiplayer.Messages.InGameMessages.SanityCheck;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
+import com.badlogic.gdx.maps.tiled.tiles.StaticTiledMapTile;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.TreeMap;
+import java.util.TreeSet;
+import java.util.Comparator;
+import java.util.LinkedList;
 import java.util.function.ToIntFunction;
 
 public class Board {
 
     private int HEIGHT;
     private int WIDTH;
+
+    private boolean firstRoundFinished = false;
 
     //Grids. Disse må initialiseres i readFromTMX().
     //Merk at vi ikke har noe grid for bakgrunnen,
@@ -35,8 +44,14 @@ public class Board {
     private final TreeMap<Robot, Position> botPositions = new TreeMap<>();
     private final TreeMap<Laser, Position> laserPositions = new TreeMap<>(Comparator.comparingInt((ToIntFunction<Object>) Object::hashCode));
     private final TreeSet<Position> dirtyLocations = new TreeSet<>();
+    private final TreeMap<Position, TiledMapTileLayer.Cell> laserLocations = new TreeMap<>();
+    // Liste over alle typene laserBeams:
+    private final TreeMap<Integer, LaserBeam> allLaserBeams = new TreeMap<>();
+
     private final LinkedList<Position> availableSpawnPoints = new LinkedList<>();
     private final LinkedList<Robot> robotsWaitingToBeRespawned = new LinkedList<>();
+
+    private final TreeSet<Robot> recentlyDamagedRobots = new TreeSet<>();
 
     //Antall flagg i spillet.
     private final ArrayList<Flag> flagWinningFormation = new ArrayList<>();
@@ -59,6 +74,13 @@ public class Board {
         TiledMapTileLayer middleground = (TiledMapTileLayer) map.getLayers().get("Middleground");
         TiledMapTileLayer foreground   = (TiledMapTileLayer) map.getLayers().get("Foreground");
 
+        allLaserBeams.put(39,new LaserBeam(39, 3, false, false,4, 6));
+        allLaserBeams.put(40,new LaserBeam(40, 0, false, true,4, 7));
+        allLaserBeams.put(47,new LaserBeam(47, 0, false, false,5, 6));
+        allLaserBeams.put(102,new LaserBeam(102, 0, true, false,12, 5));
+        allLaserBeams.put(103,new LaserBeam(103, 3, true, false,12, 6));
+        allLaserBeams.put(101,new LaserBeam(101, 0, true, true,12, 4));
+
         HEIGHT = background.getHeight();
         WIDTH  = background.getWidth();
 
@@ -69,6 +91,7 @@ public class Board {
         ArrayList<Object[]> newSpawnPositions = new ArrayList<>(8);
         for (int y = 0; y < background.getHeight(); y++) {
             for (int x = 0; x < background.getWidth(); x++) {
+
                 midgrid[HEIGHT-1-y][x] = ComponentFactory.spawnComponent(middleground.getCell(x, y));
 
                 IComponent forcomp = ComponentFactory.spawnComponent(foreground.getCell(x, y));
@@ -87,6 +110,7 @@ public class Board {
         //Dette burde være det samme som å sortere etter lavest ID.
         newSpawnPositions.sort((o1, o2) -> Integer.compare(o2[0].hashCode(), o1[0].hashCode()));
         for(Object[] o : newSpawnPositions) availableSpawnPoints.addFirst((Position) o[1]);
+
     }
 
     /**
@@ -95,8 +119,8 @@ public class Board {
      * @param card Bevegelseskortet
      * @param bot Roboten som skal flyttes
      */
-    public void performMove(ICard card, Robot bot){
-        if (bot == null) throw new NullPointerException("The bot is null.");
+    public void performMove(ProgramCard card, Robot bot){
+        if (bot == null) throw new IllegalArgumentException("The bot is null.");
         if (robotsWaitingToBeRespawned.contains(bot)) return; //Botten kan ikke flytte, den er død
         if ( ! botPositions.containsKey(bot)) throw new IllegalArgumentException("The bot is not on the board.");
         if(card.getRotation() != 0){
@@ -113,7 +137,6 @@ public class Board {
         int dist = card.getDistance();
         if (dist < 0 ) moveTowards(Math.abs(dist), pos.getX(), pos.getY(), Math.floorMod(bot.getDirection() + 2, Robot.TAU));
         else moveTowards(dist, pos.getX(), pos.getY(), bot.getDirection());
-
     }
 
     /**
@@ -125,19 +148,12 @@ public class Board {
     private void pickUpFlags() {
         for (Robot bot : botPositions.keySet()) {
             Position pos = botPositions.get(bot);
-
-            int posY = pos.getY();
-            int posX = pos.getX();
-
-            if (forgrid[posY][posX] instanceof Flag) {
-                Flag newFlag = (Flag) forgrid[posY][posX];
-
-                if (robotCanPickUpFlag(bot, newFlag)) {
-                    bot.addToFlagsVisited(newFlag);
-                }
+            IComponent comp = forgrid[pos.getY()][pos.getX()];
+            if(bot.getVisitedFlags().size() < flagWinningFormation.size() && comp instanceof Flag) {
+                Flag flag = (Flag) comp;
+                if (robotCanPickUpFlag(bot, flag)) bot.addToFlagsVisited(flag);
             }
         }
-
     }
 
 
@@ -160,11 +176,13 @@ public class Board {
             int nextFlag = flagWinningFormation.indexOf(lastVisitedFlag) + 1;
 
             //Hvis neste flagg som skal registreres er det flagget roboten fant så kan vi registrere det.
-            return foundFlag.equals(flagWinningFormation.get(nextFlag));
+            if(foundFlag.equals(flagWinningFormation.get(nextFlag)) && !visited.contains(foundFlag)){
+                return true;
+            }
         }
 
         //Hvis inget flagg er registrert så sjekker vi om roboten landet på det første flagget
-        return foundFlag.equals(flagWinningFormation.get(0));
+        return foundFlag.equals(flagWinningFormation.get(0)) && visited.isEmpty();
     }
 
     /**
@@ -299,7 +317,7 @@ public class Board {
         if (N_Moves <= 0) return true;
 
         Robot bot = botgrid[fromY][fromX];
-        if (bot == null) throw new NullPointerException("There is no bot at (" + fromX + ", " + fromY + ").");
+        if (bot == null) throw new IllegalArgumentException("There is no bot at (" + fromX + ", " + fromY + ").");
 
         int toX = fromX + directionToX(dir);
         int toY = fromY + directionToY(dir);
@@ -328,12 +346,12 @@ public class Board {
         return true;
     }
 
-
-
     /**
      * Avfyrer alle lasere. inkludert de skutt av robotene.
      */
     private void fireAllLasers(){
+        if(firstRoundFinished)
+            laserLocations.clear();
         for(Laser laser : laserPositions.keySet()){
             Position pos = laserPositions.get(laser);
             fireOneLaser(pos.getX(), pos.getY(), laser.getDirection(), laser.isDoubleLaser(), false);
@@ -342,7 +360,9 @@ public class Board {
             Position pos = botPositions.get(bot);
             fireOneLaser(pos.getX(), pos.getY(), bot.getDirection(), false, true);
         }
+        firstRoundFinished = true;
     }
+
 
     /**
      * Skyter en laser ett og ett skritt, rekursivt.
@@ -357,11 +377,14 @@ public class Board {
     private void fireOneLaser(int x, int y, int dir, boolean isDoubleLaser, boolean ignoreFirst){
         if(!ignoreFirst && botgrid[y][x] != null){
             botgrid[y][x].applyDamage(isDoubleLaser ? 2 : 1);
+            recentlyDamagedRobots.add(botgrid[y][x]);
             return;
         }
-
         if(forgrid[y][x] instanceof Wall && !((Wall) forgrid[y][x]).canLeaveInDirection(dir)) return;
 
+        if(!ignoreFirst)
+            findCorrespondingLaser(x, y, dir, isDoubleLaser);
+        
         int nextX = x + directionToX(dir);
         int nextY = y + directionToY(dir);
 
@@ -371,6 +394,50 @@ public class Board {
         fireOneLaser(nextX, nextY, dir, isDoubleLaser, false);
     }
 
+    /**
+     * Hjelpemetode for findCorrespondingLaser
+     * @param ID Component-ID
+     * @param x x-posisjon
+     * @param y y-posisjon
+     */
+    private void setLaserLocations(int ID, int x, int y, boolean isDoubleLaser) {
+        for(Position pos : laserLocations.keySet()){
+            if(pos.getX() == x && pos.getY() == y){
+                if(laserLocations.get(pos).getTile().getId() == ID) return;
+                if(isDoubleLaser) ID = 101;
+                else ID = 40;
+            }
+        }
+
+        LaserBeam laser = allLaserBeams.get(ID);
+        TiledMapTileLayer.Cell cell = new TiledMapTileLayer.Cell();
+        cell.setTile(new StaticTiledMapTile(new Sprite(laser.getImage())));
+        laserLocations.put(new Position(x,y), cell);
+    }
+
+    /**
+     * Metode som finner den grafiske representasjonen av lasere.
+     * @param x x-posisjonen akkurat nå
+     * @param y y-posisjonen akkurat nå
+     * @param dir retningen til laseren
+     * @param isDoubleLaser om det er en dobbellaser eller ikke.
+     */
+    private void findCorrespondingLaser(int x, int y, int dir, boolean isDoubleLaser) {
+        int ID = 0;
+            switch(dir){
+                case 0:
+                case 2:
+                    if(isDoubleLaser)ID = 102;
+                    else ID = 47;
+                    break;
+                case 1:
+                case 3:
+                    if(isDoubleLaser) ID = 103;
+                    else ID = 39;
+                    break;
+        }
+        setLaserLocations(ID, x, y, isDoubleLaser);
+    }
 
     /**
      * @return et sett med posisjoner som har blitt endret siden forrige gang metoden ble kalt.
@@ -380,6 +447,15 @@ public class Board {
         dirtyLocations.clear();
         return ret;
     }
+
+    public TreeSet<Position> getRecentlyDamagedPositions(){
+        TreeSet<Position> ret = new TreeSet<>();
+        for (Robot bot : recentlyDamagedRobots) ret.add(botPositions.get(bot));
+        recentlyDamagedRobots.clear();
+        return ret;
+    }
+
+    public TreeMap<Position, TiledMapTileLayer.Cell> getLaserLocations() { return new TreeMap<>(laserLocations); }
 
     private void botFellOff(Robot bot){
         bot.takeLife();
@@ -409,7 +485,6 @@ public class Board {
     public int getHeight(){
         return HEIGHT;
     }
-
 
     /**
      * Konverterer retninger på formen 0, 1, 2, 3 til hvilken retning det vil si for x-aksen.
@@ -444,18 +519,11 @@ public class Board {
     public ArrayList<Flag> getWinningCombo() { return flagWinningFormation;}
 
     public SanityCheck getSanityCheck(){
-        IComponent[][] midcopy = new IComponent[HEIGHT][WIDTH];
-        IComponent[][] forcopy = new IComponent[HEIGHT][WIDTH];
-        for (int y = 0; y < HEIGHT; y++) {
-            for (int x = 0; x < WIDTH; x++) {
-                midcopy[y][x] = midgrid[y][x]; //Trenger ikke å lage en kopi av komponentene, siden alle er immutable uansett.
-                forcopy[y][x] = forgrid[y][x];
-            }
-        }
         TreeMap<Robot, Position> positionCopy = new TreeMap<>();
         for (Robot bot : botPositions.keySet()){
             positionCopy.put(bot.copy(), botPositions.get(bot));
         }
-        return new SanityCheck(midcopy, forgrid, positionCopy);
+        return new SanityCheck(positionCopy);
     }
+
 }

@@ -1,6 +1,8 @@
-package GUIMain.Screens;
+package GUIMain.Screens.EndOfGameScreens;
 
 import GUIMain.GUI;
+import GUIMain.Screens.MenuScreen;
+import GUIMain.Screens.SimpleScreen;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -11,19 +13,20 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 
-public class GameOverScreen extends SimpleScreen {
+public abstract class LastScreen extends SimpleScreen {
+
     private SpriteBatch spriteBatch;
-
-
-    public GameOverScreen(GUI gui) {
+    
+    public LastScreen(GUI gui) {
         super(gui);
     }
+    
 
     @Override
     public void show() {
         super.show();
         spriteBatch = new SpriteBatch();
-        Texture backgroundTexture = new Texture(Gdx.files.internal("Background Images/Gameover.png"));
+        Texture backgroundTexture = chooseTexture();
         backgroundSprite = new Sprite(backgroundTexture);
         backgroundSprite.setBounds(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         stage = new Stage();
@@ -41,6 +44,7 @@ public class GameOverScreen extends SimpleScreen {
             }
         });
     }
+
     @Override
     public void render(float i) {
         spriteBatch.begin();
@@ -48,4 +52,10 @@ public class GameOverScreen extends SimpleScreen {
         spriteBatch.end();
         stage.draw();
     }
+
+    /**
+     * Abstrakt metode som blir overskrevet i subklassene
+     * @return - Den riktige grafikken
+     */
+    public abstract Texture chooseTexture();
 }

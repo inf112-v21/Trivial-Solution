@@ -1,12 +1,13 @@
 package GameBoard.Components;
 
+import java.io.Serializable;
 import java.util.Comparator;
 
 /**
  * The flag. The player needs to have touched 3 flags in order (been on positions which the flags are at
  */
 
-public class Flag extends SimpleComponent{
+public class Flag extends SimpleComponent implements Serializable {
 
 
     public Flag(int id){

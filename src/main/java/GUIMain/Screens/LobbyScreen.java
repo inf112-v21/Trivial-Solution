@@ -2,25 +2,29 @@ package GUIMain.Screens;
 
 import GUIMain.GUI;
 import GameBoard.Robot;
-import NetworkMultiplayer.Messages.MinorErrorMessage;
+import NetworkMultiplayer.Messages.PreGameMessages.GameInfo;
+import NetworkMultiplayer.Messages.PreGameMessages.SetupRobotNameDesign;
 import NetworkMultiplayer.Messages.PreGameMessages.RobotInfo;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.SelectBox;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextField;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 
 import java.util.TreeSet;
 
+import static com.badlogic.gdx.graphics.Color.BLACK;
+import static com.badlogic.gdx.graphics.Color.WHITE;
+
 public class LobbyScreen extends SimpleScreen {
 
     private final TreeSet<String> listOfPlayers = new TreeSet<>();
-    private TextField robotName;
-    private Table chooseRobotTable;
-    private Table playerListTable;
+    private TextField robotname;
+    private Table chooserobottable;
+    private Table playerlisttable;
+    private Table buttonTable;
+    private Table botDesign;
+    private SelectBox<String> map;
+
 
     public LobbyScreen(GUI gui) {
         super(gui);
@@ -32,54 +36,89 @@ public class LobbyScreen extends SimpleScreen {
         Table table = new Table();
         table.setBounds(0,0,Gdx.graphics.getWidth(),Gdx.graphics.getHeight());
 
-        Label title = new Label("Lobby", gui.getSkin());
-        table.add(title).row();
+        parameter.borderWidth = 3f;
+        parameter.color = WHITE;
+        parameter.borderColor = BLACK;
+        style.font = generator.generateFont(parameter);
+        Label title = new Label("Lobby", style);
+        table.add(title).spaceBottom(50f).row();
         Table settingtable = new Table(gui.getSkin());
-        playerListTable = new Table(gui.getSkin());
+        playerlisttable = new Table(gui.getSkin());
 
-        settingtable.add(new Label("Choose map: ", gui.getSkin()));
-        SelectBox<String> map = new SelectBox<>(gui.getSkin());
+        parameter.size = Gdx.graphics.getHeight()/44;
+        style.font = generator.generateFont(parameter);
+        Label choosenick = new Label("Choose nickname: ", style);
+        Label choosebot = new Label("Choose robot: ", style);
+        settingtable.add(new Label("Choose map: ", style));
+        parameter.size = Gdx.graphics.getHeight()/44;
+        style.font = generator.generateFont(parameter);
+        Label players = new Label("Currently connected players: ", style);
+
+        map = new SelectBox<>(gui.getSkin());
+        parameter.size = Gdx.graphics.getHeight()/54;
+        parameter.borderWidth = 1f;
+        parameter.color = WHITE;
+        parameter.borderColor = BLACK;
+        map.getStyle().font=generator.generateFont(parameter);
+        map.getStyle().listStyle.font = generator.generateFont(parameter);
         map.setItems(CreateGameScreen.getMapNames());
         settingtable.add(map).row();
-        table.add(settingtable).row();
+        table.add(settingtable).spaceBottom(25f).row();
 
-        playerListTable = new Table(gui.getSkin());
-        playerListTable.add(new Label("Currently connected players: ", gui.getSkin())).row();
-        table.add(playerListTable).row();
+        playerlisttable = new Table(gui.getSkin());
+        playerlisttable.setBounds(Gdx.graphics.getWidth()-(Gdx.graphics.getWidth()/3f),Gdx.graphics.getHeight()/2f, Gdx.graphics.getWidth()/3f,Gdx.graphics.getHeight()/2f);
+        playerlisttable.add(players).row();
+        stage.addActor(playerlisttable);
 
-        chooseRobotTable = new Table(gui.getSkin());
-        chooseRobotTable.add(new Label("Choose nickname: ", gui.getSkin()));
-        robotName = new TextField("", gui.getSkin());
-        chooseRobotTable.add(robotName).row();
+        chooserobottable = new Table(gui.getSkin());
+        chooserobottable.add(choosenick);
+        robotname = new TextField("", gui.getSkin());
+        robotname.getStyle().font = generator.generateFont(parameter);
+        chooserobottable.add(robotname);
+        table.add(chooserobottable).spaceBottom(25f).row();
 
-        chooseRobotTable.add(new Label("Choose robot: ", gui.getSkin())).row();
+        botDesign = new Table();
+        botDesign.add(choosebot).row();
         showRobotDesigns();
-        chooseRobotTable.add(designTable).row();
-
+        botDesign.add(designTable);
+        table.add(botDesign).spaceBottom(50f).row();
         TextButton confirm = new TextButton("Confirm robot", gui.getSkin());
+        buttonTable = new Table();
+        buttonTable.add(confirm);
+        table.add(buttonTable);
         confirm.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent changeEvent, Actor actor) {
-                if (robotName.getText().equals("")){
+                if (robotname.getText().equals("")){
                     gui.showPopUp("Please choose a nickname for you robot!", stage);
                     return;
                 }
-                MinorErrorMessage msg = gui.getServer().setHostRobot(new RobotInfo(robotName.getText(), design));
-                if (msg == null){
-                    chooseRobotTable.clear();
-                }
-                else {
-                    switch (msg) {
-                        case UNAVAILABLE_DESIGN:
-                            gui.showPopUp("That robot has already been taken, please choose another one", stage);
-                        case UNAVAILABLE_NAME:
-                            gui.showPopUp("That name has already been taken, please be more original", stage);
-                    }
+                SetupRobotNameDesign msg = gui.getServer().setHostRobot(new RobotInfo(robotname.getText(), design));
+                switch (msg) {
+                    case ROBOT_DESIGN_AND_NAME_ARE_OKEY:
+                        chooserobottable.clear();
+                        botDesign.clear();
+                        buttonTable.clear();
+                        TextButton butt = new TextButton("Start game", gui.getSkin());
+                        butt.addListener(new ChangeListener() {
+                            @Override
+                            public void changed(ChangeEvent changeEvent, Actor actor) {
+                                GameInfo info = gui.getServer().startTheGame(CreateGameScreen.MAP_LOCATION + "/" + map.getSelected() + ".tmx");
+                                gui.setScreen(new LoadingScreen(info, true, true, gui));
+                                //gui.setScreen(new GameScreen(info, true, true, gui));
+                            }
+                        });
+                        buttonTable.add(butt);
+                        return;
+                    case UNAVAILABLE_DESIGN:
+                        gui.showPopUp("That robot has already been taken, please choose another one", stage);
+                        return;
+                    case UNAVAILABLE_NAME:
+                        gui.showPopUp("That name has already been taken, please be more original", stage);
+                        return;
                 }
             }
         });
-        chooseRobotTable.add(confirm);
-        table.add(chooseRobotTable);
 
         stage.addActor(table);
     }
@@ -93,13 +132,17 @@ public class LobbyScreen extends SimpleScreen {
         for (Robot bot : gui.getServer().getRobotActions().keySet()){
             String name = bot.getName();
             if (listOfPlayers.contains(name)) continue;
-            playerListTable.add(name).row();
+            parameter.size = 20;
+            parameter.borderWidth = 1f;
+            parameter.color = WHITE;
+            parameter.borderColor = BLACK;
+            style.font = generator.generateFont(parameter);
+            Label named = new Label(name,style);
+            playerlisttable.add(named).row();
             listOfPlayers.add(name);
         }
-        // TODO: 14.04.2021 Sjekk om serveren har mottatt hostens navn og design, så det kan legges i listen
-        // TODO: 14.04.2021 Sjekk resten av serverens tilkoblede roboter, og legg dem til i listOfPlayers
-        // TODO: 14.04.2021 Legg til en sjekk for om spillet er klart for å begynne, og bytt deretter til GameScreen.
 
-            super.render(v);
+
+        super.render(v);
     }
 }

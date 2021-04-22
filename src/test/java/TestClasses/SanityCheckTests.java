@@ -4,6 +4,7 @@ import GameBoard.Board;
 import GameBoard.Cards.ProgramCard;
 import GameBoard.Robot;
 import NetworkMultiplayer.Messages.InGameMessages.SanityCheck;
+import NetworkMultiplayer.Messages.InGameMessages.SanityCheck.UnequalSimulationException;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
@@ -13,7 +14,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.Assert.fail;
-
 
 public class SanityCheckTests {
 
@@ -44,14 +44,24 @@ public class SanityCheckTests {
     public void reflexiveSanityCheck(){
         SanityCheck check1 = bård.getSanityCheck();
         SanityCheck check2 = bård.getSanityCheck();
-        check1.equals(check2);
+
+        try{
+            check1.assertEqualSimulation(check2);
+            check2.assertEqualSimulation(check1);
+        }catch (UnequalSimulationException ex){
+            fail();
+        }
     }
 
     @Test
     public void twoEqualBoardsShouldYieldEqualSanityCheck(){
         Board bård1 = new Board(defaultMapName);
         Board bård2 = new Board(defaultMapName);
-        bård1.equals(bård2); //Crashes if inequal
+        try{
+            bård1.getSanityCheck().assertEqualSimulation(bård2.getSanityCheck()); //Crashes if inequal
+        }catch (UnequalSimulationException ex){
+            fail();
+        }
     }
 
     @Test
@@ -64,9 +74,9 @@ public class SanityCheckTests {
         SanityCheck check2 = bård.getSanityCheck();
 
         try {
-            check1.equals(check2);
+            check1.assertEqualSimulation(check2);
             fail();
-        }catch (SanityCheck.UnequalSimulationException ex){
+        }catch (UnequalSimulationException ex){
             //Yay
         }
     }
@@ -76,12 +86,13 @@ public class SanityCheckTests {
         bård.spawnRobot(bot1);
 
         SanityCheck check1 = bård.getSanityCheck();
-        bård.performMove(new ProgramCard(1, 0, 1, null), bot1);
+        bård.performMove(new ProgramCard(1, 0, 1), bot1);
         SanityCheck check2 = bård.getSanityCheck();
 
         try{
-            check1.equals(check2);
-        }catch (SanityCheck.UnequalSimulationException e){
+            check1.assertEqualSimulation(check2);
+            fail();
+        }catch (UnequalSimulationException e){
             //It worked whoooooo
         }
     }
@@ -99,11 +110,30 @@ public class SanityCheckTests {
         SanityCheck check2 = bård2.getSanityCheck();
 
         try{
-            check2.equals(check1);
-            check1.equals(check2);
+            check1.assertEqualSimulation(check2);
+            check2.assertEqualSimulation(check1);
             fail();
-        }catch (SanityCheck.UnequalSimulationException e){
+        }catch (UnequalSimulationException e){
             //Yippe
+        }
+    }
+
+
+    @Test
+    public void makingTheSameMoveOnTwoEqualBoardsYieldsEqualSanityCheck(){
+        Board bård1 = new Board(defaultMapName);
+        bård1.spawnRobot(bot1);
+        Board bård2 = new Board(defaultMapName);
+        bård2.spawnRobot(bot1);
+        bård1.getSanityCheck().assertEqualSimulation(bård2.getSanityCheck());
+
+        bård1.performMove(new ProgramCard(1, 0, 1), bot1);
+        bård2.performMove(new ProgramCard(1, 0, 1), bot1);
+
+        try{
+            bård1.getSanityCheck().assertEqualSimulation(bård2.getSanityCheck());
+        }catch (UnequalSimulationException ex){
+            fail();
         }
     }
 }

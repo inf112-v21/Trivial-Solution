@@ -401,27 +401,27 @@ public class Board {
      * @param y y-posisjon
      */
     private void setLaserLocations(int ID, int x, int y, boolean isDoubleLaser) {
-        //Her ligger problemet! <3 kos deg
-
-        /*
         if(!isDoubleLaser){
-            for(Position pos : singleLaserCollisions.keySet()){
+            for(Position pos : singleLaserLocations.keySet()){
                 if(pos.getX() == x && pos.getY() == y){
-                    if(singleLaserCollisions.get(pos) == ID) return;
+                    if(singleLaserLocations.get(pos).getID() == ID) return;
                     ID = 40;
-                    break;
+                    LaserBeam laser = allLaserBeams.get(ID);
+                    singleLaserLocations.put(pos, laser);
+                    return;
                 }
             }
         }else{
-            for(Position pos : doubleLaserCollisions.keySet()){
+            for(Position pos : doubleLaserLocations.keySet()){
                 if(pos.getX() == x && pos.getY() == y){
-                    if(doubleLaserCollisions.get(pos) == ID) return;
+                    if(doubleLaserLocations.get(pos).getID() == ID) return;
                     ID = 101;
-                    break;
+                    LaserBeam laser = allLaserBeams.get(ID);
+                    doubleLaserLocations.put(pos, laser);
+                    return;
                 }
             }
         }
-        */
 
         LaserBeam laser = allLaserBeams.get(ID);
         switch(ID){

@@ -2,7 +2,6 @@ package GameBoard.Components;
 
 import GUIMain.Screens.GameScreen;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 public class LaserBeam extends SimpleComponent{

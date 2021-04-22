@@ -11,7 +11,7 @@ import java.io.Serializable;
  */
 public class ClientDisconnected implements IMessage, Serializable {
 
-    Robot disconnectedBot;
+    private final Robot disconnectedBot;
 
     public ClientDisconnected(Robot disconnectedBot) {
         this.disconnectedBot = disconnectedBot;

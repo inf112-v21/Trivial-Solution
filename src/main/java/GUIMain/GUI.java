@@ -122,7 +122,7 @@ public class GUI extends Game {
         Skin uiSkin = new Skin(Gdx.files.internal(SKIN_NAME));
         Dialog dialog = new Dialog("", uiSkin) {
             public void result(Object obj) {
-                System.out.println("result "+obj);
+                //Ignore
             }
         };
         dialog.text(message);

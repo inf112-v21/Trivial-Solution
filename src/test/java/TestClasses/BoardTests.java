@@ -791,7 +791,7 @@ public class BoardTests {
         bård.firstRoundFinished = true;
         bård.endPhase();
 
-        assertEquals(24, bård.getDoubleLaserLocations().size() + bård.getSingleLaserLocations().size());
+        assertEquals(28, bård.getDoubleLaserLocations().size() + bård.getSingleLaserLocations().size());
     }
 
     @Test
@@ -830,6 +830,16 @@ public class BoardTests {
 
     @Test
     public void lasersDoNotGetDrawnOnTopOfRobots(){
+        bård.placeRobotAt(4,5,robot1);
+        bård.firstRoundFinished = true;
+        bård.endPhase();
+
+        boolean laserAtThisPos = false;
+        for(Position p : bård.getSingleLaserLocations().keySet()){
+            if(p.getX() == 4 && p.getY() == 5)
+                laserAtThisPos = true;
+        }
+        assertFalse(laserAtThisPos, "There should not be a laser at this position!");
 
     }
 

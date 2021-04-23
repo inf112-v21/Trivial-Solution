@@ -22,7 +22,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.TreeMap;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Collections;
 
@@ -49,8 +48,6 @@ public class NetworkServer extends Listener {
     //Valgene de ulike klientene/robotenes tar.
     private final TreeMap<Robot,ArrayList<ProgramCard>> robotActions = new TreeMap<>();
 
-    //Antall roboter som har blirr diconnected
-    private final HashSet<Robot> disconnections = new HashSet<>();
 
     private Robot hostRobot;
 
@@ -82,7 +79,7 @@ public class NetworkServer extends Listener {
     /**
      * Metode som sjekker at alle klientene er klare til å begynne spillet.
      * Denne metoden setter deretter
-     * @return- true hvis alle er klare til å starte spillet, false ellers.
+     * @return true hvis alle er klare til å starte spillet, false ellers.
      */
     public boolean areAllClientsReady(){
         return numberOfReadyClients == numberOfConnections;
@@ -164,29 +161,11 @@ public class NetworkServer extends Listener {
     }
 
     /**
-     *
-     * @return - HashSet med klienter som har blitt disconnected fra spillet.
-     */
-    public HashSet<Robot> getDisconnections() {
-        return disconnections;
-    }
-
-    /**
      * @return - HashMap med robotene mappet til hvilke kort de valgte
      */
     public TreeMap<Robot, ArrayList<ProgramCard>> getRobotActions() {
         return robotActions;
     }
-
-
-    /**
-     *
-     * @return konneksjonen med dens tilhørende robot.
-     */
-    public HashMap<Connection, Robot> getConnectionsAndRobots() {
-        return connectionsAndRobots;
-    }
-
 
     /**
      * Binder serveren til UDP og TCP port slik at vi veit hvilken
@@ -370,7 +349,7 @@ public class NetworkServer extends Listener {
      /**
      * WIP
      * Starter opp spillet for alle.
-     * @param mapname
+     * @param mapname navnet på mappet som skal brukes
      */
     public GameInfo startTheGame(String mapname){
         List<Robot> robottttts = new ArrayList<>(robotActions.keySet());

@@ -9,11 +9,10 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import static org.junit.Assert.fail;
 
 public class SanityCheckTests {
 
@@ -49,7 +48,7 @@ public class SanityCheckTests {
             check1.assertEqualSimulation(check2);
             check2.assertEqualSimulation(check1);
         }catch (UnequalSimulationException ex){
-            fail();
+            Assertions.fail();
         }
     }
 
@@ -60,7 +59,7 @@ public class SanityCheckTests {
         try{
             bård1.getSanityCheck().assertEqualSimulation(bård2.getSanityCheck()); //Crashes if inequal
         }catch (UnequalSimulationException ex){
-            fail();
+            Assertions.fail();
         }
     }
 
@@ -75,7 +74,7 @@ public class SanityCheckTests {
 
         try {
             check1.assertEqualSimulation(check2);
-            fail();
+            Assertions.fail();
         }catch (UnequalSimulationException ex){
             //Yay
         }
@@ -91,7 +90,7 @@ public class SanityCheckTests {
 
         try{
             check1.assertEqualSimulation(check2);
-            fail();
+            Assertions.fail();
         }catch (UnequalSimulationException e){
             //It worked whoooooo
         }
@@ -112,7 +111,7 @@ public class SanityCheckTests {
         try{
             check1.assertEqualSimulation(check2);
             check2.assertEqualSimulation(check1);
-            fail();
+            Assertions.fail();
         }catch (UnequalSimulationException e){
             //Yippe
         }
@@ -133,7 +132,7 @@ public class SanityCheckTests {
         try{
             bård1.getSanityCheck().assertEqualSimulation(bård2.getSanityCheck());
         }catch (UnequalSimulationException ex){
-            fail();
+            Assertions.fail();
         }
     }
 }

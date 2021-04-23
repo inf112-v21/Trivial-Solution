@@ -16,7 +16,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 public class LastScreen extends SimpleScreen {
 
     private SpriteBatch spriteBatch;
-    private String background;
+    private final String background;
     
     public LastScreen(EndScreenBackground back, GUI gui) {
         super(gui);

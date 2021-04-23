@@ -100,7 +100,7 @@ public class BoardController {
             }
             bot.setAvailableCards(cardlist);
             if (bot.isControlledByAI()){
-                ai.chooseCards(bot, board);
+                ai.chooseCards(bot);
             }
         }
     }

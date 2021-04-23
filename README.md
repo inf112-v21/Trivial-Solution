@@ -19,5 +19,6 @@ Noen kritiske bugs/mangler:
 - Host får ikke Gameover hvis den er dø og noen andre vinner.
 - Currently connected players viser navn til en disconnected spiller i lobby, men har ingen innvirkning hvis andre vil ha det navnet.
 - Får ikke server disconnected når hosten lukker spillet.
+- Popup i Gamescreen ville ikke lukkes slik at det ikke gikk ann å spille, de er fjernet for nå i gamescreen
 
 - Lykke til!

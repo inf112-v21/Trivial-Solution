@@ -3,120 +3,268 @@
   <ID>JAVA</ID>
   <OriginalElement />
   <nodes>
-    <node x="0.0" y="1916.0">TestClasses.BoardControllerTest</node>
-    <node x="629.0" y="1112.0">GUIMain.Screens.MenuScreen</node>
-    <node x="0.0" y="1112.0">GameBoard.TestClasses</node>
-    <node x="712.0" y="2020.0">AIs.Randbot</node>
-    <node x="1372.0" y="450.5">GameBoard.Components.Flag</node>
-    <node x="1880.0" y="1112.0">GameBoard.BoardController</node>
-    <node x="253.0" y="2214.0">TestClasses.AppTest</node>
-    <node x="1924.0" y="450.5">GameBoard.Components.Wrench</node>
-    <node x="2040.0" y="450.5">GameBoard.Components.Floor</node>
-    <node x="1203.0" y="1916.0">GameBoard.Position</node>
-    <node x="718.0" y="2214.0">GUIMain.Main</node>
-    <node x="712.0" y="1916.0">AIs.AI</node>
-    <node x="0.0" y="2214.0">TestClasses.AITests</node>
-    <node x="1053.0" y="427.0">GameBoard.Components.Hole</node>
-    <node x="988.0" y="1916.0">GameBoard.Cards.Deck</node>
-    <node x="1446.5" y="0.0">GameBoard.Components.IComponent</node>
-    <node x="1090.0" y="1112.0">TestClasses.RobotTest</node>
-    <node x="1472.0" y="450.5">GameBoard.Components.SpawnPoint</node>
-    <node x="228.0" y="1916.0">TestClasses.FlagTest</node>
-    <node x="1952.0" y="1916.0">GameBoard.Components.ComponentFactory</node>
-    <node x="872.0" y="1282.0">GameBoard.Cards.ProgramCard</node>
-    <node x="1620.0" y="450.5">GameBoard.Components.CheckPoint</node>
-    <node x="1525.0" y="1112.0">GameBoard.Robot</node>
-    <node x="1696.0" y="1916.0">GameBoard.BoardController.RegisterComparator</node>
-    <node x="872.0" y="1112.0">GameBoard.Cards.ICard</node>
-    <node x="361.0" y="1112.0">GameBoard.Robot</node>
-    <node x="503.0" y="2214.0">GameBoard.Components.Flag.CompareID</node>
-    <node x="0.0" y="0.0">TestClasses.BoardTests</node>
-    <node x="1768.0" y="427.0">GameBoard.Components.Gear</node>
-    <node x="500.0" y="0.0">GUIMain.Screens.GameScreen</node>
-    <node x="811.9999999999999" y="339.0">GameBoard.Components.Wall</node>
-    <node x="1452.0" y="148.0">GameBoard.Components.SimpleComponent</node>
-    <node x="1208.0" y="405.0">GameBoard.Components.ConveyorBelt</node>
-    <node x="1382.0" y="1916.0">GUIMain.GUI</node>
-    <node x="834.4999999999999" y="642.0">GameBoard.Components.Laser</node>
+    <node x="863.0" y="2963.0">TestClasses.SanityCheckTests</node>
+    <node x="2275.0" y="519.0">GUIMain.Screens.GameScreen</node>
+    <node x="1938.0" y="3471.0">NetworkMultiplayer.Messages.InGameMessages.DistributedCards</node>
+    <node x="0.0" y="3741.0">AIs.Randbot</node>
+    <node x="3062.0" y="3327.0">TestClasses.FlagTest</node>
+    <node x="1910.0" y="1829.0">GameBoard.Components.IComponent</node>
+    <node x="3546.0" y="3327.0">GameBoard.Position</node>
+    <node x="0.0" y="3637.0">AIs.AI</node>
+    <node x="2058.0" y="2169.5">GameBoard.Components.Flag</node>
+    <node x="283.0" y="3471.0">NetworkMultiplayer.Messages.InGameMessages.ChosenCards</node>
+    <node x="1581.0" y="3637.0">NetworkMultiplayer.LanNetwork</node>
+    <node x="1538.0" y="2169.5">GameBoard.Components.Wrench</node>
+    <node x="386.0000000000001" y="1069.0">GUIMain.Screens.MenuScreen</node>
+    <node x="1573.0" y="1113.5">GUIMain.Screens.WaitingForHostScreen</node>
+    <node x="1240.5" y="3327.0">NetworkMultiplayer.Messages.IMessage</node>
+    <node x="0.0" y="1091.0">GUIMain.Screens.EndOfGameScreens.LastScreen</node>
+    <node x="1801.0" y="1102.0">GUIMain.Screens.CreateRobotScreen</node>
+    <node x="1796.0" y="3637.0">GameBoard.Components.Flag.CompareID</node>
+    <node x="2005.0" y="1069.0">GUIMain.Screens.CreateGameScreen</node>
+    <node x="2701.0" y="1829.0">NetworkMultiplayer.NetworkClient</node>
+    <node x="819.0" y="3637.0">GameBoard.BoardController.BotComparator</node>
+    <node x="1754.0" y="2146.0">GameBoard.Components.Gear</node>
+    <node x="1213.0" y="1124.5">GUIMain.Screens.HostOrJoinScreen</node>
+    <node x="465.0" y="1829.0">GameBoard.BoardController</node>
+    <node x="2011.0" y="3637.0">TestClasses.MultiplayerGUITest.Client2</node>
+    <node x="3140.0" y="1829.0">GUIMain.GUI</node>
+    <node x="2203.0" y="3637.0">TestClasses.MultiplayerGUITest.Client1</node>
+    <node x="2395.0" y="3637.0">TestClasses.MultiplayerGUITest.Host</node>
+    <node x="3211.0" y="0.0">GameBoard.Robot</node>
+    <node x="562.0" y="3637.0">GameBoard.Cards.Deck</node>
+    <node x="267.0" y="3637.0">GUIMain.Screens.EndOfGameScreens.EndScreenBackground</node>
+    <node x="1910.0" y="2169.5">GameBoard.Components.SpawnPoint</node>
+    <node x="2158.0" y="2146.0">GameBoard.Components.LaserBeam</node>
+    <node x="1654.0" y="2169.5">GameBoard.Components.Hole</node>
+    <node x="1888.0" y="1933.0">GameBoard.Components.SimpleComponent</node>
+    <node x="0.0" y="1829.0">GameBoard.Board</node>
+    <node x="1718.0" y="3471.0">NetworkMultiplayer.Messages.RobotDisconnected</node>
+    <node x="1297.0" y="2102.0">GameBoard.Components.Wall</node>
+    <node x="2587.0" y="3637.0">GUIMain.Main</node>
+    <node x="781.0000000000001" y="992.0">GUIMain.Screens.LobbyScreen</node>
+    <node x="2655.0" y="3327.0">TestClasses.RobotTest</node>
+    <node x="1057.0" y="3637.0">GameBoard.Components.ComponentFactory</node>
+    <node x="190.0000000000001" y="1102.0">GUIMain.Screens.ConnectingScreen</node>
+    <node x="581.0" y="3449.0">NetworkMultiplayer.Messages.InGameMessages.SanityCheck</node>
+    <node x="869.0" y="1829.0">NetworkMultiplayer.NetworkServer</node>
+    <node x="932.0" y="3449.0">NetworkMultiplayer.Messages.PreGameMessages.RobotInfo</node>
+    <node x="1334.0" y="2963.0">GameBoard.Cards.ProgramCard</node>
+    <node x="2364.0" y="2169.5">GameBoard.Components.CheckPoint</node>
+    <node x="2512.0" y="2124.0">GameBoard.Components.ConveyorBelt</node>
+    <node x="1093.5" y="0.0">GUIMain.Screens.SimpleScreen</node>
+    <node x="578.0000000000001" y="1069.0">GUIMain.Screens.LoadingScreen</node>
+    <node x="1041.0" y="1080.0">GUIMain.Screens.CreditsScreen</node>
+    <node x="472.0" y="2963.0">TestClasses.AITests</node>
+    <node x="1409.0" y="1124.5">GUIMain.Screens.OptionScreen</node>
+    <node x="2779.0" y="3637.0">NetworkMultiplayer.Messages.InGameMessages.SanityCheck.UnequalSimulationException</node>
+    <node x="1319.5" y="2317.0">GameBoard.Components.Laser</node>
+    <node x="1344.0" y="3637.0">TestClasses.MultiplayerGUITest</node>
+    <node x="2236.0" y="3471.0">NetworkMultiplayer.Messages.InGameMessages.AllChosenCardsFromAllRobots</node>
+    <node x="2629.0" y="0.0">TestClasses.BoardTests</node>
+    <node x="0.0" y="2963.0">TestClasses.BoardControllerTest</node>
+    <node x="1503.0" y="3427.0">NetworkMultiplayer.Messages.PreGameMessages.GameInfo</node>
+    <node x="1110.0" y="3427.0">NetworkMultiplayer.Messages.InGameMessages.ConfirmationMessage</node>
+    <node x="0.0" y="3438.0">NetworkMultiplayer.Messages.PreGameMessages.SetupRobotNameDesign</node>
   </nodes>
   <notes />
   <edges>
-    <edge source="GameBoard.Components.Laser" target="GameBoard.Components.Wall">
-      <point x="0.0" y="-60.5" />
-      <point x="0.0" y="126.5" />
-    </edge>
-    <edge source="GameBoard.Components.Wall" target="GameBoard.Components.SimpleComponent">
-      <point x="0.0" y="-126.5" />
-      <point x="922.4999999999999" y="289.0" />
-      <point x="1461.333333333333" y="289.0" />
-      <point x="-74.66666666666674" y="60.5" />
-    </edge>
-    <edge source="GameBoard.Components.Floor" target="GameBoard.Components.SimpleComponent">
-      <point x="0.0" y="-15.0" />
-      <point x="2084.0" y="289.0" />
-      <point x="1610.6666666666665" y="289.0" />
-      <point x="74.66666666666674" y="60.5" />
-    </edge>
-    <edge source="GameBoard.Components.SpawnPoint" target="GameBoard.Components.SimpleComponent">
-      <point x="0.0" y="-15.0" />
-      <point x="0.0" y="60.5" />
-    </edge>
     <edge source="GameBoard.Components.CheckPoint" target="GameBoard.Components.SimpleComponent">
       <point x="0.0" y="-15.0" />
-      <point x="1684.0" y="319.0" />
-      <point x="1554.6666666666665" y="319.0" />
-      <point x="18.666666666666742" y="60.5" />
+      <point x="2428.0" y="2062.0" />
+      <point x="2031.3333333333335" y="2062.0" />
+      <point x="57.333333333333485" y="49.5" />
     </edge>
-    <edge source="GameBoard.Components.Flag" target="GameBoard.Components.SimpleComponent">
-      <point x="0.0" y="-15.0" />
-      <point x="1412.0" y="319.0" />
-      <point x="1517.333333333333" y="319.0" />
-      <point x="-18.666666666666742" y="60.5" />
+    <edge source="GUIMain.Screens.ConnectingScreen" target="GUIMain.Screens.SimpleScreen">
+      <point x="0.0" y="-49.5" />
+      <point x="278.0000000000001" y="459.0" />
+      <point x="1122.375" y="459.0" />
+      <point x="-86.625" y="214.5" />
     </edge>
-    <edge source="GameBoard.Cards.ProgramCard" target="GameBoard.Cards.ICard">
-      <point x="0.0" y="-115.5" />
-      <point x="0.0" y="60.0" />
+    <edge source="NetworkMultiplayer.Messages.InGameMessages.ChosenCards" target="NetworkMultiplayer.Messages.IMessage">
+      <point x="0.0" y="-38.5" />
+      <point x="422.0" y="3387.0" />
+      <point x="1259.1666666666667" y="3387.0" />
+      <point x="-37.33333333333326" y="15.0" />
     </edge>
-    <edge source="GameBoard.Components.ConveyorBelt" target="GameBoard.Components.SimpleComponent">
+    <edge source="GameBoard.Components.Laser" target="GameBoard.Components.Wall">
       <point x="0.0" y="-60.5" />
-      <point x="1280.0" y="309.0" />
-      <point x="1498.6666666666665" y="309.0" />
-      <point x="-37.33333333333326" y="60.5" />
+      <point x="0.0" y="82.5" />
     </edge>
     <edge source="AIs.Randbot" target="AIs.AI">
       <point x="0.0" y="-38.5" />
       <point x="0.0" y="27.0" />
     </edge>
-    <edge source="GameBoard.Components.SimpleComponent" target="GameBoard.Components.IComponent">
-      <point x="0.0" y="-60.5" />
-      <point x="0.0" y="49.0" />
+    <edge source="GUIMain.Screens.GameScreen" target="GUIMain.Screens.SimpleScreen">
+      <point x="0.0" y="-632.5" />
+      <point x="2429.5" y="449.0" />
+      <point x="1314.875" y="449.0" />
+      <point x="105.875" y="214.5" />
+    </edge>
+    <edge source="GUIMain.Screens.CreateRobotScreen" target="GUIMain.Screens.SimpleScreen">
+      <point x="0.0" y="-49.5" />
+      <point x="1893.0" y="469.0" />
+      <point x="1276.375" y="469.0" />
+      <point x="67.375" y="214.5" />
+    </edge>
+    <edge source="NetworkMultiplayer.Messages.InGameMessages.ConfirmationMessage" target="NetworkMultiplayer.Messages.IMessage">
+      <point x="0.0" y="-82.5" />
+      <point x="0.0" y="15.0" />
+    </edge>
+    <edge source="NetworkMultiplayer.Messages.PreGameMessages.GameInfo" target="NetworkMultiplayer.Messages.IMessage">
+      <point x="0.0" y="-82.5" />
+      <point x="1600.5" y="3407.0" />
+      <point x="1308.9444444444443" y="3407.0" />
+      <point x="12.444444444444343" y="15.0" />
     </edge>
     <edge source="GameBoard.Components.Hole" target="GameBoard.Components.SimpleComponent">
+      <point x="0.0" y="-15.0" />
+      <point x="1694.0" y="2072.0" />
+      <point x="1935.7777777777778" y="2072.0" />
+      <point x="-38.22222222222217" y="49.5" />
+    </edge>
+    <edge source="GameBoard.Components.Flag" target="GameBoard.Components.SimpleComponent">
+      <point x="0.0" y="-15.0" />
+      <point x="2098.0" y="2082.0" />
+      <point x="1993.1111111111113" y="2082.0" />
+      <point x="19.111111111111313" y="49.5" />
+    </edge>
+    <edge source="GUIMain.Screens.MenuScreen" target="GUIMain.Screens.SimpleScreen">
+      <point x="0.0" y="-82.5" />
+      <point x="472.0000000000001" y="469.0" />
+      <point x="1141.625" y="469.0" />
+      <point x="-67.375" y="214.5" />
+    </edge>
+    <edge source="NetworkMultiplayer.Messages.InGameMessages.SanityCheck" target="NetworkMultiplayer.Messages.IMessage">
+      <point x="0.0" y="-60.5" />
+      <point x="746.5" y="3397.0" />
+      <point x="1271.611111111111" y="3397.0" />
+      <point x="-24.888888888888914" y="15.0" />
+    </edge>
+    <edge source="NetworkMultiplayer.Messages.RobotDisconnected" target="NetworkMultiplayer.Messages.IMessage">
       <point x="0.0" y="-38.5" />
-      <point x="1120.5" y="299.0" />
-      <point x="1480.0" y="299.0" />
-      <point x="-56.0" y="60.5" />
+      <point x="1818.0" y="3397.0" />
+      <point x="1321.388888888889" y="3397.0" />
+      <point x="24.888888888888914" y="15.0" />
+    </edge>
+    <edge source="GameBoard.Components.Wall" target="GameBoard.Components.SimpleComponent">
+      <point x="0.0" y="-82.5" />
+      <point x="1407.5" y="2052.0" />
+      <point x="1897.5555555555557" y="2052.0" />
+      <point x="-76.44444444444434" y="49.5" />
+    </edge>
+    <edge source="GUIMain.Screens.CreateGameScreen" target="GUIMain.Screens.SimpleScreen">
+      <point x="0.0" y="-82.5" />
+      <point x="2130.0" y="459.0" />
+      <point x="1295.625" y="459.0" />
+      <point x="86.625" y="214.5" />
+    </edge>
+    <edge source="NetworkMultiplayer.Messages.PreGameMessages.SetupRobotNameDesign" target="NetworkMultiplayer.Messages.IMessage">
+      <point x="0.0" y="-71.5" />
+      <point x="131.5" y="3377.0" />
+      <point x="1246.7222222222222" y="3377.0" />
+      <point x="-49.77777777777783" y="15.0" />
+    </edge>
+    <edge source="GUIMain.Screens.HostOrJoinScreen" target="GUIMain.Screens.SimpleScreen">
+      <point x="0.0" y="-27.0" />
+      <point x="1301.0" y="499.0" />
+      <point x="1218.625" y="499.0" />
+      <point x="9.625" y="214.5" />
     </edge>
     <edge source="GameBoard.Components.Gear" target="GameBoard.Components.SimpleComponent">
       <point x="0.0" y="-38.5" />
-      <point x="1836.0" y="309.0" />
-      <point x="1573.333333333333" y="309.0" />
-      <point x="37.33333333333326" y="60.5" />
+      <point x="1822.0" y="2082.0" />
+      <point x="1954.8888888888887" y="2082.0" />
+      <point x="-19.111111111111313" y="49.5" />
+    </edge>
+    <edge source="GameBoard.Components.SimpleComponent" target="GameBoard.Components.IComponent">
+      <point x="0.0" y="-49.5" />
+      <point x="0.0" y="27.0" />
+    </edge>
+    <edge source="NetworkMultiplayer.Messages.InGameMessages.AllChosenCardsFromAllRobots" target="NetworkMultiplayer.Messages.IMessage">
+      <point x="0.0" y="-38.5" />
+      <point x="2423.0" y="3377.0" />
+      <point x="1346.2777777777778" y="3377.0" />
+      <point x="49.77777777777783" y="15.0" />
+    </edge>
+    <edge source="GUIMain.Screens.WaitingForHostScreen" target="GUIMain.Screens.SimpleScreen">
+      <point x="0.0" y="-38.0" />
+      <point x="1677.0" y="479.0" />
+      <point x="1257.125" y="479.0" />
+      <point x="48.125" y="214.5" />
+    </edge>
+    <edge source="NetworkMultiplayer.Messages.PreGameMessages.RobotInfo" target="NetworkMultiplayer.Messages.IMessage">
+      <point x="0.0" y="-60.5" />
+      <point x="1011.0" y="3407.0" />
+      <point x="1284.0555555555557" y="3407.0" />
+      <point x="-12.444444444444343" y="15.0" />
+    </edge>
+    <edge source="GameBoard.Components.SpawnPoint" target="GameBoard.Components.SimpleComponent">
+      <point x="0.0" y="-15.0" />
+      <point x="0.0" y="49.5" />
+    </edge>
+    <edge source="NetworkMultiplayer.Messages.InGameMessages.DistributedCards" target="NetworkMultiplayer.Messages.IMessage">
+      <point x="0.0" y="-38.5" />
+      <point x="2077.0" y="3387.0" />
+      <point x="1333.8333333333333" y="3387.0" />
+      <point x="37.33333333333326" y="15.0" />
+    </edge>
+    <edge source="GUIMain.Screens.EndOfGameScreens.LastScreen" target="GUIMain.Screens.SimpleScreen">
+      <point x="0.0" y="-60.5" />
+      <point x="85.0" y="449.0" />
+      <point x="1103.125" y="449.0" />
+      <point x="-105.875" y="214.5" />
+    </edge>
+    <edge source="GameBoard.Components.LaserBeam" target="GameBoard.Components.SimpleComponent">
+      <point x="0.0" y="-38.5" />
+      <point x="2251.0" y="2072.0" />
+      <point x="2012.2222222222222" y="2072.0" />
+      <point x="38.22222222222217" y="49.5" />
+    </edge>
+    <edge source="GUIMain.Screens.CreditsScreen" target="GUIMain.Screens.SimpleScreen">
+      <point x="0.0" y="-71.5" />
+      <point x="1117.0" y="499.0" />
+      <point x="1199.375" y="499.0" />
+      <point x="-9.625" y="214.5" />
+    </edge>
+    <edge source="GUIMain.Screens.LoadingScreen" target="GUIMain.Screens.SimpleScreen">
+      <point x="0.0" y="-82.5" />
+      <point x="669.5000000000001" y="479.0" />
+      <point x="1160.875" y="479.0" />
+      <point x="-48.125" y="214.5" />
     </edge>
     <edge source="GameBoard.Components.Wrench" target="GameBoard.Components.SimpleComponent">
       <point x="0.0" y="-15.0" />
-      <point x="1972.0" y="299.0" />
-      <point x="1592.0" y="299.0" />
-      <point x="56.0" y="60.5" />
+      <point x="1586.0" y="2062.0" />
+      <point x="1916.666666666667" y="2062.0" />
+      <point x="-57.33333333333326" y="49.5" />
+    </edge>
+    <edge source="GUIMain.Screens.LobbyScreen" target="GUIMain.Screens.SimpleScreen">
+      <point x="0.0" y="-159.5" />
+      <point x="901.0000000000001" y="489.0" />
+      <point x="1180.125" y="489.0" />
+      <point x="-28.875" y="214.5" />
+    </edge>
+    <edge source="GUIMain.Screens.OptionScreen" target="GUIMain.Screens.SimpleScreen">
+      <point x="0.0" y="-27.0" />
+      <point x="1481.0" y="489.0" />
+      <point x="1237.875" y="489.0" />
+      <point x="28.875" y="214.5" />
+    </edge>
+    <edge source="GameBoard.Components.ConveyorBelt" target="GameBoard.Components.SimpleComponent">
+      <point x="0.0" y="-60.5" />
+      <point x="2584.0" y="2052.0" />
+      <point x="2050.4444444444443" y="2052.0" />
+      <point x="76.44444444444434" y="49.5" />
     </edge>
   </edges>
-  <settings layout="Hierarchic Group" zoom="0.47520576131687253" x="906.5843256116041" y="542.914050660316" />
+  <settings layout="Hierarchic Group" zoom="0.6000000000000001" x="2321.6666666666665" y="2010.6666666666665" />
   <SelectedNodes>
-    <node>TestClasses.BoardControllerTest</node>
+    <node>GameBoard.Components.Flag</node>
   </SelectedNodes>
   <Categories>
-    <Category>Methods</Category>
     <Category>Fields</Category>
+    <Category>Methods</Category>
   </Categories>
   <SCOPE>All</SCOPE>
   <VISIBILITY>private</VISIBILITY>

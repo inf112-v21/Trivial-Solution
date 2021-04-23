@@ -70,11 +70,7 @@ public abstract class SimpleScreen implements Screen {
     @Override
     public void hide() { }
     @Override
-    public void dispose() {
-        // TODO: 09.04.2021 Her må vi definere hvordan en Screen lukkes.
-        //stage.dispose();
-        //batch.dispose();
-    }
+    public void dispose() { }
 
     protected void showRobotDesigns() {
         designTable.clear();

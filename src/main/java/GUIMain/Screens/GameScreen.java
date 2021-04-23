@@ -92,7 +92,6 @@ public class GameScreen extends SimpleScreen {
     private final boolean isThisMultiPlayer;
     private final boolean amITheHost;
     private boolean isWaitingForCards = true;
-    private boolean deadCheck = true;
 
     //Variabel for å huske hvor laserne ble tegnet, så de kan slettes igjen effektivt
     private final TreeSet<Position> previousDoubleLaserPositions = new TreeSet<>();
@@ -401,9 +400,7 @@ public class GameScreen extends SimpleScreen {
             for(Robot bot: botsThatJustDied){
                 //gui.showPopUp("Robot: " + bot.getName() + " died", stage);
                 bot.killRobot();
-                if(robots.contains(bot)){
-                    robots.remove(bot);
-                }
+                robots.remove(bot);
             }
         }
 
@@ -643,7 +640,6 @@ public class GameScreen extends SimpleScreen {
                 if (playerControlledRobot.getNumberOfChosenCards() >= Math.min(BoardController.PHASES_PER_ROUND, playerControlledRobot.getHP())) return;
                 ProgramCard card = playerControlledRobot.getAvailableCards().get(index);
 
-                if (!playerControlledRobot.chooseCard(card)) return;
                 chosenTable.setBounds((Gdx.graphics.getWidth())/2f,
                         (Gdx.graphics.getHeight()/5f*(5-playerControlledRobot.getNumberOfChosenCards())),
                         Gdx.graphics.getWidth()/6f,

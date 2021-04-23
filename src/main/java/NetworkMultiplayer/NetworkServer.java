@@ -9,11 +9,11 @@ import NetworkMultiplayer.Messages.InGameMessages.AllChosenCardsFromAllRobots;
 import NetworkMultiplayer.Messages.InGameMessages.DistributedCards;
 import NetworkMultiplayer.Messages.InGameMessages.ChosenCards;
 import NetworkMultiplayer.Messages.InGameMessages.ConfirmationMessage;
-import NetworkMultiplayer.Messages.RobotDisconnected;
 import NetworkMultiplayer.Messages.PreGameMessages.GameInfo;
 import NetworkMultiplayer.Messages.PreGameMessages.SetupRobotNameDesign;
 import NetworkMultiplayer.Messages.IMessage;
 import NetworkMultiplayer.Messages.PreGameMessages.RobotInfo;
+import NetworkMultiplayer.Messages.RobotDisconnected;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Server;
@@ -22,7 +22,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.TreeMap;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Collections;
 
@@ -49,8 +48,6 @@ public class NetworkServer extends Listener {
     //Valgene de ulike klientene/robotenes tar.
     private final TreeMap<Robot,ArrayList<ProgramCard>> robotActions = new TreeMap<>();
 
-    //Antall roboter som har blirr diconnected
-    private final HashSet<Robot> disconnections = new HashSet<>();
 
     private Robot hostRobot;
 
@@ -82,7 +79,7 @@ public class NetworkServer extends Listener {
     /**
      * Metode som sjekker at alle klientene er klare til å begynne spillet.
      * Denne metoden setter deretter
-     * @return- true hvis alle er klare til å starte spillet, false ellers.
+     * @return true hvis alle er klare til å starte spillet, false ellers.
      */
     public boolean areAllClientsReady(){
         return numberOfReadyClients == numberOfConnections;
@@ -95,11 +92,8 @@ public class NetworkServer extends Listener {
      */
     public void distributeCards(){
 
-
-        for(Connection con : connectionsAndRobots.keySet()) {
-            if (connectionsAndRobots.get(con).hasRemainingLives()) {
-                sendToClient(con, new DistributedCards(connectionsAndRobots.get(con).getAvailableCards()));
-            }
+        for(Connection con : connectionsAndRobots.keySet()){
+            sendToClient(con, new DistributedCards(connectionsAndRobots.get(con).getAvailableCards()));
         }
         numberOfReadyClients = 0;
     }
@@ -136,10 +130,7 @@ public class NetworkServer extends Listener {
      * @return true hvis alle har sendt, false ellers.
      */
     public boolean haveAllClientSentTheirChosenCards(){
-        if(hostRobot.hasRemainingLives()) {
-            return numberOfSetsOfCardsReceived == numberOfConnections + 1;
-        }
-        return numberOfSetsOfCardsReceived == numberOfConnections;
+        return numberOfSetsOfCardsReceived == numberOfConnections+1;
 
     }
 
@@ -169,17 +160,6 @@ public class NetworkServer extends Listener {
         numberOfSetsOfCardsReceived++;
     }
 
-    public Robot getHostRobot() {
-        return hostRobot;
-    }
-
-    /**
-     *
-     * @return - HashSet med klienter som har blitt disconnected fra spillet.
-     */
-    public HashSet<Robot> getDisconnections() {
-        return disconnections;
-    }
 
     /**
      * @return - HashMap med robotene mappet til hvilke kort de valgte
@@ -317,24 +297,16 @@ public class NetworkServer extends Listener {
             @Override
             public void disconnected(Connection connection){
 
-                if(!connectionsAndRobots.isEmpty()) {
+                //Fjerner roboten
+                Robot removeThisRobot = connectionsAndRobots.remove(connection);
+                removeThisRobot.killRobot();
+                robotActions.remove(removeThisRobot);
 
-                    //Fjerner roboten
-                    Robot removeThisRobot = connectionsAndRobots.remove(connection);
+                //Oppdatterer connecitons
+                numberOfConnections--;
 
-                    if(removeThisRobot != null) {
-                        removeThisRobot.killRobot();
-                        robotActions.remove(removeThisRobot);
-
-                        //Oppdatterer connecitons
-                        numberOfConnections--;
-
-                        //Gir beskjed til alle klientene om at de kan slette denne roboten.
-                        for (Connection con : connectionsAndRobots.keySet()) {
-                            sendToClient(con, new RobotDisconnected(removeThisRobot));
-                        }
-                    }
-                }
+                //Gir beskjed til alle klientene om at de kan slette denne roboten.
+                sendMessageToAllClients(new RobotDisconnected(removeThisRobot));
 
             }
         });
@@ -366,6 +338,13 @@ public class NetworkServer extends Listener {
         return numberOfConnections;
     }
 
+    /**
+     * Sender data til alle klientene via TCP
+     */
+    public void sendMessageToAllClients(IMessage m){
+            server.sendToAllTCP(m);
+    }
+
 
     /**
      *  Stenger nettverket, altså serveren.
@@ -375,13 +354,13 @@ public class NetworkServer extends Listener {
      *  kan man gå tilbake til Main Menu og starte spillet
      *  på nytt.
      */
-    public void stopServerAndDisconnectAllClients(){server.stop();}
+    public void stopServerAndDisconnectAllClients(){ server.stop();}
 
 
      /**
      * WIP
      * Starter opp spillet for alle.
-     * @param mapname
+     * @param mapname navnet på brettet som blir brukt
      */
     public GameInfo startTheGame(String mapname){
         List<Robot> robottttts = new ArrayList<>(robotActions.keySet());
@@ -392,5 +371,7 @@ public class NetworkServer extends Listener {
         return new GameInfo(robottttts, mapname, robottttts.indexOf(hostRobot));
     }
 
-
+    public Robot getHostRobot() {
+        return hostRobot;
+    }
 }

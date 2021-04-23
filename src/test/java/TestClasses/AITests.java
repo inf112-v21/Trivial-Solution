@@ -71,7 +71,7 @@ public class AITests {
         drawRandomCards();
         assertEquals(0, bot.getNumberOfChosenCards());
 
-        ai.chooseCards(bot, bård);
+        ai.chooseCards(bot);
 
         assertTrue(bot.isPowerDownAnnounced() || bot.getNumberOfChosenCards() > 0);
     }
@@ -80,7 +80,7 @@ public class AITests {
         drawRandomCards();
         int numberOfCards = bot.getAvailableCards().size();
 
-        ai.chooseCards(bot, bård);
+        ai.chooseCards(bot);
 
         assertEquals(numberOfCards, bot.getAvailableCards().size());
     }
@@ -89,14 +89,14 @@ public class AITests {
         drawRandomCards();
 
         assertEquals(0, bot.getNumberOfChosenCards());
-        ai.chooseCards(bot, bård);
+        ai.chooseCards(bot);
         assertTrue(bot.getNumberOfChosenCards() <= BoardController.PHASES_PER_ROUND);
 
         bot.resetAllCards();
         drawRandomCards();
         bot.applyDamage(Robot.INITIAL_HP - 1); //Roboten har nå 1 liv igjen, burde bare få maks ett kort.
 
-        ai.chooseCards(bot, bård);
+        ai.chooseCards(bot);
         assertTrue(bot.getNumberOfChosenCards() <= 1);
     }
 
@@ -105,7 +105,7 @@ public class AITests {
         bård.spawnRobot(bot);
         SanityCheck before = bård.getSanityCheck();
 
-        ai.chooseCards(bot, bård);
+        ai.chooseCards(bot);
 
         SanityCheck after = bård.getSanityCheck();
         try{

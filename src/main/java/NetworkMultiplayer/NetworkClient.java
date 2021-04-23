@@ -22,7 +22,7 @@ import static GUIMain.GUI.DEVELOPER_MODE;
 
 public class NetworkClient {
 
-    private Client client = null;
+    private final Client client;
 
     //Porter som meldinger blir sendt til
     private final static int DEFAULT_UDP_PORT = 54777;
@@ -213,24 +213,19 @@ public class NetworkClient {
      * Vi må konnektere oss til serveren etterhvert. TCP fikser dette med en handshake runde først.
      * Den etablerer konneksjonen før den faktiskt sender packer frem og tilbake
      * @param ipAdress - Ip-adressen til hosten som en streng
-     * @return - true hvis konneksjonen ble etablert, false ellers.
      */
-    public boolean connect(String ipAdress) {
+    public void connect(String ipAdress) {
         if(DEVELOPER_MODE) System.out.println(ipAdress);
-        boolean connectionEstablished = true;
         try {
             //connecter til hosten
             client.connect(10000, ipAdress, DEFAULT_TCP_PORT, DEFAULT_UDP_PORT);
 
         } catch (IllegalStateException e) {
             if (DEVELOPER_MODE) System.out.println(e.toString() + ": Connect ble kalt fra konneksjonens update thread");
-            connectionEstablished = false;
         }
         catch (IOException e) {
             if (DEVELOPER_MODE) System.out.println(e.toString() + ": klienten kunne ikke opprette en konneksjon eller så gikk tiden ut");
-            connectionEstablished = false;
         }
-        return connectionEstablished;
     }
 
 
@@ -270,9 +265,4 @@ public class NetworkClient {
     public void disconnectAndStopClientThread(){
         client.stop();
     }
-
-    /**
-     * 
-     */
-
 }

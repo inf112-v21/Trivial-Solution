@@ -17,8 +17,6 @@ import NetworkMultiplayer.Messages.InGameMessages.SanityCheck;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
-import com.badlogic.gdx.maps.tiled.tiles.StaticTiledMapTile;
-import com.badlogic.gdx.scenes.scene2d.ui.Tree;
 
 import java.util.ArrayList;
 import java.util.TreeMap;
@@ -483,12 +481,10 @@ public class Board {
     }
 
     public TreeMap<Position, LaserBeam> getDoubleLaserLocations() {
-        TreeMap<Position, LaserBeam> ret = new TreeMap<>(doubleLaserLocations);
-        return ret;
+        return new TreeMap<>(doubleLaserLocations);
     }
     public TreeMap<Position, LaserBeam> getSingleLaserLocations() {
-        TreeMap<Position, LaserBeam> ret = new TreeMap<>(singleLaserLocations);
-        return ret;
+        return new TreeMap<>(singleLaserLocations);
     }
 
     private void botFellOff(Robot bot){
@@ -500,7 +496,6 @@ public class Board {
 
     public Robot getRobotAt(int x, int y){ return botgrid[y][x]; }
     public IComponent getForgridAt(int x, int y){ return forgrid[y][x]; }
-    public IComponent getMidgridAt(int x, int y){ return midgrid[y][x]; }
 
     public void placeRobotAt(int x, int y, Robot bot){
         if(outOfBounds(x, y)) throw new IllegalArgumentException("Coordinates (" + x + ", " + y + ") are out of bounds.");

@@ -90,7 +90,7 @@ public abstract class SimpleScreen implements Screen {
     }
 
     protected class RobotSpriteListener extends ClickListener {
-        private int i;
+        private final int i;
         public RobotSpriteListener(int i){ this.i = i; }
         @Override
         public void clicked(InputEvent event, float x, float y) {

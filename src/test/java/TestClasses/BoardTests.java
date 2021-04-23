@@ -788,7 +788,7 @@ public class BoardTests {
 
     @Test
     public void allLaserBeamsGetDrawn() {
-        bård.firstRoundFinished = true;
+        Board.firstRoundFinished = true;
         bård.endPhase();
 
         assertEquals(28, bård.getDoubleLaserLocations().size() + bård.getSingleLaserLocations().size());
@@ -796,7 +796,7 @@ public class BoardTests {
 
     @Test
     public void correctAmountOfCrossingLasersOnBoard() {
-        bård.firstRoundFinished = true;
+        Board.firstRoundFinished = true;
         bård.endPhase();
 
         int numberOfCrossingLasers = 0;
@@ -810,7 +810,7 @@ public class BoardTests {
 
     @Test
     public void horizontalLasersThatHitDontMakeACrossingLaser(){
-        bård.firstRoundFinished = true;
+        Board.firstRoundFinished = true;
         bård.endPhase();
 
         int i = 0;
@@ -831,13 +831,15 @@ public class BoardTests {
     @Test
     public void lasersDoNotGetDrawnOnTopOfRobots(){
         bård.placeRobotAt(4,5,robot1);
-        bård.firstRoundFinished = true;
+        Board.firstRoundFinished = true;
         bård.endPhase();
 
         boolean laserAtThisPos = false;
         for(Position p : bård.getSingleLaserLocations().keySet()){
-            if(p.getX() == 4 && p.getY() == 5)
+            if (p.getX() == 4 && p.getY() == 5) {
                 laserAtThisPos = true;
+                break;
+            }
         }
         assertFalse(laserAtThisPos, "There should not be a laser at this position!");
 

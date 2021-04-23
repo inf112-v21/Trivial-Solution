@@ -44,7 +44,7 @@ public class NetworkServer extends Listener {
     //Mappinger som sjekker at vi har alt på plass
     private final HashMap<Connection, Robot> connectionsAndRobots = new HashMap<>();
 
-    private HashMap<Connection, SanityCheck> conTocheck = new HashMap<>();
+    private final HashMap<Connection, SanityCheck> conTocheck = new HashMap<>();
 
     //Valgene de ulike klientene/robotenes tar.
     private final TreeMap<Robot,ArrayList<ProgramCard>> robotActions = new TreeMap<>();

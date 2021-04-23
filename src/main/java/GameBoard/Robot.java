@@ -43,7 +43,7 @@ public class Robot implements Serializable, Comparable<Robot> {
 
 	private static TextureRegion[][] textures;
 
-	private ArrayList<Flag> flagsVisited = new ArrayList<>();
+	private final ArrayList<Flag> flagsVisited = new ArrayList<>();
 	private ArrayList<ProgramCard> availableCards = new ArrayList<>(); //alle kortene som ble utdelt
 	private final ArrayList<ProgramCard> chosenCards = new ArrayList<>(BoardController.PHASES_PER_ROUND); //De valgte kortene, rekkefølgen er samme som den spilleren valgte dem
 

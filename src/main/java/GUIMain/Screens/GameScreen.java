@@ -69,7 +69,7 @@ public class GameScreen extends SimpleScreen {
     private final String mapName;
     private BoardController gameBoard;
     private final List<Robot> robots;
-    protected Robot playerControlledRobot;
+    protected final Robot playerControlledRobot;
 
     //Tabeller og variabler for å tegne kort
     private Table availableTable;

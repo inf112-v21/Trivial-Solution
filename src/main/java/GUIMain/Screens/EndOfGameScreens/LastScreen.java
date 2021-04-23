@@ -30,6 +30,8 @@ public class LastScreen extends SimpleScreen {
             case SERVER_DISCONNECTED:
                 background = "Background Images/EndOfGame/Serverdc.png";
                 break;
+            case ALL_CLIENTS_DC:
+                background = "Background Images/EndOfGame/allClientsdc.png";
             default:
                 throw new UnsupportedOperationException("Could not recognize background: " + back + ", please go to LastScreen and add that case to the list");
         }

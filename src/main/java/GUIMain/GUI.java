@@ -1,6 +1,7 @@
 package GUIMain;
 
-import GUIMain.Screens.EndOfGameScreens.ServerDisconnectedScreen;
+import GUIMain.Screens.EndOfGameScreens.EndScreenBackground;
+import GUIMain.Screens.EndOfGameScreens.LastScreen;
 import GUIMain.Screens.MenuScreen;
     import NetworkMultiplayer.NetworkClient;
     import NetworkMultiplayer.NetworkServer;
@@ -94,7 +95,7 @@ public class GUI extends Game {
      */
     public void didServerChooseToDisconnectThenTerminateClient(){
             getClient().disconnectAndStopClientThread();
-            setScreen(new ServerDisconnectedScreen(this));
+            setScreen(new LastScreen(EndScreenBackground.SERVER_DISCONNECTED, this));
             reSetClient();
     }
 

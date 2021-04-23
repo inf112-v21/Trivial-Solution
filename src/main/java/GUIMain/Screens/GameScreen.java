@@ -1,8 +1,11 @@
 package GUIMain.Screens;
 
 import GUIMain.GUI;
+import GUIMain.Screens.EndOfGameScreens.EndScreenBackground;
+import GUIMain.Screens.EndOfGameScreens.LastScreen;
 import GameBoard.BoardController;
 import GameBoard.Cards.ProgramCard;
+import GameBoard.Components.LaserBeam;
 import GameBoard.Position;
 import GameBoard.Robot;
 
@@ -493,42 +496,42 @@ public class GameScreen extends SimpleScreen {
 
     }
 
-    private void finishedCheck(){
+    private void finishedCheck() {
         //Sjekker om en spiller har vunnet og hvilken screen som skal vises.
         Robot winner = gameBoard.hasWon();
-        if(winner != null){
+        if (winner != null) {
 
             //Hvis multiplayer spillet er ferdig så stenger vi serveren og
             //frakobler klientene.
 
-            if(playerControlledRobot.equals(winner)){
+            if (playerControlledRobot.equals(winner)) {
                 gui.setScreen(new LastScreen(EndScreenBackground.WIN, gui));
-            }
-            else{
+            } else {
                 gui.setScreen(new LastScreen(EndScreenBackground.LOSE, gui));
             }
         }
-        if(isThisMultiPlayer){
-                if(playerControlledRobot.getLives() <= 0 && !amITheHost){
-                    gui.setScreen(new GameOverScreen(gui));
+        if (isThisMultiPlayer) {
+            if (playerControlledRobot.getLives() <= 0 && !amITheHost) {
+                gui.setScreen(new LastScreen(EndScreenBackground.LOSE, gui));
+            }
+
+            if (playerControlledRobot.getLives() <= 0) {
+                gui.setScreen(new LastScreen(EndScreenBackground.LOSE, gui));
+            } else {
+                if (playerControlledRobot.getLives() <= 0) {
+                    gui.setScreen(new LastScreen(EndScreenBackground.LOSE, gui));
                 }
-
-        if(playerControlledRobot.getLives() <= 0){
-            gui.setScreen(new LastScreen(EndScreenBackground.LOSE, gui));
-        } else {
-            if(playerControlledRobot.getLives() <= 0){
-                gui.setScreen(new GameOverScreen(gui));
             }
-        }
 
-        int alive = 0;
-        for(Robot bot: robots){
-            if (bot.getLives()>0){
-                alive++;
+            int alive = 0;
+            for (Robot bot : robots) {
+                if (bot.getLives() > 0) {
+                    alive++;
+                }
             }
-        }
-        if(alive == 1 && playerControlledRobot.getLives()>0){
-            gui.setScreen(new LastScreen(EndScreenBackground.WIN, gui));
+            if (alive == 1 && playerControlledRobot.getLives() > 0) {
+                gui.setScreen(new LastScreen(EndScreenBackground.WIN, gui));
+            }
         }
     }
 

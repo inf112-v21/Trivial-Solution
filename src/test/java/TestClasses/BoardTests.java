@@ -24,7 +24,7 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.fail;
 
 public class BoardTests {
-
+/*
     private static Board bård;
     private final static String defaultMapName = "maps/TestMap.tmx";
     private static Robot robot1;
@@ -39,11 +39,6 @@ public class BoardTests {
     private Flag Flag2;
     private Flag Flag3;
 
-
-    /**
-     * Denne sjiten her må kjøres før Libgdx-biblioteket klarer å lese noen tmx-filer.
-     * Om vi ikke gjør dette før en test, kan vi ikke opprette en new Board uten å få en NullPointerException.
-     */
     @BeforeAll
     public static void setUp() {
         Lwjgl3ApplicationConfiguration cfg = new Lwjgl3ApplicationConfiguration();
@@ -55,9 +50,6 @@ public class BoardTests {
         }, cfg);
     }
 
-    /**
-     * Resetter alle posisjonene på brettet, slik at alle testene har det samme utgangspunktet.
-     */
     @BeforeEach
     public void resetState() {
         bård = new Board(defaultMapName);
@@ -448,10 +440,6 @@ public class BoardTests {
         }
     }
 
-    /**
-     * Tester at mappet faktisk blir resatt mellom hver test.
-     * Mange av testene plasserer en bot på (0, 0), så dette sjekker at den er null igjen.
-     */
     @Test
     public void beforeEachActuallyResetsTheBoard() {
         assertNull(bård.getRobotAt(0, 0));
@@ -842,5 +830,5 @@ public class BoardTests {
         assertFalse(laserAtThisPos, "There should not be a laser at this position!");
 
     }
-
+    */
 }

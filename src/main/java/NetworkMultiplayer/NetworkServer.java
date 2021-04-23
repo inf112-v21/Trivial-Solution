@@ -130,9 +130,13 @@ public class NetworkServer extends Listener {
      * @return true hvis alle har sendt, false ellers.
      */
     public boolean haveAllClientSentTheirChosenCards(){
-        return numberOfSetsOfCardsReceived == numberOfConnections+1;
+        if(hostRobot.hasRemainingLives()) {
+            return numberOfSetsOfCardsReceived == numberOfConnections + 1;
+        }
+        return numberOfSetsOfCardsReceived == numberOfConnections;
 
     }
+
 
 
     public void sendAllChosenCardsToEveryone(SanityCheck vibeCheck){

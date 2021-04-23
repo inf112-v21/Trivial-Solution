@@ -6,8 +6,8 @@ import GameBoard.Cards.Deck;
 import GameBoard.Cards.ProgramCard;
 import GameBoard.Components.Flag;
 import GameBoard.Components.IComponent;
+import GameBoard.Components.LaserBeam;
 import NetworkMultiplayer.Messages.InGameMessages.SanityCheck;
-import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -151,7 +151,8 @@ public class BoardController {
     public SanityCheck getSanityCheck(){ return board.getSanityCheck(); }
 
     public TreeSet<Position> getDirtyLocations(){ return board.getDirtyLocations(); }
-    public TreeMap<Position, TiledMapTileLayer.Cell> getLaserLocations() { return board.getLaserLocations();}
+    public TreeMap<Position, LaserBeam> getDoubleLaserLocations() { return board.getDoubleLaserLocations();}
+    public TreeMap<Position, LaserBeam> getSingleLaserLocations() { return board.getSingleLaserLocations();}
     public TreeSet<Position> getDamagedPositions(){return board.getRecentlyDamagedPositions(); }
 
     private static class BotComparator implements Comparator<Robot> {

@@ -13,12 +13,26 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 
-public abstract class LastScreen extends SimpleScreen {
+public class LastScreen extends SimpleScreen {
 
     private SpriteBatch spriteBatch;
+    private String background;
     
-    public LastScreen(GUI gui) {
+    public LastScreen(EndScreenBackground back, GUI gui) {
         super(gui);
+        switch (back){
+            case WIN:
+                background = "Background Images/EndOfGame/Youwon.png";
+                break;
+            case LOSE:
+                background = "Background Images/EndOfGame/Gameover.png";
+                break;
+            case SERVER_DISCONNECTED:
+                background = "Background Images/EndOfGame/Serverdc.png";
+                break;
+            default:
+                throw new UnsupportedOperationException("Could not recognize background: " + back + ", please go to LastScreen and add that case to the list");
+        }
     }
     
 
@@ -26,7 +40,7 @@ public abstract class LastScreen extends SimpleScreen {
     public void show() {
         super.show();
         spriteBatch = new SpriteBatch();
-        Texture backgroundTexture = chooseTexture();
+        Texture backgroundTexture = new Texture(Gdx.files.internal(background));
         backgroundSprite = new Sprite(backgroundTexture);
         backgroundSprite.setBounds(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         stage = new Stage();
@@ -52,10 +66,4 @@ public abstract class LastScreen extends SimpleScreen {
         spriteBatch.end();
         stage.draw();
     }
-
-    /**
-     * Abstrakt metode som blir overskrevet i subklassene
-     * @return - Den riktige grafikken
-     */
-    public abstract Texture chooseTexture();
 }

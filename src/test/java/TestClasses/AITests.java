@@ -2,10 +2,18 @@ package TestClasses;
 
 import AIs.AI;
 import AIs.Randbot;
+import GameBoard.Board;
 import GameBoard.BoardController;
 import GameBoard.Cards.Deck;
 import GameBoard.Cards.ProgramCard;
 import GameBoard.Robot;
+import NetworkMultiplayer.Messages.InGameMessages.SanityCheck;
+import com.badlogic.gdx.Game;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
+import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -18,11 +26,24 @@ public class AITests {
 
     private Deck deck;
     private Robot bot;
+    private Board bård;
 
     @BeforeEach
-    public void setUp(){
+    public void reset(){
         deck = new Deck();
         bot = new Robot("Nebuchadnezzar", true);
+        bård = new Board("assets/maps/TestMap.tmx");
+    }
+
+    @BeforeAll
+    public static void setUp(){
+        Lwjgl3ApplicationConfiguration cfg = new Lwjgl3ApplicationConfiguration();
+        new Lwjgl3Application(new Game() {
+            @Override
+            public void create() {
+                Gdx.app.exit();
+            }
+        }, cfg);
     }
 
 
@@ -37,6 +58,8 @@ public class AITests {
         AIAddsCardsToRegisterOrTogglesPowerdDown(ai);
         resetState();
         AIDoesNotRemoveCards(ai);
+        resetState();
+        AIDoesNotModifyTheBoard(ai);
     }
 
     @Test
@@ -44,12 +67,15 @@ public class AITests {
         testAIProperties(new Randbot());
     }
 
+    //@Test
+    //public void testUltronProperties(){testAIProperties(new Ultron());}
+
 
     private void AIAddsCardsToRegisterOrTogglesPowerdDown(AI ai){
         drawRandomCards();
         assertEquals(0, bot.getNumberOfChosenCards());
 
-        ai.chooseCards(bot, null);
+        ai.chooseCards(bot, bård);
 
         assertTrue(bot.isPowerDownAnnounced() || bot.getNumberOfChosenCards() > 0);
     }
@@ -58,7 +84,7 @@ public class AITests {
         drawRandomCards();
         int numberOfCards = bot.getAvailableCards().size();
 
-        ai.chooseCards(bot, null);
+        ai.chooseCards(bot, bård);
 
         assertEquals(numberOfCards, bot.getAvailableCards().size());
     }
@@ -67,20 +93,35 @@ public class AITests {
         drawRandomCards();
 
         assertEquals(0, bot.getNumberOfChosenCards());
-        ai.chooseCards(bot, null);
+        ai.chooseCards(bot, bård);
         assertTrue(bot.getNumberOfChosenCards() <= BoardController.PHASES_PER_ROUND);
 
         bot.resetAllCards();
         drawRandomCards();
         bot.applyDamage(Robot.INITIAL_HP - 1); //Roboten har nå 1 liv igjen, burde bare få maks ett kort.
 
-        ai.chooseCards(bot, null);
+        ai.chooseCards(bot, bård);
         assertTrue(bot.getNumberOfChosenCards() <= 1);
     }
 
+    private void AIDoesNotModifyTheBoard(AI ai){
+        drawRandomCards();
+        bård.spawnRobot(bot);
+        SanityCheck before = bård.getSanityCheck();
+
+        ai.chooseCards(bot, bård);
+
+        SanityCheck after = bård.getSanityCheck();
+        try{
+            SanityCheck.assertEqualSimulation(before, after);
+        }catch (SanityCheck.UnequalSimulationException ex){
+            Assertions.fail();
+        }
+    }
+
     private void resetState(){
-        bot = new Robot("Nebuchadnezzar", true);
-        deck = new Deck();
+        bot.resetState();
+        deck.shuffleDeck();
     }
 
     private void drawRandomCards(){

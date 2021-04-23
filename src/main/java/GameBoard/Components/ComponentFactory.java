@@ -2,6 +2,8 @@ package GameBoard.Components;
 
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 
+import static GUIMain.GUI.DEVELOPER_MODE;
+
 public class ComponentFactory {
 
     /**
@@ -258,7 +260,7 @@ public class ComponentFactory {
 
 
             default:
-                System.err.println("Could not recognize ID no. " + cell.getTile().getId() + ". Please go to ComponentFactory and add that case to the list. Or you could go complain to Steinar.");
+                if (DEVELOPER_MODE) System.err.println("Could not recognize ID no. " + cell.getTile().getId() + ". Please go to ComponentFactory and add that case to the list. Or you could go complain to Steinar.");
                 return null;
         }
     }

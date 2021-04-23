@@ -13,7 +13,6 @@ public class LaserBeam extends SimpleComponent{
         this.image = new TextureRegion(new Texture("mapassets/tiles.png")).split(GameScreen.CELL_SIZE, GameScreen.CELL_SIZE)[x][y];
 
     }
-
     public TextureRegion getImage() {
         return image;
     }

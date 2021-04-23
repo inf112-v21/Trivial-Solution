@@ -13,9 +13,6 @@ public class Deck {
      */
     public Deck(){
         for (int i=0; i<6; i++){
-            //endre slik at hvert programkort har unik prioritet
-            //TODO: Ser ut som at gdx.files.internal ikke klarer å lese filer før gdx er initialisert
-            // https://stackoverflow.com/questions/10690982/libgdx-external-storage-causes-nullpointerexception-on-android/12149817
             cards.add(new ProgramCard(0,2,10));
             cards.add(new ProgramCard(0,-1,20));
             cards.add(new ProgramCard(0,1,30));

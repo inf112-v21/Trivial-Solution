@@ -8,7 +8,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 
 public class ConnectingScreen extends SimpleScreen{
 
-    private boolean hasTriedToConnectYet = false;
     private boolean waitone = true;
 
     public ConnectingScreen(GUI gui) {

@@ -18,6 +18,8 @@ import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.TreeMap;
 
+import static GUIMain.GUI.DEVELOPER_MODE;
+
 public class NetworkClient {
 
     private Client client = null;
@@ -142,6 +144,8 @@ public class NetworkClient {
                         case ROBOT_DESIGN_AND_NAME_ARE_OKEY:
                             state = SetupRobotNameDesign.ROBOT_DESIGN_AND_NAME_ARE_OKEY;
                             return;
+                        default:
+                            if (DEVELOPER_MODE) System.err.println("Received unidentified message: " + message + ". Please go to NetworkClient.addListeners() and add that case to the list.");
                     }
                 }
 
@@ -181,9 +185,7 @@ public class NetworkClient {
                     disconnectedRobot = ((ClientDisconnected) object).getDisconnectedBot();
                 }
 
-                else{
-                    System.out.println("Received unidenitified message: " + object.getClass());
-                }
+                else if(DEVELOPER_MODE) System.out.println("Received unidenitified message: " + object.getClass());
 
 
             }
@@ -197,7 +199,7 @@ public class NetworkClient {
             //Det som skjer når en klient disconnecter
             @Override
             public void disconnected(Connection connection) {
-                System.out.println("Client was disconnected" + client.getID());
+                if(DEVELOPER_MODE) System.out.println("Client was disconnected" + client.getID());
             }
 
 
@@ -213,18 +215,18 @@ public class NetworkClient {
      * @return - true hvis konneksjonen ble etablert, false ellers.
      */
     public boolean connect(String ipAdress) {
-        System.out.println(ipAdress);
+        if(DEVELOPER_MODE) System.out.println(ipAdress);
         boolean connectionEstablished = true;
         try {
             //connecter til hosten
             client.connect(10000, ipAdress, DEFAULT_TCP_PORT, DEFAULT_UDP_PORT);
 
         } catch (IllegalStateException e) {
-            System.out.println(e.toString() + ": Connect ble kalt fra konneksjonens update thread");
+            if (DEVELOPER_MODE) System.out.println(e.toString() + ": Connect ble kalt fra konneksjonens update thread");
             connectionEstablished = false;
         }
         catch (IOException e) {
-            System.out.println(e.toString() + ": klienten kunne ikke opprette en konneksjon eller så gikk tiden ut");
+            if (DEVELOPER_MODE) System.out.println(e.toString() + ": klienten kunne ikke opprette en konneksjon eller så gikk tiden ut");
             connectionEstablished = false;
         }
         return connectionEstablished;

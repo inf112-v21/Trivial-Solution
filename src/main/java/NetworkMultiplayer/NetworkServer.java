@@ -3,7 +3,7 @@ package NetworkMultiplayer;
 
 import GameBoard.Cards.ProgramCard;
 import GameBoard.Robot;
-import NetworkMultiplayer.Messages.ClientDisconnected;
+import NetworkMultiplayer.Messages.RobotDisconnected;
 import NetworkMultiplayer.Messages.InGameMessages.*;
 import NetworkMultiplayer.Messages.PreGameMessages.GameInfo;
 import NetworkMultiplayer.Messages.PreGameMessages.SetupRobotNameDesign;
@@ -15,7 +15,6 @@ import com.esotericsoftware.kryonet.Server;
 
 import java.io.IOException;
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class NetworkServer extends Listener {
 
@@ -44,6 +43,7 @@ public class NetworkServer extends Listener {
     private final HashSet<Robot> disconnections = new HashSet<>();
 
     private Robot hostRobot;
+
 
 
 
@@ -86,8 +86,11 @@ public class NetworkServer extends Listener {
      */
     public void distributeCards(){
 
-        for(Connection con : connectionsAndRobots.keySet()){
-            sendToClient(con, new DistributedCards(connectionsAndRobots.get(con).getAvailableCards()));
+
+        for(Connection con : connectionsAndRobots.keySet()) {
+            if (connectionsAndRobots.get(con).hasRemainingLives()) {
+                sendToClient(con, new DistributedCards(connectionsAndRobots.get(con).getAvailableCards()));
+            }
         }
         numberOfReadyClients = 0;
     }
@@ -124,7 +127,10 @@ public class NetworkServer extends Listener {
      * @return true hvis alle har sendt, false ellers.
      */
     public boolean haveAllClientSentTheirChosenCards(){
-        return numberOfSetsOfCardsReceived == numberOfConnections+1;
+        if(hostRobot.hasRemainingLives()) {
+            return numberOfSetsOfCardsReceived == numberOfConnections + 1;
+        }
+        return numberOfSetsOfCardsReceived == numberOfConnections;
 
     }
 
@@ -152,6 +158,10 @@ public class NetworkServer extends Listener {
     public void setHostsChosenCards(){
         robotActions.put(hostRobot,hostRobot.getChosenCards());
         numberOfSetsOfCardsReceived++;
+    }
+
+    public Robot getHostRobot() {
+        return hostRobot;
     }
 
     /**
@@ -302,15 +312,18 @@ public class NetworkServer extends Listener {
 
                     //Fjerner roboten
                     Robot removeThisRobot = connectionsAndRobots.remove(connection);
-                    removeThisRobot.killRobot();
-                    robotActions.remove(removeThisRobot);
 
-                    //Oppdatterer connecitons
-                    numberOfConnections--;
+                    if(removeThisRobot != null) {
+                        removeThisRobot.killRobot();
+                        robotActions.remove(removeThisRobot);
 
-                    //Gir beskjed til alle klientene om at de kan slette denne roboten.
-                    for (Connection con : connectionsAndRobots.keySet()) {
-                        sendToClient(con, new ClientDisconnected(removeThisRobot));
+                        //Oppdatterer connecitons
+                        numberOfConnections--;
+
+                        //Gir beskjed til alle klientene om at de kan slette denne roboten.
+                        for (Connection con : connectionsAndRobots.keySet()) {
+                            sendToClient(con, new RobotDisconnected(removeThisRobot));
+                        }
                     }
                 }
 

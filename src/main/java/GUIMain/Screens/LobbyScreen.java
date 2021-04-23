@@ -35,6 +35,33 @@ public class LobbyScreen extends SimpleScreen {
     }
 
     @Override
+    public void dispose(){
+        super.dispose();
+    }
+
+
+    @Override
+    public void hide(){
+        if(serverWasInitialized) {
+            listOfPlayers.clear();
+            playerlisttable.clear();
+
+            NetworkServer host = gui.getServer();
+            if (!host.getConnectionsAndRobots().isEmpty()) {
+                for (Connection con : host.getConnectionsAndRobots().keySet()) {
+                    host.sendToClient(con, ConfirmationMessage.SERVER_CHOOSE_TO_DISCONNECTED);
+                }
+            }
+            host.resetAllGameData();
+            host.stopServerAndDisconnectAllClients();
+
+            gui.reSetServer();
+            serverWasInitialized = false;
+            gui.setScreen(new MenuScreen(gui));
+        }
+    }
+
+    @Override
     public void show() {
         super.show();
         Table table = new Table();

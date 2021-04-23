@@ -92,6 +92,7 @@ public class GameScreen extends SimpleScreen {
     private final boolean isThisMultiPlayer;
     private final boolean amITheHost;
     private boolean isWaitingForCards = true;
+    private boolean deadCheck = true;
 
     //Variabel for å huske hvor laserne ble tegnet, så de kan slettes igjen effektivt
     private final TreeSet<Position> previousLaserPositions = new TreeSet<>();
@@ -143,6 +144,7 @@ public class GameScreen extends SimpleScreen {
         spriteBatch.dispose();
         stage.dispose();
         renderer.dispose();
+        //if(isThisMultiPlayer) ServerOrClientChoseToDisconnect();
     }
 
     @Override
@@ -209,6 +211,7 @@ public class GameScreen extends SimpleScreen {
 
                 //Hvis noen velger å disconnete så må vi håndtere det
                 if(isThisMultiPlayer) ServerOrClientChoseToDisconnect();
+                gui.setScreen(new MenuScreen(gui));
             }
         });
         TextButton quit = new TextButton("Quit", gui.getSkin());
@@ -232,7 +235,7 @@ public class GameScreen extends SimpleScreen {
      * enheten avhengig om det er en klient eller en server.
      */
     private void ServerOrClientChoseToDisconnect(){
-        if (amITheHost){
+        if (amITheHost && gui.getServer() != null){
             NetworkServer theHost = gui.getServer();
             if(!theHost.getConnectionsAndRobots().isEmpty()){
                 for(Connection con : theHost.getConnectionsAndRobots().keySet()){
@@ -364,7 +367,7 @@ public class GameScreen extends SimpleScreen {
 
         updateRobotPositions();
         updateLivesAndHP();
-        finishedCheck();
+
 
         if(isThisMultiPlayer ){
             updateMultiplayerProperties();
@@ -372,6 +375,8 @@ public class GameScreen extends SimpleScreen {
         else{
             updateCardsOnScreen();
         }
+
+        finishedCheck();
     }
 
     private void updateCardsOnScreen(){
@@ -388,96 +393,105 @@ public class GameScreen extends SimpleScreen {
 
     private void updateMultiplayerProperties(){
 
-        try{
-            //Dette er for klienten
-            if (!amITheHost) {
+        //Robotene slettes når de dør.
+        ArrayList<Robot> botsThatJustDied = gameBoard.getRecentlyDeceasedRobots();
+        if(!botsThatJustDied.isEmpty()){
+            for(Robot bot: botsThatJustDied){
+                //gui.showPopUp("Robot: " + bot.getName() + " died", stage);
+                bot.killRobot();
+                if(robots.contains(bot)){
+                    robots.remove(bot);
+                }
+            }
+        }
 
-                //Her sjekker vi om en klient ble disconnected. I så fall må vi fjerne roboten til den lokalt.
-                Robot possibleDisconnectedRobot = gui.getClient().getDisconnectedRobot();
-                if(possibleDisconnectedRobot!= null){
-                    for(Robot bot: robots){
-                        if(bot.equals(possibleDisconnectedRobot)){
-                            bot.killRobot();
-                            robots.remove(possibleDisconnectedRobot);
-                            gui.showPopUp("Robot: " + bot.getName() + " died", stage);
-                        }
+
+        //Dette er for klienten
+        if (!amITheHost) {
+
+            //Her sjekker vi om en klient ble disconnected. I så fall må vi fjerne roboten til den lokalt.
+            //Robot possibleDisconnectedRobot
+            if (gui.getClient().getDisconnectedRobot() != null) {
+                for (Robot bot : gameBoard.getAliveRobots()) {
+                    if (bot.equals(gui.getClient().getDisconnectedRobot())) {
+                        bot.killRobot();
+                        robots.remove(bot);
+                        //gui.showPopUp("Robot: " + bot.getName() + " died", stage);
                     }
                 }
-
-                //Her gir vi serveren besjked om at vi er klare for å motta kort
-                if (isWaitingForCards) {
-                    gui.getClient().sendToServer(ConfirmationMessage.GAME_WAS_STARTED_AND_CLIENT_IS_READY_TO_RECEIVE_CARDS);
-                    isWaitingForCards = false;
-                }
-
-                //Her mottar vi kort fra serveren.
-                ArrayList<ProgramCard> cardsToChoseFrom = gui.getClient().getCardsToChoseFrom();
-                if (cardsToChoseFrom != null) {
-                    playerControlledRobot.setAvailableCards(cardsToChoseFrom);
-                    hasDrawnCardsYet = false;
-                    updateCardsOnScreen();
-                }
-
-                //Her gir vi kortene til de ulike spillerne.
-                TreeMap<Robot, ArrayList<ProgramCard>> allChosenCards = gui.getClient().getAllChosenCards();
-                if (allChosenCards != null) {
-
-                    //Lopper igjennom alle robotene for å matche de valgte kortene til hver robot,
-                    //slik at klienten kan simulere de tatte valgene.
-                    for (Robot bot : robots) {
-                        if (bot.equals(playerControlledRobot) && ! allChosenCards.get(bot).equals(bot.getChosenCards())) {
-                            throw new UnequalSimulationException("Are you sure these are the correct cards in the correct order?\n" +
-                                    "if I send cards to the server, and get cards back, the cards for my robot should all be the same. But they are not.");
-                        }
-                        bot.setChosenCards(allChosenCards.get(bot));
-                        if (allChosenCards.get(bot).isEmpty()) bot.setPowerDown(true);
-                    }
-                    gameBoard.playersAreReady();
-                    //Sørger for å gi serveren beskjed om at simuleringen er ferdig nå
-                    isWaitingForCards = true;
-                }
-
-                //Her sjekker vi om hosten valgte å disconnecte selv. Da gir vi beskjed til klienten om det
-                if(gui.getClient().getServerIsDown() != null){
-                    gui.didServerChooseToDisconnectThenTerminateClient();
-                }
-
             }
 
-            //Dette er Hosten/Serveren sin kode
-            else {
+            //Her gir vi serveren besjked om at vi er klare for å motta kort
+            if (isWaitingForCards) {
+                gui.getClient().sendToServer(ConfirmationMessage.GAME_WAS_STARTED_AND_CLIENT_IS_READY_TO_RECEIVE_CARDS);
+                isWaitingForCards = false;
+            }
 
-                NetworkServer host = gui.getServer();
-                //Hvis alle spillerne er klare kan vi begynne å dele ut kort
-                if (host.areAllClientsReady() && gameBoard.isWaitingForPlayers()) {
-                    host.distributeCards();
-                    hasDrawnCardsYet = false;
-                    updateCardsOnScreen();
-                }
-
-                //Hvis alle spillerne har sendt kortene sine kan vi begynne simuleringen
-                if (host.haveAllClientSentTheirChosenCards()) {
-                    if (GUI.DEVELOPER_MODE) host.sendAllChosenCardsToEveryone(gameBoard.getSanityCheck());
-                    else host.sendAllChosenCardsToEveryone();
-                    gameBoard.playersAreReady();
-                }
-
-                //Dette skjer hvis alle klientene disconnecter.
-                //Vi starter uansett ikke et spill før konneksjonene er >0 så
-                //derfor kan vi bruke 0 for å sjekke om alle klientene disconnectet
-                if(host.getNumberOfConnections() == 0){
-                    host.stopServerAndDisconnectAllClients();
-                    host.resetAllGameData();
-                    gui.reSetServer();
-                    gui.setScreen( new AllClientsDisconnectedScreen(gui));
-                }
-
+            //Her mottar vi kort fra serveren.
+            ArrayList<ProgramCard> cardsToChoseFrom = gui.getClient().getCardsToChoseFrom();
+            if (cardsToChoseFrom != null) {
+                playerControlledRobot.setAvailableCards(cardsToChoseFrom);
+                hasDrawnCardsYet = false;
                 updateCardsOnScreen();
             }
 
-        } catch (NullPointerException e){
-            gui.setScreen(new MenuScreen(gui));
+            //Her gir vi kortene til de ulike spillerne.
+            TreeMap<Robot, ArrayList<ProgramCard>> allChosenCards = gui.getClient().getAllChosenCards();
+            if (allChosenCards != null) {
+
+                //Lopper igjennom alle robotene for å matche de valgte kortene til hver robot,
+                //slik at klienten kan simulere de tatte valgene.
+                for (Robot bot : robots) {
+                    if (bot.equals(playerControlledRobot) && !allChosenCards.get(bot).equals(bot.getChosenCards())) {
+                        throw new UnequalSimulationException("Are you sure these are the correct cards in the correct order?\n" +
+                                "if I send cards to the server, and get cards back, the cards for my robot should all be the same. But they are not.");
+                    }
+                    bot.setChosenCards(allChosenCards.get(bot));
+                    if (allChosenCards.get(bot).isEmpty()) bot.setPowerDown(true);
+                }
+                gameBoard.playersAreReady();
+                //Sørger for å gi serveren beskjed om at simuleringen er ferdig nå
+                isWaitingForCards = true;
+            }
+
+            //Her sjekker vi om hosten valgte å disconnecte selv. Da gir vi beskjed til klienten om det
+            if (gui.getClient().getServerIsDown() != null) {
+                gui.didServerChooseToDisconnectThenTerminateClient();
+            }
+
         }
+
+        //Dette er Hosten/Serveren sin kode
+        else {
+
+            NetworkServer host = gui.getServer();
+            //Hvis alle spillerne er klare kan vi begynne å dele ut kort
+            if (host.areAllClientsReady() && gameBoard.isWaitingForPlayers()) {
+                host.distributeCards();
+                hasDrawnCardsYet = false;
+                updateCardsOnScreen();
+            }
+
+            //Hvis alle spillerne har sendt kortene sine kan vi begynne simuleringen
+            if (host.haveAllClientSentTheirChosenCards()) {
+                if (GUI.DEVELOPER_MODE) host.sendAllChosenCardsToEveryone(gameBoard.getSanityCheck());
+                else host.sendAllChosenCardsToEveryone();
+                gameBoard.playersAreReady();
+            }
+
+            if(host.getHostRobot().getLives() <= 0){
+                    ready.setVisible(false);
+                    clear.setVisible(false);
+                    powerDown.setVisible(false);
+                    availableTable.clear();
+
+
+            }
+
+
+            updateCardsOnScreen();
+        }
+
     }
 
     private void finishedCheck(){
@@ -487,17 +501,6 @@ public class GameScreen extends SimpleScreen {
 
             //Hvis multiplayer spillet er ferdig så stenger vi serveren og
             //frakobler klientene.
-            if(isThisMultiPlayer) {
-
-                if (amITheHost) {
-                    NetworkServer server = gui.getServer();
-                    server.resetAllGameData();
-                    server.stopServerAndDisconnectAllClients();
-                    gui.reSetServer();
-                } else {
-                    gui.reSetClient();
-                }
-            }
 
             if(playerControlledRobot.equals(winner)){
                 gui.setScreen(new WinScreen(gui));
@@ -507,9 +510,15 @@ public class GameScreen extends SimpleScreen {
                 gui.setScreen(new GameOverScreen(gui));
             }
         }
+        if(isThisMultiPlayer){
+                if(playerControlledRobot.getLives() <= 0 && !amITheHost){
+                    gui.setScreen(new GameOverScreen(gui));
+                }
 
-        if(playerControlledRobot.getLives() <= 0){
-            gui.setScreen(new GameOverScreen(gui));
+        } else {
+            if(playerControlledRobot.getLives() <= 0){
+                gui.setScreen(new GameOverScreen(gui));
+            }
         }
 
         int alive = 0;

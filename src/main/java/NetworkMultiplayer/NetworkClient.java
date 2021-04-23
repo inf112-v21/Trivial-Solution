@@ -2,7 +2,7 @@ package NetworkMultiplayer;
 
 import GameBoard.Cards.ProgramCard;
 import GameBoard.Robot;
-import NetworkMultiplayer.Messages.ClientDisconnected;
+import NetworkMultiplayer.Messages.RobotDisconnected;
 import NetworkMultiplayer.Messages.InGameMessages.AllChosenCardsFromAllRobots;
 import NetworkMultiplayer.Messages.PreGameMessages.SetupRobotNameDesign;
 import NetworkMultiplayer.Messages.InGameMessages.ConfirmationMessage;
@@ -178,8 +178,8 @@ public class NetworkClient {
                 }
 
                 //Her sletter vi roboten som ble disconnected.
-                else if (object instanceof ClientDisconnected){
-                    disconnectedRobot = ((ClientDisconnected) object).getDisconnectedBot();
+                else if (object instanceof RobotDisconnected){
+                    disconnectedRobot = ((RobotDisconnected) object).getDisconnectedBot();
                 }
 
                 else{

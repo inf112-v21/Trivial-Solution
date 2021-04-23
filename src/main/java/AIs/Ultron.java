@@ -7,6 +7,7 @@ import GameBoard.Board;
 import GameBoard.Position;
 import GameBoard.Robot;
 import GameBoard.Cards.ProgramCard;
+import GameBoard.Components.Flag;
 import GameBoard.Components.SimpleComponent;
 
 public class Ultron implements AI {
@@ -14,13 +15,16 @@ public class Ultron implements AI {
 	private Robot robot;
 	private Board board;
 	private  boolean moveY = false;
+	private static LinkedList<GameBoard.Position> flags;
 	
 	@Override
 	public void chooseCards(Robot bot, Board board) {
 		this.robot = bot;this.board = board;
 		GameBoard.Position playerPosition = this.trackPlayerPosition(); 
-		selectCards(robot.getAvailableCards(), playerPosition);
-	}
+		flags = this.allocateFlags();;
+		if(playerPosition != null)
+			selectCards(robot.getAvailableCards(), playerPosition);
+	}	
 	
 	/**
 	 * Locates all flags in the board and return a list of their position
@@ -31,56 +35,12 @@ public class Ultron implements AI {
 		for(int i = 0; i < board.getHeight(); i++) {
 			for(int q = 0; q < board.getHeight(); q++) {
 				 SimpleComponent comp = (SimpleComponent) board.getForgridAt(q, i);
-				 if(comp != null) {
-				 switch(getType(comp)) {
-				 case "flag":
+				 if(comp != null && comp instanceof Flag) {
 					 flags.add(new GameBoard.Position(q,i));
-				 	}
 				 }
 			}
 		}
 			return flags;
-	}
-	
-	private String getType(SimpleComponent com) {
-		if(com instanceof GameBoard.Components.Wall) {
-			return "wall";
-		}
-		
-		else if(com instanceof GameBoard.Components.Laser) {
-			return "laser";
-		}
-		
-		else if(com instanceof GameBoard.Components.Wrench) {
-			return "wrench";
-		}
-		
-		else if(com instanceof GameBoard.Components.Gear) {
-			return "gear";
-		}
-		else if(com instanceof GameBoard.Components.Flag) {
-			return "flag";
-		}
-		
-		else if(com instanceof GameBoard.Components.Hole) {
-			return "hole";
-		}
-		
-		else if(com instanceof GameBoard.Components.ConveyorBelt) {
-			return "conveyorbelt";
-		}
-		
-		else if(com instanceof GameBoard.Components.CheckPoint) {
-			return "checkpoint";
-		}
-		
-		else if(com instanceof GameBoard.Components.SpawnPoint) {
-			return "spwanpoint";
-		}
-		
-		else {
-			return "";
-		}
 	}
 	
 	private GameBoard.Position trackPlayerPosition() {
@@ -135,25 +95,27 @@ public class Ultron implements AI {
 	
 	
 	private void selectCards(java.util.List<ProgramCard> cards, GameBoard.Position playerPosition) {
-		LinkedList<GameBoard.Position> flags = this.allocateFlags();
-		
+
 		java.util.List<ProgramCard> allCards = new java.util.ArrayList<>();
 		int xDistance = getNearestFlag(playerPosition.getX(), playerPosition.getY(), flags).getX();
 		int yDistance = getNearestFlag(playerPosition.getX(), playerPosition.getY(), flags).getY();
 		LinkedList<Integer> dir = getDirectionToFlag(playerPosition.getX(), playerPosition.getY(), xDistance, yDistance);
 		int diff = 0;
 		
+		
 		if(playerPosition.getX() == xDistance) {
 			moveY = true;
-		}	
-		
-		if(playerPosition.getX() == xDistance && playerPosition.getY() == yDistance) {
-			flags.pop();
-			xDistance = getNearestFlag(playerPosition.getX(), playerPosition.getY(), flags).getX();
-			yDistance = getNearestFlag(playerPosition.getX(), playerPosition.getY(), flags).getY();
-			
 		}
 		
+		if(playerPosition.getX() == xDistance && playerPosition.getY() == yDistance) {
+			flags.remove(this.getFlag(xDistance, yDistance, flags));
+			xDistance = getNearestFlag(playerPosition.getX(), playerPosition.getY(), flags).getX();
+			yDistance = getNearestFlag(playerPosition.getX(), playerPosition.getY(), flags).getY();
+			dir = getDirectionToFlag(playerPosition.getX(), playerPosition.getY(), xDistance, yDistance);
+			
+			System.out.println("Robot is on flag! DIRECTION TO GO: "+dir);
+			moveY = false;
+		}
 		
 		ProgramCard dirCard = filterCard(cards, dir.getFirst());
 		if(dirCard != null) {
@@ -165,7 +127,7 @@ public class Ultron implements AI {
 				diff = Math.abs(xDistance - playerPosition.getX());
 			}
 			else {
-				diff = Math.abs((yDistance-2)-playerPosition.getY()); 
+				diff = Math.abs((yDistance)-playerPosition.getY()); 
 				moveY = false;
 			}
 			java.util.List<ProgramCard> STEPS = filterCard(cards, playerPosition, diff);
@@ -178,6 +140,7 @@ public class Ultron implements AI {
 					robot.chooseCard(allCards.get(i));
 					}
 				}
+			
 		}catch(Exception e) {
 				System.out.println(e);
 		}	
@@ -219,15 +182,10 @@ public class Ultron implements AI {
 		
 		java.util.List<ProgramCard> stepCards = new java.util.ArrayList<>();
 		for(ProgramCard cards: card) {
-			int maxDistance = cards.getDistance();
 			if(cards.getRotation() == 0 && cards.getDistance() > 0) {
 				if(steps != diff ) {
 					if(steps + cards.getDistance() > diff) {
 						continue;
-					}
-					if(cards.getDistance() > maxDistance) {
-						steps += cards.getDistance();
-						stepCards.add(cards);
 					}
 					else {
 						steps += cards.getDistance();
@@ -235,11 +193,22 @@ public class Ultron implements AI {
 					}
 				}
 			}
+			
 			if(steps > diff) {
 				continue;
 			}
 		}
 		return stepCards;
 	}
-}
+	
+	private Position getFlag(int x, int y, LinkedList<Position> flags) {
+		int i = 0;
+		for(; i < flags.size(); i++) {
+			if(flags.get(i).getX() == x && flags.get(i).getY() == y) {
+				return flags.get(i);
+			}
+		}
+		return null;
+	}
 
+}

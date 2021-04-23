@@ -40,7 +40,6 @@ public class LobbyScreen extends SimpleScreen {
 
     @Override
     public void dispose(){
-        super.dispose();
     }
 
 
@@ -140,7 +139,7 @@ public class LobbyScreen extends SimpleScreen {
                         buttonTable.clear();
                         TextButton butt = new TextButton("Start game", gui.getSkin());
                         TextButton butt2 = new TextButton("Menu", gui.getSkin());
-                        buttonTable.add(butt).spaceBottom(25).row();;
+                        buttonTable.add(butt).spaceBottom(25).row();
                         buttonTable.add(butt2);
                         butt.addListener(new ChangeListener() {
                             @Override

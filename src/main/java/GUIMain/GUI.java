@@ -1,5 +1,7 @@
 package GUIMain;
 
+import GUIMain.Screens.EndOfGameScreens.EndScreenBackground;
+import GUIMain.Screens.EndOfGameScreens.LastScreen;
 import GUIMain.Screens.MenuScreen;
     import NetworkMultiplayer.NetworkClient;
     import NetworkMultiplayer.NetworkServer;
@@ -83,6 +85,18 @@ public class GUI extends Game {
             //neste gang en spiller klicker join.
             reSetClient();
         }
+    }
+
+    /**
+     * Fikser at klienten blir terminert i de ulike screen'sene
+     * hvis serveren velger å avbrytte koblingen. Funksjonen blir kun kalt
+     * Hvis det er sant at serveren ble stengt. Da sender vi clienten
+     * til ServerDisconnectedScreen.
+     */
+    public void didServerChooseToDisconnectThenTerminateClient(){
+            getClient().disconnectAndStopClientThread();
+            setScreen(new LastScreen(EndScreenBackground.SERVER_DISCONNECTED, this));
+            reSetClient();
     }
 
     @Override

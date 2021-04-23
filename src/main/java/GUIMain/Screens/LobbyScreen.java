@@ -2,9 +2,11 @@ package GUIMain.Screens;
 
 import GUIMain.GUI;
 import GameBoard.Robot;
+import NetworkMultiplayer.Messages.InGameMessages.ConfirmationMessage;
 import NetworkMultiplayer.Messages.PreGameMessages.GameInfo;
 import NetworkMultiplayer.Messages.PreGameMessages.SetupRobotNameDesign;
 import NetworkMultiplayer.Messages.PreGameMessages.RobotInfo;
+import NetworkMultiplayer.NetworkServer;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -13,6 +15,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.ui.SelectBox;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.esotericsoftware.kryonet.Connection;
 
 import java.util.TreeSet;
 
@@ -28,10 +31,38 @@ public class LobbyScreen extends SimpleScreen {
     private Table buttonTable;
     private Table botDesign;
     private SelectBox<String> map;
+    private boolean serverWasInitialized = false;
 
 
     public LobbyScreen(GUI gui) {
         super(gui);
+    }
+
+    @Override
+    public void dispose(){
+        super.dispose();
+    }
+
+
+    @Override
+    public void hide(){
+        if(serverWasInitialized) {
+            listOfPlayers.clear();
+            playerlisttable.clear();
+
+            NetworkServer host = gui.getServer();
+            if (!host.getConnectionsAndRobots().isEmpty()) {
+                for (Connection con : host.getConnectionsAndRobots().keySet()) {
+                    host.sendToClient(con, ConfirmationMessage.SERVER_CHOOSE_TO_DISCONNECTED);
+                }
+            }
+            host.resetAllGameData();
+            host.stopServerAndDisconnectAllClients();
+
+            gui.reSetServer();
+            serverWasInitialized = false;
+            gui.setScreen(new MenuScreen(gui));
+        }
     }
 
     @Override
@@ -87,33 +118,48 @@ public class LobbyScreen extends SimpleScreen {
         botDesign.add(designTable);
         table.add(botDesign).spaceBottom(50f).row();
         TextButton confirm = new TextButton("Confirm robot", gui.getSkin());
+        TextButton mainMenu = new TextButton("Menu", gui.getSkin());
         buttonTable = new Table();
-        buttonTable.add(confirm);
+        buttonTable.add(confirm).spaceBottom(25).row();
+        buttonTable.add(mainMenu);
         table.add(buttonTable);
         confirm.addListener(new ChangeListener() {
+
             @Override
             public void changed(ChangeEvent changeEvent, Actor actor) {
+                NetworkServer host = gui.getServer();
                 if (robotname.getText().equals("")){
                     gui.showPopUp("Please choose a nickname for you robot!", stage);
                     return;
                 }
-                SetupRobotNameDesign msg = gui.getServer().setHostRobot(new RobotInfo(robotname.getText(), design));
+                SetupRobotNameDesign msg = host.setHostRobot(new RobotInfo(robotname.getText(), design));
                 switch (msg) {
                     case ROBOT_DESIGN_AND_NAME_ARE_OKEY:
                         chooserobottable.clear();
                         botDesign.clear();
                         buttonTable.clear();
                         TextButton butt = new TextButton("Start game", gui.getSkin());
+                        TextButton butt2 = new TextButton("Menu", gui.getSkin());
+                        buttonTable.add(butt).spaceBottom(25).row();;
+                        buttonTable.add(butt2);
                         butt.addListener(new ChangeListener() {
                             @Override
                             public void changed(ChangeEvent changeEvent, Actor actor) {
-                                GameInfo info = gui.getServer().startTheGame(CreateGameScreen.MAP_LOCATION + "/" + map.getSelected() + ".tmx");
+
+                                if(host.getNumberOfConnections() > 0){
+                                GameInfo info = host.startTheGame(CreateGameScreen.MAP_LOCATION + "/" + map.getSelected() + ".tmx");
+                                serverWasInitialized = false;
                                 gui.setScreen(new LoadingScreen(info, true, true, gui));
-                                //gui.setScreen(new GameScreen(info, true, true, gui));
+                                } else {
+                                    gui.showPopUp("You cannot play multiplayer without friends, you friendless fuck", stage);
+                                    return;
+                                }
                             }
                         });
-                        buttonTable.add(butt);
+
+                        returnToMainMenu(butt2);
                         return;
+
                     case UNAVAILABLE_DESIGN:
                         gui.showPopUp("That robot has already been taken, please choose another one", stage);
                         return;
@@ -121,16 +167,53 @@ public class LobbyScreen extends SimpleScreen {
                         gui.showPopUp("That name has already been taken, please be more original", stage);
                         return;
                 }
+
             }
         });
 
+        returnToMainMenu(mainMenu);
+
+
         stage.addActor(table);
+    }
+
+    /**
+     * Gjør at vi kan returnere til menu'en. Samtidig så lukker den
+     * serveren på en trygg måte.
+     *
+     * @param menuButton - menu knappen som fører oss til Menu igjen
+     */
+    private void returnToMainMenu(TextButton menuButton) {
+        menuButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent changeEvent, Actor actor) {
+
+                if(serverWasInitialized) {
+                    listOfPlayers.clear();
+                    playerlisttable.clear();
+
+                    NetworkServer host = gui.getServer();
+                    if (!host.getConnectionsAndRobots().isEmpty()){
+                        for (Connection con : host.getConnectionsAndRobots().keySet()) {
+                            host.sendToClient(con, ConfirmationMessage.SERVER_CHOOSE_TO_DISCONNECTED);
+                        }
+                    }
+                    host.resetAllGameData();
+                    host.stopServerAndDisconnectAllClients();
+
+                    gui.reSetServer();
+                    serverWasInitialized = false;
+                    gui.setScreen(new MenuScreen(gui));
+                }
+            }
+        });
     }
 
     @Override
     public void render(float v) {
         if (gui.getServer() == null){
             gui.startServer();
+            serverWasInitialized = true;
             return;
         }
         for (Robot bot : gui.getServer().getRobotActions().keySet()){

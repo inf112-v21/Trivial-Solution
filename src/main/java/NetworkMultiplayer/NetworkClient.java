@@ -2,7 +2,7 @@ package NetworkMultiplayer;
 
 import GameBoard.Cards.ProgramCard;
 import GameBoard.Robot;
-import NetworkMultiplayer.Messages.ClientDisconnected;
+import NetworkMultiplayer.Messages.RobotDisconnected;
 import NetworkMultiplayer.Messages.InGameMessages.AllChosenCardsFromAllRobots;
 import NetworkMultiplayer.Messages.PreGameMessages.SetupRobotNameDesign;
 import NetworkMultiplayer.Messages.InGameMessages.ConfirmationMessage;
@@ -50,7 +50,7 @@ public class NetworkClient {
         client = new Client();
 
         //start klienten --> åpner opp en tråd for at den skal kunne sende og motta meldinger over nettverket.
-        new Thread(client).start();
+        client.start();
 
         //Registrer klienten i nettverket
         LanNetwork.register(client);
@@ -160,6 +160,7 @@ public class NetworkClient {
 
                         case SERVER_CHOOSE_TO_DISCONNECTED:
                             serverIsDown = ConfirmationMessage.SERVER_CHOOSE_TO_DISCONNECTED;
+                            System.out.println("Den skulle skifte til serverDisconnected screen");
                             return;
                     }
 
@@ -181,8 +182,8 @@ public class NetworkClient {
                 }
 
                 //Her sletter vi roboten som ble disconnected.
-                else if (object instanceof ClientDisconnected){
-                    disconnectedRobot = ((ClientDisconnected) object).getDisconnectedBot();
+                else if (object instanceof RobotDisconnected){
+                    disconnectedRobot = ((RobotDisconnected) object).getDisconnectedBot();
                 }
 
                 else if(DEVELOPER_MODE) System.out.println("Received unidenitified message: " + object.getClass());

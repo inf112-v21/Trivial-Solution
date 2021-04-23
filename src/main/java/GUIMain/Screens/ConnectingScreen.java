@@ -28,6 +28,12 @@ public class ConnectingScreen extends SimpleScreen{
     }
 
     @Override
+    public void dispose() {
+        super.dispose();
+    }
+
+
+    @Override
     public void render(float v){
         super.render(v);
 

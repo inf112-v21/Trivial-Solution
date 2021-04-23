@@ -517,10 +517,6 @@ public class GameScreen extends SimpleScreen {
 
             if (playerControlledRobot.getLives() <= 0) {
                 gui.setScreen(new LastScreen(EndScreenBackground.LOSE, gui));
-            } else {
-                if (playerControlledRobot.getLives() <= 0) {
-                    gui.setScreen(new LastScreen(EndScreenBackground.LOSE, gui));
-                }
             }
 
             int alive = 0;

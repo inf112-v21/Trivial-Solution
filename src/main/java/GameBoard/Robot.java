@@ -162,10 +162,11 @@ public class Robot implements Serializable, Comparable<Robot> {
 	 * Denne metoden legger til et og et kort i rekkefølge i registeret utifra hva spilleren velger.
 	 * @param chosenCard kortet som ble valgt
 	 */
-	public void chooseCard(ProgramCard chosenCard){
-	    if (! availableCards.contains(chosenCard)) throw new IllegalArgumentException("This card isn't in the list of available cards for som reason");
-	    if (chosenCards.size() >= getChosenCardSlots()) throw new IllegalStateException("I already have the maximum number of cards!");
+	public boolean chooseCard(ProgramCard chosenCard){
+		if (! availableCards.contains(chosenCard)) throw new IllegalArgumentException("This card isn't in the list of available cards for som reason");
+		if (chosenCards.size() >= getChosenCardSlots()) throw new IllegalStateException("I already have the maximum number of cards!");
 		chosenCards.add(chosenCard);
+		return true;
 	}
 
 	public int getNumberOfChosenCards(){ return chosenCards.size(); }

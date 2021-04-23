@@ -637,10 +637,11 @@ public class GameScreen extends SimpleScreen {
 
         @Override
         public void clicked(InputEvent event, float x, float y) {
-	        if(optionsCheck){
+            if(optionsCheck){
                 if (playerControlledRobot.getNumberOfChosenCards() >= Math.min(BoardController.PHASES_PER_ROUND, playerControlledRobot.getHP())) return;
                 ProgramCard card = playerControlledRobot.getAvailableCards().get(index);
 
+                if (!playerControlledRobot.chooseCard(card)) return;
                 chosenTable.setBounds((Gdx.graphics.getWidth())/2f,
                         (Gdx.graphics.getHeight()/5f*(5-playerControlledRobot.getNumberOfChosenCards())),
                         Gdx.graphics.getWidth()/6f,

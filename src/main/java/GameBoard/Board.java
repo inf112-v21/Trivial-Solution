@@ -74,12 +74,12 @@ public class Board {
         TiledMapTileLayer middleground = (TiledMapTileLayer) map.getLayers().get("Middleground");
         TiledMapTileLayer foreground   = (TiledMapTileLayer) map.getLayers().get("Foreground");
 
-        allLaserBeams.put(39,new LaserBeam(39, 3, false, false,4, 6));
-        allLaserBeams.put(40,new LaserBeam(40, 0, false, true,4, 7));
-        allLaserBeams.put(47,new LaserBeam(47, 0, false, false,5, 6));
-        allLaserBeams.put(102,new LaserBeam(102, 0, true, false,12, 5));
-        allLaserBeams.put(103,new LaserBeam(103, 3, true, false,12, 6));
-        allLaserBeams.put(101,new LaserBeam(101, 0, true, true,12, 4));
+        allLaserBeams.put(39,new LaserBeam(39, 4, 6));
+        allLaserBeams.put(40,new LaserBeam(40, 4, 7));
+        allLaserBeams.put(47,new LaserBeam(47, 5, 6));
+        allLaserBeams.put(102,new LaserBeam(102, 12, 5));
+        allLaserBeams.put(103,new LaserBeam(103, 12, 6));
+        allLaserBeams.put(101,new LaserBeam(101, 12, 4));
 
         HEIGHT = background.getHeight();
         WIDTH  = background.getWidth();
@@ -155,8 +155,7 @@ public class Board {
             }
         }
     }
-
-
+    
     /**
      * Denne metoden bruker den globale variabelen flagWinningFormation
      * for å forsikre seg om at flaggene blir plukket opp/registrert

@@ -67,10 +67,6 @@ public class AITests {
         testAIProperties(new Randbot());
     }
 
-    //@Test
-    //public void testUltronProperties(){testAIProperties(new Ultron());}
-
-
     private void AIAddsCardsToRegisterOrTogglesPowerdDown(AI ai){
         drawRandomCards();
         assertEquals(0, bot.getNumberOfChosenCards());

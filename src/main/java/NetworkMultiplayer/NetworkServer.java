@@ -10,6 +10,8 @@ import NetworkMultiplayer.Messages.InGameMessages.AllChosenCardsFromAllRobots;
 import NetworkMultiplayer.Messages.InGameMessages.DistributedCards;
 import NetworkMultiplayer.Messages.InGameMessages.ChosenCards;
 import NetworkMultiplayer.Messages.InGameMessages.ConfirmationMessage;
+import NetworkMultiplayer.Messages.RobotDisconnected;
+import NetworkMultiplayer.Messages.InGameMessages.*;
 import NetworkMultiplayer.Messages.PreGameMessages.GameInfo;
 import NetworkMultiplayer.Messages.PreGameMessages.SetupRobotNameDesign;
 import NetworkMultiplayer.Messages.IMessage;
@@ -95,8 +97,11 @@ public class NetworkServer extends Listener {
      */
     public void distributeCards(){
 
-        for(Connection con : connectionsAndRobots.keySet()){
-            sendToClient(con, new DistributedCards(connectionsAndRobots.get(con).getAvailableCards()));
+
+        for(Connection con : connectionsAndRobots.keySet()) {
+            if (connectionsAndRobots.get(con).hasRemainingLives()) {
+                sendToClient(con, new DistributedCards(connectionsAndRobots.get(con).getAvailableCards()));
+            }
         }
         numberOfReadyClients = 0;
     }
@@ -133,7 +138,10 @@ public class NetworkServer extends Listener {
      * @return true hvis alle har sendt, false ellers.
      */
     public boolean haveAllClientSentTheirChosenCards(){
-        return numberOfSetsOfCardsReceived == numberOfConnections+1;
+        if(hostRobot.hasRemainingLives()) {
+            return numberOfSetsOfCardsReceived == numberOfConnections + 1;
+        }
+        return numberOfSetsOfCardsReceived == numberOfConnections;
 
     }
 
@@ -161,6 +169,10 @@ public class NetworkServer extends Listener {
     public void setHostsChosenCards(){
         robotActions.put(hostRobot,hostRobot.getChosenCards());
         numberOfSetsOfCardsReceived++;
+    }
+
+    public Robot getHostRobot() {
+        return hostRobot;
     }
 
     /**
@@ -307,16 +319,24 @@ public class NetworkServer extends Listener {
             @Override
             public void disconnected(Connection connection){
 
-                //Fjerner roboten
-                Robot removeThisRobot = connectionsAndRobots.remove(connection);
-                removeThisRobot.killRobot();
-                robotActions.remove(removeThisRobot);
+                if(!connectionsAndRobots.isEmpty()) {
 
-                //Oppdatterer connecitons
-                numberOfConnections--;
+                    //Fjerner roboten
+                    Robot removeThisRobot = connectionsAndRobots.remove(connection);
 
-                //Gir beskjed til alle klientene om at de kan slette denne roboten.
-                sendMessageToAllClients(new ClientDisconnected(removeThisRobot));
+                    if(removeThisRobot != null) {
+                        removeThisRobot.killRobot();
+                        robotActions.remove(removeThisRobot);
+
+                        //Oppdatterer connecitons
+                        numberOfConnections--;
+
+                        //Gir beskjed til alle klientene om at de kan slette denne roboten.
+                        for (Connection con : connectionsAndRobots.keySet()) {
+                            sendToClient(con, new RobotDisconnected(removeThisRobot));
+                        }
+                    }
+                }
 
             }
         });
@@ -348,13 +368,6 @@ public class NetworkServer extends Listener {
         return numberOfConnections;
     }
 
-    /**
-     * Sender data til alle klientene via TCP
-     */
-    public void sendMessageToAllClients(IMessage m){
-            server.sendToAllTCP(m);
-    }
-
 
     /**
      *  Stenger nettverket, altså serveren.
@@ -364,7 +377,7 @@ public class NetworkServer extends Listener {
      *  kan man gå tilbake til Main Menu og starte spillet
      *  på nytt.
      */
-    public void stopServerAndDisconnectAllClients(){ server.stop();}
+    public void stopServerAndDisconnectAllClients(){server.stop();}
 
 
      /**

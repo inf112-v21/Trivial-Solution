@@ -133,6 +133,10 @@ public class BoardController {
         return ret;
     }
 
+    public ArrayList<Robot> getAliveRobots() {
+        return aliveRobots;
+    }
+
     /**
      * Metode som sjekker om en spiller har vunnet eller ikke.
      * Kan brukes av GameScreen.

@@ -217,7 +217,7 @@ public class NetworkServer extends Listener {
                     switch (message) {
                         case CONNECTION_WAS_SUCCESSFUL:
                             System.out.println("Woho!");
-                            sendToClient(connection,ConfirmationMessage.TEST_MESSAGE);
+                            sendToClient(connection, ConfirmationMessage.TEST_MESSAGE);
                             return;
 
 
@@ -256,7 +256,7 @@ public class NetworkServer extends Listener {
                     int chosenDesign = bot.getBotDesignNr();
 
 
-                    if(!robotActions.isEmpty()) {
+                    if (!robotActions.isEmpty()) {
                         for (Robot registeredBot : robotActions.keySet()) {
 
                             System.out.println(bot);
@@ -299,18 +299,23 @@ public class NetworkServer extends Listener {
 
             //Kalles når en klient disconnect'er fra serveren.
             @Override
-            public void disconnected(Connection connection){
+            public void disconnected(Connection connection) {
 
                 //Fjerner roboten
-                Robot removeThisRobot = connectionsAndRobots.remove(connection);
-                removeThisRobot.killRobot();
-                robotActions.remove(removeThisRobot);
+                if (!connectionsAndRobots.isEmpty()){
+                    Robot removeThisRobot = connectionsAndRobots.remove(connection);
 
-                //Oppdatterer connecitons
-                numberOfConnections--;
+                    if (removeThisRobot != null) {
+                        removeThisRobot.killRobot();
+                        robotActions.remove(removeThisRobot);
 
-                //Gir beskjed til alle klientene om at de kan slette denne roboten.
-                sendMessageToAllClients(new RobotDisconnected(removeThisRobot));
+                        //Gir beskjed til alle klientene om at de kan slette denne roboten.
+                        sendMessageToAllClients(new RobotDisconnected(removeThisRobot));
+                    }
+
+                    //Oppdatterer connecitons
+                    numberOfConnections--;
+                }
 
             }
         });

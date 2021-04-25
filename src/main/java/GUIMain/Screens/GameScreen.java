@@ -92,6 +92,7 @@ public class GameScreen extends SimpleScreen {
     private final boolean isThisMultiPlayer;
     private final boolean amITheHost;
     private boolean isWaitingForCards = true;
+    private boolean hasTheServerNotTerminated = true;
 
     //Variabel for å huske hvor laserne ble tegnet, så de kan slettes igjen effektivt
     private final TreeSet<Position> previousDoubleLaserPositions = new TreeSet<>();
@@ -145,6 +146,12 @@ public class GameScreen extends SimpleScreen {
         spriteBatch.dispose();
         stage.dispose();
         renderer.dispose();
+    }
+
+    @Override
+    public void hide(){
+        if(hasTheServerNotTerminated) ServerOrClientChoseToDisconnect();
+        if(isThisMultiPlayer) hasTheServerNotTerminated = true;
     }
 
     @Override
@@ -210,7 +217,9 @@ public class GameScreen extends SimpleScreen {
                 optionsCheck = false;
 
                 //Hvis noen velger å disconnete så må vi håndtere det
-                if(isThisMultiPlayer) ServerOrClientChoseToDisconnect();
+                if(isThisMultiPlayer) {
+                    if(amITheHost) hasTheServerNotTerminated = false;
+                    ServerOrClientChoseToDisconnect();}
                 gui.setScreen(new MenuScreen(gui));
 
             }
@@ -220,7 +229,9 @@ public class GameScreen extends SimpleScreen {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 //Hvis noen velger å disconnete så må vi håndtere det
-                if(isThisMultiPlayer) ServerOrClientChoseToDisconnect();
+                if(isThisMultiPlayer) {
+                    if(amITheHost) hasTheServerNotTerminated = false;
+                    ServerOrClientChoseToDisconnect();}
                 Gdx.app.exit();
             }
         });
@@ -246,7 +257,7 @@ public class GameScreen extends SimpleScreen {
             theHost.resetAllGameData();
             theHost.stopServerAndDisconnectAllClients();
             gui.reSetServer();
-        } else {
+        } else if(!amITheHost && gui.getClient() != null) {
             //Vi burde ikke trenge å sende noen info til serveren om det
             //Siden det skal bli plukket opp av serverens disconnected metode.
             gui.getClient().disconnectAndStopClientThread();
@@ -406,7 +417,7 @@ public class GameScreen extends SimpleScreen {
 
 
         //Dette er for klienten
-        if (!amITheHost) {
+        if (!amITheHost && gui.getClient() != null) {
 
             //Her sjekker vi om en klient ble disconnected. I så fall må vi fjerne roboten til den lokalt.
             //Robot possibleDisconnectedRobot
@@ -464,27 +475,30 @@ public class GameScreen extends SimpleScreen {
         else {
 
             NetworkServer host = gui.getServer();
-            //Hvis alle spillerne er klare kan vi begynne å dele ut kort
-            if (host.areAllClientsReady() && gameBoard.isWaitingForPlayers()) {
-                host.distributeCards();
-                hasDrawnCardsYet = false;
-                updateCardsOnScreen();
-            }
 
-            //Hvis alle spillerne har sendt kortene sine kan vi begynne simuleringen
-            if (host.haveAllClientSentTheirChosenCards()) {
-                if (GUI.DEVELOPER_MODE) host.sendAllChosenCardsToEveryone(gameBoard.getSanityCheck());
-                else host.sendAllChosenCardsToEveryone();
-                gameBoard.playersAreReady();
-            }
+            if(host != null) {
+                //Hvis alle spillerne er klare kan vi begynne å dele ut kort
+                if (host.areAllClientsReady() && gameBoard.isWaitingForPlayers()) {
+                    host.distributeCards();
+                    hasDrawnCardsYet = false;
+                    updateCardsOnScreen();
+                }
 
-            if(host.getHostRobot().getLives() <= 0){
+                //Hvis alle spillerne har sendt kortene sine kan vi begynne simuleringen
+                if (host.haveAllClientSentTheirChosenCards()) {
+                    if (GUI.DEVELOPER_MODE) host.sendAllChosenCardsToEveryone(gameBoard.getSanityCheck());
+                    else host.sendAllChosenCardsToEveryone();
+                    gameBoard.playersAreReady();
+                }
+
+                if (host.getHostRobot().getLives() <= 0) {
                     ready.setVisible(false);
                     clear.setVisible(false);
                     powerDown.setVisible(false);
                     availableTable.clear();
 
 
+                }
             }
 
 

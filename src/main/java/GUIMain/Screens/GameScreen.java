@@ -384,28 +384,6 @@ public class GameScreen extends SimpleScreen {
             updateCardsOnScreen();
         }
 
-        gameBoard.simulate();
-
-        updateRobotPositions();
-        updateLivesAndHP();
-        finishedCheck();
-
-    }
-
-    private void updateCardsOnScreen(){
-        if (gameBoard.isWaitingForPlayers()) {
-            if (hasDrawnCardsYet) return;
-            clearCards();
-            renderCards();
-            hasDrawnCardsYet = true;
-            ready.setVisible(true);
-            powerDown.setVisible(true);
-            clear.setVisible(true);
-        } else hasDrawnCardsYet = false;
-    }
-
-    private void updateMultiplayerProperties(){
-
         //Robotene slettes når de dør.
         ArrayList<Robot> botsThatJustDied = gameBoard.getRecentlyDeceasedRobots();
         if(!botsThatJustDied.isEmpty()) {
@@ -424,6 +402,29 @@ public class GameScreen extends SimpleScreen {
             }
         }
 
+
+        gameBoard.simulate();
+
+        updateRobotPositions();
+        updateLivesAndHP();
+
+        finishedCheck();
+
+    }
+
+    private void updateCardsOnScreen(){
+        if (gameBoard.isWaitingForPlayers()) {
+            if (hasDrawnCardsYet) return;
+            clearCards();
+            renderCards();
+            hasDrawnCardsYet = true;
+            ready.setVisible(true);
+            powerDown.setVisible(true);
+            clear.setVisible(true);
+        } else hasDrawnCardsYet = false;
+    }
+
+    private void updateMultiplayerProperties(){
 
         //Dette er for klienten
         if (!amITheHost && gui.getClient() != null) {

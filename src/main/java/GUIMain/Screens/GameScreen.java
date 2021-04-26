@@ -18,6 +18,7 @@ import NetworkMultiplayer.Messages.InGameMessages.ChosenCards;
 import NetworkMultiplayer.Messages.InGameMessages.ConfirmationMessage;
 import NetworkMultiplayer.Messages.InGameMessages.SanityCheck.UnequalSimulationException;
 import NetworkMultiplayer.Messages.PreGameMessages.GameInfo;
+import NetworkMultiplayer.NetworkClient;
 import NetworkMultiplayer.NetworkServer;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -93,6 +94,7 @@ public class GameScreen extends SimpleScreen {
     private final boolean amITheHost;
     private boolean isWaitingForCards = true;
     private boolean hasTheServerNotTerminated = true;
+    private boolean youAreDead = false;
 
     //Variabel for å huske hvor laserne ble tegnet, så de kan slettes igjen effektivt
     private final TreeSet<Position> previousDoubleLaserPositions = new TreeSet<>();
@@ -151,7 +153,8 @@ public class GameScreen extends SimpleScreen {
     @Override
     public void hide(){
         if(hasTheServerNotTerminated) ServerOrClientChoseToDisconnect();
-        if(isThisMultiPlayer) hasTheServerNotTerminated = true;
+        if(isThisMultiPlayer) hasTheServerNotTerminated = false;
+
     }
 
     @Override
@@ -374,13 +377,6 @@ public class GameScreen extends SimpleScreen {
             damagedPositions = gameBoard.getDamagedPositions();
             return;
         }
-
-        gameBoard.simulate();
-
-        updateRobotPositions();
-        updateLivesAndHP();
-
-
         if(isThisMultiPlayer ){
             updateMultiplayerProperties();
         }
@@ -388,7 +384,12 @@ public class GameScreen extends SimpleScreen {
             updateCardsOnScreen();
         }
 
+        gameBoard.simulate();
+
+        updateRobotPositions();
+        updateLivesAndHP();
         finishedCheck();
+
     }
 
     private void updateCardsOnScreen(){
@@ -407,11 +408,19 @@ public class GameScreen extends SimpleScreen {
 
         //Robotene slettes når de dør.
         ArrayList<Robot> botsThatJustDied = gameBoard.getRecentlyDeceasedRobots();
-        if(!botsThatJustDied.isEmpty()){
-            for(Robot bot: botsThatJustDied){
-                //gui.showPopUp("Robot: " + bot.getName() + " died", stage);
-                bot.killRobot();
-                robots.remove(bot);
+        if(!botsThatJustDied.isEmpty()) {
+            for (Robot bot : botsThatJustDied) {
+                if(bot.equals(playerControlledRobot)) gui.showPopUp("Your robot " + bot.getName() + " died", stage);
+                else gui.showPopUp("Robot: " + bot.getName() + " died", stage);
+
+                //Fiks multiplayer
+                if (isThisMultiPlayer) {
+                    youAreDead = true;
+
+                    if (amITheHost) {
+                        gui.getServer().deleteDeadRobot(bot);
+                    }
+                }
             }
         }
 
@@ -425,7 +434,6 @@ public class GameScreen extends SimpleScreen {
                 for (Robot bot : gameBoard.getAliveRobots()) {
                     if (bot.equals(gui.getClient().getDisconnectedRobot())) {
                         bot.killRobot();
-                        robots.remove(bot);
                         //gui.showPopUp("Robot: " + bot.getName() + " died", stage);
                     }
                 }
@@ -438,11 +446,18 @@ public class GameScreen extends SimpleScreen {
             }
 
             //Her mottar vi kort fra serveren.
-            ArrayList<ProgramCard> cardsToChoseFrom = gui.getClient().getCardsToChoseFrom();
-            if (cardsToChoseFrom != null) {
-                playerControlledRobot.setAvailableCards(cardsToChoseFrom);
-                hasDrawnCardsYet = false;
-                updateCardsOnScreen();
+            if(playerControlledRobot.getLives() > 0) {
+                ArrayList<ProgramCard> cardsToChoseFrom = gui.getClient().getCardsToChoseFrom();
+                if (cardsToChoseFrom != null) {
+                    playerControlledRobot.setAvailableCards(cardsToChoseFrom);
+                    hasDrawnCardsYet = false;
+                    updateCardsOnScreen();
+                }
+            } else{
+                ready.setVisible(false);
+                clear.setVisible(false);
+                powerDown.setVisible(false);
+                availableTable.clear();
             }
 
             //Her gir vi kortene til de ulike spillerne.
@@ -486,16 +501,16 @@ public class GameScreen extends SimpleScreen {
 
                 //Hvis alle spillerne har sendt kortene sine kan vi begynne simuleringen
                 if (host.haveAllClientSentTheirChosenCards()) {
-                    if (GUI.DEVELOPER_MODE) host.sendAllChosenCardsToEveryone(gameBoard.getSanityCheck());
-                    else host.sendAllChosenCardsToEveryone();
+                    host.sendAllChosenCardsToEveryone();
                     gameBoard.playersAreReady();
                 }
 
-                if (host.getHostRobot().getLives() <= 0) {
+                if (playerControlledRobot.getLives() <= 0) {
                     ready.setVisible(false);
                     clear.setVisible(false);
                     powerDown.setVisible(false);
                     availableTable.clear();
+                    gui.getServer().getHostRobot();
 
 
                 }
@@ -510,35 +525,28 @@ public class GameScreen extends SimpleScreen {
     private void finishedCheck() {
         //Sjekker om en spiller har vunnet og hvilken screen som skal vises.
         Robot winner = gameBoard.hasWon();
+
+        //Her sjekker vi om alle andre døde
+        int alive = 0;
+        for (Robot bot : robots) {
+            if (bot.getLives() > 0) {
+                alive++;
+            }
+        }
+        if (alive == 1 && playerControlledRobot.getLives() > 0) {
+            winner = playerControlledRobot;
+        }
+
+
         if (winner != null) {
 
             //Hvis multiplayer spillet er ferdig så stenger vi serveren og
             //frakobler klientene.
-
             if (playerControlledRobot.equals(winner)) {
-                gui.setScreen(new LastScreen(EndScreenBackground.WIN, gui));
-            } else {
-                gui.setScreen(new LastScreen(EndScreenBackground.LOSE, gui));
+                gui.setScreen(new LastScreen(EndScreenBackground.WIN, gui, isThisMultiPlayer, amITheHost));
             }
-        }
-        if (isThisMultiPlayer) {
-            if (playerControlledRobot.getLives() <= 0 && !amITheHost) {
-                gui.setScreen(new LastScreen(EndScreenBackground.LOSE, gui));
-            }
-        else {
-                if (playerControlledRobot.getLives() <= 0) {
-                    gui.setScreen(new LastScreen(EndScreenBackground.LOSE, gui));
-                }
-        }
-
-            int alive = 0;
-            for (Robot bot : robots) {
-                if (bot.getLives() > 0) {
-                    alive++;
-                }
-            }
-            if (alive == 1 && playerControlledRobot.getLives() > 0) {
-                gui.setScreen(new LastScreen(EndScreenBackground.WIN, gui));
+            else{
+                gui.setScreen(new LastScreen(EndScreenBackground.LOSE, gui, isThisMultiPlayer, amITheHost));
             }
         }
     }

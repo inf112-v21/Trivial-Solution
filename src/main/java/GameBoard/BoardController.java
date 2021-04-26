@@ -80,10 +80,12 @@ public class BoardController {
     }
 
     private void moveNextRobot(){
-        Robot botToMove = aliveRobots.get(currentMove);
-        ProgramCard card = botToMove.getNthChosenCard(currentPhase);
-        if (botToMove.hasRemainingLives() && card != null){
-            board.performMove(card, botToMove);
+        if(!aliveRobots.isEmpty()) {
+            Robot botToMove = aliveRobots.get(currentMove);
+            ProgramCard card = botToMove.getNthChosenCard(currentPhase);
+            if (botToMove.hasRemainingLives() && card != null) {
+                board.performMove(card, botToMove);
+            }
         }
     }
 

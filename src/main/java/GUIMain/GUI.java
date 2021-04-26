@@ -9,7 +9,8 @@ import GUIMain.Screens.MenuScreen;
     import com.badlogic.gdx.Gdx;
     import com.badlogic.gdx.Screen;
     import com.badlogic.gdx.graphics.GL30;
-    import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.Action;
+import com.badlogic.gdx.scenes.scene2d.Stage;
     import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
     import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
@@ -95,7 +96,7 @@ public class GUI extends Game {
      */
     public void didServerChooseToDisconnectThenTerminateClient(){
             getClient().disconnectAndStopClientThread();
-            setScreen(new LastScreen(EndScreenBackground.SERVER_DISCONNECTED, this));
+            setScreen(new LastScreen(EndScreenBackground.SERVER_DISCONNECTED, this,true,false));
             reSetClient();
     }
 
@@ -135,12 +136,18 @@ public class GUI extends Game {
     public void showPopUp(String message, Stage stage){
         Skin uiSkin = new Skin(Gdx.files.internal(SKIN_NAME));
         Dialog dialog = new Dialog("", uiSkin) {
+            @Override
             public void result(Object obj) {
-                //Ignore
+                boolean b = (boolean) obj;
+                if(b){
+                    hide(null);
+                    remove();
+                }
             }
         };
         dialog.text(message);
         dialog.button("OK", true); //sends "true" as the result
         dialog.show(stage);
     }
+
 }

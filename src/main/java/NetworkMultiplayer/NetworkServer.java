@@ -383,4 +383,8 @@ public class NetworkServer extends Listener {
     public Robot getHostRobot() {
         return hostRobot;
     }
+
+    public void deleteDeadRobot(Robot bot) {
+        robotActions.remove(bot);
+    }
 }

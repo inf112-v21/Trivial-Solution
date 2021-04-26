@@ -3,6 +3,8 @@ package GUIMain.Screens.EndOfGameScreens;
 import GUIMain.GUI;
 import GUIMain.Screens.MenuScreen;
 import GUIMain.Screens.SimpleScreen;
+import NetworkMultiplayer.NetworkClient;
+import NetworkMultiplayer.NetworkServer;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -17,8 +19,12 @@ public class LastScreen extends SimpleScreen {
 
     private SpriteBatch spriteBatch;
     private final String background;
+    private final boolean isThisMultiplayer;
+    private final boolean amITheHost;
+    private GUI gui;
+
     
-    public LastScreen(EndScreenBackground back, GUI gui) {
+    public LastScreen(EndScreenBackground back, GUI gui, boolean isThisMultiplayer, boolean amITheHost) {
         super(gui);
         switch (back){
             case WIN:
@@ -35,6 +41,10 @@ public class LastScreen extends SimpleScreen {
             default:
                 throw new UnsupportedOperationException("Could not recognize background: " + back + ", please go to LastScreen and add that case to the list");
         }
+
+        this.isThisMultiplayer = isThisMultiplayer;
+        this.amITheHost = amITheHost;
+        this.gui = gui;
     }
     
 
@@ -63,6 +73,25 @@ public class LastScreen extends SimpleScreen {
 
     @Override
     public void render(float i) {
+
+        if(isThisMultiplayer){
+            if(amITheHost){
+                if(gui.getServer() != null){
+                    NetworkServer host = gui.getServer();
+                    host.resetAllGameData();
+                    host.stopServerAndDisconnectAllClients();
+                    gui.reSetServer();
+                }
+            }
+            else{
+                if (gui.getClient() != null) {
+                    NetworkClient client = gui.getClient();
+                    client.disconnectAndStopClientThread();
+                    gui.reSetClient();
+                }
+            }
+        }
+
         spriteBatch.begin();
         backgroundSprite.draw(spriteBatch);
         spriteBatch.end();

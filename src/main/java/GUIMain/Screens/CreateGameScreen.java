@@ -128,10 +128,12 @@ public class CreateGameScreen extends SimpleScreen {
 
     public static String[] getMapNames(){
         File f = new File(MAP_LOCATION);
-        String[] maplist = Arrays.stream(Objects.requireNonNull(f.list())).filter(n -> !n.equals("TestMap.tmx") && !n.equals("TestMapFlags.tmx")).toArray(String[]::new);
+        String[] maplist = Arrays.stream(Objects.requireNonNull(f.list())).toArray(String[]::new);
         for (int i = 0; i < maplist.length; i++) {
             maplist[i] = maplist[i].substring(0, maplist[i].length()-4);
         }
         return maplist;
     }
+
+    //.filter(n -> !n.equals("TestMap.tmx") && !n.equals("TestMapFlags.tmx"))
 }

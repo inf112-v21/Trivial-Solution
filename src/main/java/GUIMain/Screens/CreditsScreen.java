@@ -2,6 +2,8 @@ package GUIMain.Screens;
 
 import GUIMain.GUI;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -11,16 +13,18 @@ import org.lwjgl.opengl.GL20;
 
 public class CreditsScreen extends SimpleScreen {
 
+
+
     private final String[] titlesLeft = new String[]{
             "Production Manager: Steinar Simonnes",
-            "Office Administrator: Duki",
+            "Office Administrator: Душан Николић",
             "Special Projects Handyman: Sander Sigmundstad",
             "Meeting Coordinator: Ilyas Abukar Ali",
             "Head of Quality Assurance: Sander Sigmundstad",
             "Head of AI Development: Ilyas Abukar Ali",
             "Head of Graphical Development: Samuel James Cook",
             "Head of Animation: Sander Sigmundstad",
-            "Head of Network Development : Duki",
+            "Head of Network Development : Душан Николић",
             "Head of Finance: Samuel James Cook",
             "Head of Human Relations: Ilyas Abukar Ali",
             "Head of Auditing (Tests): Sander Sigmundstad",
@@ -34,20 +38,20 @@ public class CreditsScreen extends SimpleScreen {
 
     private final String[] titlesRight = new String[]{
             "Technical Lead: Steinar Simonnes",
-            "Dr. Jekyll: Duki",
+            "Dr. Jekyll: Душан Николић",
             "Mr. Hyde: Dusan Nikolic",
             "Art: Samuel James Cook",
             "Art: Liv Eichner",
             "Lead Game Engine Developer: Steinar Simonnes",
-            "Assistant to the Game Engine Developer: Duki",
+            "Assistant to the Game Engine Developer: Душан Николић",
             "Assistant to the Production Manager: Dusan Nikolic",
             "Author of Issues: Steinar Simonnes",
-            "Winning Developer: Duki",
+            "Winning Developer: Душан Николић",
             "Button Masher: Samuel James Cook",
-            "Tile Mason: Duki",
+            "Tile Mason: Душан Николић",
             "Number Theory Apprentice: Steinar Simonnes",
             "Git-Merge Conflict Creator: Dusan Nikolic",
-            "Git-Merge Conflict Resolver: Duki",
+            "Git-Merge Conflict Resolver: Душан Николић",
             "Creator of Bullshit Titles: Samuel James Cook",
             "High Powered Optical Cannon Developer: Sander SigmundStad",
             "Robot Baptizer: Steinar Simonnes",
@@ -72,9 +76,12 @@ public class CreditsScreen extends SimpleScreen {
     @Override
     public void show() {
         super.show();
-        parameter.size = Gdx.graphics.getHeight()/27;
-        parameter.borderWidth = 2f;
-        style.font = generator.generateFont(parameter);
+        FreeTypeFontGenerator gen = new FreeTypeFontGenerator(Gdx.files.internal("fonts/ObliviousFont.ttf"));
+        FreeTypeFontGenerator.FreeTypeFontParameter para = new FreeTypeFontGenerator.FreeTypeFontParameter();
+        para.size = Gdx.graphics.getHeight()/27;
+        para.characters = " :ДушaнНиkолићqwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM";
+        para.borderWidth = 2f;
+        style.font = gen.generateFont(para);
         Table table = new Table();
         table.setBounds(0,0,Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         Label title = new Label("Credits", style);
@@ -83,9 +90,9 @@ public class CreditsScreen extends SimpleScreen {
         Table left = new Table();
         Table right = new Table();
         Table thanks = new Table();
-        parameter.size = Gdx.graphics.getHeight()/47;
-        parameter.borderWidth = 1f;
-        style.font = generator.generateFont(parameter);
+        para.size = Gdx.graphics.getHeight()/47;
+        para.borderWidth = 1f;
+        style.font = gen.generateFont(para);
 
         for (int i=0; i<titlesLeft.length;i++){
             Label temp1 = new Label(titlesLeft[i],style);

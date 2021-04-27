@@ -55,7 +55,7 @@ public class CreditsScreen extends SimpleScreen {
 
     private final String[] spThanks = new String[]{
             "Special Thanks to:",
-            "Steinar Simoness",
+            "Steinar Simonnes",
             "Dusan Nikolic",
             "Sander Sigmundstad",
             "Ilyas Abukar Ali",

@@ -75,6 +75,7 @@ public class CreditsScreen extends SimpleScreen {
 
     @Override
     public void show() {
+        //Noe å commite
         super.show();
         FreeTypeFontGenerator gen = new FreeTypeFontGenerator(Gdx.files.internal("fonts/ObliviousFont.ttf"));
         FreeTypeFontGenerator.FreeTypeFontParameter para = new FreeTypeFontGenerator.FreeTypeFontParameter();
